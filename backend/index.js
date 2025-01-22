@@ -317,24 +317,11 @@ async function startServer() {
         server.headersTimeout = 35000;
         server.maxHeadersCount = 100;
 
-        // Handle server errors
-        server.on('error', (error) => {
-            console.error('Server error:', error);
-            if (!isShuttingDown) {
-                console.log('Attempting to recover from server error...');
-                setTimeout(() => {
-                    if (restartAttempts < MAX_RESTART_ATTEMPTS) {
-                        restartAttempts++;
-                        startServer();
-                    }
-                }, 5000);
-            }
-        });
+  
 
         // Enhanced graceful shutdown
         const gracefulShutdown = async () => {
-            if (isShuttingDown) return;
-            isShuttingDown = true;
+          
 
             console.log("Starting graceful shutdown...");
             clearInterval(monitoringInterval);
