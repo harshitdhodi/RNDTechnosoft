@@ -1,0 +1,51 @@
+
+
+{
+  "latestNews": "Latest News – Slots are filling up fast! Book yours now.",
+  "navLinks": [
+    {
+      "path": "/",
+      "label": "Services",
+      "submenu": [
+        { 
+          "path": "/websites", 
+          "label": "Websites", 
+          "subtext": "Custom websites made in CMS.", 
+          "image": "/images/rndmenuWebsites.svg" 
+        },
+        { 
+          "path": "/design", 
+          "label": "Design", 
+          "subtext": "Unlimited design.", 
+          "image": "/images/rndmenuDesign.svg" 
+        },
+        { 
+          "path": "/social-media", 
+          "label": "Social Media", 
+          "subtext": "Boost your online presence.", 
+          "image": "/images/rndmenuSocialMedia.svg" 
+        },
+        { 
+          "path": "/websiteManagement", 
+          "label": "Website Management", 
+          "subtext": "Your website taken care of.", 
+          "image": "/images/rndmenuManagement.svg" 
+        },
+        { 
+          "path": "/what-we-do", 
+          "label": "What we do", 
+          "subtext": "Learn how we assist global businesses with their design and web development needs through our comprehensive subscription-based services.",
+          "image": "/images/rndmenuWhatWeDo.svg" 
+        }
+      ]
+    },
+    { "path": "/how-it-works", "label": "How it works" },
+    { "path": "/pricing", "label": "Pricing" },
+    { "path": "/projects", "label": "Projects" },
+    { "path": "/templates", "label": "Templates" }
+  ],
+  "authLinks": [
+    { "path": "/login", "label": "Log-in / Sign-up" },
+    { "path": "/get-started", "label": "Get Started" }
+  ]
+}

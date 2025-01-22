@@ -1,0 +1,52 @@
+
+<div className="mb-4">
+                <label htmlFor="parentCategory" className="block font-semibold mb-2">
+                    Parent industries Category
+                </label>
+                <select
+                    id="parentCategory"
+                    value={industriesparentCategoryId}
+                    onChange={handleIndustriesParentCategoryChange}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    required
+                >
+                    <option value="">Select Parent Category</option>
+                    {industriescategories.map(renderIndustriesCategoryOptions)}
+                </select>
+            </div>
+
+            {/* Subcategory */}
+            {subIndustriesCategories.length > 0 && (
+                <div className="mb-4">
+                    <label htmlFor="subCategory" className="block font-semibold mb-2">
+                        Sub-industries Category (optional)
+                    </label>
+                    <select
+                        id="subCategory"
+                        value={industriessubCategoryId}
+                        onChange={handleIndustriesSubCategoryChange}
+                        className="w-full p-2 border rounded focus:outline-none"
+                    >
+                        <option value="">Select Subcategory</option>
+                        {subIndustriesCategories.map(renderIndustriesCategoryOptions)}
+                    </select>
+                </div>
+            )}
+
+            {/* Sub-Subcategory */}
+            {subSubIndustriesCategories.length > 0 && (
+                <div className="mb-4">
+                    <label htmlFor="subSubCategory" className="block font-semibold mb-2">
+                        Sub-Sub-industries Category (optional)
+                    </label>
+                    <select
+                        id="subSubCategory"
+                        value={industriessubSubCategoryId}
+                        onChange={handleIndustriesSubSubCategoryChange}
+                        className="w-full p-2 border rounded focus:outline-none"
+                    >
+                        <option value="">Select Sub-Subcategory</option>
+                        {subSubIndustriesCategories.map(renderIndustriesCategoryOptions)}
+                    </select>
+                </div>
+            )}

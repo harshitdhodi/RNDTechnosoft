@@ -1,0 +1,36 @@
+[
+    {
+      "title": "Website",
+      "description": "Do you require a Website with a reliable CMS in order to scale your business? View our solutions.",
+      "tag": "Package or Subscription",
+      "bgColor": "bg-[#114038]",
+      "image": "../images/Websiteservice.webp"
+    },
+    {
+      "title": "Website Audit",
+      "description": "Seeking guidance for your existing website? Fill in the form and receive tailored report within 48 hours.",
+      "tag": "One-time payment",
+      "bgColor": "bg-[#114038]"
+    },
+    {
+      "title": "Design",
+      "description": "Unlimited design right at your fingertips. Explore our range of subscription solutions that suit your requirements.",
+      "tag": "Subscription Only",
+      "bgColor": "bg-[#114038]",
+      "image": "../images/GirlDesign.webp"
+    },
+    {
+      "title": "Website Management",
+      "description": "Seeking additional support for your website’s design and development? Explore our range of subscription solutions.",
+      "tag": "Subscription Only",
+      "bgColor": "bg-[#114038]"
+    },
+    {
+      "title": "Social Media",
+      "description": "Our solutions are designed to elevate your social media channels, fostering engagement and enhancing your reputation through top-notch design.",
+      "tag": "Subscription Only",
+      "bgColor": "bg-[#114038]",
+      "image": "../images/Socialmediaservice.webp"
+    }
+  ]
+  

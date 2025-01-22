@@ -1,0 +1,8 @@
+<svg width="600" height="200" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dotted Line -->
+  <path d="M10 10 H 200 Q 250 10 250 60 V 140 Q 250 190 300 190 H 590"
+        stroke="#f55f42"
+        stroke-width="4"
+        stroke-dasharray="6"
+        fill="transparent" />
+</svg>
