@@ -15,6 +15,9 @@ export default {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
       },
+      animation: {
+        spin: "spin 0.5s linear infinite",
+      },
     },
   },
   plugins: [],
