@@ -8,8 +8,6 @@ import {
 useLocation 
 } from "react-router-dom";
 
-
-
 // backend 
 import Sidebar from './adminComponent/Sidebar';
 import ServicesBack from './adminComponent/Pages/Services';
@@ -237,7 +235,7 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 6000); // Adjust the time as needed
+    }, 100); // Adjust the time as needed
 
     return () => clearTimeout(timer); // Cleanup the timer on unmount
   }, []);
@@ -266,15 +264,13 @@ function App() {
 
     <BrowserRouter>
       <DynamicMetaTags />
-      {isLoading && !isLoggedIn ? (
+      {isLoading ? (
         // Show loading video while loading
         <>
 
-          <div className="flex justify-center items-center h-screen w-full bg-black">
-            <video autoPlay loop muted className="h-full w-full">
-              <source src={Loader} type="video/mp4" />
-            </video>
-          </div>
+<div className="flex justify-center items-center h-screen w-full bg-white">
+        {/* <div className="loader border-t-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div> */}
+      </div>
         </>
       ) : (
         <>
