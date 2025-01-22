@@ -1,0 +1,38 @@
+{
+    "title": "The global solution ",
+    "highlight": "for design",
+    "description": "We work with brands and agencies from around the world. We source designers and developers locally to create websites and designs in the following languages:",
+    "languages": [
+      {
+        "name": "English",
+        "imgSrc": "https://kolmdesign.com/wp-content/uploads/2023/09/British-1.svg",
+        "alt": "British"
+      },
+      {
+        "name": "German",
+        "imgSrc": "https://kolmdesign.com/wp-content/uploads/2023/09/German.svg",
+        "alt": "German"
+      },
+      {
+        "name": "Italian",
+        "imgSrc": "https://kolmdesign.com/wp-content/uploads/2023/09/Italiano.svg",
+        "alt": "Italiano"
+      },
+      {
+        "name": "Dutch",
+        "imgSrc": "https://kolmdesign.com/wp-content/uploads/2023/09/Nederlands.svg",
+        "alt": "Nederlands"
+      },
+      {
+        "name": "Spanish",
+        "imgSrc": "https://kolmdesign.com/wp-content/uploads/2023/09/Spanish.svg",
+        "alt": "Spanish"
+      },
+      {
+        "name": "French",
+        "imgSrc": "https://kolmdesign.com/wp-content/uploads/2023/09/French.svg",
+        "alt": "French"
+      }
+    ]
+  }
+  

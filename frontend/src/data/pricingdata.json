@@ -1,0 +1,408 @@
+{
+    "Websites": [
+      {
+        "Websites": {
+          "1-4": {
+            "Basic": {
+              "price": "$100/month",
+              "details": [
+                "Strategy Call",
+                "Client Portal access",
+                "Two revisions per phase",
+                "Dedicated project manager",
+                "Hosting + domain setup"
+              ],
+              "getWithMaintanance": [
+                "Basic maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ],
+              "slot":"2 Slots left for Q3"
+            },
+            "Standard": {
+              "price": "$200/month",
+              "details": [
+                "All Basic features",
+                "Additional revisions per phase",
+                "Enhanced project management",
+                "Priority support"
+              ],
+              "getWithMaintanance": [
+                "Standard maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], 
+              "slot":"2 Slots left for Q3"
+            },
+            "Premium": {
+              "price": "$300/month",
+              "details": [
+                "All Standard features",
+                "Unlimited revisions",
+                "Premium support",
+                "Monthly strategy sessions"
+              ],
+              "getWithMaintanance": [
+                "Premium maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            }
+          },
+          "5-9": {
+            "Basic": {
+              "price": "$150/month",
+              "details": [
+                "Strategy Call",
+                "Client Portal access",
+                "Two revisions per phase",
+                "Dedicated project manager",
+                "Hosting + domain setup",
+                "Optimised for mobile",
+                "CMS WordPress"
+              ],
+              "getWithMaintanance": [
+                "Basic maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            },
+            "Standard": {
+              "price": "$250/month",
+              "details": [
+                "All Basic features",
+                "Additional revisions per phase",
+                "Enhanced project management",
+                "Priority support"
+              ],
+              "getWithMaintanance": [
+                "Standard maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            },
+            "Premium": {
+              "price": "$350/month",
+              "details": [
+                "All Standard features",
+                "Unlimited revisions",
+                "Premium support",
+                "Monthly strategy sessions"
+              ],
+              "getWithMaintanance": [
+                "Premium maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            }
+          },
+          "10-15": {
+            "Basic": {
+              "price": "$200/month",
+              "details": [
+                "Strategy Call",
+                "Client Portal access",
+                "Two revisions per phase"
+              ],
+              "getWithMaintanance": [
+                "Basic maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            },
+            "Standard": {
+              "price": "$300/month",
+              "details": [
+                "All Basic features",
+                "Additional revisions per phase",
+                "Enhanced project management",
+                "Priority support"
+              ],
+              "getWithMaintanance": [
+                "Standard maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            },
+            "Premium": {
+              "price": "$400/month",
+              "details": [
+                "All Standard features",
+                "Unlimited revisions",
+                "Premium support",
+                "Monthly strategy sessions"
+              ],
+              "getWithMaintanance": [
+                "Premium maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            }
+          },
+          "16-25": {
+            "Basic": {
+              "price": "$250/month",
+              "details": [
+                "Strategy Call",
+                "Client Portal access",
+                "Two revisions per phase",
+                "Dedicated project manager",
+                "Hosting + domain setup"
+              ],
+              "getWithMaintanance": [
+                "Basic maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            },
+            "Standard": {
+              "price": "$350/month",
+              "details": [
+                "All Basic features",
+                "Additional revisions per phase",
+                "Enhanced project management",
+                "Priority support"
+              ],
+              "getWithMaintanance": [
+                "Standard maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            },
+            "Premium": {
+              "price": "$450/month",
+              "details": [
+                "All Standard features",
+                "Unlimited revisions",
+                "Premium support",
+                "Monthly strategy sessions"
+              ],
+              "getWithMaintanance": [
+                "Premium maintenance included"
+              ],
+              "donoget": [
+                "No additional features"
+              ], "slot":"2 Slots left for Q3"
+            }
+          }
+        }
+      }
+    ],
+    "Design": [
+      {
+        "plan": "Basic",
+        "price": "$150/month",
+        "details": [
+          "Initial design consultation",
+          "Three design concepts",
+          "Two rounds of revisions",
+          "High-resolution files",
+          "Brand guidelines"
+        ],
+        "getWithMaintanance": [
+          "Basic maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Standard",
+        "price": "$250/month",
+        "details": [
+          "All Basic features",
+          "Additional revisions",
+          "Social media kit",
+          "Custom graphics"
+        ],
+        "getWithMaintanance": [
+          "Standard maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Premium",
+        "price": "$350/month",
+        "details": [
+          "All Standard features",
+          "Unlimited revisions",
+          "Complete branding package",
+          "Print and digital assets"
+        ],
+        "getWithMaintanance": [
+          "Premium maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      }
+    ],
+    "E-commerce": [
+      {
+        "plan": "Basic",
+        "price": "$200/month",
+        "details": [
+          "Setup of 10 products",
+          "Basic SEO setup",
+          "Payment gateway integration",
+          "Basic analytics"
+        ],
+        "getWithMaintanance": [
+          "Basic maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Standard",
+        "price": "$300/month",
+        "details": [
+          "All Basic features",
+          "Setup of 50 products",
+          "Enhanced SEO setup",
+          "Email marketing integration"
+        ],
+        "getWithMaintanance": [
+          "Standard maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Premium",
+        "price": "$400/month",
+        "details": [
+          "All Standard features",
+          "Unlimited products",
+          "Advanced analytics",
+          "Monthly performance reports"
+        ],
+        "getWithMaintanance": [
+          "Premium maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      }
+    ],
+    "Social Media": [
+      {
+        "plan": "Basic",
+        "price": "$80/month",
+        "details": [
+          "Two posts per week",
+          "Content calendar",
+          "Basic engagement monitoring"
+        ],
+        "getWithMaintanance": [
+          "Basic maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Standard",
+        "price": "$150/month",
+        "details": [
+          "All Basic features",
+          "Four posts per week",
+          "Audience growth strategy",
+          "Detailed analytics"
+        ],
+        "getWithMaintanance": [
+          "Standard maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Premium",
+        "price": "$250/month",
+        "getWithMaintanance": [
+          "All Standard features",
+          "Daily posts",
+          "Social media advertising",
+          "Full engagement management"
+        ],
+        "details": [
+          "All Standard features",
+          "Daily posts",
+          "Social media advertising",
+          "Full engagement management"
+        ],
+        "donoget": [
+          "All Basic features",
+          "Weekly backups",
+          "SEO updates",
+          "Performance optimization"
+        ], "slot":"2 Slots left for Q3"
+      }
+    ],
+    "Websites Management": [
+      {
+        "plan": "Basic",
+        "price": "$120/month",
+        "details": [
+          "Monthly backups",
+          "Security monitoring",
+          "Basic updates"
+        ],
+        "getWithMaintanance": [
+          "Basic maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Standard",
+        "price": "$220/month",
+        "details": [
+          "All Basic features",
+          "Weekly backups",
+          "SEO updates",
+          "Performance optimization"
+        ],
+        "getWithMaintanance": [
+          "Standard maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      },
+      {
+        "plan": "Premium",
+        "price": "$320/month",
+        "details": [
+          "All Standard features",
+          "Daily backups",
+          "24/7 support",
+          "Custom development tasks"
+        ],
+        "getWithMaintanance": [
+          "Premium maintenance included"
+        ],
+        "donoget": [
+          "No additional features"
+        ], "slot":"2 Slots left for Q3"
+      }
+    ]
+  }
+  

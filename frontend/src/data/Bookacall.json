@@ -1,0 +1,15 @@
+{
+    "heading": "Book a call with us",
+    "description": "Ready to learn more about how Kolm can help you save time, and money on your designs? Book a 1:1 call with a member of our team today.",
+    "buttons": [
+      {
+        "text": "Get Started",
+        "type": "primary"
+      },
+      {
+        "text": "Fill in the form",
+        "type": "secondary"
+      }
+    ]
+  }
+  

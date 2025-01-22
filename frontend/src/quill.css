@@ -1,0 +1,215 @@
+/* quill.css */
+.quill {
+    font-family: inherit;
+}
+
+.ql-editor {
+    padding: 0 !important;
+}
+
+/* .ql-editor h1 {
+    font-size: 34px;
+    line-height: 40px;
+}
+
+.ql-editor h2 {
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.ql-editor h3 {
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.ql-editor h4 {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.ql-editor h5 {
+    font-size: 16px;
+    line-height: 26px;
+
+}
+
+.ql-editor h6 {
+    font-size: 16px;
+    line-height: 26px;
+} */
+
+/* Base styles for headings */
+.ql-editor h1 {
+    font-size: 34px;
+    line-height: 40px;
+}
+
+.ql-editor h2 {
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.ql-editor h3 {
+    font-size: 20px;
+    line-height: 30px;
+}
+
+.ql-editor h4 {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.ql-editor h5 {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.ql-editor h6 {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .ql-editor h1 {
+        font-size: 28px; /* Decrease font size for tablets */
+        line-height: 34px;
+    }
+
+    .ql-editor h2 {
+        font-size: 18px; /* Decrease font size for tablets */
+        line-height: 26px;
+    }
+
+    .ql-editor h3 {
+        font-size: 18px; /* Decrease font size for tablets */
+        line-height: 26px;
+    }
+
+    .ql-editor h4,
+    .ql-editor h5,
+    .ql-editor h6 {
+        font-size: 14px; /* Decrease font size for tablets */
+        line-height: 22px;
+    }
+}
+
+@media (max-width: 576px) {
+    .ql-editor h1 {
+        font-size: 24px; /* Further decrease font size for mobile */
+        line-height: 30px;
+    }
+
+    .ql-editor h2 {
+        font-size: 16px; /* Further decrease font size for mobile */
+        line-height: 24px;
+    }
+
+    .ql-editor h3 {
+        font-size: 16px; /* Further decrease font size for mobile */
+        line-height: 24px;
+    }
+
+    .ql-editor h4,
+    .ql-editor h5,
+    .ql-editor h6 {
+        font-size: 12px; /* Further decrease font size for mobile */
+        line-height: 20px;
+    }
+}
+
+
+body .space-y-10> :not([hidden])~ :not([hidden]) {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+
+.ql-editor img {
+    display: inline-block;
+    max-width: 45%;
+    margin-right: 5%;
+    vertical-align: top;
+}
+
+.ql-editor img:last-child {
+    margin-right: 0;
+}
+
+
+.ql-editor li {
+    font-size: 20px;
+    margin: 10px 0px;
+    padding: 0px;
+}
+
+.ql-editor ol {
+    font-size: 20px;
+    padding: 0px;
+}
+
+
+.ql-editor ul {
+    font-size: 18px;
+    padding: 0 !important;
+}
+
+
+/* @media (max-width: 576px) {
+    .ql-editor {
+        text-align: center !important;
+      
+    }
+} */
+
+/* @media (min-width: 576px) {
+    .ql-editor {
+        text-align: justify !important;
+      
+    }
+
+    .ql-editor h4 {
+        text-align: initial !important;
+        
+    }
+} */
+
+/* recaptchaStyles.css */
+
+/* Center the reCAPTCHA container */
+/* .rc-anchor {
+    display: flex !important;
+    
+    justify-content: center !important;
+    align-items: center !important;
+} */
+
+/* Scale down the entire reCAPTCHA */
+/* .rc-anchor-normal {
+    transform: scale(0.85) !important;
+   
+    transform-origin: 0 0 !important;
+   
+    width: 100% !important;
+   
+} */
+
+/* Style for the checkbox */
+/* .recaptcha-checkbox {
+    width: 24px !important;
+    
+    height: 24px !important;
+    
+} */
+
+/* Adjust spacing or margins */
+/* .rc-anchor-center-item {
+    margin: 0 10px !important;
+  
+} */
+
+/* Hide the logo if not needed */
+/* .rc-anchor-logo-portrait {
+    display: none !important;
+  
+} */

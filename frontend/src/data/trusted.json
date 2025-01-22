@@ -1,0 +1,26 @@
+[
+    {
+      "heading": "Trusted by 50 + companies",
+      "buttonText": "Read all our user cases",
+      "buttonLink": "/projects",
+      "imageSrc": "https://kolmdesign.com/wp-content/uploads/2023/08/user-cases-scaled.webp",
+      "srcSet": "https://kolmdesign.com/wp-content/uploads/2023/09/logos-company-1024x131.png 1024w, https://kolmdesign.com/wp-content/uploads/2023/09/logos-company-300x38.png 300w, https://kolmdesign.com/wp-content/uploads/2023/09/logos-company-768x98.png 768w, https://kolmdesign.com/wp-content/uploads/2023/09/logos-company-1536x196.png 1536w, https://kolmdesign.com/wp-content/uploads/2023/09/logos-company-2048x262.png 2048w, https://kolmdesign.com/wp-content/uploads/2023/09/logos-company-1920x246.png 1920w, https://kolmdesign.com/wp-content/uploads/2023/09/logos-company-600x77.png 600w",
+      "imageAlt": "company logos",
+      "background": "bg-[#134C6C]",
+      "textColor": "text-white"
+    },
+    {
+      "heading": "See testimonials",
+      "buttonText": "See all our reviews",
+      "buttonLink": "/all-reviews",
+      "rating": "4.9",
+      "starsSrc": "https://kolmdesign.com/wp-content/uploads/2023/09/stars.png",
+      "starsAlt": "stars",
+      "reviewsSrc": "https://kolmdesign.com/wp-content/uploads/2023/08/reviews.webp",
+      "reviewsAlt": "reviews",
+      "personImages": "../images/Testimonialsimage1.webp",
+      "background": "bg-[#114038]",
+      "textColor": "text-white"
+    }
+  ]
+  
