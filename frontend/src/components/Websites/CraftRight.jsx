@@ -130,7 +130,7 @@ export default function CraftRight() {
                 autoPlay
                 muted
                 loop
-                className="w-[450px] h-[450px] rounded-2xl transition-all duration-300"
+                className="sm:w-[450px] sm:h-[450px] rounded-2xl transition-all duration-300"
               />
             ) : (
               service.photo && service.photo.length > 0 && (

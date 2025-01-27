@@ -53,7 +53,7 @@ const PricingPackage = () => {
         </div>
 
         {/* Header Section */}
-        <div className="text-center  bg-gradient-to-tr from-yellow-300   to-yellow-700 text-white p-6">
+        <div className="text-center overflow-auto bg-gradient-to-tr from-yellow-300   to-yellow-700 text-white p-6">
           <h2 className="text-[29px] font-bold mb-2 max-w-[90%]">
             {title || "Ultimate Growth Package: A One-Time Investment for Lifelong Growth"}
           </h2>
@@ -69,11 +69,11 @@ const PricingPackage = () => {
                     value={description}
                     modules={{ toolbar: false }}
                     theme="bubble"
-                    className="quill text-sm"
+                    className="quill text-sm "
                   />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2  grid-cols-1 gap-4">
             {features.map((feature, index) => (
               <div
                 key={index}

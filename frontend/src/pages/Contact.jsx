@@ -172,9 +172,9 @@ const GetInTouch = () => {
   };
 
   return (
-    <div className="bg-white p-8 mt-24">
+    <div className="bg-white p-8 sm:mt-24 mt-12">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-center items-center">
-        <div className="md:w-1/2 pr-8">
+        <div className="md:w-1/2 px-8">
           <h1 className="text-4xl font-bold text-yellow-500 mb-6">Rnd.</h1>
           <h2 className="text-3xl font-bold mb-6">Get in touch</h2>
           <form onSubmit={handleSubmit} className="space-y-4">

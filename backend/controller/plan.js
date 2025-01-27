@@ -247,7 +247,7 @@ const getAllPackages = async (req, res) => {
     console.error("Error retrieving packages:", error);
     res.status(500).json({ message: 'Server error', error });
   }
-};
+}; 
 
 
 const getAllnormalPackagesSlug = async (req, res) => {
@@ -787,10 +787,7 @@ const getPackagesBySlug = async (req, res) => {
   }
 };
 
-
-
-
-
+  
 const getAllPackagesFront = async (req, res) => {
   try {
     // Fetch all categories
@@ -848,7 +845,67 @@ const getAllPackagesFront = async (req, res) => {
   }
 };
 
+const getPackagesByCategoryOrSubcategory = async (req, res) => {
+  try {
+    const { slug } = req.query;
 
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        message: 'Slug is required'
+      });
+    }
+
+    // Find packages that belong to the given category or subcategory
+    const packages = await Package.find({
+      $or: [
+        { categories: slug },
+        { subcategories: slug }
+      ]
+    });
+
+    if (!packages || packages.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No packages found for the given category or subcategory'
+      });
+    }
+
+    // Format the packages
+    const formattedPackages = packages.map(pkg => ({
+      _id: pkg._id,
+      title: pkg.title,
+      status: pkg.status,
+      categories: pkg.categories,
+      subcategories: pkg.subcategories,
+      subSubcategories: pkg.subSubcategories,
+      servicecategories: pkg.servicecategories,
+      servicesubcategories: pkg.servicesubcategories,
+      servicesubSubcategories: pkg.servicesubSubcategories,
+      description: pkg.description,
+      price: pkg.price,
+      whatIsTheir: pkg.whatIsTheir,
+      whatIsNotTheir: pkg.whatIsNotTheir,
+      slug: pkg.slug,
+      createdAt: pkg.createdAt,
+      updatedAt: pkg.updatedAt
+    }));
+
+    return res.status(200).json({
+      success: true,
+      count: formattedPackages.length,
+      packages: formattedPackages
+    });
+
+  } catch (error) {
+    console.error('Error retrieving packages by category or subcategory:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
 
 
 
@@ -991,5 +1048,6 @@ module.exports = {
   getCategoryPackages,
   getSubcategoryPackages,
   getSubSubcategoryPackages,
+  getPackagesByCategoryOrSubcategory,
   getAllnormalPackagesSlug,getAllhourlyPackagesSlug,getAllPackagesFront,getCategoryHeadingBySlug,getPackagesBySlug
 };

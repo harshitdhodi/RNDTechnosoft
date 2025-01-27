@@ -33,20 +33,24 @@ const PricingSection = ({ setServiceSlug }) => {
       }
     };
     fetchHeadings();
-  }, []);
+  }, [slug]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/api/packages/front/${slug}`, {
+        // Reset the state before fetching new data
+        setNormalpackage([]);
+        setHourlypackage([]);
+
+        const response = await axios.get(`/api/packages/getPackagesByCategoryOrSubcategory?slug=${slug}`, {
           withCredentials: true,
         });
 
-        if (response.data.data.packages.length > 0) {
-          setServiceSlug(response.data.data.packages[0].servicecategories[0]);
+        if (response.data.packages.length > 0) {
+          setServiceSlug(response.data.packages[0].servicecategories[0]);
         }
 
-        setNormalpackage(response.data.data.packages);
+        setNormalpackage(response.data.packages);
       } catch (error) {
         console.error("Error fetching service data:", error);
       }
@@ -57,12 +61,12 @@ const PricingSection = ({ setServiceSlug }) => {
         const response = await axios.get(`/api/packages/hourlypackage/${slug}`, {
           withCredentials: true,
         });
-
-        if (response.data.data.packages.length > 0) {
-          setServiceSlug(response.data.data.packages[0].servicecategories[0]);
+ 
+        if (response.data.packages.length > 0) {
+          setServiceSlug(response.data.packages[0].servicecategories[0]);
         }
 
-        setHourlypackage(response.data.data.packages);
+        setHourlypackage(response.data.packages);
       } catch (error) {
         console.error("Error fetching service data:", error);
       }
@@ -70,7 +74,7 @@ const PricingSection = ({ setServiceSlug }) => {
 
     fetchData();
     fetchHourlyData();
-  }, [location.pathname]);
+  }, [location.pathname, slug, setServiceSlug]);
 
   // Helper function to parse JSON strings to arrays
   const parseJsonArray = (jsonArray) => {
@@ -91,7 +95,6 @@ const PricingSection = ({ setServiceSlug }) => {
 
   // Package Card Component to avoid repetition
   const PackageCard = ({ item }) => {
-    console.log(item);
     const whatIsTheir = parseJsonArray(item.whatIsTheir[0]);
     const whatIsNotTheir = parseJsonArray(item.whatIsNotTheir[0]);
 
