@@ -284,7 +284,7 @@ function App() {
                     </>
                   }
                   />
-                  <Route path="/:slug" element={<DynamicPage />} />
+                  <Route path="/:slug" element={<DynamicPage />} /> 
                   <Route path="/blog/:slug" element={<BlogSubSub />} />
                   <Route path="/all-reviews" element={<AllReviews />} />
                   <Route path="/templates" element={<Templates />} />

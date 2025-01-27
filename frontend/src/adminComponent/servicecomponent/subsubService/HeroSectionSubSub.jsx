@@ -2,8 +2,10 @@ import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
-const HeroSection = ({ categoryId,subcategoryId ,subsubcategoryId}) => {
+const HeroSection = ({ categoryId, subcategoryId, subsubcategoryId }) => {
     const [heading, setHeading] = useState("");
     const [title, setTitle] = useState("");
     const [subheading, setSubheading] = useState("");
@@ -20,7 +22,7 @@ const HeroSection = ({ categoryId,subcategoryId ,subsubcategoryId}) => {
         setError("");
         try {
             const response = await axios.get(`/api/herosection/subsub/${categoryId}/${subcategoryId}/${subsubcategoryId}`, { withCredentials: true });
-            const { heading = "", subheading = "", title="" } = response.data || {};
+            const { heading = "", subheading = "", title = "" } = response.data || {};
             setHeading(heading);
             setTitle(title);
             setSubheading(subheading);
@@ -32,7 +34,7 @@ const HeroSection = ({ categoryId,subcategoryId ,subsubcategoryId}) => {
         } finally {
             setLoading(false);
         }
-    }, [categoryId]);
+    }, [categoryId, subcategoryId, subsubcategoryId]);
 
     // Save headings to the API
     const saveHeadings = async () => {
@@ -60,7 +62,7 @@ const HeroSection = ({ categoryId,subcategoryId ,subsubcategoryId}) => {
             setHeading(value);
         } else if (name === "subheading") {
             setSubheading(value);
-        }else if (name === "title") {
+        } else if (name === "title") {
             setTitle(value);
         }
     };
@@ -72,12 +74,22 @@ const HeroSection = ({ categoryId,subcategoryId ,subsubcategoryId}) => {
         }
     }, [categoryId, fetchHeadings]);
 
+    // Custom toolbar options
+    const toolbarOptions = [
+        [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+        [{size: []}],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+        ['link', 'image', 'video'],
+        ['clean']
+    ];
+
     return (
         <div className="p-4 overflow-x-auto">
             <ToastContainer />
             <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded">
                 <div className="">
-                <div className="mb-6">
+                    <div className="mb-6">
                         <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
                             Tagline
                         </label>
@@ -88,21 +100,20 @@ const HeroSection = ({ categoryId,subcategoryId ,subsubcategoryId}) => {
                             onChange={handleInputChange}
                             disabled={loading}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-                            placeholder="Enter subheading"
+                            placeholder="Enter tagline"
                         />
                     </div>
                     <div className="mb-6">
                         <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
                             Paragraph
                         </label>
-                        <input
-                            type="text"
-                            name="heading"
+                        <ReactQuill
                             value={heading}
-                            onChange={handleInputChange}
-                            disabled={loading}
+                            onChange={setHeading}
+                            readOnly={loading}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-                            placeholder="Enter heading"
+                            placeholder="Enter paragraph"
+                            modules={{ toolbar: toolbarOptions }}
                         />
                     </div>
                     <div className="mb-6">

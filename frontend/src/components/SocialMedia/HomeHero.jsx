@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { FaStarOfLife } from "react-icons/fa6";
@@ -314,14 +314,31 @@ export default function HeroSection() {
   if (isLoading) return <SkeletonLoader />;
 
   return (
-    <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black md:min-h-[80vh] py-4 flex items-center justify-between text-white overflow-hidden">
+    <div className="relative bg-gradient-to-br pb-20 sm:pt-20 from-gray-900 via-gray-800 to-black md:min-h-[80vh] py-4 flex items-center justify-between text-white overflow-hidden">
+      
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
       </div>
-
-      <div className="relative flex flex-col md:flex-row  justify-center gap-10 xl:gap-40 w-11/12 lg:w-4/5 mx-auto pt-16 ">
+      <div className="relative flex flex-col md:flex-row mt-10 sm:mt-20 justify-center gap-10 xl:gap-40 w-11/12 lg:w-4/5 mx-auto pt-16 ">
         <div className="md:w-[50%] space-y-8">
+          <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
+            {/* <span className="h-2 w-2 rounded-full bg-blue-500"></span> */}
+            <span className=" text-[16px] font-medium bg-yellow-500 rounded-full text-white
+             px-8  ">
+              Best
+            </span>
+            <span className="ml-2 text-[16px] pr-4 text-gray-700">
+           
+            <ReactQuill
+            readOnly={true}
+            value={heroSection.tagline}
+            modules={{ toolbar: false }}
+            theme="bubble"
+            className="quill-content"
+          />
+            </span>
+          </div>
           <ReactQuill
             readOnly={true}
             value={heroSection.heading}
@@ -329,7 +346,13 @@ export default function HeroSection() {
             theme="bubble"
             className="quill-content"
           />
-
+ <Link to="/contact">
+        <button
+           className=" px-8 mt-3 py-2 mb-10 bg-gradient-to-r from-yellow-300 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-lg "
+         >
+           Reaquest Proposal
+         </button>
+        </Link>
           <button
             onClick={() => setIsModalOpen(true)}
             className="md:hidden px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-lg hover:from-yellow-500 hover:to-yellow-600 transform hover:scale-105 transition-all duration-300 shadow-lg w-full"

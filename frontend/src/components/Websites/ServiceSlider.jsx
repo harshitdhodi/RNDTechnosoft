@@ -82,6 +82,7 @@ function ServiceSlider() {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
+          dots: false, // Hide dots on small devices
         },
       },
       {
@@ -89,6 +90,7 @@ function ServiceSlider() {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          dots: false, // Hide dots on small devices
         },
       },
     ],
