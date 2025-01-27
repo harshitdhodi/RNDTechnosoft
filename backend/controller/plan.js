@@ -451,6 +451,7 @@ const getAllnormalPackagesSlug = async (req, res) => {
   }
 };
 
+
 const getAllhourlyPackagesSlug = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -652,6 +653,7 @@ const getAllhourlyPackagesSlug = async (req, res) => {
   }
 };
 
+
 const getStandardPackage = async (req, res) => {
   try {
     // Helper function to format package data
@@ -707,8 +709,6 @@ const getStandardPackage = async (req, res) => {
     });
   }
 };
-
-
 
 
 const getPackagesBySlug = async (req, res) => {

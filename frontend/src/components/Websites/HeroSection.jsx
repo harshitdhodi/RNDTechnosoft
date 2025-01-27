@@ -93,7 +93,17 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
     ipaddress: "",
   };
 
+  const initialErrorState = {
+    name: "",
+    email: "",
+    phone: "",
+    service: "",
+    budget: "",
+    city: "",
+  };
+
   const [formData, setFormData] = useState(initialFormState);
+  const [errors, setErrors] = useState(initialErrorState);
   const [category, setCategory] = useState([]);
   const [cities, setCities] = useState([]);
   const [loadingCities, setLoadingCities] = useState(false);
@@ -107,6 +117,44 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
     "INR 15 Lacs - 25 Lacs.",
     "INR 5 Lacs - 15 Lacs.",
   ];
+
+  // Validation functions
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return 'Name is required';
+        if (value.length < 2) return 'Name must be at least 2 characters';
+        if (!/^[a-zA-Z\s]*$/.test(value)) return 'Name should only contain letters';
+        return '';
+
+      case 'email':
+        if (!value.trim()) return 'Email is required';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return 'Please enter a valid email address';
+        return '';
+
+      case 'phone':
+        if (!value.trim()) return 'Phone number is required';
+        const phoneRegex = /^\d{10}$/;
+        if (!phoneRegex.test(value)) return 'Phone number must be exactly 10 digits';
+        return '';
+
+      case 'service':
+        if (!value.trim()) return 'Please select a service';
+        return '';
+
+      case 'budget':
+        if (!value.trim()) return 'Please select a budget range';
+        return '';
+
+      case 'city':
+        if (!value.trim()) return 'Please select a city';
+        return '';
+
+      default:
+        return '';
+    }
+  };
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -148,19 +196,57 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    
+    // For phone numbers, only allow digits and limit to 10 characters
+    if (name === 'phone' && !/^\d*$/.test(value)) {
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
+
+    // Validate field and update errors
+    const error = validateField(name, value);
+    setErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    let isValid = true;
+
+    // Validate all required fields
+    Object.keys(formData).forEach(field => {
+      if (['name', 'email', 'phone', 'service', 'budget', 'city'].includes(field)) {
+        const error = validateField(field, formData[field]);
+        if (error) {
+          newErrors[field] = error;
+          isValid = false;
+        }
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
     await onSubmit(formData);
     setFormData(initialFormState);
+    setErrors(initialErrorState);
     setResetKey((prev) => prev + 1);
     setShowSuccessMessage(true);
-    // Hide success message after 5 seconds
+    
     setTimeout(() => {
       setShowSuccessMessage(false);
     }, 5000);
@@ -180,65 +266,84 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
       </h3>
 
       {["name", "email", "phone"].map((field) => (
-        <input
-          key={field}
-          name={field}
-          type={
-            field === "email" ? "email" : field === "phone" ? "tel" : "text"
-          }
-          placeholder={
-            field.charAt(0).toUpperCase() +
-            field.slice(1) +
-            (field === "phone" ? " No." : "")
-          }
-          value={formData[field]}
-          onChange={handleInputChange}
-          className="w-full mb-4 px-3 py-1 rounded-lg bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-yellow-400 transition-colors duration-300"
-          required
-        />
+        <div key={field} className="mb-4">
+          <input
+            name={field}
+            type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+            placeholder={
+              field.charAt(0).toUpperCase() +
+              field.slice(1) +
+              (field === "phone" ? " No." : "")
+            }
+            value={formData[field]}
+            onChange={handleInputChange}
+            className={`w-full px-3 py-1 rounded-lg bg-white/5 border ${
+              errors[field] ? 'border-red-500' : 'border-white/20'
+            } text-white placeholder:text-white/50 focus:outline-none focus:border-yellow-400 transition-colors duration-300`}
+            maxLength={field === "phone" ? 10 : undefined}
+            required
+          />
+          {errors[field] && (
+            <p className="text-red-500 text-sm mt-1">{errors[field]}</p>
+          )}
+        </div>
       ))}
 
-      <AutocompleteInput
-        value={formData.city}
-        onChange={handleInputChange}
-        suggestions={cities}
-        placeholder="City"
-        loading={loadingCities}
-        fieldName="city"
-        resetKey={resetKey}
-      />
+      <div className="mb-4">
+        <AutocompleteInput
+          value={formData.city}
+          onChange={handleInputChange}
+          suggestions={cities}
+          placeholder="City"
+          loading={loadingCities}
+          fieldName="city"
+          resetKey={resetKey}
+        />
+        {errors.city && (
+          <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+        )}
+      </div>
 
-      <AutocompleteInput
-        value={formData.service}
-        onChange={handleInputChange}
-        suggestions={category}
-        placeholder="Service"
-        fieldName="service"
-        resetKey={resetKey}
-      />
+      <div className="mb-4">
+        <AutocompleteInput
+          value={formData.service}
+          onChange={handleInputChange}
+          suggestions={category}
+          placeholder="Service"
+          fieldName="service"
+          resetKey={resetKey}
+        />
+        {errors.service && (
+          <p className="text-red-500 text-sm mt-1">{errors.service}</p>
+        )}
+      </div>
 
-      <AutocompleteInput
-        value={formData.budget}
-        onChange={handleInputChange}
-        suggestions={budgetOptions}
-        placeholder="Your Monthly Budget(INR)"
-        fieldName="budget"
-        resetKey={resetKey}
-      />
+      <div className="mb-4">
+        <AutocompleteInput
+          value={formData.budget}
+          onChange={handleInputChange}
+          suggestions={budgetOptions}
+          placeholder="Your Monthly Budget(INR)"
+          fieldName="budget"
+          resetKey={resetKey}
+        />
+        {errors.budget && (
+          <p className="text-red-500 text-sm mt-1">{errors.budget}</p>
+        )}
+      </div>
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={loading || Object.keys(errors).some(key => errors[key])}
         className={`w-full py-3 ${
-          loading
-            ? "bg-gray-400"
-            : "bg-gradient-to-r from-yellow-400 to-yellow-500"
-        } text-black font-semibold rounded-lg hover:from-yellow-500 hover:to-yellow-600 transform hover:scale-105 transition-all duration-300 shadow-lg`}
+          loading || Object.keys(errors).some(key => errors[key])
+            ? "bg-gray-400 cursor-not-allowed"
+            : "bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600"
+        } text-black font-semibold rounded-lg transform hover:scale-105 transition-all duration-300 shadow-lg`}
       >
         {loading ? "Submitting..." : "Let's Connect"}
       </button>
 
-      {/* Success Message */}
       {showSuccessMessage && (
         <div className="mt-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg">
           <div className="flex items-center space-x-2">
@@ -414,12 +519,13 @@ const HeroSection = () => {
 
       <div className="relative flex flex-col md:flex-row  justify-center gap-10 xl:gap-40 w-11/12 pt-16 lg:w-4/5 mx-auto my-32 ">
         <div className="md:w-[50%] space-y-8">
-          <div className="inline-flex items-center rounded-full bg-white px-2 py-2 pr-4">
+          <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
             {/* <span className="h-2 w-2 rounded-full bg-blue-500"></span> */}
-            <span className="ml-2 text-[16px] font-medium bg-yellow-500 rounded-full text-white px-4 py-1 ">
+            <span className=" text-[16px] font-medium bg-yellow-500 rounded-full text-white
+             px-8  ">
               Best
             </span>
-            <span className="ml-2 text-[16px] text-gray-700">
+            <span className="ml-2 text-[16px] pr-4 text-gray-700">
             {heroSection.title}
             </span>
           </div>
@@ -432,7 +538,7 @@ const HeroSection = () => {
           />
         <Link to="/contact">
         <button
-           className="mt-6 px-8 py-3 bg-gradient-to-r from-yellow-300 to-yellow-500 text-black font-semibold rounded-lg hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-lg "
+           className=" px-8 py-2 bg-gradient-to-r from-yellow-300 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-lg "
          >
            Reaquest Proposal
          </button>
