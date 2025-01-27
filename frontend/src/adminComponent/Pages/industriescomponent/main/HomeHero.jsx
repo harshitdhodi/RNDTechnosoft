@@ -8,7 +8,8 @@ import "react-quill/dist/quill.snow.css";
 const HeroSection = ({ categoryId }) => {
   const [heading, setHeading] = useState("");
   const [subheading, setSubheading] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [tagline, setTagline] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const notifySuccess = useCallback(() => {
@@ -45,14 +46,13 @@ const HeroSection = ({ categoryId }) => {
           withCredentials: true,
         }
       );
-      const { heading = "", subheading = "" } = response.data || {};
+      const { heading = "", subheading = "", tagline = "" } = response.data || {};
       setHeading(heading);
       setSubheading(subheading);
+      setTagline(tagline);
     } catch (error) {
       console.error(error);
       setError("Failed to fetch headings. Please try again later.");
-      setHeading("");
-      setSubheading("");
     } finally {
       setLoading(false);
     }
@@ -68,6 +68,7 @@ const HeroSection = ({ categoryId }) => {
         {
           heading,
           subheading,
+          tagline,
         },
         { withCredentials: true }
       );
@@ -80,12 +81,10 @@ const HeroSection = ({ categoryId }) => {
     }
   };
 
-  // Handle input changes for heading and subheading
+  // Handle input changes for heading, subheading, and tagline
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "heading") {
-      setHeading(value);
-    } else if (name === "subheading") {
+    if (name === "subheading") {
       setSubheading(value);
     }
   };
@@ -108,7 +107,7 @@ const HeroSection = ({ categoryId }) => {
             </label>
             <ReactQuill
               value={heading}
-              onChange={setHeading} // Directly update heading
+              onChange={setHeading}
               modules={modules}
               className="quill"
             />
@@ -125,6 +124,17 @@ const HeroSection = ({ categoryId }) => {
               disabled={loading}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
               placeholder="Enter subheading"
+            />
+          </div>
+          <div className="mb-6">
+            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
+              Tagline
+            </label>
+            <ReactQuill
+              value={tagline}
+              onChange={setTagline}
+              modules={modules}
+              className="quill"
             />
           </div>
         </div>

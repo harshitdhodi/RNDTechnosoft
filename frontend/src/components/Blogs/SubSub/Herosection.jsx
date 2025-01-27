@@ -36,7 +36,7 @@ const BlogHeader = () => {
   const { title, date, categoryName, serviceCategoryName, photo, imgtitle, alt } = blogData;
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between bg-[#333]  pt-16 pb-8 p-4 md:pt-44 md:pb-16 md:p-6 ">
+    <div className="flex flex-col md:flex-row items-center justify-between bg-[#333]  pt-20 pb-8 p-4 md:pt-44 md:pb-16 md:p-6 ">
       <div className="flex-1 md:ml-5">
         <h1 className="text-2xl md:text-4xl font-serif font-bold text-white mb-2">{title}</h1>
         <div className="flex flex-col md:flex-row items-start md:items-center text-md text-white gap-4">

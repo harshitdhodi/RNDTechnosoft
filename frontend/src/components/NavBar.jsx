@@ -150,7 +150,7 @@ const Navbar = () => {
                 src={`/api/logo/download/${colorlogo.photo}`}
                 alt={colorlogo.alt}
                 title={colorlogo.imgTitle}
-                className="h-18 w-[27%]"
+                className="h-18 w-[27%] xl:w-[50%]"
               />
             </NavLink>
           </div>

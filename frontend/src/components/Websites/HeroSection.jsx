@@ -517,12 +517,12 @@ const HeroSection = () => {
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
       </div>
 
-      <div className="relative flex flex-col md:flex-row  justify-center gap-10 xl:gap-40 w-11/12 pt-16 lg:w-4/5 mx-auto my-32 ">
+      <div className="relative flex flex-col md:flex-row  justify-center gap-10 xl:gap-40 w-11/12 pt-16 lg:w-4/5 mx-auto sm:my-32 my-5 ">
         <div className="md:w-[50%] space-y-8">
           <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
             {/* <span className="h-2 w-2 rounded-full bg-blue-500"></span> */}
             <span className=" text-[16px] font-medium bg-yellow-500 rounded-full text-white
-             px-8  ">
+             px-8 py-3 sm:py-0 ">
               Best
             </span>
             <span className="ml-2 text-[16px] pr-4 text-gray-700">
@@ -543,12 +543,12 @@ const HeroSection = () => {
            Reaquest Proposal
          </button>
         </Link>
-          <button
+          {/* <button
             onClick={() => setIsModalOpen(true)}
             className="md:hidden px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-lg hover:from-yellow-500 hover:to-yellow-600 transform hover:scale-105 transition-all duration-300 shadow-lg w-full"
           >
             Get in Touch
-          </button>
+          </button> */}
         </div>
 
         <div className="hidden md:block xl:w-[25%] w-[40%] relative">
