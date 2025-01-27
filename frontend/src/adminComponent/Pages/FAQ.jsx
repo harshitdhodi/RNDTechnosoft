@@ -29,7 +29,7 @@ const FaqTable = () => {
     toast.success("Updated Successfully!");
   };
 
-  const pageSize = 5;
+  const pageSize = 20;
 
   const filteredFaqs = useMemo(() => {
     return faqs.filter((faqs) =>

@@ -7,10 +7,10 @@ export default defineConfig({
     mimeTypes: {
       "application/javascript": ["js"],
     },
-    // proxy: {
-    //   "/api": {
-    //     target: "http://localhost:3005", 
-    //  },
-    // },
+    proxy: {
+      "/api": {
+        target: "http://localhost:3005", 
+     },
+    },
   },
 });

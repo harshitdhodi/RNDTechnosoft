@@ -91,6 +91,7 @@ const PricingSection = ({ setServiceSlug }) => {
 
   // Package Card Component to avoid repetition
   const PackageCard = ({ item }) => {
+    console.log(item);
     const whatIsTheir = parseJsonArray(item.whatIsTheir[0]);
     const whatIsNotTheir = parseJsonArray(item.whatIsNotTheir[0]);
 

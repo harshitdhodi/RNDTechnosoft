@@ -305,7 +305,7 @@ const DecorativeElement = ({ color }) => {
 
 const ServiceCard = ({ service, isLarge }) => {
   const hasImage = service.image && service.image !== "null";
-
+console.log(service)
   return (
     <div
       className={`group overflow-hidden transition-all duration-300 hover:shadow-xl relative
@@ -444,6 +444,7 @@ const ServicesGrid = () => {
       image: service.photo ? `/api/logo/download/${service.photo}` : null,
       imgtitle: service.imgtitle || "",
       alt: service.alt || "",
+      slug: service.slug,
       bgColor: uniqueColors[index],
     }));
   };
