@@ -143,7 +143,7 @@ export default function CraftLeft() {
                 autoPlay
                 muted
                 loop
-                className="w-[450px] h-[450px] rounded-2xl transition-all duration-300"
+                className="sm:w-[450px] sm:h-[450px] rounded-2xl transition-all duration-300"
               />
             ) : (
               service.photo &&
