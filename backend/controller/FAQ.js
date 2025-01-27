@@ -27,7 +27,7 @@ const insertFAQ = async (req, res) => {
 const getFAQ = async (req, res) => {
   try {
     const { page = 1 } = req.query;
-    const limit = 5;
+    const limit = 20;
     const count = await FAQ.countDocuments();
     const faq = await FAQ.find()
       .skip((page - 1) * limit) // Skip records for previous pages
