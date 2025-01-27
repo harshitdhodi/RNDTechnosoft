@@ -519,13 +519,13 @@ const HeroSection = () => {
 
       <div className="relative flex flex-col md:flex-row  justify-center gap-10 xl:gap-40 w-11/12 pt-16 lg:w-4/5 mx-auto my-32 ">
         <div className="md:w-[50%] space-y-8">
-          <div className="inline-flex items-center w-[70%] rounded-full bg-white px-3 py-2 pr-4">
+          <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
             {/* <span className="h-2 w-2 rounded-full bg-blue-500"></span> */}
             <span className=" text-[16px] font-medium bg-yellow-500 rounded-full text-white
              px-8  ">
               Best
             </span>
-            <span className="ml-2 text-[16px] text-gray-700">
+            <span className="ml-2 text-[16px] pr-4 text-gray-700">
             {heroSection.title}
             </span>
           </div>
