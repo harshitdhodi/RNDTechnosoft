@@ -6,10 +6,9 @@ const Industriescategory = require("../model/industriescategory");
 
 const getFormattedCategoriesFromAllSchemas = async () => {
   try {
-    // Fetch data from all schemas
-    // const newsCategories = await NewsCategory.find().lean();
-    const serviceCategories = await ServiceCategory.find().lean();
-    const packageCategories = await PackageCategory.find().lean();
+    // Fetch data from all schemas with active status for categories and packages
+    const serviceCategories = await ServiceCategory.find({ status: "active" }).lean();
+    const packageCategories = await PackageCategory.find({ status: "active" }).lean();
     const portfolioCategories = await PortfolioCategory.find().lean();
     const industryCategories = await Industriescategory.find().lean();
 

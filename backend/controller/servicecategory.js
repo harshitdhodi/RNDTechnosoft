@@ -430,6 +430,25 @@ const updatesubsubcategory = async (req, res) => {
   }
 };
 
+const getActiveCategories = async (req, res) => {
+  try {
+    // Fetch active categories
+    const categories = await ServiceCategory.find({ status: "active" });
+
+    // Send the active categories in the response
+    res.status(200).json({
+      data: categories,
+      total: categories.length,
+    });
+  } catch (error) {
+    console.error("Error retrieving active categories:", error);
+    let errorMessage = 'Server error';
+    if (error.name === 'CastError') {
+      errorMessage = 'Invalid query parameter format';
+    }
+    res.status(500).json({ message: errorMessage, error });
+  }
+};
 
 const deletecategory = async (req, res) => {
   const { id } = req.query;
@@ -1069,6 +1088,7 @@ const getServicesBySlug = async (req, res) => {
 module.exports = {
   getServicesBySlug,
   getCategory,
+  getActiveCategories,
   insertCategory,
   insertSubCategory,
   insertSubSubCategory,
