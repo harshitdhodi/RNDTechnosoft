@@ -76,10 +76,10 @@ const HeroSection = ({ categoryId, subcategoryId, subsubcategoryId }) => {
 
     // Custom toolbar options
     const toolbarOptions = [
-        [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
-        [{size: []}],
+        [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+        [{ size: [] }],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-        [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
         ['link', 'image', 'video'],
         ['clean']
     ];
@@ -107,15 +107,18 @@ const HeroSection = ({ categoryId, subcategoryId, subsubcategoryId }) => {
                         <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
                             Paragraph
                         </label>
-                        <ReactQuill
-                            value={heading}
-                            onChange={setHeading}
-                            readOnly={loading}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-                            placeholder="Enter paragraph"
-                            modules={{ toolbar: toolbarOptions }}
-                        />
+                        <div className="quill-container">
+                            <ReactQuill
+                                value={heading}
+                                onChange={setHeading}
+                                readOnly={loading}
+                                className="custom-quill w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
+                                placeholder="Enter paragraph"
+                                modules={{ toolbar: toolbarOptions }}
+                            />
+                        </div>
                     </div>
+
                     <div className="mb-6">
                         <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
                             Subheading
