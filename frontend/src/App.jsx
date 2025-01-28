@@ -227,7 +227,16 @@ import CreateSubSubIndustryImage from "./adminComponent/Pages/CreateSubSubIndust
 import EditIndustryImage from "./adminComponent/Pages/EditIndustryImage"
 import Loader from "../src/assets/loader.mp4"
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  console.log("Current pathname:", pathname);
+  useEffect(() => {
+    console.log("Scrolling to top");
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
+  return null;
+};
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -263,6 +272,7 @@ function App() {
   return (
 
     <BrowserRouter>
+     <ScrollToTop />
       <DynamicMetaTags />
       {isLoading ? (
         // Show loading video while loading
