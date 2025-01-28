@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {insertService,getAllServices,updateService,deleteService,getSingleService, countServices,deletePhotoAndAltText,exportServicesToExcel,importServices,fetchUrlPriorityFreq,editUrlPriorityFreq,fetchUrlPriorityFreqById,fetchUrlmeta, editUrlmeta, fetchUrlmetaById   } = require('../controller/services') 
-const {getServicesBySlug,getCategory,insertCategory,insertSubCategory,insertSubSubCategory,updateCategory,updateSubCategory,updatesubsubcategory,deletecategory,deletesubcategory,deletesubsubcategory,getAll,getSpecificCategory,getSpecificSubcategory,getSpecificSubSubcategory,fetchCategoryUrlPriorityFreq, editCategoryUrlPriorityFreq,  fetchCategoryUrlPriorityFreqById,fetchCategoryUrlmeta, editCategoryUrlmeta, fetchCategoryUrlmetaById }= require('../controller/servicecategory')
+const {getServicesBySlug,getCategory,insertCategory,insertSubCategory,insertSubSubCategory,updateCategory,updateSubCategory,updatesubsubcategory,deletecategory,deletesubcategory,deletesubsubcategory,getAll,getSpecificCategory,getSpecificSubcategory,getSpecificSubSubcategory,fetchCategoryUrlPriorityFreq, editCategoryUrlPriorityFreq,  fetchCategoryUrlPriorityFreqById,fetchCategoryUrlmeta, editCategoryUrlmeta, fetchCategoryUrlmetaById,getActiveCategories }= require('../controller/servicecategory')
 
 const {uploadPhoto} = require('../middleware/fileUpload')
 const { requireAuth } = require('../middleware/authmiddleware');
@@ -28,6 +28,7 @@ router.get('/fetchUrlmetaById', requireAuth, fetchUrlmetaById)
 
 
 router.post('/insertCategory',requireAuth,uploadLogo,insertCategory)
+router.get('/getActiveCategories',getActiveCategories)
 router.post('/insertSubCategory',requireAuth,uploadLogo,insertSubCategory)
 router.post('/insertSubSubCategory',requireAuth,uploadLogo,insertSubSubCategory)
 router.put('/updateCategory',requireAuth,uploadLogo,updateCategory)
