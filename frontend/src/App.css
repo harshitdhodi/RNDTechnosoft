@@ -37,3 +37,8 @@
   }
 }
 
+.custom-quill .ql-container {
+  min-height: 200px; /* Set desired minimum height */
+  max-height: 400px; /* Optional, for scrollability */
+  overflow-y: auto;  /* Enables scrolling if max-height is reached */
+}
