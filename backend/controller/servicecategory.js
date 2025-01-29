@@ -397,30 +397,30 @@ const updatesubsubcategory = async (req, res) => {
       return res.status(404).json({ message: "Subcategory not found" });
     }
 
-    const subSubCategory = subCategory.subSubCategories.find(subSubCat => subSubCat.slug === subSubCategoryId);
-    if (!subSubCategory) {
+    const subSubCategories = subCategory.subSubCategory.find(subSubCat => subSubCat.slug === subSubCategoryId);
+    if (!subSubCategories) {
       return res.status(404).json({ message: "Sub-subcategory not found" });
     }
 
     // Update fields of the sub-subcategory
-    subSubCategory.category = category || subSubCategory.category;
-    subSubCategory.tag = tag || subSubCategory.tag;
-    subSubCategory.description = description || subSubCategory.description;
-    subSubCategory.status = status || subSubCategory.status;
-    subSubCategory.photo = photo || subSubCategory.photo;
-    subSubCategory.alt = alt || subSubCategory.alt;
-    subSubCategory.imgtitle = imgtitle || subSubCategory.imgtitle;
-    subSubCategory.slug = slug || subSubCategory.slug;
-    subSubCategory.metatitle = metatitle || subSubCategory.metatitle;
-    subSubCategory.metadescription = metadescription || subSubCategory.metadescription;
-    subSubCategory.metakeywords = metakeywords || subSubCategory.metakeywords;
-    subSubCategory.metacanonical = metacanonical || subSubCategory.metacanonical;
-    subSubCategory.metalanguage = metalanguage || subSubCategory.metalanguage;
-    subSubCategory.metaschema = metaschema || subSubCategory.metaschema;
-    subSubCategory.otherMeta = otherMeta || subSubCategory.otherMeta;
-    subSubCategory.url = url || subSubCategory.url;
-    subSubCategory.priority = priority || subSubCategory.priority;
-    subSubCategory.changeFreq = changeFreq || subSubCategory.changeFreq;
+    subSubCategories.category = category || subSubCategories.category;
+    subSubCategories.tag = tag || subSubCategories.tag;
+    subSubCategories.description = description || subSubCategories.description;
+    subSubCategories.status = status || subSubCategories.status;
+    subSubCategories.photo = photo || subSubCategories.photo;
+    subSubCategories.alt = alt || subSubCategories.alt;
+    subSubCategories.imgtitle = imgtitle || subSubCategories.imgtitle;
+    subSubCategories.slug = slug || subSubCategories.slug;
+    subSubCategories.metatitle = metatitle || subSubCategories.metatitle;
+    subSubCategories.metadescription = metadescription || subSubCategories.metadescription;
+    subSubCategories.metakeywords = metakeywords || subSubCategories.metakeywords;
+    subSubCategories.metacanonical = metacanonical || subSubCategories.metacanonical;
+    subSubCategories.metalanguage = metalanguage || subSubCategories.metalanguage;
+    subSubCategories.metaschema = metaschema || subSubCategories.metaschema;
+    subSubCategories.otherMeta = otherMeta || subSubCategories.otherMeta;
+    subSubCategories.url = url || subSubCategories.url;
+    subSubCategories.priority = !isNaN(priority) ? Number(priority) : subSubCategories.priority;
+    subSubCategories.changeFreq = changeFreq || subSubCategories.changeFreq;
 
     await categoryDoc.save(); // Save the updated document
     res.status(200).json(categoryDoc); // Return the updated category document
