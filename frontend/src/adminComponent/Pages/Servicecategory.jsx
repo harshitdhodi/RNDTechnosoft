@@ -111,10 +111,20 @@ const CategoryTable = () => {
     }
   };
 
-  const handleStatusChange = async (slug, currentStatus) => {
+  const handleStatusChange = async (slug, currentStatus, categoryId, subCategoryId) => {
     const newStatus = currentStatus === "active" ? "inactive" : "active";
+    let url = '';
+
+    if (categoryId && subCategoryId) {
+      url = `/api/services/updatesubsubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${slug}`;
+    } else if (categoryId) {
+      url = `/api/services/updateSubCategory?categoryId=${categoryId}&subCategoryId=${slug}`;
+    } else {
+      url = `/api/services/updateCategory?categoryId=${slug}`;
+    }
+
     try {
-      await axios.put(`/api/services/updateCategory?categoryId=${slug}`, { status: newStatus }, { withCredentials: true });
+      await axios.put(url, { status: newStatus }, { withCredentials: true });
       fetchCategories();
     } catch (error) {
       console.error(error);
@@ -188,7 +198,7 @@ const CategoryTable = () => {
                             <input
                               type="checkbox"
                               checked={subcategory.status === "active"}
-                              onChange={() => handleStatusChange(subcategory.slug, subcategory.status)}
+                              onChange={() => handleStatusChange(subcategory.slug, subcategory.status, row.original.slug)}
                             />
                           </td>
                           <td className="py-2 px-4">
@@ -213,12 +223,12 @@ const CategoryTable = () => {
                         {subcategory.subSubCategory && subcategory.subSubCategory.map((subSubcategory, subSubIndex) => (
                           <tr key={subSubIndex} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
                             <td></td>
-                            <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/ServiceCategory/editServiceCategory/${row.original.slug}/${subSubcategory.slug}`)}><BsArrowReturnRight />{subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}<span>{subSubcategory.category}</span></td>
+                            <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/ServiceCategory/editServiceCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`)}><BsArrowReturnRight />{subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}<span>{subSubcategory.category}</span></td>
                             <td className="py-2 px-4">
                               <input
                                 type="checkbox"
                                 checked={subSubcategory.status === "active"}
-                                onChange={() => handleStatusChange(subSubcategory.slug, subSubcategory.status)}
+                                onChange={() => handleStatusChange(subSubcategory.slug, subSubcategory.status, row.original.slug, subcategory.slug)}
                               />
                             </td>
                             <td className="py-2 px-4">
