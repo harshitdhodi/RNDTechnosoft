@@ -4,7 +4,7 @@ import Review from "../components/Websites/Review";
 import CraftLeft from "../components/Websites/CraftLeft";
 import CraftRight from "../components/Websites/CraftRight";
 import LatestProduct from "../components/Websites/LatestProduct";
-import Companies from "../components/Websites/companies";
+// import Companies from "../components/Websites/companies";
 import WhyPartnerWithUs from "../components/Websites/WhyPatnerUs";
 import FAQ from "../components/Faq";
 import BookAcall from "../components/BookAcall";
@@ -25,10 +25,10 @@ export default function Website() {
       <CraftLeft />
       <ServiceSlider/>
       <Tagline/>
-      <WeAreExpert />
+      <WeAreExpert /> 
       <Logotypes/>
       <Review />
-      <Companies />
+      {/* <Companies /> */}
       <WhyPartnerWithUs />
       <PricingSection />
       <De />
