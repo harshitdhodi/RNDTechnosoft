@@ -2,7 +2,9 @@ const ContactInquiry = require('../model/contactinquiry');
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    host: 'smtp.gmail.com', // Gmail SMTP server
+    port: 587, // Port
+    secure: false, // Use `true` for 465, `false` for other ports
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
