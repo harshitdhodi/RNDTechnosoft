@@ -16,78 +16,137 @@ exports.createInquiry = async (req, res) => {
 
         // HTML Email Template
         const emailHTML = `
-       <!DOCTYPE html>
+     <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Inquiry</title>
+    <title>New Inquiry Alert</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: "Poppins", sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f4f4f4;
         }
         .container {
             width: 100%;
-            padding: 20px;
+            max-width: 600px;
+            margin: 40px auto;
             background-color: #ffffff;
-            border-radius: 10px; 
-            max-width: 500px;
-            margin: 20px auto;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 2px solid;
+            }
+        .header {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        .logo {
+            width: 120px;
+            margin-bottom: 10px;
         }
         h2 {
             color: #333;
-            font-size: 24px;
-            margin-bottom: 20px;
-            text-align: center; /* Center the heading */
+            font-size: 22px;
+            margin-bottom: 5px;
         }
-        p {
-            font-size: 16px;
-            color: #555;
-            line-height: 1.6;
+        .sub-text {
+            color: #777;
+            font-size: 14px;
+        }
+        .info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        .info-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
         }
         .field {
-            font-weight: bold;
-            color: #333;
+            font-weight: 600;
+            color: #222;
+            width: 40%;
+        }
+        .message-box {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin-top: 15px;
+            border-left: 4px solid #007bff;
+            font-style: italic;
+            color: #444;
         }
         .footer {
             margin-top: 20px;
+            padding-top: 15px;
             font-size: 12px;
-            color: #aaa;
+            color: #777;
             text-align: center;
+            border-top: 1px solid #eee;
         }
-        .centered-text {
-            text-align: center; /* Center text */
-            margin: 20px 0; /* Add margin above and below */
-            font-size: 20px; /* Adjust font size as needed */
-            color: #333; /* Text color */
+        .admin-actions {
+            text-align: center;
+            margin-top: 20px;
         }
-           
-                 .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 120px; /* Adjusted width */
-            height: auto;
-            object-fit: contain; /* Ensures aspect ratio is maintained */
-        } 
-            
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+        .contact-info {
+            font-size: 14px;
+            color: #555;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-       <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
-        <p class="centered-text">New Inquiry!!</p>
-        <p><span class="field">Name:</span> ${newInquiry.name}</p>
-        <p><span class="field">Email:</span> ${newInquiry.email}</p>
-        <p><span class="field">Phone:</span> ${newInquiry.phone}</p>
-        <p><span class="field">Subject:</span> ${newInquiry.subject}</p>
-        <p><span class="field">Message:</span></p>
-        <p>${newInquiry.message}</p>
-        <div class="footer">
-            <p>This is an automated email. Please do not reply.</p>
+        <!-- Header Section -->
+        <div class="header">
+            <img src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" class="logo" alt="RND Technosoft Logo">
+            <h2>🔔 New Inquiry Alert</h2>
+            <!--<p class="sub-text">A new inquiry has been submitted. Please review the details below.</p>-->
         </div>
+
+        <!-- Inquiry Details -->
+        <table class="info-table">
+            <tr>
+                <td class="field">Name:</td>
+                <td>${newInquiry.name}</td>
+            </tr>
+            <tr>
+                <td class="field">Email:</td>
+                <td>${newInquiry.email}</td>
+            </tr>
+            <tr>
+                <td class="field">Phone:</td>
+                <td>${newInquiry.phone}</td>
+            </tr>
+            <tr>
+                <td class="field">Subject:</td>
+                <td>${newInquiry.subject}</td>
+            </tr>
+        </table>
+
+        <!-- Message Section -->
+        <div class="message-box">
+            <strong>Message:</strong> <br>
+            ${newInquiry.message}
+        </div>
+
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <p>This is an automated notification for administrators. Do not reply.</p>
+         </div>
     </div>
 </body>
 </html>
