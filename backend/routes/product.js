@@ -8,7 +8,7 @@ const { uploadfiles } = require('../middleware/files');
 const { uploadLogo } = require("../middleware/logoUpload")
 
 router.post('/insertProduct', requireAuth, uploadPhoto, insertProduct)
-router.get('/getAllProducts', requireAuth, getAllProducts)
+router.get('/getAllProducts',  getAllProducts)
 router.put('/updateProduct', requireAuth, uploadPhoto, updateProduct)
 router.delete('/deleteProduct', requireAuth, deleteProduct)
 router.get('/getSingleProduct', requireAuth, getSingleProduct)

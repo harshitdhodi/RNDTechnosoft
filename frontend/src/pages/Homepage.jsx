@@ -29,8 +29,8 @@ export default function Homepage() {
       </div>
       <WeAreExpert />
       <TrustedSection />
-      <MainContent />
-      <ScrollSection />
+      {/* <MainContent /> */}
+      {/* <ScrollSection /> */}
       <WhatYouGet />
       <StandardPackage/>
       <Faq />
