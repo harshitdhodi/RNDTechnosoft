@@ -196,12 +196,11 @@ console.log(id)
 
 const getAllPackages = async (req, res) => {
   try {
-    const { page = 1, packageCategoryId, serviceCategoryId } = req.query; // Get category filters from query
-    const limit = 20;
+    const { packageCategoryId, serviceCategoryId } = req.query; // Get category filters from query
 
     // Build query object dynamically based on provided filters
     let filter = {};
-    
+
     if (packageCategoryId) {
       // Match by category slug instead of _id
       filter.categories = packageCategoryId; // Assuming `categories` is a slug, not ObjectId
@@ -212,42 +211,39 @@ const getAllPackages = async (req, res) => {
       filter.servicecategories = serviceCategoryId; // Assuming `servicecategories` is a slug, not ObjectId
     }
 
-    const count = await Package.countDocuments(filter); // Count based on the filter
-
-    // Find packages based on filters with pagination
-    const packages = await Package.find(filter)
-      .skip((page - 1) * limit)
-      .limit(limit);
+    // Find all packages based on filters (No pagination)
+    const packages = await Package.find(filter);
 
     // Map over each package to find and append both category and service category names
-    const packagesWithCategoryNames = await Promise.all(packages.map(async (pkg) => {
-      // Fetch the corresponding package category using the slug
-      const packageCategory = await PackageCategory.findOne({ slug: pkg.categories });
-      const packageCategoryName = packageCategory ? packageCategory.category : 'Uncategorized';
+    const packagesWithCategoryNames = await Promise.all(
+      packages.map(async (pkg) => {
+        // Fetch the corresponding package category using the slug
+        const packageCategory = await PackageCategory.findOne({ slug: pkg.categories });
+        const packageCategoryName = packageCategory ? packageCategory.category : 'Uncategorized';
 
-      // Fetch the corresponding service category using the slug
-      const serviceCategory = await ServiceCategory.findOne({ slug: pkg.servicecategories });
-      const serviceCategoryName = serviceCategory ? serviceCategory.category : 'Uncategorized';
+        // Fetch the corresponding service category using the slug
+        const serviceCategory = await ServiceCategory.findOne({ slug: pkg.servicecategories });
+        const serviceCategoryName = serviceCategory ? serviceCategory.category : 'Uncategorized';
 
-      // Return package with both category and service category names
-      return {
-        ...pkg.toJSON(),
-        packageCategoryName,
-        serviceCategoryName
-      };
-    }));
+        // Return package with both category and service category names
+        return {
+          ...pkg.toJSON(),
+          packageCategoryName,
+          serviceCategoryName,
+        };
+      })
+    );
 
     res.status(200).json({
       data: packagesWithCategoryNames,
-      total: count,
-      currentPage: parseInt(page),
-      hasNextPage: count > page * limit
+      total: packages.length,
     });
   } catch (error) {
     console.error("Error retrieving packages:", error);
     res.status(500).json({ message: 'Server error', error });
   }
-}; 
+};
+
 
 
 const getAllnormalPackagesSlug = async (req, res) => {
