@@ -226,6 +226,8 @@ import CreateSubIndustryImage from "./adminComponent/Pages/CreateSubIndustryImag
 import CreateSubSubIndustryImage from "./adminComponent/Pages/CreateSubSubIndustryImage"
 import EditIndustryImage from "./adminComponent/Pages/EditIndustryImage"
 import Loader from "../src/assets/loader.mp4"
+import MainPackageComponent from "./adminComponent/Pages/package/NewsTable";
+import MainFaqSection from "./adminComponent/Pages/faq/MainFaqSection";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -340,7 +342,7 @@ function App() {
                     <Route path="/PackageCategory" element={<PackageCategory />} />
                     <Route path="/PackageCategory/CreatePackageCategory" element={<CreatePackageCategory />} />
                     <Route path="/PackageCategory/editPackageCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditPackageCategory />} />
-                    <Route path="/package" element={<Packages />} />
+                    <Route path="/package" element={<MainPackageComponent />} />
                     <Route path="/package/createPackage" element={<CreatePackage />} />
                     <Route path="/package/editPackage/:packageId" element={<EditPackageForm />} />
 
@@ -387,7 +389,7 @@ function App() {
                     <Route path="/hero-inquiry" element={<HerosectionInquiry />} />
 
                     <Route path="/testimonials/editTestimonials/:id" element={<EditTestimonials />} />
-                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/faq" element={<MainFaqSection />} />
                     <Route path="/faq/createFAQ" element={<CreateFAQ />} />
                     <Route path="/faq/editFAQ/:id" element={<EditFAQ />} />
                     <Route path="/ourTeam" element={<OurStaff />} />
