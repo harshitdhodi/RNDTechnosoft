@@ -236,7 +236,6 @@ const ScrollToTop = () => {
     console.log("Scrolling to top");
     window.scrollTo(0, 0);
   }, [pathname]);
-
   return null;
 };
 function App() {
