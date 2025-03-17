@@ -14,8 +14,8 @@ const fs = require('fs').promises;
 const http = require('http');
 //dev branch 
 const app = express();
-
-app.use(cors({
+app.use(compression({ threshold: 1024 }));
+app.use(cors({ 
     origin: true, // or specify your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -33,7 +33,7 @@ app.use(express.static('dist', {
     } else if (path.endsWith('.br')) {
       res.setHeader('Content-Encoding', 'br');
     }
-  }
+  } 
 }));
 // API Routes first
 app.use('/api/product', require('./routes/product'));

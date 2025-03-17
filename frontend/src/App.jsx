@@ -7,12 +7,10 @@ import {
   Routes,
 useLocation 
 } from "react-router-dom";
-
+ 
 // backend 
 import Sidebar from './adminComponent/Sidebar';
 import ServicesBack from './adminComponent/Pages/Services';
-import CreateService from "./adminComponent/Pages/CreateService";
-import EditService from './adminComponent/Pages/EditService';
 import ServiceCategory from "./adminComponent/Pages/Servicecategory"
 import CreateServiceCategory from "./adminComponent/Pages/CreateServiceCategory"
 import EditServiceCategory from "./adminComponent/Pages/EditServiceCategory"
@@ -47,9 +45,6 @@ import Testimonials from './adminComponent/Pages/Testimonials';
 import CreateTestimonials from './adminComponent/Pages/CreateTestimonials';
 import CreateTestimonialsSub from './adminComponent/Pages/CreateTestimonialSub'
 import CreateTestimonialsSubSub from './adminComponent/Pages/CreateTestimonialSubSub'
-
-
-
 import EditTestimonials from './adminComponent/Pages/EditTestimonials';
 import FAQ from "./adminComponent/Pages/FAQ";
 import CreateFAQ from "./adminComponent/Pages/CreateFAQ";
@@ -90,8 +85,6 @@ import EditCounter from "./adminComponent/Pages/EditCounter"
 import CreateCounter from "./adminComponent/Pages/CreateCounter"
 
 import Inquiry from "./adminComponent/Pages/Inquiry"
-import Mission from "./adminComponent/Pages/Mission"
-import Vision from "./adminComponent/Pages/Vision"
 import Corevalue from "./adminComponent/Pages/Corevalue"
 import CreateCorevalue from "./adminComponent/Pages/CreateCorevalue"
 import EditCorevalue from "./adminComponent/Pages/EditCorevalue"
@@ -124,38 +117,20 @@ import CreateServiceDetails from "./adminComponent/Pages/CreateServiceDetails"
 import EditServiceDetails from "./adminComponent/Pages/EditServicePage";
 import CreateServiceImage from "./adminComponent/Pages/CreateServiceImage"
 import EditServiceImages from "./adminComponent/Pages/EditServiceImages"
-
-import Navbar from "./components/NavBar";
 import Homepage from "./pages/Homepage";
 import MainPage from "./pages/Mainpage";
-import HowItWorks from "./pages/HowItWorks";
-import Pricing from "./pages/Pricing";
-import Projects from "./pages/Projects";
 import Templates from "./pages/Templates";
-import WhatWeDo from "./pages/WhatWeDo";
-import Website from "./pages/Website";
 import AllReviews from "./components/WhatWeDo/AllReviews"
-import ErrorBoundary from "./components/ErrorBound";
 import HomeHerosection from "./adminComponent/Pages/HomeHerosection";
-import Design from "./pages/Design"
 import DynamicPage from "./pages/DynamicPages";
-import SubSubBlogs from "./pages/Blogs/SubSubBlog";
-
-
-
 import CreatePackage from "./adminComponent/Pages/CreatePackage"
 import EditPackageForm from "./adminComponent/Pages/EditPackage";
 
 import CreatePackageDescription from "./adminComponent/Pages/CreatePackageDescription"
 import EditPackageDescription from "./adminComponent/Pages/EditPackageDescription"
-import PackageDescription from "./adminComponent/Pages/PackageDescription";
-
 import DesignProcessForm from "./adminComponent/Pages/CreateDesignProcess"
-
 import EditDesignProcess from "./adminComponent/Pages/EditDesignProcess"
-
 import EditWebSolutionDetails from "./adminComponent/Pages/WebSolution"
-import SocialMedia from "./pages/SocialMedia";
 import EditServicePage from "./adminComponent/Pages/EditEachCategory";
 import AboutUs from "./pages/AboutUs";
 import Collabration from "./pages/Collabration";
@@ -166,7 +141,6 @@ import EditSubmenuForm from "./adminComponent/Pages/EditSubMenu";
 import PrivacyPolicy from "./components/CookiePolice";
 import PrivacyPolicysss from "./components/PravicyPolice";
 import TermsCondition from "./components/TermsCondition";
-import WebsiteManagement from "./pages/WebsiteManagement";
 import DynamicMetaTags from "./components/DynamicMetaTag";
 import BlogSubSub from "./pages/Blogs/SubSubBlog";
 import EditSubServicePage from "./adminComponent/Pages/EditEachSubcategory"
@@ -179,7 +153,6 @@ import NewSubGalleryForm from "./adminComponent/Pages/CreateSubServiveImage";
 import NewSubSubGalleryForm from "./adminComponent/Pages/CreateSubSubServiceImage";
 import DesignSubProcessForm from "./adminComponent/Pages/CreateSubDesignProcess";
 import DesignSubSubProcessForm from "./adminComponent/Pages/CreateSubSubDesignProcess";
-import Packages from "./adminComponent/Pages/Package";
 import EditIndustiresPage from "./adminComponent/Pages/EditEachIndustriesCategory";
 import EditIndustiresSubPage from "./adminComponent/Pages/EditEachIndustriesSubCategory";
 import EditIndustiresSubsubPage from "./adminComponent/Pages/EditEachIndustriesSubsubcategory";
@@ -189,12 +162,9 @@ import EditIndustriesForm from "./adminComponent/Pages/industriescomponent/main/
 
 import NewIndustriesSubForm from "./adminComponent/Pages/industriescomponent/sub/CreateDetails";
 import EditIndustriesSubForm from "./adminComponent/Pages/industriescomponent/sub/EditDetails";
-
 import Homeanimation from "./adminComponent/Pages/Homeanimation/Homeanimation"
 import EditHomeanimation from "./adminComponent/Pages/Homeanimation/EditHomeanimation"
 import CreateHomeanimation from "./adminComponent/Pages/Homeanimation/CreateHomeanimation"
-
-
 import NewIndustriesSubSubForm from "./adminComponent/Pages/industriescomponent/subsub/CreateDetails";
 import EditIndustriesSubSubForm from "./adminComponent/Pages/industriescomponent/subsub/EditDetails";
 import ContactUs from "./pages/ContactUs";
@@ -207,12 +177,9 @@ import Newsletter from "./adminComponent/Pages/Newsletter"
 import AddCard from "./adminComponent/Pages/Cards/AddCards"
 import ShowCard from "./adminComponent/Pages/Cards/showCards"
 import UpdateCard from "./adminComponent/Pages/Cards/UpdateCards";
-
 import PopupInquiry from "./adminComponent/Pages/PopupInquiry"
 import HerosectionInquiry from "./adminComponent/Pages/HerosectionInquiry"
-
 import Thankyou from "./components/Thankyou"
-
 import Career from "./pages/Career"
 import Popup from "./components/Popup"
 import Portfolios from "./pages/Portfolios"
@@ -488,26 +455,17 @@ function App() {
                     <Route path="/services/editImages/:categoryId" element={<EditServiceImages />} />
                     <Route path="/industries/editImages/:categoryId" element={<EditIndustryImage />} />
 
-                    {/* <Route path="/services/createPackage/:categoryId" element={<CreatePackage/>}/>
-<Route path="/services/packages/:packageId" element={<EditPackageForm/>}/> */}
                     <Route path="/services/designProcess/:categoryId" element={<DesignProcessForm />} />
                     <Route path="/services/designProcess/:categoryId/:subcategoryId" element={<DesignSubProcessForm />} />
                     <Route path="/services/designProcess/:categoryId/:subcategoryId/:subsubcategoryId" element={<DesignSubSubProcessForm />} />
 
                     <Route path="/services/editDesignProcess/:processId" element={<EditDesignProcess />} />
                     <Route path="/extrapages/:contentType" element={<EditWebSolutionDetails />} />
-
-
-
                     <Route path="/menulisting/createSubmenu" element={<NewSubmenuListingForm />} />
                     <Route path="/menulisting/editSubmenu/:id" element={<EditSubmenuForm />} />
-
-
-
                     <Route path="/industries/edit-industries/:categoryId" element={<EditIndustiresPage />} />
                     <Route path="/industries/edit-subcategory/:categoryId/:subcategoryId" element={<EditIndustiresSubPage />} />
                     <Route path="/industries/edit-subsubcategory/:categoryId/:subcategoryId/:subsubcategoryId" element={<EditIndustiresSubsubPage />} />
-
                     <Route path="/industries/createIndustries/:categoryId" element={<NewIndustriesForm />} />
                     <Route path="/industries/editIndustries/:categoryId" element={<EditIndustriesForm />} />
 

@@ -1,133 +1,84 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import { VitePWA } from "vite-plugin-pwa";
-import path from "path";
-import viteCompression from "vite-plugin-compression";
-import svgr from "vite-plugin-svgr";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import path from 'path';
+import viteCompression from 'vite-plugin-compression';
+import svgr from 'vite-plugin-svgr';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
-  
+
   return {
     plugins: [
       react(),
-      
-      // SVGR Configuration
-      svgr({
-        svgrOptions: {
-          icon: true,
-          ref: true,
-        },
-      }),
-      
-      // Compression
-      viteCompression({
-        algorithm: "brotliCompress",
-        ext: '.br',
-        threshold: 5120,
-        deleteOriginFile: false,
-        verbose: true,
-      }),
-      viteCompression({
-        algorithm: "gzip",
-        ext: '.gz',
-        threshold: 5120,
-        deleteOriginFile: false,
-        verbose: true,
-      }),
-      
-      // PWA Configuration
+      svgr({ svgrOptions: { icon: true, ref: true } }),
+      viteCompression({ algorithm: 'brotliCompress' }),
+      viteCompression({ algorithm: 'gzip' }),
       VitePWA({
-        registerType: "autoUpdate",
-        includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
-        manifest: {
-          name: "Vite PWA Project",
-          short_name: "Vite PWA",
-          theme_color: "#ffffff",
-          icons: [
-            { src: "pwa-64x64.png", sizes: "64x64", type: "image/png" },
-            { src: "pwa-192x192.png", sizes: "192x192", type: "image/png" },
-            { src: "pwa-512x512.png", sizes: "512x512", type: "image/png", purpose: "any" },
-            { src: "maskable-icon-512x512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
-          ],
-        },
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+        manifest: { /* unchanged */ },
         workbox: {
           maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
           runtimeCaching: [
             {
-              urlPattern: /.*\.(?:png|jpg|jpeg|svg|gif|pdf)$/,
-              handler: "CacheFirst",
+              urlPattern: /.*\.js$/,
+              handler: 'StaleWhileRevalidate',
               options: {
-                cacheName: "large-assets",
-                expiration: { maxEntries: 10, maxAgeSeconds: 7 * 24 * 60 * 60 },
+                cacheName: 'js-chunks',
+                expiration: { maxAgeSeconds: 24 * 60 * 60 },
+                cacheableResponse: { statuses: [0, 200] },
               },
             },
             {
-              urlPattern: /.*\.(?:js|css)/,
-              handler: "NetworkFirst",
+              urlPattern: /.*\.(?:png|jpg|jpeg|svg|gif|pdf)$/,
+              handler: 'CacheFirst',
               options: {
-                cacheName: "static-resources",
+                cacheName: 'large-assets',
+                expiration: { maxEntries: 10, maxAgeSeconds: 7 * 24 * 60 * 60 },
               },
             },
           ],
         },
       }),
-      
-      // Bundle visualizer
       isProd && visualizer({
         filename: 'stats.html',
         gzipSize: true,
         brotliSize: true,
-        open: false
+        open: true, // Open for analysis
       }),
     ],
 
     resolve: {
-      alias: {
-        "@": path.resolve(__dirname, "./src"),
-      },
+      alias: { '@': path.resolve(__dirname, './src') },
     },
 
     build: {
-      chunkSizeWarningLimit: 800,
+      sourcemap: !isProd, // Enable in dev for debugging
       rollupOptions: {
         input: {
-          main: "./index.html",
-          "service-worker": "./public/service-worker.js",
+          main: './index.html',
+          'service-worker': './public/service-worker.js',
         },
         output: {
-          // Simplified chunking strategy with only confirmed dependencies
-          manualChunks: {
-            // Put core React in one chunk
-            'framework': [
-              'react', 
-              'react-dom', 
-              'react-router-dom'
-            ]
-            // Note: Other chunks like 'data' and 'utils' removed until we confirm they're installed
+          manualChunks(id) {
+            if (id.includes('node_modules')) return 'vendor';
+            if (id.includes('src/components')) return 'components';
+            if (id.includes('src/utils')) return 'utils';
           },
-          chunkFileNames: isProd ? 'assets/[name].[hash].js' : 'assets/[name].js',
-          entryFileNames: isProd ? 'assets/[name].[hash].js' : 'assets/[name].js',
-          assetFileNames: isProd ? 'assets/[name].[hash].[ext]' : 'assets/[name].[ext]',
         },
       },
-      target: "esnext",
-      minify: "terser",
+      chunkSizeWarningLimit: 500,
+      target: 'esnext',
+      minify: 'esbuild',
       terserOptions: {
         compress: {
-          drop_console: isProd,
-          drop_debugger: isProd,
-          pure_funcs: isProd ? ['console.log', 'console.info', 'console.debug'] : [],
-        },
-        mangle: {
-          safari10: true,
-        },
-        format: {
-          comments: false,
+          drop_console: true,
+          dead_code: true,
+          unused: true,
         },
       },
-      sourcemap: !isProd,
     },
 
     optimizeDeps: {
@@ -135,7 +86,7 @@ export default defineConfig(({ mode }) => {
     },
 
     server: {
-      port: 3000,
+      port: 3001,
       headers: {
         "Service-Worker-Allowed": "/",
       },
@@ -144,7 +95,7 @@ export default defineConfig(({ mode }) => {
       },
       proxy: {
         "/api": {
-          target: "http://localhost:3028",
+          target: "http://localhost:3021",
           changeOrigin: false,
           secure: false,
         },
@@ -152,11 +103,5 @@ export default defineConfig(({ mode }) => {
       compress: true,
     },
 
-    define: {
-      'process.env.NODE_ENV': JSON.stringify(mode),
-      __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
-    },
-
-    base: "/",
   };
 });
