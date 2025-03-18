@@ -182,7 +182,7 @@ const SubsectionsComponent = ({
         <>
           <div className="mb-4">
             <h3 className="font-semibold mb-2">Add New Subsection</h3>
-            
+
             <div className="mb-4">
               <label htmlFor="serviceParentCategory" className="block font-semibold mb-2">
                 Service Parent Category
@@ -298,7 +298,21 @@ const SubsectionsComponent = ({
                 <div key={index} className="border p-4 mb-2">
                   <h4 className="font-semibold mb-2">{sub.title}</h4>
                   <div dangerouslySetInnerHTML={{ __html: sub.description }} />
-                  {sub.photo && <img src={`/api/image/download/${sub.photo}`} alt={sub.photoAlt} className="w-32 h-32 object-cover mb-2" />}
+                  {sub.photo && (
+                    sub.photo.endsWith('.webm') ? (
+                      <video
+                        src={`/api/image/download/${sub.photo}`}
+                        controls
+                        className="w-32 h-32 object-cover mb-2"
+                      />
+                    ) : (
+                      <img
+                        src={`/api/image/download/${sub.photo}`}
+                        alt={sub.photoAlt}
+                        className="w-32 h-32 object-cover mb-2"
+                      />
+                    )
+                  )}
                   <button
                     type="button"
                     onClick={() => setEditingIndex(index)}

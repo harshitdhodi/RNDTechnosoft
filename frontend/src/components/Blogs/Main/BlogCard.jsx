@@ -11,7 +11,7 @@ export default function HowRndHelp() {
   const [selectedCategory, setSelectedCategory] = useState(""); // State for the selected category
   const location = useLocation();
   const navigate = useNavigate();
-
+ 
   useEffect(() => {
     // Fetch data from the API when the component mounts
     const fetchBlogData = async () => {
