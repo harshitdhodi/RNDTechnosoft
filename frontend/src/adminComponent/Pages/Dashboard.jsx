@@ -19,9 +19,6 @@ const AdminDashboard = () => {
     const [totalCount, setTotalCount] = useState(0);
     const [countWithFields, setCountWithFields] = useState(0);
     const [countWithoutFields, setCountWithoutFields] = useState(0);
-    // const [dataWithFields, setDataWithFields] = useState([]);
-    // const [dataWithoutFields, setDataWithoutFields] = useState([]);
-    // const [inquiries, setInquiries] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -85,9 +82,6 @@ const AdminDashboard = () => {
             setTotalCount(totalCount);
             setCountWithFields(countWithFields);
             setCountWithoutFields(countWithoutFields);
-            // setDataWithFields(dataWithFields);
-            // setDataWithoutFields(dataWithoutFields);
-            // setInquiries(inquiries);
         } catch (error) {
             console.error(error);
         } finally {

@@ -5,6 +5,7 @@ import gsap from 'gsap';
 import wave from "../images/wave.svg";
 import ImageBubble from './ImageBubble';
 import ImageBubbleright from "../components/ImageBubbleright";
+import Skeleton from './Skeleton';
 
 const HeroSection = ({ serviceGridRef }) => {
   const [homeHero, setHomeHero] = useState(null);
@@ -41,28 +42,28 @@ const HeroSection = ({ serviceGridRef }) => {
 
   useEffect(() => {
     if (dataFetched) {
-      // Run animations only after data is fetched
+      // Simplify animations
       gsap.fromTo(
         leftImageRef.current,
-        { x: -200, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1 }
+        { x: -100, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.5 }
       );
       gsap.fromTo(
         textSectionRef.current,
-        { y: 200, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, delay: 0.5 }
+        { y: 100, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.25 }
       );
       gsap.fromTo(
         rightImageRef.current,
-        { x: 200, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1 }
+        { x: 100, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.5 }
       );
     }
-  }, [dataFetched]); // Trigger animations when dataFetched changes
+  }, [dataFetched]);
 
   // Ensure homeHero and its nested objects are available before rendering
-  if (!homeHero || !homeHero.heading || !homeHero.paragraph) {
-    return null;
+  if (!dataFetched) {
+    return <Skeleton />; // Render the skeleton layout while data is being fetched
   }
 
   return (
