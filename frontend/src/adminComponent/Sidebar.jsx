@@ -119,7 +119,7 @@ export default function Sidebar() {
         { title: "Products", icon: <FaOpencart size={20} />, path: "/product" },
       ]
     },
-    { title: "Global Presence", icon: < FaEarthAsia size={20} />, path: "/globalpresence" },
+    // { title: "Global Presence", icon: < FaEarthAsia size={20} />, path: "/globalpresence" },
 
     {
       title: "News/Blogs", icon: <FaNewspaper size={20} />, submenu: [
