@@ -1,20 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import axios from 'axios';
-import { ReactTyped as Typed } from 'react-typed';
 import gsap from 'gsap';
-import wave from "../images/wave.svg";
-import ImageBubble from './ImageBubble';
-import ImageBubbleright from "../components/ImageBubbleright";
 import Skeleton from './Skeleton';
+import ImageBubble from './ImageBubble';
+import ImageBubbleright from './ImageBubbleright';
+
+const CustomTextAnimation = lazy(() => import('./TextAnimation'));
 
 const HeroSection = ({ serviceGridRef }) => {
   const [homeHero, setHomeHero] = useState(null);
   const [photos, setPhotos] = useState([]);
-  const [dataFetched, setDataFetched] = useState(false); // State for tracking data fetch status
+  const [isLoading, setIsLoading] = useState(true);
+  const [animationLoaded, setAnimationLoaded] = useState(false); // New state to track animation load
 
   const leftImageRef = useRef(null);
   const rightImageRef = useRef(null);
   const textSectionRef = useRef(null);
+  const containerRef = useRef(null);
 
   const scrollToServices = () => {
     if (serviceGridRef.current) {
@@ -22,69 +24,87 @@ const HeroSection = ({ serviceGridRef }) => {
     }
   };
 
+  const preloadImages = (images) => {
+    if (!images || images.length === 0) return Promise.resolve();
+    const promises = images.map(src => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+    });
+    return Promise.all(promises);
+  };
+
   useEffect(() => {
-    // Fetch homeHero and photos data
     const fetchData = async () => {
       try {
         const homeHeroResponse = await axios.get('/api/homehero', { withCredentials: true });
-
-        setHomeHero(homeHeroResponse.data[0]);  // Assuming you get an array, take the first item
-
-        // Set dataFetched to true after all data is fetched
-        setDataFetched(true);
+        const heroData = homeHeroResponse.data[0];
+        setHomeHero(heroData);
+        const imagesToPreload = [heroData.leftImage, heroData.rightImage];
+        preloadImages(imagesToPreload).then(() => setPhotos(imagesToPreload));
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setIsLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
   useEffect(() => {
-    if (dataFetched) {
-      // Simplify animations
-      gsap.fromTo(
-        leftImageRef.current,
-        { x: -100, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5 }
-      );
-      gsap.fromTo(
-        textSectionRef.current,
-        { y: 100, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.5, delay: 0.25 }
-      );
-      gsap.fromTo(
-        rightImageRef.current,
-        { x: 100, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.5 }
-      );
+    if (!isLoading && containerRef.current) {
+      const tl = gsap.timeline({ delay: 0.1 });
+      tl.fromTo(leftImageRef.current, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" });
+      tl.fromTo(textSectionRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2");
+      tl.fromTo(rightImageRef.current, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2");
     }
-  }, [dataFetched]);
+  }, [isLoading]);
 
-  // Ensure homeHero and its nested objects are available before rendering
-  if (!dataFetched) {
-    return <Skeleton />; // Render the skeleton layout while data is being fetched
+  if (isLoading) {
+    return (
+      <div className="bg-[#F7F4EE]">
+        <div className="flex flex-col xl:flex-row justify-center text-center lg:py-5 relative">
+          <Skeleton />
+          <div className="flex-2 flex flex-col items-center justify-center max-w-2xl pb-5 pt-10 xl:pt-32 mx-auto px-4 md:px-0">
+            <h1 className="text-[27px] md:text-[50px] leading-[3rem] md:leading-[4rem] md:mb-5 text-center font-poppins font-semibold py-10 text-gray-700">
+              We Build Brand, Assets, Websites For Businesses Aiming for Success.
+            </h1>
+          </div>
+          <Skeleton />
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="  bg-[#F7F4EE]">
+    <div className="bg-[#F7F4EE]" ref={containerRef}>
       <div className="flex flex-col xl:flex-row justify-center text-center lg:py-5 relative">
-        {/* Left Side Animated Photos */}
         <div className="xl:flex flex-col flex-1 hidden" ref={leftImageRef}>
           <ImageBubble photos={photos} homeHero={homeHero} />
         </div>
 
-        {/* Middle Text Section */}
         <div className="flex-2 flex flex-col items-center justify-center max-w-2xl pb-5 pt-10 xl:pt-32 mx-auto px-4 md:px-0" ref={textSectionRef}>
-          <h1 className="text-[27px] md:text-[50px] leading-[3rem] md:leading-[4rem] md:mb-5 text-center font-poppins font-semibold py-10  text-gray-700 ">
+          <h1 className="text-[27px] md:text-[50px] leading-[3rem] md:leading-[4rem] md:mb-5 text-center font-poppins font-semibold py-10 text-gray-700">
             {homeHero.heading.beforeHighlight}{' '}
-            <Typed
-              strings={homeHero.heading.highlightedWords}
-              typeSpeed={100}
-              backSpeed={60}
-              loop
-              className="pl-2 text-[#f3ca0d] font-bold"
-            />{' '}
+            <Suspense
+              fallback={
+                <span className="pl-2 text-[#f3ca0d] font-bold">
+                  {homeHero.heading.highlightedWords[0]}
+                </span>
+              }
+            >
+              <CustomTextAnimation
+                strings={homeHero.heading.highlightedWords}
+                typeSpeed={100}
+                backSpeed={60}
+                loop
+                className="pl-2 text-[#f3ca0d] font-bold"
+                onLoad={() => setAnimationLoaded(true)} // Optional: if component supports a callback
+              />
+            </Suspense>{' '}
             <br />
             {homeHero.heading.afterHighlight}
             <span className="text-[#f3ca0d]">.</span>
@@ -102,13 +122,9 @@ const HeroSection = ({ serviceGridRef }) => {
           </button>
         </div>
 
-        {/* Right Side Animated Photos */}
         <div className="xl:flex flex-col flex-1 hidden" ref={rightImageRef}>
           <ImageBubbleright photos={photos} homeHero={homeHero} />
         </div>
-
-        {/* Wave Image - visible only on smaller screens */}
-        <img src={wave} alt="wave img" className='object-cover xl:hidden absolute bottom-0 w-full -z-10' />
       </div>
     </div>
   );

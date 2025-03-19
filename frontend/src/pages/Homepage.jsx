@@ -1,78 +1,36 @@
-import React, { useRef, Suspense } from 'react';
-
-// Lazy load all components
-const HeroSection = React.lazy(() => import('../components/HeroSection'));
-const Marquee = React.lazy(() => import('../components/Marquee'));
-const OurWorkComponent = React.lazy(() => import('../components/OurWork'));
-const TrustedSection = React.lazy(() => import('../components/BigCards'));
-const WeAreExpert = React.lazy(() => import('../components/WeAreExpert'));
-const WhatYouGet = React.lazy(() => import('../components/WhatYouGet'));
-const BookAcall = React.lazy(() => import('../components/BookAcall'));
-const ServiceGrid = React.lazy(() => import('../components/OurServices'));
-const GlobalSolution = React.lazy(() => import('../components/GlobalSolution'));
-const Faq = React.lazy(() => import('../components/Faq'));
-const StandardPackage = React.lazy(() => import('../components/StandardPackage'));
-const PremiumTemplatesSection = React.lazy(() => import('../components/PrimiumTemplateSection'));
+import React, { useRef } from 'react';
+import HeroSection from '../components/HeroSection';
+import Marquee from '../components/Marquee';
+import OurWorkComponent from '../components/OurWork';
+import TrustedSection from '../components/BigCards';
+import WeAreExpert from '../components/WeAreExpert';
+import WhatYouGet from '../components/WhatYouGet';
+import BookAcall from '../components/BookAcall';
+import ServiceGrid from '../components/OurServices';
+import GlobalSolution from '../components/GlobalSolution';
+import Faq from '../components/Faq';
+import StandardPackage from '../components/StandardPackage';
+import PremiumTemplatesSection from '../components/PrimiumTemplateSection';
 
 export default function Homepage() {
   const serviceGridRef = useRef(null);
 
-  // Fallback component while loading
-  const LoadingFallback = () => <div className="flex items-center justify-center h-screen">
-    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
-  </div>;
-
   return (
     <div>
-      <Suspense fallback={<LoadingFallback />}>
-        <HeroSection serviceGridRef={serviceGridRef} />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <Marquee />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <OurWorkComponent />
-      </Suspense>
-      
+      <HeroSection serviceGridRef={serviceGridRef} />
+      <Marquee />
+      <OurWorkComponent />
       <div ref={serviceGridRef}>
-        <Suspense fallback={<LoadingFallback />}>
-          <ServiceGrid />
-        </Suspense>
+        <ServiceGrid />
       </div>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <WeAreExpert />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <TrustedSection />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <WhatYouGet />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <StandardPackage />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <Faq />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <BookAcall />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <PremiumTemplatesSection />
-      </Suspense>
-      
-      <Suspense fallback={<LoadingFallback />}>
-        <GlobalSolution />
-      </Suspense>
+      <WeAreExpert />
+      <TrustedSection />
+      <WhatYouGet />
+      <StandardPackage />
+      <Faq />
+      <BookAcall />
+      <PremiumTemplatesSection />
+      <GlobalSolution />
     </div>
   );
 }

@@ -58,25 +58,27 @@ export default defineConfig(({ mode }) => {
       sourcemap: !isProd, // Enable in dev for debugging
       rollupOptions: {
         input: {
-          main: './index.html',
-          'service-worker': './public/service-worker.js',
+          main: path.resolve(__dirname, 'index.html'),
+          'service-worker': path.resolve(__dirname, 'public/service-worker.js'),
         },
         output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) return 'vendor';
-            if (id.includes('src/components')) return 'components';
-            if (id.includes('src/utils')) return 'utils';
+          manualChunks: {
+            // Splitting Vendor JS to optimize loading
+            vendor: ["react", "react-dom", "react-router-dom"],
           },
         },
       },
       chunkSizeWarningLimit: 500,
       target: 'esnext',
-      minify: 'esbuild',
+      minify: 'terser',
       terserOptions: {
         compress: {
           drop_console: true,
           dead_code: true,
           unused: true,
+        },
+        output: {
+          comments: false,
         },
       },
     },
@@ -102,6 +104,5 @@ export default defineConfig(({ mode }) => {
       },
       compress: true,
     },
-
   };
 });
