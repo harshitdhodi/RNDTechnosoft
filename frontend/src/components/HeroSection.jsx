@@ -9,9 +9,9 @@ import CustomTextAnimation from './TextAnimation';
 // Default content to render immediately
 const defaultContent = {
   heading: {
-    beforeHighlight: "We Build ",
-    highlightedWords: ["Brand", "Assets", "Websites"],
-    afterHighlight: "For Businesses Aiming for Success"
+    beforeHighlight: "We Build Brand, Assets, Websites For",
+    highlightedWords: ["Businesses"],
+    afterHighlight: "Aiming for Success"
   },
   paragraph: { text: "Dream it, and we'll design it! Our web development and design services come in…" }
 };
@@ -66,28 +66,24 @@ const HeroSection = ({ serviceGridRef }) => {
 
   // Split data fetching from rendering
   useEffect(() => {
-    // Start with fallback content showing
-    setShowFallbackContent(true);
-    
-    // Set timeout to ensure fallback content stays visible if API is slow
+    // Set timeout to show fallback content if data takes too long
     const timeoutId = setTimeout(() => {
+      setShowFallbackContent(true);
       setIsContentLoading(false);
-    }, 300); // Show fallback content for at least 300ms
-  
+    }, 300); // Show fallback content after 300ms if API is slow
+
     const fetchData = async () => {
       try {
         const homeHeroResponse = await axios.get('/api/homehero', { withCredentials: true });
         const heroData = homeHeroResponse.data[0];
         
-        // Set the API data
-        setHomeHero(heroData);
+        // Cancel timeout as we have data now
+        clearTimeout(timeoutId);
         
-        // Only switch to API content after a minimum display time for fallback
-        setTimeout(() => {
-          setShowFallbackContent(false);
-          setIsContentLoading(false);
-        }, 300);
-  
+        setHomeHero(heroData);
+        setShowFallbackContent(false);
+        setIsContentLoading(false);
+
         // Preload images separately in background
         const imagesToPreload = [heroData.leftImage, heroData.rightImage];
         preloadImages(imagesToPreload).then(() => {
@@ -97,6 +93,7 @@ const HeroSection = ({ serviceGridRef }) => {
       } catch (error) {
         console.error('Error fetching data:', error);
         setIsContentLoading(false);
+        setAreImagesLoaded(true);
       }
     };
     
