@@ -9,9 +9,9 @@ import CustomTextAnimation from './TextAnimation';
 // Default content to render immediately
 const defaultContent = {
   heading: {
-    beforeHighlight: "We Build Brand, Assets, Websites For",
-    highlightedWords: ["Businesses"],
-    afterHighlight: "Aiming for Success"
+    beforeHighlight: "We Build ",
+    highlightedWords: ["Brand", "Assets", "Websites"],
+    afterHighlight: "For Businesses Aiming for Success"
   },
   paragraph: { text: "Dream it, and we'll design it! Our web development and design services come in…" }
 };

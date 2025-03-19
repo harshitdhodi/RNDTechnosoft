@@ -73,6 +73,8 @@ export default function WeAreExpert() {
       <div className="relative w-20 h-20 md:w-28 md:h-28 overflow-hidden rounded-full shadow-md transition-transform duration-300 hover:scale-110 hover:shadow-lg">
         <Img
           src={`/api/image/download/${expert.photo}`}
+          srcSet={`/api/image/download/${expert.photo}?w=100 100w, /api/image/download/${expert.photo}?w=200 200w, /api/image/download/${expert.photo}?w=300 300w`}
+          sizes="(max-width: 768px) 100px, (max-width: 1024px) 200px, 300px"
           alt={expert.title || "Expert"}
           loader={<ImageLoader />}
           unloader={
