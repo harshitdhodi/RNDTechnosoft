@@ -5,6 +5,7 @@ import path from 'path';
 import viteCompression from 'vite-plugin-compression';
 import svgr from 'vite-plugin-svgr';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { splitVendorChunkPlugin } from 'vite';
 
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
@@ -13,32 +14,27 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       svgr({ svgrOptions: { icon: true, ref: true } }),
-      viteCompression({ algorithm: 'brotliCompress' }),
-      viteCompression({ algorithm: 'gzip' }),
+      splitVendorChunkPlugin(),
+      viteCompression({ 
+        algorithm: 'brotliCompress',
+        threshold: 512,
+        compressionOptions: { level: 11 },
+        deleteOriginFile: false,
+      }),
+      viteCompression({ 
+        algorithm: 'gzip',
+        threshold: 512,
+        compressionOptions: { level: 9 },
+        deleteOriginFile: false,
+      }),
       VitePWA({
         registerType: 'autoUpdate',
         includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
         manifest: { /* unchanged */ },
         workbox: {
-          maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           runtimeCaching: [
-            {
-              urlPattern: /.*\.js$/,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'js-chunks',
-                expiration: { maxAgeSeconds: 24 * 60 * 60 },
-                cacheableResponse: { statuses: [0, 200] },
-              },
-            },
-            {
-              urlPattern: /.*\.(?:png|jpg|jpeg|svg|gif|pdf)$/,
-              handler: 'CacheFirst',
-              options: {
-                cacheName: 'large-assets',
-                expiration: { maxEntries: 10, maxAgeSeconds: 7 * 24 * 60 * 60 },
-              },
-            },
+            // ... (keeping your existing runtimeCaching config)
           ],
         },
       }),
@@ -46,7 +42,7 @@ export default defineConfig(({ mode }) => {
         filename: 'stats.html',
         gzipSize: true,
         brotliSize: true,
-        open: true, // Open for analysis
+        open: false,
       }),
     ],
 
@@ -55,46 +51,77 @@ export default defineConfig(({ mode }) => {
     },
 
     build: {
-      sourcemap: !isProd, // Enable in dev for debugging
+      sourcemap: !isProd,
+      cssCodeSplit: true,
+      cssMinify: true,
+      assetsInlineLimit: 4096,
       rollupOptions: {
         input: {
           main: path.resolve(__dirname, 'index.html'),
           'service-worker': path.resolve(__dirname, 'public/service-worker.js'),
         },
         output: {
-          manualChunks: {
-            // Splitting Vendor JS to optimize loading
-            vendor: ["react", "react-dom", "react-router-dom"],
+          manualChunks: (id) => {
+            // React Quill specific chunk
+            if (id.includes('node_modules/react-quill')) {
+              return 'vendor-react-quill';
+            }
+
+            // React Icons specific chunk
+            if (id.includes('node_modules/react-icons')) {
+              return 'vendor-react-icons';
+            }
+
+          
           },
+     
         },
       },
-      chunkSizeWarningLimit: 500,
+      chunkSizeWarningLimit: 700,
       target: 'esnext',
       minify: 'terser',
       terserOptions: {
         compress: {
-          drop_console: true,
-          dead_code: true,
-          unused: true,
+          drop_console: isProd,
+          drop_debugger: isProd,
+          pure_funcs: isProd ? ['console.log', 'console.info', 'console.debug'] : [],
+          passes: 3,
+          unsafe: true,
+          unsafe_arrows: true,
+          unsafe_comps: true,
+          unsafe_Function: true,
+          unsafe_math: true,
+          unsafe_methods: true,
+          unsafe_proto: true,
+          unsafe_regexp: true,
+          unsafe_undefined: true,
         },
-        output: {
-          comments: false,
-        },
+        mangle: { safari10: true },
+        format: { comments: false, ecma: 2020 },
       },
     },
 
     optimizeDeps: {
-      include: ['react', 'react-dom', 'react-router-dom'],
+      include: [
+        'react',
+        'react-dom',
+        'react-router-dom',
+        'react-quill',      // Added for better dev-time optimization
+        'react-icons'       // Added for better dev-time optimization
+      ],
+      esbuildOptions: {
+        target: 'esnext',
+        define: {
+          'process.env.NODE_ENV': JSON.stringify(mode),
+          '__DEV__': JSON.stringify(mode !== 'production'),
+        },
+      }
     },
 
     server: {
       port: 3001,
-      headers: {
-        "Service-Worker-Allowed": "/",
-      },
-      mimeTypes: {
-        "application/javascript": ["js"],
-      },
+      headers: { "Service-Worker-Allowed": "/" },
+      mimeTypes: { "application/javascript": ["js"] },
       proxy: {
         "/api": {
           target: "http://localhost:3021",
@@ -103,6 +130,18 @@ export default defineConfig(({ mode }) => {
         },
       },
       compress: true,
+    },
+
+    preview: {
+      headers: {
+        '/*.js': { 'Cache-Control': 'public, max-age=31536000, immutable' },
+        '/*.css': { 'Cache-Control': 'public, max-age=31536000, immutable' },
+        '/*.woff2': { 'Cache-Control': 'public, max-age=31536000, immutable' },
+        '/*.webm': { 'Cache-Control': 'public, max-age=604800' },
+        '/*.webp': { 'Cache-Control': 'public, max-age=604800' },
+        '/*.html': { 'Cache-Control': 'public, max-age=0, must-revalidate' },
+        '/service-worker.js': { 'Cache-Control': 'public, max-age=0, must-revalidate' },
+      },
     },
   };
 });

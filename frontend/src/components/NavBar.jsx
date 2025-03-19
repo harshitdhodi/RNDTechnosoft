@@ -151,6 +151,8 @@ const Navbar = () => {
                 alt={colorlogo.alt}
                 title={colorlogo.imgTitle}
                 className="h-18 w-[27%]"
+                loading="lazy"
+                fetchPriority="high"
               />
             </NavLink>
           </div>

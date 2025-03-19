@@ -81,6 +81,7 @@ const GlobalSolution = () => {
                 {language.imageUrl ? (
                   <img
                     loading="lazy"
+                    fetchPriority='high'
                     decoding="async"
                     src={language.imageUrl}
                     alt={language.photoAlt}

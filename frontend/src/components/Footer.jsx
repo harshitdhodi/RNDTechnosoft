@@ -174,6 +174,8 @@ const Footer = () => {
                 src={`/api/logo/download/${logo.photo}`}
                 alt={logo.alt}
                 title={logo.imgtitle}
+                loading='lazy'
+                fetchPriority='high'
                 className="mb-4 h-16"
               />
             </Link>
