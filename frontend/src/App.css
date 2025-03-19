@@ -6,7 +6,16 @@
   height: 40vmin;
   pointer-events: none;
 }
+.hidden-content {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+}
 
+.visible-content {
+  opacity: 1;
+  visibility: visible;
+}
 @font-face {
   font-family: 'Poppins';
   src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
