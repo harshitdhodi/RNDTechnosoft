@@ -95,7 +95,7 @@ import EditCareeroption from "./adminComponent/Pages/EditCareeroption"
 import Careerinquiry from "./adminComponent/Pages/Careerinquiry"
 import Footer from "./adminComponent/Pages/Footer"
 import Header from "./adminComponent/Pages/Header"
-import Globalpresence from "./adminComponent/Pages/GlobalPresence"
+// import Globalpresence from "./adminComponent/Pages/GlobalPresence"
 import WhatsappSettings from "./adminComponent/Pages/WhatsappSettings"
 import GoogleSettings from "./adminComponent/Pages/GoogleSettings"
 import Menulisting from "./adminComponent/Pages/Menulisting"
@@ -403,7 +403,7 @@ function App() {
                     <Route path="/careerinquiry" element={<Careerinquiry />} />
                     <Route path="/footer" element={<Footer />} />
                     <Route path="/header" element={<Header />} />
-                    <Route path="/globalpresence" element={<Globalpresence />} />
+                    {/* <Route path="/globalpresence" element={<Globalpresence />} /> */}
                     <Route path="/whatsappSettings" element={<WhatsappSettings />} />
                     <Route path="/googleSettings" element={<GoogleSettings />} />
                     <Route path="/menulisting" element={<Menulisting />} />

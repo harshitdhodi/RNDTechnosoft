@@ -15,71 +15,62 @@ const OurWorkComponent = () => {
   const sliderRef = useRef(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-
     const fetchProjects = async () => {
-      setIsLoading(true);
       try {
-        const response = await axios.get('/api/homepage/ourwork', {
-          signal: controller.signal
-        });
-        
+        const response = await axios.get('/api/homepage/ourwork');
         const projectsData = response.data.map(project => ({
           name: project.name,
-          photoId: project.photo, // Store photo ID instead of fetching immediately
+          photoId: project.photo,
           link: `/${project.slug}`,
           alt: project.alt,
           imgtitle: project.imgtitle,
         }));
-        
-        setProjects(projectsData);
-        setError(null);
+        setProjects(projectsData); // Set projects without waiting for images
+        setIsLoading(false);
+  
+        // Load images for initial slides only
+        const initialImages = projectsData.slice(0, 4).map(project => 
+          axios.get(`/api/logo/download/${project.photoId}`, { responseType: 'blob' })
+            .then(res => {
+              project.imageUrl = URL.createObjectURL(res.data);
+              setProjects(prev => [...prev]); // Trigger re-render
+            })
+            .catch(err => {
+              project.imageError = true;
+            })
+        );
+        await Promise.all(initialImages);
       } catch (error) {
-        if (!axios.isCancel(error)) {
-          console.error('Error fetching projects:', error);
-          setError('Failed to load projects');
-        }
-      } finally {
+        setError('Failed to load projects');
         setIsLoading(false);
       }
     };
-
     fetchProjects();
-
-    return () => {
-      controller.abort();
-    };
   }, []);
 
   useLayoutEffect(() => {
     if (!containerRef.current || projects.length === 0) return;
-
-    const ctx = gsap.context(() => {
-      const buttons = containerRef.current.querySelectorAll('.project-button');
-
-      buttons.forEach((button) => {
-        gsap.fromTo(
-          button, 
-          { opacity: 0, y: 50 }, 
-          { 
-            opacity: 1, 
-            y: 0,
-            scrollTrigger: {
-              trigger: button,
-              start: "top 80%",
-              end: "bottom 60%",
-              scrub: 1,
-              markers: false,
-              once: true, // Animation plays only once
-            }
+  
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            gsap.fromTo(
+              entry.target,
+              { opacity: 0, y: 50 },
+              { opacity: 1, y: 0, duration: 1 }
+            );
+            observer.unobserve(entry.target);
           }
-        );
-      });
-    }, containerRef);
-
-    return () => {
-      ctx.revert();
-    };
+        });
+      },
+      { threshold: 0.1 }
+    );
+  
+    const buttons = containerRef.current.querySelectorAll('.project-button');
+    buttons.forEach((button) => observer.observe(button));
+  
+    return () => observer.disconnect();
   }, [projects]);
 
   // Cleanup ScrollTrigger on unmount
@@ -95,7 +86,7 @@ const OurWorkComponent = () => {
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
-    dots:true,
+    dots: true,
     autoplaySpeed: 2000,
     pauseOnHover: true,
     responsive: [
@@ -103,78 +94,43 @@ const OurWorkComponent = () => {
         breakpoint: 1536, // 2xl
         settings: {
           slidesToShow: 4,
-          dots:true,
+          dots: true,
         },
       },
       {
         breakpoint: 1280, // xl
         settings: {
           slidesToShow: 4,
-          dots:true,
+          dots: true,
         },
       },
       {
         breakpoint: 1024, // lg
         settings: {
           slidesToShow: 3,
-          dots:true,
+          dots: true,
         },
       },
       {
         breakpoint: 768, // md
         settings: {
           slidesToShow: 2,
-          dots:true,
+          dots: true,
         },
       },
       {
         breakpoint: 640, // sm
         settings: {
           slidesToShow: 1,
-          dots:true,
+          dots: true,
         },
       },
     ],
   };
 
   const ProjectCard = ({ project }) => {
-    const [imageUrl, setImageUrl] = useState(null);
-    const [imageError, setImageError] = useState(false);
-
-    useEffect(() => {
-      let isMounted = true;
-
-      const loadImage = async () => {
-        try {
-          const response = await axios.get(`/api/logo/download/${project.photoId}`, {
-            responseType: 'blob'
-          });
-          if (isMounted) {
-            setImageUrl(URL.createObjectURL(response.data));
-          }
-        } catch (error) {
-          if (isMounted) {
-            console.error('Error loading image:', error);
-            setImageError(true);
-          }
-        }
-      };
-
-      loadImage();
-
-      return () => {
-        isMounted = false;
-        // Cleanup blob URL
-        if (imageUrl) {
-          URL.revokeObjectURL(imageUrl);
-        }
-      };
-    }, [project.photoId]);
-
-    if (imageError) {
-      return (
-      null
-      );
+    if (project.imageError) {
+      return null;
     }
 
     return (
@@ -182,13 +138,13 @@ const OurWorkComponent = () => {
         to={project.link}
         className="relative flex justify-center items-end h-64 mx-3 overflow-hidden group"
       >
-        {imageUrl ? (
+        {project.imageUrl ? (
           <img 
-            src={imageUrl} 
+            src={project.imageUrl} 
             alt={project.alt || project.name} 
             title={project.imgtitle} 
+            loading='lazy'
             className="w-full h-full transition-transform duration-300" 
-            loading="lazy"
           />
         ) : (
           <div className="w-full h-full bg-gray-200 animate-pulse" />
@@ -202,10 +158,14 @@ const OurWorkComponent = () => {
     );
   };
 
-  if (isLoading) {
+  if (isLoading || projects.length === 0) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-yellow-500 border-t-transparent" />
+      <div className="w-full xl:px-28">
+        <div className="flex justify-center gap-3">
+          {Array(4).fill().map((_, i) => (
+            <div key={i} className="w-64 h-64 bg-gray-200 animate-pulse" />
+          ))}
+        </div>
       </div>
     );
   }

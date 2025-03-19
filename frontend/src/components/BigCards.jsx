@@ -107,12 +107,16 @@ const TrustedSection = () => {
               <img
                 src={firstCard.imageSrc}
                 alt={firstCard.imageAlt}
+                loading="lazy"
+                fetchPriority="high"
                 className="w-40 h-auto md:w-52 md:h-auto md:absolute md:-top-8 md:right-0 md:transform md:-translate-1/4"
               />
             </div>
             {firstCard.srcSet && (
               <div className="flex-grow flex items-center justify-center">
                 <img
+                loading="lazy"
+                fetchPriority="high"
                   srcSet={firstCard.srcSet}
                   alt={firstCard.imageAlt}
                   className="mt-4 max-h-24" // Ensure the image doesn't grow too large
@@ -140,6 +144,8 @@ const TrustedSection = () => {
                 </Link>
               </div>
               <img
+              loading="lazy"
+              fetchPriority="high"
                 src={secondCard.personImages}
                 alt={secondCard.reviewsAlt}
                 className="w-40 h-auto md:w-52 md:h-auto md:absolute md:-top-8 md:right-0 md:transform md:-translate-1/4"

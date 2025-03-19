@@ -147,7 +147,7 @@ const AboutUsPoints = () => {
           <thead className="bg-slate-700 hover:bg-slate-800 text-white">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map((column) => ( 
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     className="py-2 px-4 border-b border-gray-300 cursor-pointer uppercase font-serif"
