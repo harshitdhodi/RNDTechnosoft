@@ -3,7 +3,6 @@ import { IoStarSharp, IoStarOutline, IoStarHalfSharp } from "react-icons/io5";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-
 // Transformer function to map and structure home card data
 function transformHomeCardData(homeCardData, ratingData) {
   return homeCardData.map((card) => {
@@ -106,6 +105,8 @@ const TrustedSection = () => {
               </div>
               <img
                 src={firstCard.imageSrc}
+                srcSet={`${firstCard.imageSrc}?w=200 200w, ${firstCard.imageSrc}?w=400 400w, ${firstCard.imageSrc}?w=600 600w`}
+                sizes="(max-width: 768px) 200px, (max-width: 1024px) 400px, 600px"
                 alt={firstCard.imageAlt}
                 loading="lazy"
                 fetchPriority="high"
@@ -115,10 +116,11 @@ const TrustedSection = () => {
             {firstCard.srcSet && (
               <div className="flex-grow flex items-center justify-center">
                 <img
-                loading="lazy"
-                fetchPriority="high"
                   srcSet={firstCard.srcSet}
+                  sizes="(max-width: 768px) 200px, (max-width: 1024px) 400px, 600px"
                   alt={firstCard.imageAlt}
+                  loading="lazy"
+                  fetchPriority="high"
                   className="mt-4 max-h-24" // Ensure the image doesn't grow too large
                 />
               </div>
@@ -137,17 +139,19 @@ const TrustedSection = () => {
                   {secondCard.heading}
                 </h3>
                 <Link
-                  href={secondCard.buttonLink}
+                  to={secondCard.buttonLink}
                   className="bg-white text-black px-4 py-2 rounded hover:bg-gray-200 transition duration-300 inline-block"
                 >
                   {secondCard.buttonText}
                 </Link>
               </div>
               <img
-              loading="lazy"
-              fetchPriority="high"
                 src={secondCard.personImages}
+                srcSet={`${secondCard.personImages}?w=200 200w, ${secondCard.personImages}?w=400 400w, ${secondCard.personImages}?w=600 600w`}
+                sizes="(max-width: 768px) 200px, (max-width: 1024px) 400px, 600px"
                 alt={secondCard.reviewsAlt}
+                loading="lazy"
+                fetchPriority="high"
                 className="w-40 h-auto md:w-52 md:h-auto md:absolute md:-top-8 md:right-0 md:transform md:-translate-1/4"
               />
             </div>

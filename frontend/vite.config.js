@@ -5,7 +5,6 @@ import path from 'path';
 import viteCompression from 'vite-plugin-compression';
 import svgr from 'vite-plugin-svgr';
 import { visualizer } from 'rollup-plugin-visualizer';
-import { splitVendorChunkPlugin } from 'vite';
 
 export default defineConfig(({ mode }) => {
   const isProd = mode === 'production';
@@ -14,7 +13,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       svgr({ svgrOptions: { icon: true, ref: true } }),
-      splitVendorChunkPlugin(),
+     
       viteCompression({ 
         algorithm: 'brotliCompress',
         threshold: 512,
@@ -52,8 +51,6 @@ export default defineConfig(({ mode }) => {
 
     build: {
       sourcemap: !isProd,
-      cssCodeSplit: true,
-      cssMinify: true,
       assetsInlineLimit: 4096,
       rollupOptions: {
         input: {
