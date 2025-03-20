@@ -9,74 +9,76 @@ gsap.registerPlugin(ScrollTrigger);
 
 const OurWorkComponent = () => {
   const containerRef = useRef(null);
+  const sliderRef = useRef(null);
+  const projectsRef = useRef([]); // Use ref to store projects without re-rendering
+
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const sliderRef = useRef(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
       try {
         const response = await axios.get('/api/homepage/ourwork');
-        const projectsData = response.data.map(project => ({
+        let projectsData = response.data.map((project) => ({
           name: project.name,
           photoId: project.photo,
           link: `/${project.slug}`,
           alt: project.alt,
           imgtitle: project.imgtitle,
         }));
-        setProjects(projectsData); // Set projects without waiting for images
-        setIsLoading(false);
-  
-        // Load images for initial slides only
-        const initialImages = projectsData.slice(0, 4).map(project => 
-          axios.get(`/api/logo/download/${project.photoId}`, { responseType: 'blob' })
-            .then(res => {
-              project.imageUrl = URL.createObjectURL(res.data);
-              setProjects(prev => [...prev]); // Trigger re-render
-            })
-            .catch(err => {
-              project.imageError = true;
-            })
+
+        // **🚀 Parallel fetching using `Promise.allSettled`**
+        const imagePromises = projectsData.map((project) =>
+          axios
+            .get(`/api/logo/download/${project.photoId}`, { responseType: 'blob' })
+            .then((res) => ({
+              ...project,
+              imageUrl: URL.createObjectURL(res.data),
+            }))
+            .catch(() => ({
+              ...project,
+              imageError: true,
+            }))
         );
-        await Promise.all(initialImages);
+
+        const resolvedProjects = await Promise.allSettled(imagePromises);
+
+        // Extract only fulfilled results
+        projectsRef.current = resolvedProjects
+          .filter((p) => p.status === 'fulfilled')
+          .map((p) => p.value);
+
+        setProjects([...projectsRef.current]);
+        setIsLoading(false);
       } catch (error) {
         setError('Failed to load projects');
         setIsLoading(false);
       }
     };
+
     fetchProjects();
   }, []);
 
   useLayoutEffect(() => {
     if (!containerRef.current || projects.length === 0) return;
-  
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            gsap.fromTo(
-              entry.target,
-              { opacity: 0, y: 50 },
-              { opacity: 1, y: 0, duration: 1 }
-            );
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-  
+
     const buttons = containerRef.current.querySelectorAll('.project-button');
-    buttons.forEach((button) => observer.observe(button));
-  
-    return () => observer.disconnect();
+
+    buttons.forEach((button) => {
+      gsap.fromTo(
+        button,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 1, scrollTrigger: button }
+      );
+    });
+
+    return () => ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   }, [projects]);
 
-  // Cleanup ScrollTrigger on unmount
   useEffect(() => {
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
@@ -90,81 +92,23 @@ const OurWorkComponent = () => {
     autoplaySpeed: 2000,
     pauseOnHover: true,
     responsive: [
-      {
-        breakpoint: 1536, // 2xl
-        settings: {
-          slidesToShow: 4,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1280, // xl
-        settings: {
-          slidesToShow: 4,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1024, // lg
-        settings: {
-          slidesToShow: 3,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768, // md
-        settings: {
-          slidesToShow: 2,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 640, // sm
-        settings: {
-          slidesToShow: 1,
-          dots: true,
-        },
-      },
+      { breakpoint: 1536, settings: { slidesToShow: 4, dots: true } },
+      { breakpoint: 1280, settings: { slidesToShow: 4, dots: true } },
+      { breakpoint: 1024, settings: { slidesToShow: 3, dots: true } },
+      { breakpoint: 768, settings: { slidesToShow: 2, dots: true } },
+      { breakpoint: 640, settings: { slidesToShow: 1, dots: true } },
     ],
-  };
-
-  const ProjectCard = ({ project }) => {
-    if (project.imageError) {
-      return null;
-    }
-
-    return (
-      <Link 
-        to={project.link}
-        className="relative flex justify-center items-end h-64 mx-3 overflow-hidden group"
-      >
-        {project.imageUrl ? (
-          <img 
-            src={project.imageUrl} 
-            alt={project.alt || project.name} 
-            title={project.imgtitle} 
-            loading='lazy'
-            className="w-full h-full transition-transform duration-300" 
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-200 animate-pulse" />
-        )}
-        <span className="project-button bg-white text-gray-950 font-semibold text-sm rounded-full 
-          py-2 px-6 shadow-lg hover:bg-gray-200 transition-all duration-300 absolute bottom-0 mb-12 
-          opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0">
-          {project.name}
-        </span>
-      </Link>
-    );
   };
 
   if (isLoading || projects.length === 0) {
     return (
       <div className="w-full xl:px-28">
         <div className="flex justify-center gap-3">
-          {Array(4).fill().map((_, i) => (
-            <div key={i} className="w-64 h-64 bg-gray-200 animate-pulse" />
-          ))}
+          {Array(4)
+            .fill()
+            .map((_, i) => (
+              <div key={i} className="w-64 h-64 bg-gray-200 animate-pulse" />
+            ))}
         </div>
       </div>
     );
@@ -189,9 +133,27 @@ const OurWorkComponent = () => {
 
       <div className="w-full xl:px-28" ref={containerRef}>
         <Slider ref={sliderRef} {...settings}>
-          {projects.map((project, index) => (
-            <div key={project.name || index}>
-              <ProjectCard project={project} />
+          {projects.map((project) => (
+            <div key={project.name}>
+              <Link to={project.link} className="relative flex justify-center items-end h-64 mx-3 overflow-hidden group">
+                {project.imageUrl ? (
+                  <img
+                  loading='lazy'
+                  fetchPriority='eager'
+                    src={project.imageUrl}
+                    alt={project.alt || project.name}
+                    title={project.imgtitle}
+                    className="w-full h-full transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 animate-pulse" />
+                )}
+                <span className="project-button bg-white text-gray-950 font-semibold text-sm rounded-full 
+                  py-2 px-6 shadow-lg hover:bg-gray-200 transition-all duration-300 absolute bottom-0 mb-12 
+                  opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0">
+                  {project.name}
+                </span>
+              </Link>
             </div>
           ))}
         </Slider>

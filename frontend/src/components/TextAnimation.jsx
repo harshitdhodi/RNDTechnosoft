@@ -1,65 +1,61 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 const CustomTextAnimation = ({ strings = [], typeSpeed = 100, backSpeed = 60, loop = true, className = '' }) => {
   const [displayText, setDisplayText] = useState('');
   const [currentStringIndex, setCurrentStringIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
-  const typingRef = useRef(null);
-  
-  useEffect(() => {
-    if (!strings.length) return;
-    
+  const animationFrameRef = useRef(null);
+  const mountedRef = useRef(false);
+
+  const animateText = useCallback(() => {
+    if (!mountedRef.current || !strings.length) return;
+
     const currentString = strings[currentStringIndex];
-    
-    // Clear previous timeout
-    if (typingRef.current) {
-      clearTimeout(typingRef.current);
-    }
-    
-    // Calculate typing/deleting speed
-    let typeTimer = isDeleting ? backSpeed : typeSpeed;
-    
-    // Handle typing logic
-    const handleTyping = () => {
+    const delay = isDeleting ? backSpeed : typeSpeed;
+
+    const updateText = () => {
       if (isDeleting) {
-        // Deleting text
-        setDisplayText(currentString.substring(0, displayText.length - 1));
-        
-        // When fully deleted, move to next string
-        if (displayText.length === 0) {
+        if (displayText.length > 0) {
+          setDisplayText((prev) => prev.slice(0, -1));
+        } else {
           setIsDeleting(false);
-          setCurrentStringIndex((prevIndex) => 
-            loop ? (prevIndex + 1) % strings.length : Math.min(prevIndex + 1, strings.length - 1)
+          setCurrentStringIndex((prev) => 
+            loop ? (prev + 1) % strings.length : Math.min(prev + 1, strings.length - 1)
           );
         }
       } else {
-        // Typing text
-        setDisplayText(currentString.substring(0, displayText.length + 1));
-        
-        // When fully typed, start deleting after a pause
-        if (displayText.length === currentString.length) {
-          typingRef.current = setTimeout(() => {
-            setIsDeleting(true);
-          }, 1500); // Pause at end of word
+        if (displayText.length < currentString.length) {
+          setDisplayText((prev) => currentString.slice(0, prev.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), 1500);
           return;
         }
       }
-      
-      // Continue the animation loop
-      typingRef.current = setTimeout(handleTyping, typeTimer);
+      animationFrameRef.current = requestAnimationFrame(updateText);
     };
-    
-    // Start the animation
-    typingRef.current = setTimeout(handleTyping, typeTimer);
-    
-    // Cleanup
+
+    const timeout = setTimeout(() => {
+      animationFrameRef.current = requestAnimationFrame(updateText);
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [strings, currentStringIndex, isDeleting, typeSpeed, backSpeed, loop, displayText.length]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    if (!strings.length) return;
+
+    const cleanup = animateText();
+
     return () => {
-      if (typingRef.current) {
-        clearTimeout(typingRef.current);
+      mountedRef.current = false;
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
+      if (cleanup) cleanup();
     };
-  }, [displayText, currentStringIndex, isDeleting, strings, typeSpeed, backSpeed, loop]);
-  
+  }, [animateText]);
+
   return <span className={className}>{displayText}</span>;
 };
 

@@ -91,7 +91,7 @@ self.onmessage = async function(e) {
       break;
       
     default:
-      self.postMessage({ 
+      self.postMessage({  
         type: 'ERROR', 
         payload: { message: `Unknown command: ${type}` } 
       });
