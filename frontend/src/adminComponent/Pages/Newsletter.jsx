@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaTrashAlt, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { 
+  Trash2,  // Trash2
+  ArrowUp,  // ArrowUp
+  ArrowDown  // ArrowDown
+} from "lucide-react";
+
 import axios from "axios";
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
@@ -73,7 +78,7 @@ const NewsletterTable = () => {
             className="text-red-500 hover:text-red-700 transition"
             onClick={() => deleteEmail(row.original._id)}
           >
-            <FaTrashAlt />
+            <Trash2 />
           </button>
         ),
         disableSortBy: true,
@@ -129,12 +134,12 @@ const NewsletterTable = () => {
                             <span className="ml-1">
                               {column.isSorted ? (
                                 column.isSortedDesc ? (
-                                  <FaArrowDown />
+                                  <ArrowDown />
                                 ) : (
-                                  <FaArrowUp />
+                                  <ArrowUp />
                                 )
                               ) : (
-                                <FaArrowDown className="text-gray-400" />
+                                <ArrowDown className="text-gray-400" />
                               )}
                             </span>
                           )}

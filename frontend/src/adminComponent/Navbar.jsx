@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaUserCircle } from "react-icons/fa";
-import { GiHamburgerMenu } from "react-icons/gi";
-import { IoIosLock } from "react-icons/io";
-import { IoLogOut } from "react-icons/io5";
+import { UserCircle,  //FaUserCircle
+    Menu,  //GiHamburgerMenu
+    Lock,  //IoIosLock
+    LogOut  //IoLogOut
+    } from 'lucide-react';
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import axios from 'axios';
@@ -54,7 +55,7 @@ export default function Navbar({ toggleSidebar }) {
         <div>
             <nav className="flex justify-between px-10 h-[1.5cm] shadow-md bg-white items-center">
                 <div className="flex gap-6 items-center">
-                    <GiHamburgerMenu onClick={toggleSidebar} className="block lg:hidden cursor-pointer" />
+                    <Menu onClick={toggleSidebar} className="block lg:hidden cursor-pointer" />
                 </div>
                 <div className="flex gap-8 items-center">
                     {admin && (
@@ -65,9 +66,9 @@ export default function Navbar({ toggleSidebar }) {
                                 {isMenuOpen && (
                                     <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-md">
                                         <ul className="py-1">
-                                            <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-2"><FaUserCircle size={20} /><Link to="/manageProfile">Manage Profile</Link></li>
-                                            <li className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-2"><IoIosLock size={25} /><Link to="/managePassword">Manage Password</Link></li>
-                                            <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-2"><IoLogOut size={25} /><span onClick={handleLogout}>Logout</span></li>
+                                            <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-2"><UserCircle size={20} /><Link to="/manageProfile">Manage Profile</Link></li>
+                                            <li className="px-3 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-2"><Lock size={25} /><Link to="/managePassword">Manage Password</Link></li>
+                                            <li className="px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer flex items-center gap-2"><LogOut size={25} /><span onClick={handleLogout}>Logout</span></li>
                                         </ul>
                                     </div>
                                 )}

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaServicestack, FaHandshake, FaShoppingCart } from "react-icons/fa";
-import { GiVerticalBanner } from "react-icons/gi";
-import { FaNewspaper, FaPager, FaPeopleGroup } from "react-icons/fa6";
-import { RiQuestionAnswerFill } from "react-icons/ri";
+import { ServerStack,  //ServerStack
+ Handshake,  //Handshake
+ ShoppingCart,  //ShoppingCart
+ Flag,  //Flag
+ Newspaper,  //Newspaper
+ Users2,  //Users2
+ MessageSquare  //MessageSquare
+} from 'lucide-react';
 
 // Custom Bar Chart Component
 const CustomBarChart = ({ data, categories, title }) => {
@@ -313,7 +317,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countServices}</h3>
                             <p className='font-semibold'>Services</p>
                         </div>
-                        <FaServicestack size={60} />
+                        <ServerStack size={60} />
                     </div>
 
                     {/* Box 2 */}
@@ -322,7 +326,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countProducts}</h3>
                             <p className='font-semibold'>Products</p>
                         </div>
-                        <FaShoppingCart size={60} />
+                        <ShoppingCart size={60} />
                     </div>
 
                     {/* Box 3 */}
@@ -331,7 +335,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countTestimonials}</h3>
                             <p className='font-semibold'>Testimonials</p>
                         </div>
-                        <FaPager size={60} />
+                        <MessageSquare size={60} />
                     </div>
 
                     {/* Box 4 */}
@@ -340,7 +344,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countNews}</h3>
                             <p className='font-semibold'>News</p>
                         </div>
-                        <FaNewspaper size={60} />
+                        <Newspaper size={60} />
                     </div>
 
                     {/* Box 5 */}
@@ -349,7 +353,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countFaqs}</h3>
                             <p className='font-semibold'>FAQs</p>
                         </div>
-                        <RiQuestionAnswerFill size={60} />
+                        <MessageSquare size={60} />
                     </div>
 
                     {/* Box 6 */}
@@ -358,7 +362,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countBanners}</h3>
                             <p className='font-semibold'>Banners</p>
                         </div>
-                        <GiVerticalBanner size={60} />
+                        <Flag size={60} />
                     </div>
 
                     {/* Box 7 */}
@@ -367,7 +371,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countStaff}</h3>
                             <p className='font-semibold'>Our Team</p>
                         </div>
-                        <FaPeopleGroup size={60} />
+                        <Users2 size={60} />
                     </div>
                     
                     <div className="bg-lime-500 border border-gray-300 rounded p-4 text-white flex justify-around cursor-pointer" onClick={() => navigate("/clients")}>
@@ -375,7 +379,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countPartners}</h3>
                             <p className='font-semibold'>Our Clients</p>
                         </div>
-                        <FaHandshake size={60} />
+                        <Handshake size={60} />
                     </div>
                 </div>
             </div>
