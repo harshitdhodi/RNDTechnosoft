@@ -305,7 +305,7 @@ const DecorativeElement = ({ color }) => {
 
 const ServiceCard = ({ service, isLarge }) => {
   const hasImage = service.image && service.image !== "null";
-
+console.log(service)
   return (
     <div
       className={`group overflow-hidden transition-all duration-300 hover:shadow-xl relative
@@ -356,15 +356,10 @@ const ServiceCard = ({ service, isLarge }) => {
               className="w-full hidden xl:flex  relative flex-col justify-center items-center "
             >
               <div className="relative   group-hover:scale-105 transition-transform duration-500 h-full ">
-                {/* <div className="absolute inset-0 transform -translate-x-2 -translate-y-2">
-                  <div className="w-full h-full rounded-full border-2 border-white/20" />
-                </div>
-                <div className="absolute inset-0 transform translate-x-2 translate-y-2">
-                  <div className="w-full h-full rounded-full border-2 border-white/20" />
-                </div> */}
                 <img
                   src={service.image}
                   alt={service.alt}
+                  loading="lazy"
                   title={service.imgtitle}
                   className="xl:h-full xl:w-full  object-contain object-center relative z-10 
                     transition-all duration-500 group-hover:rotate-1"
@@ -377,37 +372,7 @@ const ServiceCard = ({ service, isLarge }) => {
     </div>
   );
 };
-// const LoadingSkeleton = () => {
-//   const skeletonColors = getUniqueColors(4);
 
-//   return (
-//     <>
-//       {[1, 2, 3, 4].map((i) => (
-//         <div
-//           key={i}
-//           className={`${
-//             i <= 2
-//               ? "col-span-12 md:col-span-6"
-//               : "col-span-12 md:col-span-6 lg:col-span-3"
-//           }
-//             animate-pulse rounded-xl min-h-[300px]`}
-//           style={{ backgroundColor: skeletonColors[i - 1] }}
-//         >
-//           <BackgroundPattern color="white" />
-//           <div className="h-full p-8 space-y-6">
-//             <div className="w-24 h-6 bg-white/20 rounded-full" />
-//             <div className="w-3/4 h-8 bg-white/20 rounded" />
-//             <div className="space-y-3">
-//               <div className="w-full h-4 bg-white/20 rounded" />
-//               <div className="w-5/6 h-4 bg-white/20 rounded" />
-//               <div className="w-4/6 h-4 bg-white/20 rounded" />
-//             </div>
-//           </div>
-//         </div>
-//       ))}
-//     </>
-//   );
-// };
 
 const ServicesGrid = () => {
   const [services, setServices] = useState([]);
@@ -444,6 +409,7 @@ const ServicesGrid = () => {
       image: service.photo ? `/api/logo/download/${service.photo}` : null,
       imgtitle: service.imgtitle || "",
       alt: service.alt || "",
+      slug: service.slug,
       bgColor: uniqueColors[index],
     }));
   };

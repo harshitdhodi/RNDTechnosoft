@@ -204,11 +204,13 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
   const [resume, setResume] = useState(null);
   const [clientIp, setClientIp] = useState("");
   const [utmParams, setUtmParams] = useState({});
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
     setResume(e.target.files[0]);
   };
+
   useEffect(() => {
     const fetchClientIp = async () => {
       try {
@@ -236,6 +238,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); // Start loading
     try {
       await axios.post(
         "/api/careerInquiries/createCareerInquiry",
@@ -252,7 +255,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      // alert('Application submitted successfully!');
+
       navigate("/thankyou");
       onClose();
       setName("");
@@ -262,6 +265,8 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
       setResume(null);
     } catch (err) {
       console.error("Failed to submit application", err);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -335,15 +340,19 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           </div>
           <button
             type="submit"
-            className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg w-full"
+            className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg w-full ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading} // Disable button when loading
           >
-            Submit Application
+            {loading ? "Submitting..." : "Submit Application"}
           </button>
         </form>
       </div>
     </div>
   );
 };
+
 
 const CareerPage = () => {
   const [searchTerm, setSearchTerm] = useState("");

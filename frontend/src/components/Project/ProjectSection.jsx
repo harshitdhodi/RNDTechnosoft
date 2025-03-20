@@ -97,7 +97,7 @@ const ProjectsSection = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center my-16 relative bg-white overflow-hidden">
+    <div className="flex flex-col items-center justify-center sm:my-10 relative bg-white overflow-hidden">
       <button
         className="sm:hidden mx-0 w-auto h-auto flex items-center justify-start px-4 py-2 text-xl font-inter focus:outline-none bg-yellow-500 text-white rounded-lg"
         onClick={() => setIsFilterOpen(!isFilterOpen)}
@@ -157,13 +157,13 @@ const ProjectsSection = () => {
       )}
 
       {/* Current Filter Text */}
-      <div className="mt-4 sm:hidden text-[#F55F42] text-base">
-        <span>Current Filter: {selectedCategory?.category}</span>
+      <div className="mt-4 sm:hidden text-[#fcdf3d] text-base">
+        {/* <span>Current Filter: {selectedCategory?.category}</span> */}
       </div>
 
       {selectedCategory && (
-        <div className="mt-12 text-center mx-10 sm:mx-20">
-          <div className="grid lg:grid-cols-4 grid-cols-3 sm:grid-cols-2 gap-6 mt-6">
+        <div className="sm:mt-5  text-center mx-10 sm:mx-20">
+          <div className="grid lg:grid-cols-4 grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
             {portfolios.map((item, index) =>
               item.photo[0] ? (
                 <div key={index} className="relative cursor-pointer group">
