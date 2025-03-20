@@ -1,6 +1,14 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaCheck, FaTimes, FaArrowUp, FaArrowDown, FaPlus, FaEye } from "react-icons/fa";
+import { Edit,  //Edit
+  Trash2,  //Trash2
+  Check,  //Check
+  X,  //X
+  ArrowUp,  //ArrowUp
+  ArrowDown,  //ArrowDown
+  Plus,  //Plus
+  Eye  //Eye
+ } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
@@ -95,7 +103,7 @@ const BannersTable = () => {
       {
         Header: "Status",
         accessor: "status",
-        Cell: ({ value }) => (value === "active" ? <FaCheck className="text-green-500" /> : <FaTimes className="text-red-500" />),
+        Cell: ({ value }) => (value === "active" ? <Check className="text-green-500" /> : <X className="text-red-500" />),
         disableSortBy: true,
       },
       {
@@ -103,18 +111,18 @@ const BannersTable = () => {
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-gray-700 hover:text-gray-900 transition" onClick={() => handleView(row.original)}>
-              <FaEye />
+              <Eye />
             </button>
             <button className="text-blue-500 hover:text-blue-700 transition">
               <Link to={`/banner/editBanner/${row.original._id}`}>
-                <FaEdit />
+                <Edit />
               </Link>
             </button>
             <button
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => deleteBanner(row.original._id, row.original.section)}
             >
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -244,7 +252,7 @@ const BannersTable = () => {
         <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Banners</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
           <Link to="/banner/createBanner">
-            <FaPlus size={15} />
+            <Plus size={15} />
           </Link>
         </button>
       </div>
@@ -292,12 +300,12 @@ const BannersTable = () => {
                     <span className="ml-1">
                       {column.isSorted ? (
                         column.isSortedDesc ? (
-                          <FaArrowDown />
+                          <ArrowDown />
                         ) : (
-                          <FaArrowUp />
+                          <ArrowUp />
                         )
                       ) : (
-                        <FaArrowDown className="text-gray-400" />
+                        <ArrowDown className="text-gray-400" />
                       )}
                     </span>
                   )}
@@ -354,7 +362,7 @@ const BannersTable = () => {
       >
         <div className="bg-white p-8 rounded shadow-lg min-w-54 m-4 relative">
         <button onClick={closeModal} className="absolute top-5 right-5 text-gray-500 hover:text-gray-700">
-            <FaTimes size={20} />
+            <X size={20} />
           </button>
           <h2 className="text-xl font-bold font-serif mb-4">Banner</h2>
 

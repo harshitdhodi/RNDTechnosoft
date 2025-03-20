@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
-// import * as AllIcons from "react-icons/fa"
-// import { IconContext } from "react-icons";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 

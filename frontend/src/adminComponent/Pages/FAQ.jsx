@@ -1,6 +1,14 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaCheck, FaEye, FaTimes, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { Edit,  //Edit
+  Trash2,  //Trash2
+  Check,  //Check
+  Eye,  //Eye
+  X,  //X
+  ArrowUp,  //ArrowUp
+  ArrowDown,  //ArrowDown
+  Plus  //Plus
+ } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
@@ -58,7 +66,7 @@ const FaqTable = () => {
       {
         Header: "Status",
         accessor: "status",
-        Cell: ({ value }) => value === "active" ? <FaCheck className="text-green-500" /> : <FaTimes className="text-red-500" />,
+        Cell: ({ value }) => value === "active" ? <Check className="text-green-500" /> : <X className="text-red-500" />,
         disableSortBy: true,
       },
       {
@@ -66,13 +74,13 @@ const FaqTable = () => {
         Cell: ({ row }) => (
           <div className="flex  gap-4">
             <button className="text-gray-600 hover:text-gray-800 transition" onClick={() => handleView(row.original)}>
-              <FaEye />
+              <Eye />
             </button>
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/faq/editFAQ/${row.original._id}`}><FaEdit /></Link>
+              <Link to={`/faq/editFAQ/${row.original._id}`}><Edit /></Link>
             </button>
             <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteFaq(row.original._id)}>
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -202,7 +210,7 @@ const FaqTable = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">FAQs</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-          <Link to="/faq/createFAQ"><FaPlus size={15} /></Link>
+          <Link to="/faq/createFAQ"><Plus size={15} /></Link>
         </button>
       </div>
       <div className="mb-4">
@@ -235,12 +243,12 @@ const FaqTable = () => {
                         <span className="ml-1">
                           {column.isSorted ? (
                             column.isSortedDesc ? (
-                              <FaArrowDown />
+                              <ArrowDown />
                             ) : (
-                              <FaArrowUp />
+                              <ArrowUp />
                             )
                           ) : (
-                            <FaArrowDown className="text-gray-400" />
+                            <ArrowDown className="text-gray-400" />
                           )}
                         </span>
                       )}
@@ -296,7 +304,7 @@ const FaqTable = () => {
          
         <div className="bg-white p-8 rounded shadow-lg w-96 relative">
         <button onClick={closeModal} className="absolute top-5 right-5 text-gray-500 hover:text-gray-700">
-            <FaTimes size={20} />
+            <X size={20} />
           </button>
           <h2 className="text-xl font-bold font-serif mb-4">FAQ</h2>
           {selectedFAQ && (
