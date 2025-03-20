@@ -12,10 +12,10 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const fs = require('fs').promises;
 const http = require('http');
-
+//dev branch 
 const app = express();
-
-app.use(cors({
+app.use(compression({ threshold: 1024 }));
+app.use(cors({ 
     origin: true, // or specify your frontend URL
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -26,7 +26,15 @@ app.use(cookieParser());
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.json());
-
+app.use(express.static('dist', {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.gz')) {
+      res.setHeader('Content-Encoding', 'gzip');
+    } else if (path.endsWith('.br')) {
+      res.setHeader('Content-Encoding', 'br');
+    }
+  } 
+}));
 // API Routes first
 app.use('/api/product', require('./routes/product'));
 app.use('/api/services', require('./routes/services'));
@@ -279,56 +287,7 @@ const performanceLogger = {
     }
 };
 
-// Resource monitoring function
-const monitorResources = async () => {
-    const used = process.memoryUsage();
-    const heapUsedMB = Math.round(used.heapUsed / 1024 / 1024);
-    const rssUsedMB = Math.round(used.rss / 1024 / 1024);
 
-    // Log memory usage
-    console.log(`Memory Usage - Heap: ${heapUsedMB}MB, RSS: ${rssUsedMB}MB`);
-
-    // Trigger garbage collection if memory usage is high
-    if (heapUsedMB > MEMORY_CONFIG.maximumMemoryMB * 0.8) {
-        if (global.gc) {
-            console.log('Triggering garbage collection...');
-            global.gc();
-        }
-    }
-
-    // Log metrics to file
-    await performanceLogger.logMetrics();
-
-    // Check heap usage and trigger GC if needed
-    if (heapUsedMB > RESOURCE_LIMITS.MAX_HEAP_MB * 0.8) {
-        if (global.gc) {
-            global.gc();
-            console.log('Garbage collection triggered');
-        }
-    }
-
-    // Check total memory usage
-    if (rssUsedMB > RESOURCE_LIMITS.MAX_MEMORY_MB * 0.9) {
-        console.error('Critical memory usage. Initiating shutdown...');
-        process.emit('SIGTERM');
-    }
-};
-
-// Error recovery configuration
-const MAX_RESTART_ATTEMPTS = 3;
-let restartAttempts = 0;
-let isShuttingDown = false;
-
-// Global error handlers
-process.on('uncaughtException', (error) => {
-    console.error('Uncaught Exception:', error);
-    monitorResources();
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-    monitorResources();
-});
 
 // Enhanced database connection with retry mechanism
 const connectWithRetry = async (retries = 5) => {
@@ -366,27 +325,11 @@ async function startServer() {
         server.headersTimeout = 35000;
         server.maxHeadersCount = 100;
 
-        // Handle server errors
-        server.on('error', (error) => {
-            console.error('Server error:', error);
-            if (!isShuttingDown) {
-                console.log('Attempting to recover from server error...');
-                setTimeout(() => {
-                    if (restartAttempts < MAX_RESTART_ATTEMPTS) {
-                        restartAttempts++;
-                        startServer();
-                    }
-                }, 5000);
-            }
-        });
-
-        // Start monitoring
-        const monitoringInterval = setInterval(monitorResources, 5000);
+  
 
         // Enhanced graceful shutdown
         const gracefulShutdown = async () => {
-            if (isShuttingDown) return;
-            isShuttingDown = true;
+          
 
             console.log("Starting graceful shutdown...");
             clearInterval(monitoringInterval);

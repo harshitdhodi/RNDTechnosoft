@@ -11,7 +11,7 @@ export default function HowRndHelp() {
   const [selectedCategory, setSelectedCategory] = useState(""); // State for the selected category
   const location = useLocation();
   const navigate = useNavigate();
-
+ 
   useEffect(() => {
     // Fetch data from the API when the component mounts
     const fetchBlogData = async () => {
@@ -45,12 +45,17 @@ export default function HowRndHelp() {
     setVisibleCount((prevCount) => prevCount + 4); // Increase the number of visible cards
   };
 
-  const handleReadMore = async (blogslug) => {
-    try {
-      await axios.put(`/api/news/updateBlogVisits?slug=${blogslug}`);
-      navigate(`/blog/${blogslug}`);
-    } catch (error) {
-      console.error("Error updating visits:", error);
+  const handleReadMore = async (blogslug, event) => {
+    if (event.ctrlKey || event.metaKey || event.button === 1) {
+      // Open in a new tab
+      window.open(`/blog/${blogslug}`, "_blank");
+    } else {
+      try {
+        await axios.put(`/api/news/updateBlogVisits?slug=${blogslug}`);
+        navigate(`/blog/${blogslug}`);
+      } catch (error) {
+        console.error("Error updating visits:", error);
+      }
     }
   };
 
@@ -76,7 +81,8 @@ export default function HowRndHelp() {
         {filteredData.slice(0, visibleCount).map((blog) => (
           <div
             key={blog._id}
-            className="relative blog-card border border-lg border-black rounded-xl p-4 sm:p-6 flex flex-col gap-3 items-center bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105"
+          
+            className="relative blog-card border  border-lg border-black rounded-xl p-4 sm:p-6 flex flex-col gap-3 items-center bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105"
           >
             <p className="bg-[#333] rounded-xl text-white px-3 py-1 absolute top-2 right-2">
               {blog.serviceCategoryName}
@@ -100,7 +106,7 @@ export default function HowRndHelp() {
               </p>
 
               <button
-                onClick={() => handleReadMore(blog.slug)} // Use blog.slug to navigate
+                onClick={(e) => handleReadMore(blog.slug, e)} // Use blog.slug to navigate
                 className="relative mt-3 py-1 px-4 text-mg font-bold bg-[#f3ca0d] text-white rounded-3xl overflow-hidden group"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-[#f3ca0d] to-yellow-800 transform origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100" />

@@ -7,36 +7,20 @@
     padding: 0 !important;
 }
 
-/* .ql-editor h1 {
-    font-size: 34px;
-    line-height: 40px;
-}
 
-.ql-editor h2 {
-    font-size: 20px;
-    line-height: 30px;
-}
-
-.ql-editor h3 {
-    font-size: 20px;
-    line-height: 30px;
-}
-
-.ql-editor h4 {
-    font-size: 16px;
-    line-height: 26px;
-}
-
-.ql-editor h5 {
-    font-size: 16px;
-    line-height: 26px;
+.quill-content {
+    color: black !important;
 
 }
 
-.ql-editor h6 {
-    font-size: 16px;
-    line-height: 26px;
-} */
+.text-white{
+    color: white !important;
+}
+.custom-quill .ql-container {
+    min-height: 200px; /* Set desired minimum height */
+    max-height: 400px; /* Optional, for scrollability */
+    overflow-y: auto;  /* Enables scrolling if max-height is reached */
+  }
 
 /* Base styles for headings */
 .ql-editor h1 {
@@ -155,61 +139,3 @@ body .space-y-10> :not([hidden])~ :not([hidden]) {
 }
 
 
-/* @media (max-width: 576px) {
-    .ql-editor {
-        text-align: center !important;
-      
-    }
-} */
-
-/* @media (min-width: 576px) {
-    .ql-editor {
-        text-align: justify !important;
-      
-    }
-
-    .ql-editor h4 {
-        text-align: initial !important;
-        
-    }
-} */
-
-/* recaptchaStyles.css */
-
-/* Center the reCAPTCHA container */
-/* .rc-anchor {
-    display: flex !important;
-    
-    justify-content: center !important;
-    align-items: center !important;
-} */
-
-/* Scale down the entire reCAPTCHA */
-/* .rc-anchor-normal {
-    transform: scale(0.85) !important;
-   
-    transform-origin: 0 0 !important;
-   
-    width: 100% !important;
-   
-} */
-
-/* Style for the checkbox */
-/* .recaptcha-checkbox {
-    width: 24px !important;
-    
-    height: 24px !important;
-    
-} */
-
-/* Adjust spacing or margins */
-/* .rc-anchor-center-item {
-    margin: 0 10px !important;
-  
-} */
-
-/* Hide the logo if not needed */
-/* .rc-anchor-logo-portrait {
-    display: none !important;
-  
-} */

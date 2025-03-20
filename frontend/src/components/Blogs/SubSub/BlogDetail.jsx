@@ -61,7 +61,7 @@ export default function BlogDetail() {
   const { details } = blogData || {};
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-20 px-4 sm:px-8 md:px-16 lg:px-32 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-10 sm:pt-20 px-4 sm:px-8 md:px-16 lg:px-32 mb-6">
       {/* Left section */}
       <div className="col-span-1 md:col-span-2 lg:col-span-2">
         <div className="mb-4">
@@ -76,11 +76,11 @@ export default function BlogDetail() {
       </div>
 
       {/* Right section */}
-      <div className="col-span-1 md:col-span-1 lg:col-span-1  border-[3px] rounded-xl">
+      <div className="col-span-1 md:col-span-1 lg:col-span-1 h-fit border-[3px] rounded-xl">
         <h2 className="text-lg md:text-xl lg:text-2xl font-serif text-center font-bold mt-4 mb-4">
           Latest Blogs
         </h2>
-        <div className="flex flex-col gap-4">
+        <div className="flex mb-10 flex-col gap-4">
           {latestBlogs.map((blog) => (
             <div
               key={blog._id}

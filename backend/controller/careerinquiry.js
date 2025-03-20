@@ -3,11 +3,13 @@ const path = require('path')
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: process.env.EMAIL_HR,
-    pass: process.env.EMAIL_HRPASS
-  }
+    host: 'smtp.gmail.com', // Gmail SMTP server
+    port: 587, // Port
+    secure: false, // Use `true` for 465, `false` for other ports
+    auth: {
+        user: process.env.EMAIL_HR,
+        pass: process.env.HR_PASS
+    }
 });
 
 exports.CreateCareerInquiry = async (req, res) => {

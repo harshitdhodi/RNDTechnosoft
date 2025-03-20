@@ -12,6 +12,11 @@ const heroSectionSchema = new mongoose.Schema({
   
     trim: true,
   },
+  tagline: {
+    type: String,
+  
+    trim: true,
+  },
   category: {
     type: mongoose.Schema.Types.ObjectId, // Reference to IndustriesCategory
     ref: 'IndustriesCategory',
