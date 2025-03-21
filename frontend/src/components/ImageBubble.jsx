@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 // Custom hook to track window resize events
 const useResize = () => {
@@ -16,8 +16,8 @@ const useResize = () => {
       });
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return windowSize;
@@ -25,49 +25,36 @@ const useResize = () => {
 
 const ImageBubble = ({ homeHero }) => {
   const [photos, setPhotos] = useState([]);
-  const { width } = useResize(); // Track screen width for responsiveness
+  const { width } = useResize();
 
-  // Fetch photos from the server
+  // Fetch photos from API
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
-        const photosResponse = await axios.get('/api/homehero/leftphoto', {
+        const response = await axios.get("/api/homehero/leftphoto", {
           withCredentials: true,
         });
 
-        const photoNames = photosResponse.data.data.map((photoObj) => photoObj.photo[0]);
-        const photoPromises = photoNames.map((photoName) => fetchPhoto(photoName));
-        const photoUrls = await Promise.all(photoPromises);
-        setPhotos(photoUrls);
+        console.log("Fetched Data:", response.data); // Debugging fetched data
+        if (response.data && response.data.data) {
+          setPhotos(response.data.data.map((photoObj) => photoObj.photo[0])); // Extracting image URLs
+        }
       } catch (error) {
-        console.error('Error fetching photos:', error);
+        console.error("Error fetching photos:", error);
       }
     };
 
     fetchPhotos();
   }, []);
 
-  const fetchPhoto = async (photoName) => {
-    try {
-      const response = await axios.get(`/api/image/download/${photoName}`, {
-        responseType: 'blob',
-        withCredentials: true,
-      });
-      return URL.createObjectURL(response.data);
-    } catch (error) {
-      console.error(`Error fetching photo ${photoName}:`, error);
-      return null;
-    }
-  };
-
   if (!homeHero || !homeHero.labels || !homeHero.smallCircles) {
     return null;
   }
 
-  const labels = homeHero.labels.slice(0,4);
+  const labels = homeHero.labels.slice(0, 4);
   const smallCircles = homeHero.smallCircles;
 
-  // Large screen positions (used as a base for scaling)
+  // Base positions for large screens
   const imagePositionsLarge = [
     { top: 35, left: 20, size: 6 },
     { top: 65, left: 45, size: 8 },
@@ -76,19 +63,19 @@ const ImageBubble = ({ homeHero }) => {
   ];
 
   const labelPositionsLarge = [
-    { top: 20, left: 40, size: 6, color: '#000' },
-    { top: 55, left: 10, size: 5, color: '#000' },
-    { top: 50, left: 40, size: 5, color: '#000' },
-    { top: 58, left: 75, size: 5, color: '#000' },
+    { top: 20, left: 40, size: 6, color: "#000" },
+    { top: 55, left: 10, size: 5, color: "#000" },
+    { top: 50, left: 40, size: 5, color: "#000" },
+    { top: 58, left: 75, size: 5, color: "#000" },
   ];
 
   const smallCirclePositionsLarge = [
-    { top: 40, left: 50, size: 1.7, color: '#FF6347' },
-    { top: 65, left: 30, size: 2.5, color: '#FFD700' },
-    { top: 85, left: 70, size: 3, color: '#87CEEB' },
+    { top: 40, left: 50, size: 1.7, color: "#FF6347" },
+    { top: 65, left: 30, size: 2.5, color: "#FFD700" },
+    { top: 85, left: 70, size: 3, color: "#87CEEB" },
   ];
 
-  // Helper function to scale positions and sizes based on screen width
+  // Scale positions dynamically based on screen width
   const scaleFactor = width >= 1440 ? 1 : width / 1440;
 
   const scalePositions = (positions) =>
@@ -105,28 +92,35 @@ const ImageBubble = ({ homeHero }) => {
 
   return (
     <div className="relative bg-[#F7F4EE] p-4 min-h-screen overflow-hidden">
+      {/* Render Images */}
       {photos.map((photo, index) => {
         const position = scaledImagePositions[index];
-        if (!position) return null; // Check if position is defined
-        return (
+
+        return position ? (
           <img
             key={index}
             src={photo}
-            alt={`Dynamic ${index}`}
-            className="absolute"
+            alt={`Staff ${index}`}
+            className="absolute object-cover rounded-full"
             style={{
               top: position.top,
               left: position.left,
               width: position.size,
               height: position.size,
             }}
+            onError={(e) => {
+              console.error(`Image failed to load: ${photo}`);
+              e.target.style.display = "none"; // Hide broken images
+            }}
           />
-        );
+        ) : null;
       })}
+
+      {/* Render Labels */}
       {labels.map((label, index) => {
         const position = scaledLabelPositions[index];
-        if (!position) return null; // Check if position is defined
-        return (
+
+        return position ? (
           <div
             key={index}
             className="absolute rounded-full text-white flex items-center justify-center text-[15px] font-poppins uppercase"
@@ -134,19 +128,21 @@ const ImageBubble = ({ homeHero }) => {
               top: position.top,
               left: position.left,
               backgroundColor: label.color,
-              padding: '0.5rem',
+              padding: "0.5rem",
               width: position.size,
               height: position.size,
             }}
           >
             {label.label}
           </div>
-        );
+        ) : null;
       })}
+
+      {/* Render Small Circles */}
       {smallCircles.map((circle, index) => {
         const position = scaledSmallCirclePositions[index];
-        if (!position) return null; // Check if position is defined
-        return (
+
+        return position ? (
           <div
             key={index}
             className="absolute rounded-full"
@@ -158,7 +154,7 @@ const ImageBubble = ({ homeHero }) => {
               height: position.size,
             }}
           />
-        );
+        ) : null;
       })}
     </div>
   );
