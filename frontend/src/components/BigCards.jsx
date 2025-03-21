@@ -11,8 +11,8 @@ function transformHomeCardData(homeCardData, ratingData) {
         heading: card.heading.replace(/<\/?[^>]+(>|$)/g, ""), // Remove HTML tags
         buttonText: card.subheading.replace(/<\/?[^>]+(>|$)/g, ""), // Remove HTML tags
         buttonLink: "/portfolios",
-        imageSrc: `/api/image/download/${card.photo[0]}`, // Main image
-        srcSet: card.subsections.length > 0 ? `/api/image/download/${card.subsections[0].photo} 1024w` : "", // Second image from subsection
+        imageSrc: card.photo?.[0] || "", // Use the original URL from the API
+        srcSet: card.subsections?.[0]?.photo || "", // Use subsection image if available
         imageAlt: card.photoAlt?.[0] || "company logos",
         background: "bg-[#134C6C]",
         textColor: "text-white",
@@ -24,7 +24,7 @@ function transformHomeCardData(homeCardData, ratingData) {
         buttonLink: "/all-reviews",
         rating: ratingData.averageRating || "N/A", // Use provided rating or "N/A" as fallback
         reviewsAlt: card.photoAlt?.[0] || "reviews",
-        personImages: `/api/image/download/${card.photo[0]}`,
+        personImages: card.photo?.[0] || "", // Use the original URL from the API
         background: "bg-[#114038]",
         textColor: "text-white",
       };
