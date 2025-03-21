@@ -1,105 +1,108 @@
 const express = require('express');
-const axios = require('axios');
 const Content = require('../model/content');
 const Package = require('../model/packages');
 const router = express.Router();
 
-// Functions to fetch data from different endpoints
-const getContent = async (req, res) => {
+// Function to fetch content data
+const getContent = async () => {
     try {
-      const contents = await Content.find();
-      return res.status(200).json(contents);
+        return await Content.find();
     } catch (error) {
-      console.error("Error retrieving contents:", error);
-      return res
-        .status(500)
-        .json({ message: "Error retrieving contents", error });
+        console.error("Error retrieving contents:", error);
+        return null; // Return null or empty array if error occurs
     }
-  };
-  
-
-const getStandardPackage = async (req, res) => {
-  try {
-    // Helper function to format package data
-    const formatPackage = (pkg) => ({
-      _id: pkg._id,
-      title: pkg.title,
-      status: pkg.status,
-      categories: pkg.categories,
-      subcategories: pkg.subcategories,
-      subSubcategories: pkg.subSubcategories,
-      servicecategories: pkg.servicecategories,
-      servicesubcategories: pkg.servicesubcategories,
-      servicesubSubcategories: pkg.servicesubSubcategories,
-      description: pkg.description,
-      price: pkg.price,
-      whatIsTheir: pkg.whatIsTheir,
-      whatIsNotTheir: pkg.whatIsNotTheir,
-      slug: pkg.slug,
-      createdAt: pkg.createdAt,
-      updatedAt: pkg.updatedAt
-    });
-
-    // Query to find packages where all specified fields are empty or contain only empty spaces
-    const packages = await Package.find({
-      categories: { $in: ["", " "] },
-      subcategories: { $in: ["", " "] },
-      subSubcategories: { $in: ["", " "] },
-      servicecategories: { $in: ["", " "] },
-      servicesubcategories: { $in: ["", " "] },
-      servicesubSubcategories: { $in: ["", " "] }
-    });
-
-    // If no packages are found
-    if (!packages || packages.length === 0) {
-      return res.status(404).json({
-        message: 'No packages found with all categories, subcategories, and service categories empty'
-      });
-    }
-
-    // Return the found packages
-    return res.status(200).json({
-      data: {
-        packages: packages.map(formatPackage),
-        total: packages.length
-      }
-    });
-
-  } catch (error) {
-    console.error('Error retrieving empty category packages:', error);
-    return res.status(500).json({
-      message: 'Server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
-  }
 };
 
+// Function to fetch standard packages
+const getStandardPackage = async () => {
+    try {
+        const formatPackage = (pkg) => ({
+            _id: pkg._id,
+            title: pkg.title,
+            status: pkg.status,
+            categories: pkg.categories,
+            subcategories: pkg.subcategories,
+            subSubcategories: pkg.subSubcategories,
+            servicecategories: pkg.servicecategories,
+            servicesubcategories: pkg.servicesubcategories,
+            servicesubSubcategories: pkg.servicesubSubcategories,
+            description: pkg.description,
+            price: pkg.price,
+            whatIsTheir: pkg.whatIsTheir,
+            whatIsNotTheir: pkg.whatIsNotTheir,
+            slug: pkg.slug,
+            createdAt: pkg.createdAt,
+            updatedAt: pkg.updatedAt
+        });
+
+        const packages = await Package.find({
+            categories: { $in: ["", " "] },
+            subcategories: { $in: ["", " "] },
+            subSubcategories: { $in: ["", " "] },
+            servicecategories: { $in: ["", " "] },
+            servicesubcategories: { $in: ["", " "] },
+            servicesubSubcategories: { $in: ["", " "] }
+        });
+
+        return {
+            packages: packages.map(formatPackage),
+            total: packages.length
+        };
+
+    } catch (error) {
+        console.error('Error retrieving empty category packages:', error);
+        return null; // Return null or empty array if error occurs
+    }
+};
+
+// Placeholder for getHomeCard1_2() function
+const getHomeCards = async () => {
+    try {
+        const contentTypes = ["homecard1", "homecard2", "everyplan", "globalsolution","weareexpertsin"];
+        const contents = await Content.find({ contentType: { $in: contentTypes }, status: true });
+
+        // Categorize contents based on contentType
+        const categorizedContents = {
+            homecard1: [],
+            homecard2: [],
+            everyplan: [],
+            globalsolution: [],
+            weareexpertsin: [],
+        };
+
+        contents.forEach(item => {
+            if (categorizedContents[item.contentType]) {
+                categorizedContents[item.contentType].push(item);
+            }
+        });
+
+        return categorizedContents;
+    } catch (error) {
+        console.error("Error retrieving contents by type:", error);
+        return {weareexpertsin:[], homecard1: [], homecard2: [], everyplan: [], globalsolution: [] }; // Return empty arrays in case of an error
+    }
+};
+
+
 // Combined API endpoint
-router.get('/api/combined2', async (req, res) => {
+router.get('/combined2', async (req, res) => {
     try {
         // Fetch all data concurrently
-        const [
-            content,
-            homecard1,
-            standardPackage
-        ] = await Promise.all([
-            getContent(),
-            getHomeCard1_2(),
-          
+        const [ homeCards, standardPackage] = await Promise.all([
+           
+            getHomeCards(),
             getStandardPackage()
         ]);
 
-        // Structure the combined response
+        // Structure the combined response with separated content types
         const combinedResponse = {
-            content: content,
-            homepage: {
-                homecard1: homecard1,
-                homecard2: homecard1,
-                everyplan: homecard1,
-                globalsolution: homecard1
-            },
+            WeAreExpert: homeCards.weareexpertsin || [],
+            homecard1: homeCards.homecard1 || [],
+            homecard2: homeCards.homecard2 || [],
+            everyplan: homeCards.everyplan || [],
+            globalsolution: homeCards.globalsolution || [],
             packages: {
-                standard: standardPackage
+                standard: standardPackage || { packages: [], total: 0 }
             }
         };
 
