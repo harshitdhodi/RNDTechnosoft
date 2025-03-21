@@ -305,7 +305,7 @@ const DecorativeElement = ({ color }) => {
 
 const ServiceCard = ({ service, isLarge }) => {
   const hasImage = service.image && service.image !== "null";
-console.log(service)
+// console.log(service)
   return (
     <div
       className={`group overflow-hidden transition-all duration-300 hover:shadow-xl relative
@@ -374,30 +374,21 @@ console.log(service)
 };
 
 
-const ServicesGrid = () => {
+const ServicesGrid = ({ serviceData }) => {
+  console.log("Service Data:", serviceData);
+
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/services/getCategory", {
-          credentials: "include",
-        });
-        const data = await response.json();
-        const transformedData = transformServices(data);
-        setServices(transformedData);
-      } catch (error) {
-        console.error("Error fetching services:", error);
-        setError("Failed to load services");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
+    if (serviceData && serviceData.length > 0) {
+      const transformedData = transformServices(serviceData);
+      setServices(transformedData);
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  }, [serviceData]);
 
   const transformServices = (apiData) => {
     const uniqueColors = getUniqueColors(apiData.length);
@@ -414,19 +405,21 @@ const ServicesGrid = () => {
     }));
   };
 
-  if (error) {
-    return (
-     null
-    );
+  if (loading) {
+    return <div className="text-center py-16 text-gray-600">Loading services...</div>;
+  }
+
+  if (!services.length) {
+    return <div className="text-center py-16 text-gray-600">No services available</div>;
   }
 
   return (
-    <section className="md:my-20 md:py-16  py-4 px-4 bg-gray-50">
+    <section className="md:my-20 md:py-16 py-4 px-4 bg-gray-50">
       <div className="w-[85%] mx-auto">
-        <h2 className="text-4xl md:text-5xl font-serif text-center font-medium ">
+        <h2 className="text-4xl md:text-5xl font-serif text-center font-medium">
           Our <span className="text-yellow-500">Services</span>
         </h2>
-        <h3 className=" md:text-[23px]  text-center  pb-16 mt-4  ">
+        <h3 className="md:text-[23px] text-center pb-16 mt-4">
           Dedicated to Your Success
         </h3>
 
@@ -435,13 +428,7 @@ const ServicesGrid = () => {
             <ServiceCard
               key={index}
               service={service}
-              isLarge={
-                index === 0 ||
-                index === 4 ||
-                index === 7 ||
-                index === 9 ||
-                index === 10
-              }
+              isLarge={[0, 4, 7, 9, 10].includes(index)}
             />
           ))}
         </div>

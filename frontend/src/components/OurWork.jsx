@@ -2,12 +2,13 @@ import React, { useLayoutEffect, useRef, useEffect, useState } from 'react';
 import Slider from 'react-slick';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const OurWorkComponent = () => {
+const OurWorkComponent = ({ ourWorkData }) => {
+  console.log('Our Work Data:', ourWorkData);
+
   const containerRef = useRef(null);
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,42 +16,26 @@ const OurWorkComponent = () => {
   const sliderRef = useRef(null);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.get('/api/homepage/ourwork');
-        const projectsData = response.data.map(project => ({
-          name: project.name,
-          photoId: project.photo,
-          link: `/${project.slug}`,
-          alt: project.alt,
-          imgtitle: project.imgtitle,
-        }));
-        setProjects(projectsData); // Set projects without waiting for images
-        setIsLoading(false);
-  
-        // Load images for initial slides only
-        const initialImages = projectsData.slice(0, 4).map(project => 
-          axios.get(`/api/logo/download/${project.photoId}`, { responseType: 'blob' })
-            .then(res => {
-              project.imageUrl = URL.createObjectURL(res.data);
-              setProjects(prev => [...prev]); // Trigger re-render
-            })
-            .catch(err => {
-              project.imageError = true;
-            })
-        );
-        await Promise.all(initialImages);
-      } catch (error) {
-        setError('Failed to load projects');
-        setIsLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
+    if (ourWorkData && ourWorkData.length > 0) {
+      const projectsData = ourWorkData.map(project => ({
+        name: project.name,
+        photoId: project.photo,
+        link: `/${project.slug}`,
+        alt: project.alt,
+        imgtitle: project.imgtitle,
+      }));
+
+      setProjects(projectsData);
+      setIsLoading(false);
+    } else {
+      setError('No projects found');
+      setIsLoading(false);
+    }
+  }, [ourWorkData]);
 
   useLayoutEffect(() => {
     if (!containerRef.current || projects.length === 0) return;
-  
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -66,14 +51,13 @@ const OurWorkComponent = () => {
       },
       { threshold: 0.1 }
     );
-  
+
     const buttons = containerRef.current.querySelectorAll('.project-button');
     buttons.forEach((button) => observer.observe(button));
-  
+
     return () => observer.disconnect();
   }, [projects]);
 
-  // Cleanup ScrollTrigger on unmount
   useEffect(() => {
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -90,65 +74,27 @@ const OurWorkComponent = () => {
     autoplaySpeed: 2000,
     pauseOnHover: true,
     responsive: [
-      {
-        breakpoint: 1536, // 2xl
-        settings: {
-          slidesToShow: 4,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1280, // xl
-        settings: {
-          slidesToShow: 4,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 1024, // lg
-        settings: {
-          slidesToShow: 3,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 768, // md
-        settings: {
-          slidesToShow: 2,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 640, // sm
-        settings: {
-          slidesToShow: 1,
-          dots: true,
-        },
-      },
+      { breakpoint: 1536, settings: { slidesToShow: 4, dots: true } },
+      { breakpoint: 1280, settings: { slidesToShow: 4, dots: true } },
+      { breakpoint: 1024, settings: { slidesToShow: 3, dots: true } },
+      { breakpoint: 768, settings: { slidesToShow: 2, dots: true } },
+      { breakpoint: 640, settings: { slidesToShow: 1, dots: true } },
     ],
   };
 
   const ProjectCard = ({ project }) => {
-    if (project.imageError) {
-      return null;
-    }
-
     return (
       <Link 
         to={project.link}
         className="relative flex justify-center items-end h-64 mx-3 overflow-hidden group"
       >
-        {project.imageUrl ? (
-          <img 
-            src={project.imageUrl} 
-            alt={project.alt || project.name} 
-            title={project.imgtitle} 
-            loading='lazy'
-            className="w-full h-full transition-transform duration-300" 
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-200 animate-pulse" />
-        )}
+        <img 
+          src={`/api/logo/download/${project.photoId}`}
+          alt={project.alt || project.name} 
+          title={project.imgtitle} 
+          loading='lazy'
+          className="w-full h-full transition-transform duration-300" 
+        />
         <span className="project-button bg-white text-gray-950 font-semibold text-sm rounded-full 
           py-2 px-6 shadow-lg hover:bg-gray-200 transition-all duration-300 absolute bottom-0 mb-12 
           opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0">
@@ -158,7 +104,7 @@ const OurWorkComponent = () => {
     );
   };
 
-  if (isLoading || projects.length === 0) {
+  if (isLoading) {
     return (
       <div className="w-full xl:px-28">
         <div className="flex justify-center gap-3">

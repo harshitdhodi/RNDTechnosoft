@@ -1,32 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import axios from 'axios';
 
-const Marquee = ({ speed = 30 }) => {
+const Marquee = ({ speed = 30, marqueeData = [] }) => {
   const marqueeRef = useRef(null);
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true); // Track loading state
+
+  // Duplicate marqueeData array to enable seamless looping
+  const combinedServices = [...marqueeData, ...marqueeData, ...marqueeData, ...marqueeData];
 
   useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await axios.get('/api/homepage/marquee');
-        setServices(response.data);
-      } catch (error) {
-        console.error('Error fetching services:', error);
-      } finally {
-        setLoading(false); // Stop loading after fetch
-      }
-    };
-
-    fetchServices();
-  }, []);
-
-  // Duplicate services array to enable seamless looping
-  const combinedServices = [...services, ...services, ...services, ...services];
-
-  useEffect(() => {
-    if (!loading) {
+    if (marqueeRef.current && marqueeData.length > 0) {
       const marqueeElement = marqueeRef.current;
       const totalWidth = marqueeElement.scrollWidth;
 
@@ -35,7 +17,7 @@ const Marquee = ({ speed = 30 }) => {
         marqueeElement,
         { x: 0 },
         {
-          x: -totalWidth / 2, // Move the whole content left by half of its width
+          x: -totalWidth / 2, // Move left by half of its width
           duration: speed,
           repeat: -1,
           ease: 'linear',
@@ -45,22 +27,24 @@ const Marquee = ({ speed = 30 }) => {
         }
       );
     }
-  }, [combinedServices, speed, loading]);
+  }, [combinedServices, speed, marqueeData]);
 
   return (
     <div className="bg-[#333] py-3 relative -z-10 overflow-hidden">
       <div ref={marqueeRef} className="flex space-x-10 whitespace-nowrap pb-2">
-        {loading
-          ? [...Array(5)].map((_, index) => (
-              <span key={index} className="scrolling-text text-xl font-semibold text-gray-500 animate-pulse">
-                Loading... <span className="scroll-dot text-gray-400 text-3xl pl-8">●</span>
-              </span>
-            ))
-          : combinedServices.map((service, index) => (
-              <span key={index} className="scrolling-text text-xl font-semibold text-white">
-                {service} <span className="scroll-dot text-[#f3ca0d] text-3xl pl-8">●</span>
-              </span>
-            ))}
+        {combinedServices.length > 0 ? (
+          combinedServices.map((service, index) => (
+            <span key={index} className="scrolling-text text-xl font-semibold text-white">
+              {service} <span className="scroll-dot text-[#f3ca0d] text-3xl pl-8">●</span>
+            </span>
+          ))
+        ) : (
+          [...Array(5)].map((_, index) => (
+            <span key={index} className="scrolling-text text-xl font-semibold text-gray-500 animate-pulse">
+              Loading... <span className="scroll-dot text-gray-400 text-3xl pl-8">●</span>
+            </span>
+          ))
+        )}
       </div>
     </div>
   );

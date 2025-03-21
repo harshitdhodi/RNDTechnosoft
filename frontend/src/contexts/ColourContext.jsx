@@ -1,6 +1,5 @@
-// src/contexts/ColorContext.js
-import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { createContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export const ColorContext = createContext();
 
@@ -11,23 +10,17 @@ export const ColorProvider = ({ children }) => {
         accent1: '#0000ff',
         accent2: '#ffff00',
     });
-
+    console.log(useSelector((state) => state || null))
+    // ✅ SAFELY Access Redux state to prevent "Cannot read properties of undefined"
+    const colorData = useSelector((state) => state.colors || null);
+console.log(colorData)
     useEffect(() => {
-        const loadColors = async () => {
-            try {
-                const response = await axios.get('/api/colors/get-colors');
-                if (response.data.colors) {
-                    setColors(response.data.colors);
-                    updateCSSVariables(response.data.colors);
-                    localStorage.setItem('colors', JSON.stringify(response.data.colors));
-                }
-            } catch (error) {
-                console.error('Error fetching colors:', error);
-            }
+        if (colorData) {
+            setColors(colorData); // ✅ Update state with Redux data
+            updateCSSVariables(colorData);
+            localStorage.setItem('colors', JSON.stringify(colorData));
         }
-
-        loadColors();
-    }, []);
+    }, [colorData]);
 
     const updateCSSVariables = (colors) => {
         document.documentElement.style.setProperty('--primary-color', colors.primary);
@@ -36,28 +29,8 @@ export const ColorProvider = ({ children }) => {
         document.documentElement.style.setProperty('--accent2-color', colors.accent2);
     };
 
-    const handleChange = (colorName, colorValue) => {
-        const newColors = {
-            ...colors,
-            [colorName]: colorValue,
-        };
-        setColors(newColors);
-        updateCSSVariables(newColors);
-        localStorage.setItem('colors', JSON.stringify(newColors));
-    };
-
-    const handleSave = async () => {
-        try {
-            await axios.post('/api/colors/save-colors', { colors });
-            alert('Colors saved successfully!');
-        } catch (error) {
-            console.error('Error saving colors:', error);
-            alert('Failed to save colors.');
-        }
-    };
-
     return (
-        <ColorContext.Provider value={{ colors, handleChange, handleSave }}>
+        <ColorContext.Provider value={{ colors }}>
             {children}
         </ColorContext.Provider>
     );

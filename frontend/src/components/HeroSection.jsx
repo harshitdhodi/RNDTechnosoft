@@ -16,7 +16,8 @@ const defaultContent = {
   paragraph: { text: "Dream it, and we'll design it! Our web development and design services come in…" }
 };
 
-const HeroSection = ({ serviceGridRef }) => {
+const HeroSection = ({ serviceGridRef,heroData }) => {
+  console.log(heroData);
   const [homeHero, setHomeHero] = useState(null);
   const [photos, setPhotos] = useState([]);
   const [isContentLoading, setIsContentLoading] = useState(true);
