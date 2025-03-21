@@ -11,30 +11,7 @@ const GlobalSolution = () => {
         const solutionData = response.data[0];
 
         if (solutionData) {
-          const subsections = solutionData.subsections;
-
-          // Fetch images for each language in the subsections
-          const languagesWithImages = await Promise.all(
-            subsections.map(async (language) => {
-              try {
-                const imageResponse = await axios.get(
-                  `/api/image/download/${language.photo}`,
-                  { responseType: 'blob' }
-                );
-                const imageUrl = URL.createObjectURL(imageResponse.data);
-                return { ...language, imageUrl };
-              } catch (error) {
-                console.error("Error fetching image:", error);
-                return { ...language, imageUrl: null };
-              }
-            })
-          );
-
-          // Set the state with the fetched and processed data
-          setGlobalSolution({
-            ...solutionData,
-            subsections: languagesWithImages
-          });
+          setGlobalSolution(solutionData);
         }
       } catch (error) {
         console.error("Error fetching global solution data:", error);
@@ -44,10 +21,10 @@ const GlobalSolution = () => {
     fetchGlobalSolution();
   }, []);
 
-  if (!globalSolution) return null; 
+  if (!globalSolution) return null;
 
   return (
-    <section className="relative bg-[#333] overflow-hidden mt-5 ">
+    <section className="relative bg-[#333] overflow-hidden mt-5">
       {/* Shape Divider */}
       <div className="absolute inset-x-0 top-0 py-0">
         <svg
@@ -78,12 +55,12 @@ const GlobalSolution = () => {
           <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:mt-32 mt-24">
             {globalSolution.subsections.map((language, index) => (
               <div key={index} className="text-center space-y-6">
-                {language.imageUrl ? (
+                {language.photo ? (
                   <img
                     loading="lazy"
-                    fetchPriority='high'
+                    fetchPriority="high"
                     decoding="async"
-                    src={language.imageUrl}
+                    src={language.photo}
                     alt={language.photoAlt}
                     title={language.imgtitle}
                     className="md:w-28 md:h-28 w-24 h-24 mx-auto mb-2"

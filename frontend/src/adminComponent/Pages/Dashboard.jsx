@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { ServerStack,  //ServerStack
- Handshake,  //Handshake
+import { Headphones, Handshake,  //Handshake
  ShoppingCart,  //ShoppingCart
  Flag,  //Flag
  Newspaper,  //Newspaper
  Users2,  //Users2
- MessageSquare  //MessageSquare
+ MessageSquare,  //MessageSquare
+
 } from 'lucide-react';
 
 // Custom Bar Chart Component
@@ -317,7 +317,7 @@ const AdminDashboard = () => {
                             <h3 className="text-4xl font-bold mb-2">{countServices}</h3>
                             <p className='font-semibold'>Services</p>
                         </div>
-                        <ServerStack size={60} />
+                        <Headphones size={60} />
                     </div>
 
                     {/* Box 2 */}
