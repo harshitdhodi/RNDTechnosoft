@@ -24,7 +24,7 @@ export default function Homepage() {
     error 
   } = useGetCombinedDataQuery();
 
-console.log(data)
+console.log(data) 
 useEffect(() => {
   if (data?.navigation) {
     dispatch(setNavData(data.navigation)); // Save navigation data to Redux
@@ -60,14 +60,14 @@ useEffect(() => {
           serviceData={data?.services?.categories} // Pass service categories
         />
       </div>
-      <WeAreExpert />
-      <TrustedSection />
-      <WhatYouGet />
-      <StandardPackage />
+      <WeAreExpert expertData={data?.WeAreExpert} />
+      <TrustedSection homecard1={data?.homecard1} homecard2 ={data?.homecard2}/>
+      <WhatYouGet everyPlan = {data?.everyplan} />
+      <StandardPackage packagesData = {data?.packages} />
       <Faq />
       <BookAcall />
       <PremiumTemplatesSection />
-      <GlobalSolution />
+      <GlobalSolution globalData = {data?.globalsolution} />
     </div>
   );
 }
