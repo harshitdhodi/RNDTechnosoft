@@ -1,6 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { Edit,  //Edit
+ Trash2,  //Trash2
+ ArrowUp,  //ArrowUp
+ ArrowDown,  //ArrowDown
+ Plus  //Plus
+} from 'lucide-react';
 import { BsArrowReturnRight } from "react-icons/bs";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -46,14 +51,14 @@ const CategoryTable = () => {
           <div className="flex gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition">
               <Link to={`/ServiceCategory/editServiceCategory/${row.original.slug}`}>
-                <FaEdit />
+                <Edit />
               </Link>
             </button>
             <button
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => deleteCategory({ id: row.original.slug })}
             >
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -140,7 +145,7 @@ const CategoryTable = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">Categories</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
-          <Link to="/ServiceCategory/CreateServiceCategory"><FaPlus size={15} /></Link>
+          <Link to="/ServiceCategory/CreateServiceCategory"><Plus size={15} /></Link>
         </button>
       </div>
       {loadings ? (
@@ -162,12 +167,12 @@ const CategoryTable = () => {
                           <span className="ml-1">
                             {column.isSorted ? (
                               column.isSortedDesc ? (
-                                <FaArrowDown />
+                                <ArrowDown />
                               ) : (
-                                <FaArrowUp />
+                                <ArrowUp />
                               )
                             ) : (
-                              <FaArrowDown className="text-gray-400" />
+                              <ArrowDown className="text-gray-400" />
                             )}
                           </span>
                         )}
@@ -205,7 +210,7 @@ const CategoryTable = () => {
                             <div className="flex gap-4">
                               <button className="text-blue-500 hover:text-blue-700 transition">
                                 <Link to={`/ServiceCategory/editServiceCategory/${row.original.slug}/${subcategory.slug}`}>
-                                  <FaEdit />
+                                  <Edit />
                                 </Link>
                               </button>
                               <button
@@ -215,7 +220,7 @@ const CategoryTable = () => {
                                   subCategoryId: subcategory.slug
                                 })}
                               >
-                                <FaTrashAlt />
+                                <Trash2 />
                               </button>
                             </div>
                           </td>
@@ -235,7 +240,7 @@ const CategoryTable = () => {
                               <div className="flex gap-4">
                                 <button className="text-blue-500 hover:text-blue-700 transition">
                                   <Link to={`/ServiceCategory/editServiceCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`}>
-                                    <FaEdit />
+                                    <Edit />
                                   </Link>
                                 </button>
                                 <button
@@ -246,7 +251,7 @@ const CategoryTable = () => {
                                     subSubCategoryId: subSubcategory.slug
                                   })}
                                 >
-                                  <FaTrashAlt />
+                                  <Trash2 />
                                 </button>
                               </div>
                             </td>

@@ -1,6 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { 
+  Trash2,  // Trash2
+  ArrowUp,  // ArrowUp
+  ArrowDown  // ArrowDown
+} from "lucide-react";
+
 import axios from "axios";
 import UseAnimations from "react-useanimations";
 
@@ -102,7 +107,7 @@ const Inquiry = () => {
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => deleteInquiry(row.original._id)}
             >
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -229,12 +234,12 @@ const Inquiry = () => {
                             <span className="ml-1">
                               {column.isSorted ? (
                                 column.isSortedDesc ? (
-                                  <FaArrowDown />
+                                  <ArrowDown />
                                 ) : (
-                                  <FaArrowUp />
+                                  <ArrowUp />
                                 )
                               ) : (
-                                <FaArrowDown className="text-gray-400" />
+                                <ArrowDown className="text-gray-400" />
                               )}
                             </span>
                           )}

@@ -1,24 +1,45 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, Link, Outlet } from 'react-router-dom';
-import { BiSolidDashboard, BiCategory } from "react-icons/bi";
-import { FaServicestack, FaSitemap, FaHome, FaPhone, FaHandshake, FaCartPlus, FaShoppingCart, FaDatabase, FaGraduationCap, FaEnvelopeOpenText, FaCode, FaGoogle, FaListOl } from "react-icons/fa";
-import { GiVerticalBanner, GiAchievement } from "react-icons/gi";
-import { GrGallery, GrServices } from "react-icons/gr";
-import { BsFillPersonLinesFill, BsFillBuildingsFill } from "react-icons/bs";
-import { FaNewspaper, FaPager, FaPeopleGroup, FaBuildingUser, FaOpencart, FaBuildingCircleCheck, FaEarthAsia } from "react-icons/fa6";
-import { RiQuestionAnswerFill, RiPagesFill, RiGalleryFill, RiWhatsappFill } from "react-icons/ri";
-import { IoIosArrowDown, IoIosArrowForward, IoMdPricetags } from "react-icons/io";
-import { TiMessages } from "react-icons/ti";
-import { GoNumber, GoGoal } from "react-icons/go";
-import { PiEyesFill, PiNewspaperClippingBold } from "react-icons/pi"
-import { AiOutlineVerticalAlignBottom, AiOutlineVerticalAlignTop } from "react-icons/ai";
-import { MdHighQuality } from "react-icons/md";
-import { TbSeo } from "react-icons/tb";
-import { IoSettings } from "react-icons/io5";
-import { FiPackage } from "react-icons/fi";
-import { FaIndustry } from "react-icons/fa6";
-import { FaImage } from "react-icons/fa6";
-
+import { LayoutDashboard,  //LayoutDashboard
+  LayoutGrid,  //Categories
+  Map, 
+  Home, 
+  Phone,  //Phone
+  ShoppingCart,  //ShoppingCart
+  Database,  //Database
+  GraduationCap,  //GraduationCap
+  MailOpen,  //MailOpen
+  Code,  //Code
+  Globe,  //Globe
+  ListOrdered,  //ListOrdered
+  Flag,  //Flag
+  Award,  //Award
+  Wrench,  //Wrench
+  Users,  //Users
+  Newspaper,  //Newspaper
+   Users2,  //Users2
+  Building2,  //Building2
+  Globe2,  //Globe2
+  Image, 
+  MessageSquare,  
+  FileText, 
+  MessageCircle, 
+  ChevronDown, 
+  ChevronRight,
+  Tags, 
+  MessagesSquare,  
+  Hash,
+  Target, 
+  Newspaper as NewspaperClip, 
+  ArrowDown, 
+  ArrowUp, 
+  BarChart3, 
+  Settings,
+  Package,  
+  Headset,
+  ChartColumn
+ } from 'lucide-react';
+ 
 import axios from 'axios';
 import Navbar from './Navbar';
 import Breadcrumbs from './Breadcrumbs';
@@ -45,110 +66,110 @@ export default function Sidebar() {
   }, []);
 
   const sidebarData = [
-    { title: "Dashboard", icon: <BiSolidDashboard size={20} />, path: "/dashboard" },
+    { title: "Dashboard", icon: <LayoutDashboard size={20} />, path: "/dashboard" },
     {
-      title: "Home", icon: <FaHome size={20} />, submenu: [
-        { title: "Banner", icon: <GiVerticalBanner size={20} />, path: "/banner" },
-        { title: "Hero Section", icon: <GiVerticalBanner size={20} />, path: "/homehero" },
-        { title: "Animation", icon: <RiQuestionAnswerFill size={20} />, path: "/homeanimation" },
+      title: "Home", icon: <Home size={20} />, submenu: [
+        { title: "Banner", icon: <Flag size={20} />, path: "/banner" },
+        { title: "Hero Section", icon: <Flag size={20} />, path: "/homehero" },
+        { title: "Animation", icon: <MessageSquare size={20} />, path: "/homeanimation" },
 
-        { title: "Testimonials", icon: <FaPager size={20} />, path: "/testimonials" },
-        { title: "Counter", icon: <GoNumber size={20} />, path: "/counter" },
-        { title: "FAQ", icon: <RiQuestionAnswerFill size={20} />, path: "/faq" },
+        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        { title: "Counter", icon: <Hash size={20} />, path: "/counter" },
+        { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
     },
     {
-      title: "About us", icon: <BsFillPersonLinesFill size={20} />, submenu: [
-        { title: "About Company", icon: <FaBuildingUser size={20} />, path: "/aboutcompany" },
-        { title: "Mission & Vision", icon: <GoGoal size={20} />, path: "/missionandvision" },
-        { title: "Core Value", icon: <IoMdPricetags size={20} />, path: "/corevalue" },
-        { title: "Certificates", icon: <GiAchievement size={20} />, path: "/certificates" },
-        { title: "Our Team", icon: <FaPeopleGroup size={20} />, path: "/ourTeam" },
+      title: "About us", icon: <Users size={20} />, submenu: [
+        { title: "About Company", icon: <Building2 size={20} />, path: "/aboutcompany" },
+        { title: "Mission & Vision", icon: <Target size={20} />, path: "/missionandvision" },
+        { title: "Core Value", icon: <Tags size={20} />, path: "/corevalue" },
+        { title: "Certificates", icon: <Award size={20} />, path: "/certificates" },
+        { title: "Our Team", icon: <Users2 size={20} />, path: "/ourTeam" },
       ]
     },
     {
-      title: "Career", icon: <FaGraduationCap size={20} />, submenu: [
-        { title: "Career Options", icon: <FaEnvelopeOpenText size={20} />, path: "/careeroption" },
-        { title: "Career Inquiry", icon: <TiMessages size={20} />, path: "/careerinquiry" }
+      title: "Career", icon: <GraduationCap size={20} />, submenu: [
+        { title: "Career Options", icon: <MailOpen size={20} />, path: "/careeroption" },
+        { title: "Career Inquiry", icon: <MessagesSquare size={20} />, path: "/careerinquiry" }
       ]
     },
-    { title: "Hero Section Inquiry", icon: <TiMessages size={20} />, path: "/hero-inquiry" },
-    { title: "Popup Inquiry", icon: <TiMessages size={20} />, path: "/popup-inquiry" },
+    { title: "Hero Section Inquiry", icon: <MessagesSquare size={20} />, path: "/hero-inquiry" },
+    { title: "Popup Inquiry", icon: <MessagesSquare size={20} />, path: "/popup-inquiry" },
     {
-      title: "Services", icon: <FaServicestack size={20} />, submenu: [
-        { title: "Categories", icon: <BiCategory size={20} />, path: "/ServiceCategory" },
-        { title: "Services", icon: <GrServices size={20} />, path: "/services" },
-        { title: "Logo Design Types", icon: <GrServices size={20} />, path: "/logotype" },
-      ]
-    },
-    {
-      title: "Industries", icon: <FaIndustry size={20} />, submenu: [
-        { title: "Categories", icon: <BiCategory size={20} />, path: "/IndustriesCategory" },
-        { title: "Industries", icon: <GrServices size={20} />, path: "/industries" },
-        { title: "Card", icon: <GrServices size={20} />, path: "/Card" },
+      title: "Services", icon: <Headset size={20} />, submenu: [
+        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
+        { title: "Services", icon: <Wrench size={20} />, path: "/services" },
+        { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
       ]
     },
     {
-      title: "Packages", icon: <FiPackage size={20} />, submenu: [
-        { title: "Categories", icon: <BiCategory size={20} />, path: "/PackageCategory" },
-        { title: "Packages", icon: <GrServices size={20} />, path: "/package" },
+      title: "Industries", icon: <Building2 size={20} />, submenu: [
+        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/IndustriesCategory" },
+        { title: "Industries", icon: <Wrench size={20} />, path: "/industries" },
+        { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
       ]
     },
-
     {
-      title: "Portfolio", icon: <FaImage size={20} />, submenu: [
-        { title: "Categories", icon: <BiCategory size={20} />, path: "/PortfolioCategory" },
-        { title: "Portfolio", icon: <GrServices size={20} />, path: "/portfolio" },
-      ]
-    },
-
-
-
-
-    {
-      title: "Contact Us", icon: <BiSolidDashboard size={20} />, submenu: [
-        { title: "Contact Us", icon: <BiSolidDashboard size={20} />, path: "/contactinfo" },
-        { title: "ContactUs Inquiries", icon: <BiSolidDashboard size={20} />, path: "/conatctinquiries" },
+      title: "Packages", icon: <Package size={20} />, submenu: [
+        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PackageCategory" },
+        { title: "Packages", icon: <Wrench size={20} />, path: "/package" },
       ]
     },
 
     {
-      title: "Products", icon: <FaShoppingCart size={20} />, submenu: [
-        { title: "Categories", icon: <BiCategory size={20} />, path: "/ProductCategory" },
-        { title: "Banefits", icon: <FaCartPlus size={20} />, path: "/benefits" },
-        { title: "Products", icon: <FaOpencart size={20} />, path: "/product" },
-      ]
-    },
-    // { title: "Global Presence", icon: < FaEarthAsia size={20} />, path: "/globalpresence" },
-
-    {
-      title: "News/Blogs", icon: <FaNewspaper size={20} />, submenu: [
-        { title: "Categories", icon: <BiCategory size={20} />, path: "/NewsCategory" },
-        { title: "News/Blogs", icon: <PiNewspaperClippingBold size={20} />, path: "/news" },
+      title: "Portfolio", icon: <Image size={20} />, submenu: [
+        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PortfolioCategory" },
+        { title: "Portfolio", icon: <Wrench size={20} />, path: "/portfolio" },
       ]
     },
 
-    { title: "Extra Pages", icon: <RiPagesFill size={20} />, path: "/extrapages" },
-    { title: "News Letter", icon: <RiPagesFill size={20} />, path: "/newsletter" },
+
+
+
     {
-      title: "SEO", icon: <TbSeo size={20} />, submenu: [
-        { title: "Sitemap Generator", icon: <FaSitemap size={20} />, path: "/sitemap" },
-        { title: "Meta Tags Settings", icon: <FaCode size={20} />, path: "/metadetails" },
-        { title: "Google Tag Manager", icon: <FaGoogle size={20} />, path: "/googleSettings" },
-        { title: "Inquiries", icon: <FaPhone size={20} />, path: "/Inquiry" },
+      title: "Contact Us", icon: <LayoutDashboard size={20} />, submenu: [
+        { title: "Contact Us", icon: <LayoutDashboard size={20} />, path: "/contactinfo" },
+        { title: "ContactUs Inquiries", icon: <LayoutDashboard size={20} />, path: "/conatctinquiries" },
+      ]
+    },
+
+    {
+      title: "Products", icon: <ShoppingCart size={20} />, submenu: [
+        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ProductCategory" },
+        { title: "Banefits", icon: <ShoppingCart size={20} />, path: "/benefits" },
+        { title: "Products", icon: <ChartColumn size={20} />, path: "/product" },
+      ]
+    },
+    // { title: "Global Presence", icon: < Globe2 size={20} />, path: "/globalpresence" },
+
+    {
+      title: "News/Blogs", icon: <Newspaper size={20} />, submenu: [
+        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/NewsCategory" },
+        { title: "News/Blogs", icon: <NewspaperClip size={20} />, path: "/news" },
+      ]
+    },
+
+    { title: "Extra Pages", icon: <FileText size={20} />, path: "/extrapages" },
+    { title: "News Letter", icon: <FileText size={20} />, path: "/newsletter" },
+    {
+      title: "SEO", icon: <BarChart3 size={20} />, submenu: [
+        { title: "Sitemap Generator", icon: <Map size={20} />, path: "/sitemap" },
+        { title: "Meta Tags Settings", icon: <Code size={20} />, path: "/metadetails" },
+        { title: "Google Tag Manager", icon: <Globe size={20} />, path: "/googleSettings" },
+        { title: "Inquiries", icon: <Phone size={20} />, path: "/Inquiry" },
       ]
     },
     {
-      title: "Settings", icon: <IoSettings size={20} />, submenu: [
-        { title: "Menu Listing", icon: <FaListOl size={20} />, path: "/menulisting" },
-        { title: "Manage Section Visibility", icon: < FaEarthAsia size={20} />, path: "/managesectionvisibility" },
-        { title: "Manage Theme", icon: <FaCode size={20} />, path: "/manageTheme" },
-        { title: "Footer Settings", icon: <AiOutlineVerticalAlignBottom size={20} />, path: "/footer" },
-        { title: "Header Settings", icon: <AiOutlineVerticalAlignTop size={20} />, path: "/header" },
-        { title: "Manage Logo", icon: <FaPager size={20} />, path: "/manageLogo" },
-        { title: "Whatsapp Settings", icon: <RiWhatsappFill size={20} />, path: "/whatsappSettings" },
+      title: "Settings", icon: <Settings size={20} />, submenu: [
+        { title: "Menu Listing", icon: <ListOrdered size={20} />, path: "/menulisting" },
+        { title: "Manage Section Visibility", icon: < Globe2 size={20} />, path: "/managesectionvisibility" },
+        { title: "Manage Theme", icon: <Code size={20} />, path: "/manageTheme" },
+        { title: "Footer Settings", icon: <ArrowDown size={20} />, path: "/footer" },
+        { title: "Header Settings", icon: <ArrowUp size={20} />, path: "/header" },
+        { title: "Manage Logo", icon: <MessageSquare size={20} />, path: "/manageLogo" },
+        { title: "Whatsapp Settings", icon: <MessageCircle size={20} />, path: "/whatsappSettings" },
 
-        { title: "Database Management", icon: <FaDatabase size={20} />, path: "/DatabaseManagement" }
+        { title: "Database Management", icon: <Database size={20} />, path: "/DatabaseManagement" }
       ]
     }
 
@@ -223,9 +244,9 @@ export default function Sidebar() {
                       {item.submenu && item.submenu.length > 0 && (
                         <span className='ml-auto'>
                           {isSubMenuOpen[i] ? (
-                            <IoIosArrowDown className='text-white' />
+                            <ChevronDown className='text-white' />
                           ) : (
-                            <IoIosArrowForward className='text-white' />
+                            <ChevronRight className='text-white' />
                           )}
                         </span>
                       )}
@@ -244,9 +265,9 @@ export default function Sidebar() {
                               {subItem.subsubmenu && subItem.subsubmenu.length > 0 && (
                                 <span className='ml-auto'>
                                   {isSubMenuOpen[`${i}-${j}`] ? (
-                                    <IoIosArrowDown className='text-white' />
+                                    <ChevronDown className='text-white' />
                                   ) : (
-                                    <IoIosArrowForward className='text-white' />
+                                    <ChevronRight className='text-white' />
                                   )}
                                 </span>
                               )}

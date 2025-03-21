@@ -1,16 +1,22 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaCheck, FaTimes, FaArrowUp, FaArrowDown, FaPlus, FaFileImport, FaFileExport } from "react-icons/fa";
+import { Edit,  //Edit
+  Trash2,  //Trash2
+  Check,  //Check
+  X,  //X
+  ArrowUp,  //ArrowUp
+  ArrowDown,  //ArrowDown
+  Plus,  //Plus
+
+ } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
 import axios from 'axios';
-import * as FaIcons from "react-icons/fa";
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
-
 
 const CountersTable = () => {
   const [heading, setHeading] = useState("");
@@ -39,12 +45,7 @@ const CountersTable = () => {
         Header: "ID",
         accessor: "id",
       },
-      // {
-      //   Header: "Icon",
-      //   accessor: "icon",
-      //   Cell: ({ value }) => <DynamicFaIcon name={value} />,
-      //   disableSortBy: true,
-      // },
+ 
       {
         Header: "Photo",
         accessor: "photo",
@@ -94,7 +95,7 @@ const CountersTable = () => {
       {
         Header: "Status",
         accessor: "status",
-        Cell: ({ value }) => value === "active" ? <FaCheck className="text-green-500" /> : <FaTimes className="text-red-500" />,
+        Cell: ({ value }) => value === "active" ? <Check className="text-green-500" /> : <X className="text-red-500" />,
         disableSortBy: true,
       },
       {
@@ -102,10 +103,10 @@ const CountersTable = () => {
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/counter/editCounter/${row.original._id}`}>  <FaEdit /></Link>
+              <Link to={`/counter/editCounter/${row.original._id}`}>  <Edit /></Link>
             </button>
             <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteCounter(row.original._id)}>
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -158,15 +159,6 @@ const CountersTable = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  const DynamicFaIcon = ({ name }) => {
-    const IconComponent = FaIcons[name];
-    if (!IconComponent) {
-      return <FaIcons.FaQuestionCircle />; // Return a default icon if the specified icon doesn't exist
-    }
-    return <IconComponent size={25} />;
-  };
-
 
   const fetchHeadings = async () => {
     try {
@@ -238,7 +230,7 @@ const CountersTable = () => {
         <div className="flex gap-2 md:flex-row flex-col md:mt-0 mt-4">
           <div className="flex items-center gap-2">
             <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
-              <Link to="/counter/createCounter"><FaPlus size={15} /></Link>
+              <Link to="/counter/createCounter"><Plus size={15} /></Link>
             </button>
           </div>
         </div>
@@ -274,12 +266,12 @@ const CountersTable = () => {
                         <span className="ml-1">
                           {column.isSorted ? (
                             column.isSortedDesc ? (
-                              <FaArrowDown />
+                              <ArrowDown />
                             ) : (
-                              <FaArrowUp />
+                              <ArrowUp />
                             )
                           ) : (
-                            <FaArrowDown className="text-gray-400" />
+                            <ArrowDown className="text-gray-400" />
                           )}
                         </span>
                       )}

@@ -1,6 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaTrashAlt, FaDownload, FaEye, FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { Trash2,  //Trash2
+  Download,  //Download
+  Eye,  //Eye
+  ArrowUp,  //ArrowUp
+  ArrowDown  //ArrowDown
+ } from 'lucide-react';
 import axios from 'axios';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
@@ -82,10 +87,10 @@ const CareerInquiryTable = () => {
         Cell: ({ value }) => (
           <div className="flex gap-4">
             <a className="text-green-500 hover:text-green-700 transition" href={`/api/careerInquiries/download/${value}`}>
-              <FaDownload size={20} />
+              <Download size={20} />
             </a>
             <button className="text-blue-500 hover:text-blue-700 transition" onClick={() => viewResume(value)}>
-              <FaEye size={20} />
+              <Eye size={20} />
             </button>
           </div>
         ),
@@ -100,7 +105,7 @@ const CareerInquiryTable = () => {
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteInquiry(row.original._id)}>
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -211,12 +216,12 @@ const CareerInquiryTable = () => {
                           <span className="ml-1">
                             {column.isSorted ? (
                               column.isSortedDesc ? (
-                                <FaArrowDown />
+                                <ArrowDown />
                               ) : (
-                                <FaArrowUp />
+                                <ArrowUp />
                               )
                             ) : (
-                              <FaArrowDown className="text-gray-400" />
+                              <ArrowDown className="text-gray-400" />
                             )}
                           </span>
                         )}

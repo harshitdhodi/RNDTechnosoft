@@ -1,6 +1,10 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import {
+ ArrowUp,  //ArrowUp
+ ArrowDown,  //ArrowDown
+ Plus  //Plus
+} from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -127,7 +131,7 @@ const NewsTable = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-700 uppercase">Package Description</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition">
-          <Link to="/package/createPackageDescription"><FaPlus size={15} /></Link>
+          <Link to="/package/createPackageDescription"><Plus size={15} /></Link>
         </button>
       </div>
       <div className="mb-4">
@@ -171,7 +175,7 @@ const NewsTable = () => {
                           <th {...column.getHeaderProps(column.getSortByToggleProps())} className="py-2 px-4 border-b cursor-pointer uppercase">
                             <div className="flex items-center gap-2">
                               {column.render("Header")}
-                              {column.canSort && (column.isSorted ? (column.isSortedDesc ? <FaArrowDown /> : <FaArrowUp />) : <FaArrowDown className="text-gray-400" />)}
+                              {column.canSort && (column.isSorted ? (column.isSortedDesc ? <ArrowDown /> : <ArrowUp />) : <ArrowDown className="text-gray-400" />)}
                             </div>
                           </th>
                         ))}

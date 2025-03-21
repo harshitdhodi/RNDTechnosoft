@@ -1,6 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { Edit,  //Edit
+ Trash2,  //Trash2
+ ArrowUp,  //ArrowUp
+ ArrowDown,  //ArrowDown
+ Plus  //Plus
+} from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -61,14 +66,14 @@ const Packages = ({ categoryId }) => {
             <Link
               to={`/services/packages/${row.original._id}`}
             >
-              <FaEdit />
+              <Edit />
             </Link>
 
             <button
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => deletePackage(row.original._id)}
             >
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -224,7 +229,7 @@ const Packages = ({ categoryId }) => {
         
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
           <Link to={`/services/createPackage/${categoryId}`}>
-            <FaPlus size={15} />
+            <Plus size={15} />
           </Link>
         </button>
       </div>
@@ -302,9 +307,9 @@ const Packages = ({ categoryId }) => {
                     <span>
                       {column.isSorted ? (
                         column.isSortedDesc ? (
-                          <FaArrowDown className="inline ml-2" />
+                          <ArrowDown className="inline ml-2" />
                         ) : (
-                          <FaArrowUp className="inline ml-2" />
+                          <ArrowUp className="inline ml-2" />
                         )
                       ) : (
                         ""
