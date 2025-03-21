@@ -19,7 +19,7 @@ const OurWorkComponent = ({ ourWorkData }) => {
     if (ourWorkData && ourWorkData.length > 0) {
       const projectsData = ourWorkData.map(project => ({
         name: project.name,
-        photoId: project.photo,
+        photo: project.photo, // Direct image URL
         link: `/${project.slug}`,
         alt: project.alt,
         imgtitle: project.imgtitle,
@@ -89,7 +89,7 @@ const OurWorkComponent = ({ ourWorkData }) => {
         className="relative flex justify-center items-end h-64 mx-3 overflow-hidden group"
       >
         <img 
-          src={`/api/logo/download/${project.photoId}`}
+          src={project.photo} // Use the provided image URL directly
           alt={project.alt || project.name} 
           title={project.imgtitle} 
           loading='lazy'
