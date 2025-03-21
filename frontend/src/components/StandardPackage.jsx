@@ -1,43 +1,24 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Check } from "lucide-react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
-const PricingPackage = () => {
-  const [packageData, setPackageData] = useState(null); // Store package data
-  const [loading, setLoading] = useState(true); // Handle loading state
-  const quillRef = useRef(null); // Ref for ReactQuill
+const PricingPackage = ({ packagesData }) => {
+  const [packageData, setPackageData] = useState(null);
+  const quillRef = useRef(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/api/packages/getStandardPackage`, { withCredentials: true });
-        setPackageData(response.data.data.packages[0]); // Assuming there's always one package in the response
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching package data:", error);
-        setLoading(false);
-      }
-    };
+    if (packagesData?.standard?.packages?.length > 0) {
+      setPackageData(packagesData.standard.packages[0]); // Set the first package
+    }
+  }, [packagesData]);
 
-    fetchData();
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>; // Loading indicator while data is being fetched
+  if (!packageData) {
+    return <div>Loading...</div>;
   }
 
-  // Extract data from the package
-  const {
-    title,
-    price,
-    description,
-    whatIsTheir,
-  } = packageData || {};
-
-  // Parse features from the `whatIsTheir` field (assuming it's stored as a stringified array)
+  const { title, price, description, whatIsTheir } = packageData;
   const features = whatIsTheir ? JSON.parse(whatIsTheir) : [];
 
   return (
@@ -59,7 +40,6 @@ const PricingPackage = () => {
             {title || "Ultimate Growth Package: A One-Time Investment for Lifelong Growth"}
           </h2>
           <p className="text-4xl font-bold mb-2">₹{price} Lakh</p>
-          {/* <p className="text-sm opacity-90">One-time investment for forever growth</p> */}
         </div>
 
         {/* Content Section */}
@@ -67,7 +47,7 @@ const PricingPackage = () => {
           <div className="mb-4">
             <ReactQuill
               ref={quillRef}
-              readOnly={true}
+              readOnly
               value={description}
               modules={{ toolbar: false }}
               theme="bubble"
@@ -77,23 +57,15 @@ const PricingPackage = () => {
 
           <div className="grid sm:grid-cols-2 grid-cols-1 gap-4">
             {features.map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-3 hover:bg-blue-50 p-2 rounded-lg transition-colors duration-200"
-              >
-                <div className="flex-shrink-0">
-                  <Check className="w-5 h-5 text-yellow-500" />
-                </div>
+              <div key={index} className="flex items-center gap-3 hover:bg-blue-50 p-2 rounded-lg transition-colors duration-200">
+                <Check className="w-5 h-5 text-yellow-500" />
                 <span className="text-gray-700">{feature}</span>
               </div>
             ))}
           </div>
 
           <Link to="/contact">
-            <button
-              className="w-full mt-8 bg-yellow-400 text-black py-3 px-6 rounded-lg font-semibold 
-              hover:bg-yellow-700 transition-colors duration-200 shadow-lg"
-            >
+            <button className="w-full mt-8 bg-yellow-400 text-black py-3 px-6 rounded-lg font-semibold hover:bg-yellow-700 transition-colors duration-200 shadow-lg">
               Get Started Now
             </button>
           </Link>
