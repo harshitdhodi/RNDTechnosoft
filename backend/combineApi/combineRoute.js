@@ -23,6 +23,7 @@ const getOurWork = async () => {
     const categories = await portfoliocategory.find()
         .select('category photo _id alt imgtitle slug');
     return categories.map(cat => ({
+        id: cat._id,
         name: cat.category,
         photo: cat.photo,
         alt: cat.alt,
