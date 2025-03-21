@@ -1,27 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
-const GlobalSolution = () => {
-  const [globalSolution, setGlobalSolution] = useState(null);
+const GlobalSolution = ({ globalData }) => {
+  if (!globalData || globalData.length === 0) return null;
 
-  useEffect(() => {
-    const fetchGlobalSolution = async () => {
-      try {
-        const response = await axios.get(`/api/content/types/globalsolution`, { withCredentials: true });
-        const solutionData = response.data[0];
-
-        if (solutionData) {
-          setGlobalSolution(solutionData);
-        }
-      } catch (error) {
-        console.error("Error fetching global solution data:", error);
-      }
-    };
-
-    fetchGlobalSolution();
-  }, []);
-
-  if (!globalSolution) return null;
+  const globalSolution = globalData[0]; // Assuming there's only one global solution entry
 
   return (
     <section className="relative bg-[#333] overflow-hidden mt-5">
@@ -53,7 +35,7 @@ const GlobalSolution = () => {
           </div>
 
           <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:mt-32 mt-24">
-            {globalSolution.subsections.map((language, index) => (
+            {globalSolution.subsections?.map((language, index) => (
               <div key={index} className="text-center space-y-6">
                 {language.photo ? (
                   <img
