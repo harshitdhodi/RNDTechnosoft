@@ -114,7 +114,7 @@ app.use("/api/homepage", cacheMiddleware(3600), require('./routes/homepage'));
 app.use("/api/video", cacheMiddleware(86400), require('./routes/video'));
 app.use("/api/serviceImages", cacheMiddleware(86400), require('./routes/serviceImage'));
 app.use("/api/industryImages", cacheMiddleware(86400), require('./routes/industryimage'));
-app.use("/api/packages", cacheMiddleware(3600), require('./routes/plan'));
+app.use("/api/packages", require('./routes/plan'));
 app.use("/api/designProcess", cacheMiddleware(3600), require('./routes/designProcess'));
 app.use("/api/content", cacheMiddleware(3600), require('./routes/content'));
 app.use("/api/submenulisting", cacheMiddleware(3600), require('./routes/submenu'));
@@ -134,7 +134,7 @@ app.use("/api/home", cacheMiddleware(3600), require('./routes/homeanimation'));
 app.use("/api/popupinquiry", cacheMiddleware(300), require('./routes/popupinquiry'));
 app.use("/api/herosectioninquiry", cacheMiddleware(300), require('./routes/herosectioninquiry'));
 app.use("/api/logotype", cacheMiddleware(86400), require('./routes/logotype'));
-app.use("/api/packagedescription", cacheMiddleware(3600), require('./routes/packagedescription'));
+app.use("/api/packagedescription", require('./routes/packagedescription'));
 app.use("/api/allData", cacheMiddleware(3600), require('./combineApi/combineRoute'));
 app.use("/api/allData2", cacheMiddleware(3600), require('./combineApi/combineRoute2'));
 
