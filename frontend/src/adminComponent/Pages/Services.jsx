@@ -17,6 +17,7 @@ const CategorySelection = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get("/api/services/getall", { withCredentials: true });
+      console.log(response.data)
       setCategories(flattenCategories(response.data));
     } catch (error) {
       console.error(error);
@@ -49,14 +50,19 @@ const CategorySelection = () => {
   };
 
   const handleEditCategory = (category) => {
+    console.log("Category being edited:", category);
+    
     if (category.indent === 0) {
       // If it's a top-level category
       navigate(`/services/edit-service/${category._id}`);
     } else if (category.indent === 1) {
       // If it's a subcategory
+      console.log("Parent Category ID:", category.parentCategoryId);
       navigate(`/services/edit-subcategory/${category.parentCategoryId}/${category._id}`);
     } else if (category.indent === 2) {
       // If it's a subsubcategory
+      console.log("Parent Category ID:", category.parentCategoryId);
+      console.log("Parent Subcategory ID:", category.parentSubcategoryId);
       navigate(`/services/edit-subsubcategory/${category.parentCategoryId}/${category.parentSubcategoryId}/${category._id}`);
     }
   };
