@@ -1,0 +1,147 @@
+[
+  {
+    "_id": "66c834e7693ccd620d532d95",
+    "icon": "icon_1727947752692.webp",
+    "title": "Consistent high-quality design",
+    "questionsAndAnswers": [
+      {
+        "question": "<h5>Professional design team</h5>",
+        "answer": "<p>Gain access to a dedicated team of highly skilled designers who are committed to bringing your vision to life.</p>",
+        "_id": "66c834e7693ccd620d532d96"
+      },
+      {
+        "question": "<h5>Top-tier visuals</h5>",
+        "answer": "<p>We consistently provide top-quality visuals with a fast turnaround time of 24-48 hours, depending on complexity with unlimited revisions.</p>",
+        "_id": "66c834e7693ccd620d532d97"
+      },
+      {
+        "question": "<h5>Across all platforms</h5>",
+        "answer": "<p>We prioritize maintaining a strong, consistent, and cohesive brand identity across all digital and traditional platforms, ensuring seamless brand recognition.</p>",
+        "_id": "66c834e7693ccd620d532d98"
+      }
+    ],
+    "__v": 0,
+    "altName": "rocket",
+    "iconName": "Rocket"
+  },
+  {
+    "_id": "66c83686693ccd620d532db0",
+    "icon": "icon_1727947913109.webp",
+    "title": "Cost-effective design solutions",
+    "questionsAndAnswers": [
+      {
+        "question": "<h5>Pause or cancel anytime</h5>",
+        "answer": "<p>Enjoy the flexibility to pause or cancel our design subscription anytime, ensuring control over your design expenses.</p>",
+        "_id": "66c83686693ccd620d532db1"
+      },
+      {
+        "question": "<h5>Flat monthly fee structure</h5>",
+        "answer": "<p>Our flat monthly fee structure offers a cost-effective alternative to hiring in-house designers or engaging multiple freelancers.</p>",
+        "_id": "66c83686693ccd620d532db2"
+      },
+      {
+        "question": "<h5>Adapt to changing business needs</h5>",
+        "answer": "<p>Easily adapt to changing business needs while maintaining control over your design expenses.</p>",
+        "_id": "66c83686693ccd620d532db3"
+      }
+    ],
+    "__v": 0,
+    "altName": "thumb",
+    "iconName": "thumb"
+  },
+  {
+    "_id": "66c83738693ccd620d532de7",
+    "icon": "icon_1727947960969.webp",
+    "title": "Scale up without scaling costs",
+    "questionsAndAnswers": [
+      {
+        "question": "<h5>Customized subscription plans</h5>",
+        "answer": "<p>Tailor your design subscription package to your needs. Receive 1, 2, 3, or more design assets at a time without a linear increase in costs.</p>",
+        "_id": "66c83738693ccd620d532de8"
+      },
+      {
+        "question": "<h5>No surprises, just reliable support</h5>",
+        "answer": "<p>Enjoy customized retainer plans for ongoing design support at fixed costs. Plan and manage your budgets effectively without unexpected expenses.</p>",
+        "_id": "66c83738693ccd620d532de9"
+      },
+      {
+        "question": "<h5>On-demand support without the overhead</h5>",
+        "answer": "<p>Access on-demand design services during peak times or surges in demand without hiring permanent employees. Avoid recruitment costs, employee benefits, and potential downsizing expenses associated with permanent hires or freelancers.</p>",
+        "_id": "66c83738693ccd620d532dea"
+      }
+    ],
+    "__v": 0,
+    "altName": "handshake",
+    "iconName": "handshake"
+  },
+  {
+    "_id": "66c8378a693ccd620d532df6",
+    "icon": "icon_1727948000971.webp",
+    "title": "Optimized for success ",
+    "questionsAndAnswers": [
+      {
+        "question": "<h5>Strategic design</h5>",
+        "answer": "<p>Our specialized work processes are optimized for success. With a proven track record of delivering results for numerous clients, we offer tangible evidence that our designs drive business success.</p>",
+        "_id": "66c8378a693ccd620d532df7"
+      },
+      {
+        "question": "<h5>Peace of Mind</h5>",
+        "answer": "<p>Our team takes care of the creative aspects, providing you with peace of mind and more time to drive growth and innovation for your business.</p>",
+        "_id": "66c8378a693ccd620d532df8"
+      },
+      {
+        "question": "<h5>Commitment to Success</h5>",
+        "answer": "<p>At Kolm, our team is deeply committed and passionate about design, driven by our dedication to excellence, ensuring your brand's continuous growth and success.</p>",
+        "_id": "66c8378a693ccd620d532df9"
+      }
+    ],
+    "__v": 0,
+    "altName": "hundred",
+    "iconName": "hundred"
+  },
+  {
+    "_id": "66c83803693ccd620d532e08",
+    "icon": "icon_1727948095888.webp",
+    "title": "Efficient Communication and Collaboration",
+    "questionsAndAnswers": [
+      {
+        "question": "<h5>Real-time Communication</h5>",
+        "answer": "<p>Through our portal, you can utilize efficient communication tools for direct communication with our design team.</p>",
+        "_id": "66c83803693ccd620d532e09"
+      },
+      {
+        "question": "<h5>Real-time progress tracking</h5>",
+        "answer": "<p>Track project progress in real-time, allowing for efficient project management and quick turnaround times.</p>",
+        "_id": "66c83803693ccd620d532e0a"
+      },
+      {
+        "question": "<h5>Efficient project management</h5>",
+        "answer": "<p>Our user-friendly platform enables seamless collaboration, making it easy to submit requests and provide feedback.</p>",
+        "_id": "66c83803693ccd620d532e0b"
+      }
+    ],
+    "__v": 0,
+    "altName": "palette",
+    "iconName": "palette"
+  },
+  {
+    "_id": "66c83841693ccd620d532e1d",
+    "icon": "icon_1727948118576.webp",
+    "title": "Comprehensive service offerings",
+    "questionsAndAnswers": [
+      {
+        "question": "<h5>Beyond Design</h5>",
+        "answer": "<p>Alongside our design subscriptions, we provide flexible options for social media management, website management, or both, ensuring all your digital marketing, content creation, and brand management needs are covered under one roof, streamlining your efforts for maximum efficiency and consistent growth</p>",
+        "_id": "66c83841693ccd620d532e1e"
+      },
+      {
+        "question": "<h5>Integrated Approach</h5>",
+        "answer": "<p>Our integrated approach with Kolm subscription services centralizes design, social media, and website management, offering all these services under one roof. This streamlines communication and decision-making, saving you time, reducing complexity, and boosting efficiency in managing your digital assets and campaigns.</p>",
+        "_id": "66c83841693ccd620d532e1f"
+      }
+    ],
+    "__v": 0,
+    "altName": "euro",
+    "iconName": "euro"
+  }
+]

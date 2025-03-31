@@ -1,0 +1,37 @@
+[{
+  "_id": {
+    "$oid": "67cad0ac5b52c972643b5eb5"
+  },
+  "name": "Megan C.",
+  "designation": "Marketing Manager, Beacon Consulting Group",
+  "testimony": "<p>I loved how easy it was to submit design requests and get revisions. The team listened to my feedback and delivered high-quality graphics that matched our brand perfectly.<span class=\"ql-cursor\">﻿</span></p>",
+  "photo": [
+    "photo_1741344940703_original.webp"
+  ],
+  "video": "",
+  "rating": 5,
+  "priority": "medium",
+  "alt": [
+    "RND Technosoft"
+  ],
+  "altVideo": "",
+  "imgtitle": [
+    "RND Technosoft"
+  ],
+  "videotitle": "",
+  "status": true,
+  "category": {
+    "$oid": "671870fff27da8d1a09d0491"
+  },
+  "subcategory": {
+    "$oid": "6718715af27da8d1a09d059c"
+  },
+  "isVisible": true,
+  "createdAt": {
+    "$date": "2025-03-07T10:55:40.737Z"
+  },
+  "updatedAt": {
+    "$date": "2025-03-07T10:55:40.743Z"
+  },
+  "__v": 0
+}]

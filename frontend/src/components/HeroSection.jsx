@@ -106,21 +106,18 @@ const HeroSection = ({ serviceGridRef,heroData }) => {
   // Apply animations after content is loaded
   useEffect(() => {
     if (areImagesLoaded && containerRef.current && !isMobile) {
-      const tl = gsap.timeline({ delay: 0.1 });
-      tl.fromTo(leftImageRef.current, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" });
-      tl.fromTo(textSectionRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2");
-      tl.fromTo(rightImageRef.current, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2");
-    } else if (areImagesLoaded && isMobile) {
-      // For mobile, just make elements visible without animation
-      if (leftImageRef.current) gsap.set(leftImageRef.current, { opacity: 1 });
-      if (textSectionRef.current) gsap.set(textSectionRef.current, { opacity: 1 });
-      if (rightImageRef.current) gsap.set(rightImageRef.current, { opacity: 1 });
+      requestIdleCallback(() => {
+        const tl = gsap.timeline({ delay: 0.1 });
+        tl.fromTo(leftImageRef.current, { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" });
+        tl.fromTo(textSectionRef.current, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2");
+        tl.fromTo(rightImageRef.current, { x: 50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, "-=0.2");
+      });
     }
   }, [areImagesLoaded, isMobile]);
+  
 
   const renderHeading = () => {
-    // Use either API data or fallback based on showFallbackContent
-    const heading = (!showFallbackContent && homeHero?.heading) || defaultContent.heading;
+    const heading = homeHero?.heading || defaultContent.heading;
     return (
       <>
         {heading.beforeHighlight}{' '}
@@ -137,6 +134,7 @@ const HeroSection = ({ serviceGridRef,heroData }) => {
       </>
     );
   };
+  
   
   // For the paragraph:
   const renderParagraph = () => {

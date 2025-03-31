@@ -1,0 +1,181 @@
+[{
+  "_id": {
+    "$oid": "66e970335195a9a344589b3b"
+  },
+  "category": "Chemical Marketing ",
+  "photo": "",
+  "alt": " ",
+  "imgtitle": "",
+  "slug": "chemical-marketing",
+  "metatitle": "",
+  "metadescription": "",
+  "metakeywords": "",
+  "metacanonical": "",
+  "metalanguage": "",
+  "metaschema": "",
+  "otherMeta": "",
+  "url": "https://rndtechnosoft.com/chemical-marketing",
+  "priority": null,
+  "changeFreq": "",
+  "component": "MainIndustries",
+  "status": "active",
+  "lastmod": {
+    "$date": "2024-09-17T12:04:03.421Z"
+  },
+  "subCategories": [
+    {
+      "category": "SEO",
+      "photo": "photo_1731322436208.webp",
+      "alt": "SEO",
+      "slug": "chemical-marketing-seo",
+      "metatitle": "",
+      "metadescription": "",
+      "metakeywords": "",
+      "metacanonical": "",
+      "metalanguage": "",
+      "metaschema": "",
+      "otherMeta": "",
+      "url": "https://rndtechnosoft.com/chemical-marketing-seo",
+      "priority": 1,
+      "changeFreq": "",
+      "component": "SubIndustries",
+      "status": "active",
+      "_id": {
+        "$oid": "6713861e0b7471940be35d12"
+      },
+      "lastmod": {
+        "$date": "2024-10-19T10:12:46.485Z"
+      },
+      "subSubCategory": []
+    },
+    {
+      "category": "PPC",
+      "photo": "photo_1731322746785.webp",
+      "alt": "PPC",
+      "slug": "chemical-marketing-ppc",
+      "metatitle": "",
+      "metadescription": "",
+      "metakeywords": "",
+      "metacanonical": "",
+      "metalanguage": "",
+      "metaschema": "",
+      "otherMeta": "",
+      "url": "https://rndtechnosoft.com/chemical-marketing-ppc",
+      "priority": 1,
+      "changeFreq": "",
+      "component": "SubIndustries",
+      "status": "active",
+      "_id": {
+        "$oid": "671386290b7471940be35d32"
+      },
+      "lastmod": {
+        "$date": "2024-10-19T10:12:57.694Z"
+      },
+      "subSubCategory": []
+    }
+  ],
+  "__v": 6
+},
+{
+  "_id": {
+    "$oid": "671386430b7471940be35d55"
+  },
+  "category": "Travel Marketing",
+  "photo": null,
+  "alt": "",
+  "imgtitle": "",
+  "slug": "travel-marketing",
+  "metatitle": "",
+  "metadescription": "",
+  "metakeywords": "",
+  "metacanonical": "",
+  "metalanguage": "",
+  "metaschema": "",
+  "otherMeta": "",
+  "url": "https://rndtechnosoft.com/travel-marketing",
+  "priority": null,
+  "changeFreq": "",
+  "component": "MainIndustries",
+  "status": "active",
+  "lastmod": {
+    "$date": "2024-10-19T10:13:23.826Z"
+  },
+  "subCategories": [
+    {
+      "category": "SEO",
+      "photo": "",
+      "alt": "",
+      "slug": "travel-marketing-seo",
+      "metatitle": "",
+      "metadescription": "",
+      "metakeywords": "",
+      "metacanonical": "",
+      "metalanguage": "",
+      "metaschema": "",
+      "otherMeta": "",
+      "url": "https://rndtechnosoft.com/travel-marketing-seo",
+      "priority": 1,
+      "changeFreq": "",
+      "component": "SubIndustries",
+      "status": "active",
+      "_id": {
+        "$oid": "671386530b7471940be35d94"
+      },
+      "lastmod": {
+        "$date": "2024-10-19T10:13:39.147Z"
+      },
+      "subSubCategory": []
+    },
+    {
+      "category": "SMM",
+      "photo": "",
+      "alt": "",
+      "slug": "travel-marketing-smm",
+      "metatitle": "",
+      "metadescription": "",
+      "metakeywords": "",
+      "metacanonical": "",
+      "metalanguage": "",
+      "metaschema": "",
+      "otherMeta": "",
+      "url": "https://rndtechnosoft.com/travel-marketing-smm",
+      "priority": 1,
+      "changeFreq": "",
+      "component": "SubIndustries",
+      "status": "active",
+      "_id": {
+        "$oid": "6713865e0b7471940be35dbc"
+      },
+      "lastmod": {
+        "$date": "2024-10-19T10:13:50.472Z"
+      },
+      "subSubCategory": []
+    },
+    {
+      "category": "Branding",
+      "photo": "",
+      "alt": "",
+      "slug": "travel-marketing-branding",
+      "metatitle": "",
+      "metadescription": "",
+      "metakeywords": "",
+      "metacanonical": "",
+      "metalanguage": "",
+      "metaschema": "",
+      "otherMeta": "",
+      "url": "https://rndtechnosoft.com/travel-marketing-branding",
+      "priority": 1,
+      "changeFreq": "",
+      "component": "SubIndustries",
+      "status": "active",
+      "_id": {
+        "$oid": "6713866c0b7471940be35de9"
+      },
+      "lastmod": {
+        "$date": "2024-10-19T10:14:04.546Z"
+      },
+      "subSubCategory": []
+    }
+  ],
+  "__v": 3
+}]

@@ -1,0 +1,64 @@
+[{
+  "_id": {
+    "$oid": "66f28456098d87475f7078f1"
+  },
+  "type": "Head Office Address",
+  "phone1": "",
+  "phone2": "",
+  "email1": "",
+  "email2": "",
+  "photo": "photo_1727169622907.gif",
+  "imgTitle": "img 1",
+  "alt": "image 1",
+  "title": "Head Office",
+  "address": "V2 Signature, 135-136, Chala, Vapi, Gujarat 396191",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66f2849d098d87475f707915"
+  },
+  "type": "Sales Office Address",
+  "phone1": "",
+  "phone2": "",
+  "email1": "",
+  "email2": "",
+  "photo": "photo_1727169693242.gif",
+  "imgTitle": "img 1",
+  "alt": "image 1",
+  "title": "Sales Office",
+  "address": "E/1/19, Kripa Nagar, Irla, S.V Road Vile Parle, Mumbai, India.",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66f284c9098d87475f707921"
+  },
+  "type": "Phone No",
+  "phone1": "+91-987 047 2873",
+  "phone2": "+91-730 494 5823",
+  "email1": "",
+  "email2": "",
+  "photo": "photo_1727169737556.gif",
+  "imgTitle": "img 1",
+  "alt": "image 1",
+  "title": "Call Us",
+  "address": "",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66f284f5098d87475f70792d"
+  },
+  "type": "Email",
+  "phone1": "",
+  "phone2": "",
+  "email1": "hello@rndtechnosoft.com",
+  "email2": "rndtechnosoft@gmail.com",
+  "photo": "photo_1727169781311.gif",
+  "imgTitle": "img 1",
+  "alt": "image 1",
+  "title": "Write Us",
+  "address": "",
+  "__v": 0
+}]
