@@ -1,0 +1,188 @@
+[{
+  "_id": {
+    "$oid": "671b29a21353e3be282069d7"
+  },
+  "title": "Symbol/Iconic Logo",
+  "description": "<p>Symbol/Iconic Logo</p>",
+  "photo": [
+    "photo_1729833378135.png"
+  ],
+  "alt": [
+    ""
+  ],
+  "imgtitle": [
+    ""
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:16:18.152Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:16:18.152Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "671b29bd1353e3be282069f0"
+  },
+  "title": "Illustrative Logo",
+  "description": "<p>Illustrative Logo</p>",
+  "photo": [
+    "photo_1729833405542.png"
+  ],
+  "alt": [
+    "",
+    "[]"
+  ],
+  "imgtitle": [
+    "",
+    "[]"
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:16:45.546Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:16:45.546Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "671b29e01353e3be28206a09"
+  },
+  "title": "Typographical Logo",
+  "description": "<p>Typographical Logo</p>",
+  "photo": [
+    "photo_1729833440041.png"
+  ],
+  "alt": [
+    ""
+  ],
+  "imgtitle": [
+    ""
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:17:20.043Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:17:20.043Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "671b2a021353e3be28206a22"
+  },
+  "title": "3D Feel Logo",
+  "description": "<p>3D Feel Logo</p>",
+  "photo": [
+    "photo_1729833474738.png"
+  ],
+  "alt": [
+    "",
+    "[]"
+  ],
+  "imgtitle": [
+    "",
+    "[]"
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:17:54.742Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:17:54.742Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "671b2a2a1353e3be28206a3b"
+  },
+  "title": "Abstract Logo",
+  "description": "<p>Abstract Logo</p>",
+  "photo": [
+    "photo_1729833514220.png"
+  ],
+  "alt": [
+    ""
+  ],
+  "imgtitle": [
+    ""
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:18:34.222Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:18:34.222Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "671b2a441353e3be28206a54"
+  },
+  "title": "Mascots Logo",
+  "description": "<p>Mascots Logo</p>",
+  "photo": [
+    "photo_1729833540535.png"
+  ],
+  "alt": [
+    ""
+  ],
+  "imgtitle": [
+    ""
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:19:00.538Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:19:00.538Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "671b2ac81353e3be28206a6d"
+  },
+  "title": "Combination Mark Logo",
+  "description": "<p>Combination Mark Logo</p>",
+  "photo": [
+    "photo_1729833672810.png"
+  ],
+  "alt": [
+    ""
+  ],
+  "imgtitle": [
+    ""
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:21:12.812Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:21:12.812Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "671b2aef1353e3be28206a86"
+  },
+  "title": "Origami Logo Design",
+  "description": "<p>Origami Logo Design</p>",
+  "photo": [
+    "photo_1729833711608.png"
+  ],
+  "alt": [
+    ""
+  ],
+  "imgtitle": [
+    ""
+  ],
+  "createdAt": {
+    "$date": "2024-10-25T05:21:51.610Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-25T05:21:51.610Z"
+  },
+  "__v": 0
+}]

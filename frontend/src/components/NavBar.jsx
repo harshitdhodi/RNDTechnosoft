@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
 import flames from "../images/flames.png";
 // import rndlogo from "../images/rndlogo.png";
@@ -12,6 +12,27 @@ import axios from "axios";
 const NavItem = ({ item, depth = 0, closeMenu }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [closeTimeout, setCloseTimeout] = useState(null);
+  const location = useLocation();
+  const menuRef = useRef(null);
+
+  // Reset hover state whenever the URL changes
+  useEffect(() => {
+    setIsHovered(false);
+  }, [location.pathname]);
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsHovered(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleMouseEnter = () => {
     if (closeTimeout) {
@@ -29,8 +50,14 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
   };
 
   const handleClick = () => {
+    // Always close menu when clicking on any menu item
     closeMenu();
     setIsHovered(false);
+    
+    // If this is a link with subItems and at depth 0, don't navigate
+    if (item.subItems && item.subItems.length > 0 && depth === 0) {
+      return;
+    }
   };
 
   // Set different font sizes based on depth
@@ -42,6 +69,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
       className={`relative ${depth === 0 ? "group" : ""} list-none`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      ref={menuRef}
     >
       <Link
         to={
@@ -100,6 +128,12 @@ const Navbar = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [colorlogo, setColorLogo] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Reset mobile menu state on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   const closeMenu = () => {
     setIsMenuOpen(false);

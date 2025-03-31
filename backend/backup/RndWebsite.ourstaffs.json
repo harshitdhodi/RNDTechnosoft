@@ -1,0 +1,156 @@
+[{
+  "_id": {
+    "$oid": "6707b7b981773f5e341d6063"
+  },
+  "S_id": "4",
+  "name": "Ravi Sir",
+  "photo": [
+    "https://ik.imagekit.io/mikbqwyy0/p2.webp?updatedAt=1742545250755"
+  ],
+  "alt": [
+    "image 4"
+  ],
+  "imgtitle": [
+    "image 4"
+  ],
+  "details": "no",
+  "jobTitle": "Developer",
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-10-10T11:17:13.639Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-18T05:37:44.832Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6707b82481773f5e341d6102"
+  },
+  "S_id": "1",
+  "name": "Ravi Sir",
+  "photo": [
+    "https://ik.imagekit.io/mikbqwyy0/p4.webp?updatedAt=1742545250377"
+  ],
+  "alt": [
+    "image 1"
+  ],
+  "imgtitle": [
+    "image 1"
+  ],
+  "details": "no",
+  "jobTitle": "Developer",
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-10-10T11:19:00.939Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-18T05:36:41.304Z"
+  },
+  "__v": 3
+},
+{
+  "_id": {
+    "$oid": "6707b83a81773f5e341d610f"
+  },
+  "S_id": "5",
+  "name": "Ravi Sir",
+  "photo": [
+    "https://ik.imagekit.io/mikbqwyy0/p1.webp?updatedAt=1742545249892"
+  ],
+  "alt": [
+    "image 5"
+  ],
+  "imgtitle": [
+    "image 5"
+  ],
+  "details": "no",
+  "jobTitle": "Developer",
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-10-10T11:19:22.023Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-18T05:38:07.459Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6707b85381773f5e341d6151"
+  },
+  "S_id": "3",
+  "name": "Ravi Sir",
+  "photo": [
+    "https://ik.imagekit.io/mikbqwyy0/p3.webp?updatedAt=1742545249931"
+  ],
+  "alt": [
+    "image 3"
+  ],
+  "imgtitle": [
+    "image 3"
+  ],
+  "details": "no",
+  "jobTitle": "Developer",
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-10-10T11:19:47.034Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-18T05:37:25.733Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6707b86f81773f5e341d615d"
+  },
+  "S_id": "2",
+  "name": "Ravi Sir",
+  "photo": [
+    "https://ik.imagekit.io/mikbqwyy0/p5.webp?updatedAt=1742545249808"
+  ],
+  "alt": [
+    "image 2"
+  ],
+  "imgtitle": [
+    "image 2"
+  ],
+  "details": "no",
+  "jobTitle": "Developer",
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-10-10T11:20:15.062Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-18T05:37:05.144Z"
+  },
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6707b87a81773f5e341d6167"
+  },
+  "S_id": "6",
+  "name": "Ravi Sir",
+  "photo": [
+    "https://ik.imagekit.io/mikbqwyy0/p6.webp?updatedAt=1742545249606"
+  ],
+  "alt": [
+    "image 6"
+  ],
+  "imgtitle": [
+    "image 6"
+  ],
+  "details": "no",
+  "jobTitle": "Developer",
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-10-10T11:20:26.966Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-18T05:38:34.345Z"
+  },
+  "__v": 1
+}]

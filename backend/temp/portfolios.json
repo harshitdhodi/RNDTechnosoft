@@ -1,0 +1,708 @@
+[
+  {
+    "_id": "672dd99d15c6849cee4360a9",
+    "title": "Chemical Bull",
+    "details": "<p>Chemical Bull</p>",
+    "photo": [
+      "photo_1731058069194.webp",
+      "photo_1731058069197.webp"
+    ],
+    "alt": [
+      "Chemical Bull",
+      "Chemical Bull"
+    ],
+    "imgtitle": [
+      "Chemical Bull",
+      "Chemical Bull"
+    ],
+    "slug": "chemical-bull",
+    "link": "https://chemicalbull.com/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "web-application"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "web-application"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:27:57.652Z",
+    "updatedAt": "2024-11-08T09:27:57.653Z",
+    "__v": 0,
+    "industrycategories": [
+      "chemical-marketing"
+    ],
+    "industrysubSubcategories": [
+      ""
+    ],
+    "industrysubcategories": [
+      ""
+    ]
+  },
+  {
+    "_id": "672dda2e15c6849cee436126",
+    "title": "Sweta Desai",
+    "details": "<p>Sweta Desai</p>",
+    "photo": [
+      "photo_1731058216684.webp",
+      "photo_1731058216687.webp"
+    ],
+    "alt": [
+      "Sweta Desai",
+      "Sweta Desai"
+    ],
+    "imgtitle": [
+      "Sweta Desai",
+      "Sweta Desai"
+    ],
+    "slug": "sweta-desai",
+    "link": "https://swetadesaidesign.com/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "ecommerce"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "ecommerce-website"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:30:22.626Z",
+    "updatedAt": "2024-11-08T09:30:22.626Z",
+    "__v": 0
+  },
+  {
+    "_id": "672dda8215c6849cee4362f0",
+    "title": "VBOTT",
+    "details": "<p>VBOTT</p>",
+    "photo": [
+      "photo_1731058297593.webp",
+      "photo_1731058297596.webp"
+    ],
+    "alt": [
+      "VBOTT",
+      "VBOTT"
+    ],
+    "imgtitle": [
+      "VBOTT",
+      "VBOTT"
+    ],
+    "slug": "vbott",
+    "link": "https://www.vbott.in/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "ecommerce"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "ecommerce-website"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:31:46.882Z",
+    "updatedAt": "2024-11-08T09:31:46.883Z",
+    "__v": 0
+  },
+  {
+    "_id": "672ddb07ba016455e8a7fb20",
+    "title": "Prakash Steelage Limited",
+    "details": "<p>Prakash Steelage Limited</p>",
+    "photo": [
+      "photo_1731058429310.webp",
+      "photo_1731058429394.webp"
+    ],
+    "alt": [
+      "Prakash Steelage Limited",
+      "Prakash Steelage Limited"
+    ],
+    "imgtitle": [
+      "Prakash Steelage Limited",
+      "Prakash Steelage Limited"
+    ],
+    "slug": "prakash-steelage-limited",
+    "link": "https://prakashsteelage.com/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "web-application"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "web-application"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:33:59.876Z",
+    "updatedAt": "2024-11-08T09:33:59.884Z",
+    "__v": 0
+  },
+  {
+    "_id": "672ddb62ba016455e8a7fbdb",
+    "title": "Inject Care",
+    "details": "<p>Inject Care</p>",
+    "photo": [
+      "photo_1731058522951.webp",
+      "photo_1731058522956.webp"
+    ],
+    "alt": [
+      "Inject Care",
+      "Inject Care"
+    ],
+    "imgtitle": [
+      "Inject Care",
+      "Inject Care"
+    ],
+    "slug": "inject-care",
+    "link": "https://injectcare.com/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "web-application"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "web-application"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:35:30.372Z",
+    "updatedAt": "2024-11-08T09:35:30.374Z",
+    "__v": 0
+  },
+  {
+    "_id": "672ddc05ba016455e8a7fe21",
+    "title": "Mom & Mee",
+    "details": "<p>Mom &amp; Mee</p>",
+    "photo": [
+      "photo_1731058683779.webp",
+      "photo_1731058683786.webp"
+    ],
+    "alt": [
+      "Mom & Mee",
+      "Mom & Mee"
+    ],
+    "imgtitle": [
+      "Mom & Mee",
+      "Mom & Mee"
+    ],
+    "slug": "mom-mee",
+    "link": "https://momandmee.com/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "ecommerce"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "ecommerce-website"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:38:13.865Z",
+    "updatedAt": "2024-11-08T09:38:13.866Z",
+    "__v": 0
+  },
+  {
+    "_id": "672ddd12ba016455e8a7ff5a",
+    "title": "VK International",
+    "details": "<p>VK International</p>",
+    "photo": [
+      "photo_1731058954618.webp",
+      "photo_1731058954623.webp"
+    ],
+    "alt": [
+      "VK International",
+      "VK International"
+    ],
+    "imgtitle": [
+      "VK International",
+      "VK International"
+    ],
+    "slug": "vk-international",
+    "link": "https://vkinternationalinc.com/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "web-application"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "web-application"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:42:42.504Z",
+    "updatedAt": "2024-11-08T09:42:42.505Z",
+    "__v": 0
+  },
+  {
+    "_id": "672ddd7fba016455e8a80018",
+    "title": "Flashback Media",
+    "details": "<p>Flashback Media</p>",
+    "photo": [
+      "photo_1731059065394.webp",
+      "photo_1731059065401.webp"
+    ],
+    "alt": [
+      "Flashback Media",
+      "Flashback Media"
+    ],
+    "imgtitle": [
+      "Flashback Media",
+      "Flashback Media"
+    ],
+    "slug": "flashback-media",
+    "link": "https://flashbackmedia.in/",
+    "status": "active",
+    "categories": [
+      "websites-portfolio"
+    ],
+    "subcategories": [
+      "web-application"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "web-development"
+    ],
+    "servicesubcategories": [
+      "web-application"
+    ],
+    "servicesubSubcategories": [
+      ""
+    ],
+    "createdAt": "2024-11-08T09:44:31.732Z",
+    "updatedAt": "2024-11-08T09:44:31.733Z",
+    "__v": 0
+  },
+  {
+    "_id": "672de9db1cfc06a5264862a5",
+    "title": "Chango Noodles",
+    "details": "<p>Chango</p>",
+    "photo": [
+      "photo_1731062231004.webp",
+      "photo_1731062231030.webp"
+    ],
+    "alt": [
+      "Chango Noodles",
+      "Chango Noodles"
+    ],
+    "imgtitle": [
+      "Chango Noodles",
+      "Chango Noodles"
+    ],
+    "slug": "chango-noodles",
+    "link": "https://www.changonoodles.com/",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-08T10:37:15.696Z",
+    "updatedAt": "2024-11-08T10:37:15.698Z",
+    "__v": 0
+  },
+  {
+    "_id": "672dea6d1cfc06a526486391",
+    "title": "ACE Packaging",
+    "details": "<p>ACE Packaging</p>",
+    "photo": [
+      "photo_1731062372985.webp",
+      "photo_1731062373245.webp"
+    ],
+    "alt": [
+      "ACE Packaging",
+      "ACE Packaging"
+    ],
+    "imgtitle": [
+      "ACE Packaging",
+      "ACE Packaging"
+    ],
+    "slug": "ace-packaging",
+    "link": "https://www.acepack.co.in/",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-08T10:39:41.803Z",
+    "updatedAt": "2024-11-08T10:39:41.804Z",
+    "__v": 0
+  },
+  {
+    "_id": "672deac91cfc06a52648655d",
+    "title": "Holiday Sathi",
+    "details": "<p>Holiday Sathi</p>",
+    "photo": [
+      "photo_1731062467223.webp",
+      "photo_1731062467226.webp"
+    ],
+    "alt": [
+      "Holiday Sathi",
+      "Holiday Sathi"
+    ],
+    "imgtitle": [
+      "Holiday Sathi",
+      "Holiday Sathi"
+    ],
+    "slug": "holiday-sathi",
+    "link": "https://www.holidaysathi.in/",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-08T10:41:13.680Z",
+    "updatedAt": "2024-11-08T10:41:13.681Z",
+    "__v": 0
+  },
+  {
+    "_id": "672deb491cfc06a5264866ae",
+    "title": "Travel Sathi",
+    "details": "<p>Travel Sathi</p>",
+    "photo": [
+      "photo_1731062594426.webp",
+      "photo_1731062594432.webp"
+    ],
+    "alt": [
+      "Travel Sathi",
+      "Travel Sathi"
+    ],
+    "imgtitle": [
+      "Travel Sathi",
+      "Travel Sathi"
+    ],
+    "slug": "travel-sathi",
+    "link": "https://www.travelsaathi.co/",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-08T10:43:21.313Z",
+    "updatedAt": "2024-11-08T10:43:21.314Z",
+    "__v": 0
+  },
+  {
+    "_id": "672dec891cfc06a5264869ac",
+    "title": "Mahavir Clinic",
+    "details": "<p>Mahavir Clinic</p>",
+    "photo": [
+      "photo_1731062913553.webp",
+      "photo_1731062913558.webp"
+    ],
+    "alt": [
+      "Mahavir Clinic",
+      "Mahavir Clinic"
+    ],
+    "imgtitle": [
+      "Mahavir Clinic",
+      "Mahavir Clinic"
+    ],
+    "slug": "mahavir-clinic",
+    "link": "https://mahavirclinic.com/",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-08T10:48:41.330Z",
+    "updatedAt": "2024-11-08T10:48:41.331Z",
+    "__v": 0
+  },
+  {
+    "_id": "672ed9872fb20de029aa33b3",
+    "title": "Dowell Moulds",
+    "details": "<p>Dowell Moulds</p>",
+    "photo": [
+      "photo_1731123583785.webp",
+      "photo_1731123584815.webp"
+    ],
+    "alt": [
+      "Dowell Moulds",
+      "Dowell Moulds"
+    ],
+    "imgtitle": [
+      "Dowell Moulds",
+      "Dowell Moulds"
+    ],
+    "slug": "dowell-moulds",
+    "link": "https://www.dowellmoulds.com/",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-09T03:39:51.284Z",
+    "updatedAt": "2024-11-09T03:39:51.285Z",
+    "__v": 0
+  },
+  {
+    "_id": "672edd302fb20de029aa35d4",
+    "title": "Om Shivam",
+    "details": "<p>Om Shivam</p>",
+    "photo": [
+      "photo_1731124522097.webp",
+      "photo_1731124522103.webp"
+    ],
+    "alt": [
+      "Om Shivam",
+      "Om Shivam"
+    ],
+    "imgtitle": [
+      "Om Shivam",
+      "Om Shivam"
+    ],
+    "slug": "om-shivam",
+    "link": "",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-09T03:55:28.968Z",
+    "updatedAt": "2024-11-09T03:55:29.060Z",
+    "__v": 0
+  },
+  {
+    "_id": "672edd812fb20de029aa36c5",
+    "title": "Rutvish",
+    "details": "<p>Rutvish</p>",
+    "photo": [
+      "photo_1731124591234.webp",
+      "photo_1731124597750.webp"
+    ],
+    "alt": [
+      "Rutvish",
+      "Rutvish"
+    ],
+    "imgtitle": [
+      "Rutvish",
+      "Rutvish"
+    ],
+    "slug": "rutvish",
+    "link": "",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-09T03:56:49.500Z",
+    "updatedAt": "2024-11-09T03:56:49.503Z",
+    "__v": 0
+  },
+  {
+    "_id": "672f325ba49a5f8766a60e0a",
+    "title": "Navkar Dental",
+    "details": "<p>Navkar Dental</p>",
+    "photo": [
+      "photo_1731146320972.webp",
+      "photo_1731146324031.webp"
+    ],
+    "alt": [
+      "Navkar Dental",
+      "Navkar Dental"
+    ],
+    "imgtitle": [
+      "Navkar Dental",
+      "Navkar Dental"
+    ],
+    "slug": "navkar-dental",
+    "link": "",
+    "status": "active",
+    "categories": [
+      "social-media"
+    ],
+    "subcategories": [
+      "website-social-media-template"
+    ],
+    "subSubcategories": [
+      ""
+    ],
+    "servicecategories": [
+      "smm-services"
+    ],
+    "servicesubcategories": [
+      "smm-graphic-designing"
+    ],
+    "servicesubSubcategories": [
+      "website-social-banner-design"
+    ],
+    "createdAt": "2024-11-09T09:58:51.092Z",
+    "updatedAt": "2024-11-09T09:58:51.094Z",
+    "__v": 0
+  }
+]

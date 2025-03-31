@@ -1,0 +1,67 @@
+[
+  {
+    "_id": "66c71d5f8b9b76092327e398",
+    "pagename": "Websites",
+    "photo": "photo_1724325215721.png",
+    "alt": "websites",
+    "priority": 1,
+    "details": "Custom Websites made in CMS",
+    "parent": "66c7134dd3d9493f5654fe83",
+    "createdAt": "2024-08-22T11:13:35.814Z",
+    "__v": 0,
+    "imgtitle": "website",
+    "updatedAt": "2024-08-27T10:06:10.400Z"
+  },
+  {
+    "_id": "66c71e878b9b76092327e3b8",
+    "pagename": "Design",
+    "photo": "photo_1724325511875.png",
+    "alt": "design",
+    "priority": 2,
+    "details": "Unlimited designs",
+    "parent": "66c7134dd3d9493f5654fe83",
+    "createdAt": "2024-08-22T11:18:31.925Z",
+    "__v": 0,
+    "imgtitle": "design",
+    "updatedAt": "2024-08-27T10:06:21.401Z"
+  },
+  {
+    "_id": "66c71ee38b9b76092327e3c3",
+    "pagename": "Social Media",
+    "photo": "photo_1724325603357.png",
+    "alt": "social media",
+    "priority": 3,
+    "details": "Boost your online presence",
+    "parent": "66c7134dd3d9493f5654fe83",
+    "createdAt": "2024-08-22T11:20:03.400Z",
+    "__v": 0,
+    "imgtitle": "social media",
+    "updatedAt": "2024-08-27T10:06:46.952Z"
+  },
+  {
+    "_id": "66c71f4b8b9b76092327e3ce",
+    "pagename": "Website Management",
+    "photo": "photo_1724325707315.png",
+    "alt": "website mansgement",
+    "priority": 4,
+    "details": "Your website takes care of",
+    "parent": "66c7134dd3d9493f5654fe83",
+    "createdAt": "2024-08-22T11:21:47.361Z",
+    "__v": 0,
+    "imgtitle": "website management",
+    "updatedAt": "2024-08-27T10:07:08.854Z"
+  },
+  {
+    "_id": "66c720778b9b76092327e3d9",
+    "pagename": "What we do",
+    "photo": "photo_1724326007810.webp",
+    "alt": "how it works",
+    "priority": 5,
+    "details": "Learn how we assist global businesses with their design and web development needs through our comprehensive subscription-based services.",
+    "parent": "66c7134dd3d9493f5654fe83",
+    "createdAt": "2024-08-22T11:26:47.860Z",
+    "__v": 0,
+    "imgtitle": "how it works",
+    "updatedAt": "2024-08-27T10:07:24.942Z"
+  }
+]

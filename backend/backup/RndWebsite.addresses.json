@@ -1,0 +1,9 @@
+[{
+  "_id": {
+    "$oid": "66f23bbf583847a1465c922d"
+  },
+  "headOfficeAddress": "https://maps.app.goo.gl/7tX5zSdgBo65nbKL7",
+  "salesOfficeAddress": "https://maps.app.goo.gl/faxRjt7MD6PTZqE26",
+  "location": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3739.7428488292326!2d72.89097727484366!3d20.39348988110159!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be0ce2ca3e11597%3A0x8f8459404645f9bc!2sRnD%20Technosoft!5e0!3m2!1sen!2sin!4v1727150884102!5m2!1sen!2sin",
+  "__v": 0
+}]

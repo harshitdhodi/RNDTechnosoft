@@ -11,12 +11,9 @@ const HomeAnimationsTable = () => {
   const [homeAnimations, setHomeAnimations] = useState([]);
   const [heading, setHeading] = useState("");
   const [subheading, setSubheading] = useState("");
-
-
   const notify = () => {
     toast.success("Updated Successfully!");
   };
-
   const fetchHeadings = async () => {
     try {
       const response = await axios.get('/api/pageHeading/heading?pageType=homeanimation', { withCredentials: true });
@@ -27,7 +24,6 @@ const HomeAnimationsTable = () => {
       console.error(error);
     }
   };
-
   const saveHeadings = async () => {
     const formData = new FormData();
     formData.append("pagetype", 'homeanimation');

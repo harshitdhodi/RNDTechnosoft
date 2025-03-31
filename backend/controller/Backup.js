@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const Backup = require('../model/Backupfiles');
 const MonthlyBackup=require("../model/MonthlyBackupfiles")
+const archiver = require("archiver");
 
 const exportAndBackupAllCollections = async (req, res) => {
     try {
@@ -187,5 +188,110 @@ const deleteAllDataExceptAdmins = async (req, res) => {
     }
   };
 
+// Controller to download a specific collection file
+const downloadAllData = async (req, res) => {
+  try {
+      const tempDir = path.join(__dirname, "../temp");
+      if (!fs.existsSync(tempDir)) {
+          fs.mkdirSync(tempDir, { recursive: true });
+      }
 
-module.exports = { exportAndBackupAllCollections,exportAndBackupAllCollectionsmonthly,getLastThreeMonthlyBackups,downloadFile ,deleteAllDataExceptAdmins};
+      // Fetch all collections
+      const collections = await mongoose.connection.db.listCollections().toArray();
+      const fileLinks = [];
+
+      for (const collection of collections) {
+          const modelName = collection.name;
+
+          let Model;
+          try {
+              Model = mongoose.model(modelName);
+          } catch (err) {
+              Model = mongoose.model(modelName, new mongoose.Schema({}, { strict: false }));
+          }
+
+          const data = await Model.find({}).lean();
+          if (data.length === 0) continue;
+
+          // Save JSON file
+          const filePath = path.join(tempDir, `${modelName}.json`);
+          fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+
+          // Add download link
+          fileLinks.push({
+              name: `${modelName}.json`,
+              url: `${req.protocol}://${req.get("host")}/download/${modelName}.json`
+          });
+      }
+
+      if (fileLinks.length === 0) {
+          return res.status(404).json({ message: "No collections found." });
+      }
+
+      res.json({ message: "Download JSON files", files: fileLinks });
+
+  } catch (error) {
+      console.error("Error downloading collections:", error);
+      res.status(500).json({ message: "Error processing request", error });
+  }
+};
+
+const uploadAllCollections = async (req, res) => {
+  try {
+    const db = mongoose.connection.db;
+    const exportDir = path.join(__dirname, "../backup");
+
+    if (!fs.existsSync(exportDir)) {
+      return res.status(400).json({ message: "Export folder does not exist." });
+    }
+
+    const files = fs.readdirSync(exportDir).filter((file) => file.endsWith(".json"));
+    if (files.length === 0) {
+      return res.status(400).json({ message: "No JSON files found to import." });
+    }
+
+    // Drop all existing collections before importing
+    const collections = await db.listCollections().toArray();
+    for (const collection of collections) {
+      await db.collection(collection.name).drop();
+    }
+    console.log("All existing collections dropped.");
+
+    let importedCollections = [];
+
+    for (const file of files) {
+      let collectionName = file.replace(".json", "");
+
+      // Remove "Apurva." prefix if it exists
+      if (collectionName.startsWith("RndWebsite.")) {
+        collectionName = collectionName.replace("RndWebsite.", "");
+      }
+
+      const filePath = path.join(exportDir, file);
+      const jsonData = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
+      if (jsonData.length === 0) continue; // Skip empty files
+
+      // Convert _id fields from { "$oid": "value" } to ObjectId
+      const transformedData = jsonData.map((doc) => {
+        if (doc._id && doc._id.$oid) {
+          doc._id = new mongoose.Types.ObjectId(doc._id.$oid);
+        }
+        return doc;
+      });
+
+      const collection = db.collection(collectionName);
+      await collection.insertMany(transformedData);
+
+      importedCollections.push(collectionName);
+    }
+
+    return res.json({ message: "Collections imported successfully after clearing existing ones.", importedCollections });
+
+  } catch (error) {
+    console.error("Error importing collections:", error);
+    res.status(500).json({ message: "Error importing collections", error });
+  }
+};
+
+module.exports = { exportAndBackupAllCollections,exportAndBackupAllCollectionsmonthly,getLastThreeMonthlyBackups,downloadFile ,deleteAllDataExceptAdmins ,downloadAllData ,uploadAllCollections};
