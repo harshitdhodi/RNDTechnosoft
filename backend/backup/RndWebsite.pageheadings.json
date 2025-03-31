@@ -1,0 +1,173 @@
+[{
+  "_id": {
+    "$oid": "66b456445a670b4fd05d1053"
+  },
+  "pageType": "faq",
+  "heading": "FAQ",
+  "subheading": "Clear Your Doubts with Our FAQs",
+  "__v": 0,
+  "alt": "",
+  "imgTitle": ""
+},
+{
+  "_id": {
+    "$oid": "66b73553500b42fe0f48d55e"
+  },
+  "pageType": "testimonial",
+  "heading": "Review",
+  "subheading": "See What Our Customers Have to Say",
+  "__v": 0,
+  "alt": "",
+  "imgTitle": ""
+},
+{
+  "_id": {
+    "$oid": "66bb21425c26eccebc03c684"
+  },
+  "pageType": "package",
+  "heading": "All Packages",
+  "subheading": "Choose the package that fits your business needs. Each package requires a one-time payment, covering all included features + services.",
+  "__v": 0,
+  "alt": "",
+  "imgTitle": ""
+},
+{
+  "_id": {
+    "$oid": "66bb3f25a6426bdc5f88d9dc"
+  },
+  "pageType": "designProcess",
+  "heading": "Our Design Process",
+  "subheading": "RnD Technosoft focuses on understanding the client's requirements first and then executing the step-by-step guidelines for the successful competition and deployment of targeted graphic designs and goals. To promote graphic designing services and establish client relationships, trustworthiness, negligence, and good bonding between consumers and the company. ",
+  "__v": 0,
+  "alt": "",
+  "imgTitle": ""
+},
+{
+  "_id": {
+    "$oid": "66c247da0e26a432d488df94"
+  },
+  "pageType": "howItWorks",
+  "heading": "How it works",
+  "subheading": "no",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c4cac59fde7caffa2c8bc9"
+  },
+  "pageType": "counter",
+  "heading": "Driving growth for our clients",
+  "subheading": "Default Subheading",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c5bcef0fafeee418b9866f"
+  },
+  "pageType": "aboutcompany",
+  "heading": "About Us",
+  "subheading": "We offer unlimited design solutions and customized website packages",
+  "__v": 0,
+  "alt": "about us",
+  "imgTitle": "about us",
+  "photo": "photo_1729078025378.jpg"
+},
+{
+  "_id": {
+    "$oid": "66c5bdc00fafeee418b9867b"
+  },
+  "pageType": "corevalue",
+  "heading": "Our Values",
+  "subheading": "This is the foundation for our value statement, and our commitment at RND Technosoft is inspired by the following core values. Here’s what sets us apart:",
+  "__v": 0,
+  "alt": "",
+  "imgTitle": ""
+},
+{
+  "_id": {
+    "$oid": "66c6c3ebf349ce57a67333b7"
+  },
+  "pageType": "product",
+  "heading": "Premium templates",
+  "subheading": "Have a taste of Rnd",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66d697bc2eb3d24999fd5a03"
+  },
+  "pageType": "blogs",
+  "heading": "Blogs",
+  "subheading": "In today’s digital age, a captivating online presence is essential for photographers looking to showcase their work, attract clients, and build their brand. A well-designed",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66ebc9a34c3a8f64c6976fa9"
+  },
+  "pageType": "portfolio",
+  "heading": "Portfolio",
+  "subheading": "Crafting Digital Experiences That Elevate Your Brand",
+  "__v": 0,
+  "alt": "",
+  "imgTitle": ""
+},
+{
+  "_id": {
+    "$oid": "66f142ff85524911a26ef63d"
+  },
+  "pageType": "contactus",
+  "heading": "contact us",
+  "subheading": "Get in touch for personalized support and solutions!",
+  "__v": 0,
+  "alt": "Contact us",
+  "imgTitle": "Contact Us",
+  "photo": "photo_1727414897385.jpg"
+},
+{
+  "_id": {
+    "$oid": "66f3adb0e0474db415fc3d74"
+  },
+  "pageType": "career",
+  "heading": "Join RND Technosoft",
+  "subheading": "Creativity.Technology.Innovation",
+  "__v": 0,
+  "alt": "",
+  "imgTitle": ""
+},
+{
+  "_id": {
+    "$oid": "66fe777f4009c7515227cc87"
+  },
+  "pageType": "howrndhelp",
+  "heading": "How RnD Technosoft can help",
+  "subheading": "At RnD Technosoft, our design subscription model is crafted to help businesses scale efficiently and effectively. Here’s how our approach can support your growth.",
+  "photo": "photo_1727952767942.webp",
+  "alt": "image 1",
+  "imgTitle": "image 1",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6707809c7df28e5ff8d58f75"
+  },
+  "pageType": "homeanimation",
+  "heading": "Unlock Growth with Design that Drives Results!",
+  "subheading": "Our subscription model powers your business's growth through best-in-class, on-trend design solutions. Partner with us for creative expertise and strategic impact—keeping your brand fresh, relevant, and primed for success in a rapidly changing market. Together, we're committed to building your brand's future.",
+  "photo": "",
+  "alt": "",
+  "imgTitle": "",
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "671a225817d8cb09c4f519d3"
+  },
+  "pageType": "logotype",
+  "heading": " Let’s explore the various types of logo designs we can assist you with.",
+  "subheading": "We provide a variety of logo styles, including the following:",
+  "photo": "",
+  "alt": "",
+  "imgTitle": "",
+  "__v": 0
+}]

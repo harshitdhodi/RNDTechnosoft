@@ -1,0 +1,114 @@
+[{
+  "_id": {
+    "$oid": "66b5b9f52ded637e7aa6f093"
+  },
+  "labels": [
+    {
+      "label": "Websites",
+      "color": "#687d6b",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea33678c"
+      }
+    },
+    {
+      "label": "Social Media",
+      "color": "#1d4b62",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea33678d"
+      }
+    },
+    {
+      "label": "Landing Page",
+      "color": "#0f2e2d",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea33678e"
+      }
+    },
+    {
+      "label": "E-Mail Design",
+      "color": "#e3c635",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea33678f"
+      }
+    },
+    {
+      "label": "UI/UX",
+      "color": "#219125",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea336790"
+      }
+    },
+    {
+      "label": "Video-Editing",
+      "color": "#2e0887",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea336791"
+      }
+    },
+    {
+      "label": "Brand Identity",
+      "color": "#4f0303",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea336792"
+      }
+    },
+    {
+      "label": "Mobile Apps",
+      "color": "#559e33",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea336793"
+      }
+    }
+  ],
+  "smallCircles": [
+    {
+      "color": "#f4861f",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea336794"
+      }
+    },
+    {
+      "color": "#316cb9",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea336795"
+      }
+    },
+    {
+      "color": "#f0e000",
+      "_id": {
+        "$oid": "66b5e5bcfc6469a5ea336796"
+      }
+    },
+    {
+      "color": "#ed0c0c",
+      "_id": {
+        "$oid": "66f37ccd098d87475f708166"
+      }
+    }
+  ],
+  "heading": {
+    "highlightedWords": [
+      "Brand",
+      "Assests",
+      "Websites"
+    ],
+    "beforeHighlight": "We Build ",
+    "afterHighlight": "For Businesses Aiming for Success",
+    "_id": {
+      "$oid": "6719e6b84e4971d12a6b67b7"
+    }
+  },
+  "paragraph": {
+    "text": "<p>Dream it, and we’ll design it! Our web development and design services come in convenient <span style=\"color: rgb(22, 21, 25);\">&nbsp;</span><span style=\"color: rgb(243, 202, 13);\">subscription plans</span> and <span style=\"color: rgb(243, 202, 13);\">cutomizable packages</span> to fit your needs.</p>",
+    "_id": {
+      "$oid": "6719e6b84e4971d12a6b67b8"
+    }
+  },
+  "createdAt": {
+    "$date": "2024-08-09T06:40:53.167Z"
+  },
+  "updatedAt": {
+    "$date": "2024-10-24T06:18:32.233Z"
+  },
+  "__v": 0
+}]

@@ -136,7 +136,7 @@ app.use("/api/herosectioninquiry", cacheMiddleware(300), require('./routes/heros
 app.use("/api/logotype", cacheMiddleware(86400), require('./routes/logotype'));
 app.use("/api/packagedescription", cacheMiddleware(3600), require('./routes/packagedescription'));
 app.use("/api/allData", cacheMiddleware(3600), require('./combineApi/combineRoute'));
-app.use("/api/allData2", cacheMiddleware(3600), require('./combineApi/combineRoute2'));
+app.use("/api/allData2", cacheMiddleware(3600), require('./combineApi/combineRoute2')); 
 
 // Swagger setup
 const swaggerUi = require('swagger-ui-express');

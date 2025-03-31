@@ -1,0 +1,117 @@
+[{
+  "_id": {
+    "$oid": "66c7134dd3d9493f5654fe83"
+  },
+  "pagename": "Service",
+  "photo": "photo_1724322637251.webp",
+  "alt": "jwdfoerjf",
+  "priority": 1,
+  "createdAt": {
+    "$date": "2024-08-22T10:30:37.299Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T09:53:59.598Z"
+  },
+  "__v": 0,
+  "imgtitle": "years"
+},
+{
+  "_id": {
+    "$oid": "66c7209f8b9b76092327e3e2"
+  },
+  "pagename": "How it works",
+  "photo": "photo_1724326047450.webp",
+  "alt": "how it works",
+  "priority": 2,
+  "createdAt": {
+    "$date": "2024-08-22T11:27:27.577Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T09:54:50.694Z"
+  },
+  "__v": 0,
+  "imgtitle": "years"
+},
+{
+  "_id": {
+    "$oid": "66c721398b9b76092327e3eb"
+  },
+  "pagename": "Pricing",
+  "photo": "photo_1724326201776.webp",
+  "alt": "pricing",
+  "priority": 3,
+  "createdAt": {
+    "$date": "2024-08-22T11:30:01.831Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T09:54:58.383Z"
+  },
+  "__v": 0,
+  "imgtitle": "website"
+},
+{
+  "_id": {
+    "$oid": "66c721648b9b76092327e3f4"
+  },
+  "pagename": "Projects",
+  "photo": "photo_1724326244248.webp",
+  "alt": "projects",
+  "priority": 4,
+  "createdAt": {
+    "$date": "2024-08-22T11:30:44.294Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-22T11:30:44.294Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c721838b9b76092327e3fd"
+  },
+  "pagename": "Templates",
+  "photo": "photo_1724326275826.webp",
+  "alt": "templates",
+  "priority": 5,
+  "createdAt": {
+    "$date": "2024-08-22T11:31:15.865Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-22T11:31:15.865Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c721a88b9b76092327e406"
+  },
+  "pagename": "Login in",
+  "photo": "photo_1724326312852.webp",
+  "alt": "LOGIN",
+  "priority": 6,
+  "createdAt": {
+    "$date": "2024-08-22T11:31:52.893Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T09:55:07.400Z"
+  },
+  "__v": 0,
+  "imgtitle": "years"
+},
+{
+  "_id": {
+    "$oid": "66c721de8b9b76092327e40f"
+  },
+  "pagename": "Get Started",
+  "photo": "photo_1724326366659.webp",
+  "alt": "get started",
+  "priority": 7,
+  "createdAt": {
+    "$date": "2024-08-22T11:32:46.707Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-27T09:55:16.943Z"
+  },
+  "__v": 0,
+  "imgtitle": "website"
+}]
