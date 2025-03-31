@@ -531,16 +531,19 @@ const EditNews = () => {
         />
       </div>
       <div className="mb-8">
-        <label htmlFor="details" className="block font-semibold mb-2">
-          Description
-        </label>
-        <ReactQuill
-          value={details}
-          onChange={setDetails}
-          modules={modules} // Include modules for image handling
-          className="quill"
-        />
-      </div>
+  <label htmlFor="details" className="block font-semibold mb-2">
+    Description
+  </label>
+  <div className="h-[500px]  border border-gray-300 rounded">
+    <ReactQuill
+      value={details}
+      onChange={setDetails}
+      modules={modules} // Include modules for image handling
+      className="quill h-full overflow-y-hidden"
+    />
+  </div>
+</div>
+
       <div className="mb-4">
         <label className="block font-semibold mb-2">Current Photos</label>
         <div className="flex flex-wrap gap-4">

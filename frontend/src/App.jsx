@@ -238,14 +238,12 @@ function App() {
     return children;
 };
   return (
-
     <BrowserRouter>
      <ScrollToTop />
       <DynamicMetaTags />
       {isLoading ? (
         // Show loading video while loading
         <>
-
 <div className="flex justify-center items-center h-screen w-full bg-white">
         {/* <div className="loader border-t-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div> */}
       </div>
@@ -284,7 +282,6 @@ function App() {
             <Route path="/resetpassword" element={<ResetPassword />} />
             <Route path="/verifyOTP" element={<VerifyOTP />} />
             <Route path="/forgetpassword" element={<ForgetPassword />} />
-        
             {/* Protected Routes */}
             <Route
                 path="/dashboard"
@@ -295,7 +292,6 @@ function App() {
                 }
             />
         </>
-        
             ) : (
               <><Route path="/login" element={<Navigate to="/dashboard" />} /><Route path="/" element={<Sidebar />}>
                     <Route index element={<Dashboard />} />
@@ -304,44 +300,30 @@ function App() {
                     <Route path="/ServiceCategory" element={<ServiceCategory />} />
                     <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
                     <Route path="/ServiceCategory/editServiceCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditServiceCategory />} />
-
                     <Route path="/PackageCategory" element={<PackageCategory />} />
                     <Route path="/PackageCategory/CreatePackageCategory" element={<CreatePackageCategory />} />
                     <Route path="/PackageCategory/editPackageCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditPackageCategory />} />
                     <Route path="/package" element={<MainPackageComponent />} />
                     <Route path="/package/createPackage" element={<CreatePackage />} />
                     <Route path="/package/editPackage/:packageId" element={<EditPackageForm />} />
-
-
                     <Route path="/package/createPackageDescription" element={<CreatePackageDescription />} />
                     <Route path="/package/editPackageDescription/:packageId" element={<EditPackageDescription />} />
-
-
                     <Route path="/IndustriesCategory" element={<IndustriesCategory />} />
                     <Route path="/IndustriesCategory/CreateIndustriesCategory" element={<CreateIndustriesCategory />} />
                     <Route path="/IndustriesCategory/editIndustriesCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditIndustriesCategory />} />
-
                     <Route path="/industries" element={<Industries />} />
-
-
                     <Route path="/PortfolioCategory" element={<PortfolioCategory />} />
                     <Route path="/PortfolioCategory/CreatePortfolioCategory" element={<CreatePortfolioCategory />} />
                     <Route path="/PortfolioCategory/editPortfolioCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditPortfolioCategory />} />
-
-
                     <Route path="/news" element={<News />} />
                     <Route path="/news/createNews" element={<CreateNews />} />
                     <Route path="/news/editNews/:slugs" element={<EditNews />} />
-
                     <Route path="/homeanimation" element={<Homeanimation />} />
                     <Route path="/homeanimation/createHomeanimation" element={<CreateHomeanimation />} />
                     <Route path="/homeanimation/editHomeanimation/:id" element={<EditHomeanimation />} />
-
                     <Route path="/portfolio" element={<Portfolio />} />
                     <Route path="/portfolio/createPortfolio" element={<CreatePortfolio />} />
                     <Route path="/portfolio/editPortfolio/:slugs" element={<EditPortfolio />} />
-
-
                     <Route path="/NewsCategory" element={<NewsCategory />} />
                     <Route path="/NewsCategory/CreateNewsCategory" element={<CreateNewsCategory />} />
                     <Route path="/NewsCategory/editNewsCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditNewsCategory />} />
@@ -350,10 +332,8 @@ function App() {
                     <Route path="/testimonials/createTestimonials/:categoryId" element={<CreateTestimonials />} />
                     <Route path="/testimonials/createTestimonials/:categoryId/:subcategoryId" element={<CreateTestimonialsSub />} />
                     <Route path="/testimonials/createTestimonials/:categoryId/:subcategoryId/:subsubcategoryId" element={<CreateTestimonialsSubSub />} />
-
                     <Route path="/popup-inquiry" element={<PopupInquiry />} />
                     <Route path="/hero-inquiry" element={<HerosectionInquiry />} />
-
                     <Route path="/testimonials/editTestimonials/:id" element={<EditTestimonials />} />
                     <Route path="/faq" element={<MainFaqSection />} />
                     <Route path="/faq/createFAQ" element={<CreateFAQ />} />
@@ -375,7 +355,6 @@ function App() {
                     <Route path="/product" element={<Product />} />
                     <Route path="/product/createProduct" element={<CreateProduct />} />
                     <Route path="/product/editProduct/:slugs" element={<EditProduct />} />
-
                     <Route path="/manageLogo" element={<Logo />} />
                     <Route path="/DatabaseManagement" element={<DatabaseManagement />} />
                     <Route path="/managePassword" element={<ManagePassword />} />
@@ -391,11 +370,9 @@ function App() {
                     <Route path="/corevalue" element={<Corevalue />} />
                     <Route path="/corevalue/createCorevalue" element={<CreateCorevalue />} />
                     <Route path="/corevalue/editCorevalue/:id" element={<EditCorevalue />} />
-
                     <Route path="/Card" element={<ShowCard />} />
                     <Route path="/Card/createCard" element={<AddCard />} />
                     <Route path="/Card/editCard/:id" element={<UpdateCard />} />
-
                     <Route path="/aboutcompany" element={<Aboutcompany />} />
                     <Route path="/careeroption" element={<Careeroption />} />
                     <Route path="/careeroption/createCareerOption" element={<CreateCareeroption />} />
@@ -409,8 +386,6 @@ function App() {
                     <Route path="/menulisting" element={<Menulisting />} />
                     <Route path="/menulisting/createMenulisting" element={<CreateMenulisting />} />
                     <Route path="/menulisting/editMenulisting/:id" element={<EditMenulisting />} />
-
-
                     <Route path="/sitemap" element={<Sitemap />} />
                     <Route path="/sitemap/createSitemap" element={<CreateSitemap />} />
                     <Route path="/sitemap/editSitemap/:id/:type" element={<EditSitemap />} />
@@ -420,45 +395,33 @@ function App() {
                     <Route path="/benefits/createBenefits" element={<CreateBenefits />} />
                     <Route path="/benefits/editBenefits/:id" element={<EditBenefits />} />
                     <Route path="/manageTheme" element={<ManageColor />} />
-
                     <Route path="/contactinfo" element={<ContactInfoData />} />
                     <Route path="/contactinfo/createContactinfo" element={<CreateContactInfo />} />
                     <Route path="/contactinfo/editContactinfo/:id" element={<EditContactInfo />} />
                     <Route path="/conatctinquiries" element={<ContactInquiry />} />
                     <Route path="/managesectionvisibility" element={<ManageSectionVisibility />} />
-
                     {/* made for me  */}
-
                     <Route path="/homehero" element={<HomeHerosection />} />
                     <Route path="/services/createService/:categoryId" element={<CreateServiceDetails />} />
                     <Route path="/services/createService/:categoryId/:subcategoryId" element={<NewSubServiceForm />} />
                     <Route path="/services/createService/:categoryId/:subcategoryId/:subsubcategoryId" element={<NewSubSubServiceForm />} />
-
                     <Route path="/services/edit-service/:categoryId" element={<EditServicePage />} />
                     <Route path="/services/edit-subcategory/:categoryId/:subcategoryId" element={<EditSubServicePage />} />
                     <Route path="/services/edit-subsubcategory/:categoryId/:subcategoryId/:subsubcategoryId" element={<EditSubSubServicePage />} />
-
                     <Route path="/services/editService/:categoryId" element={<EditServiceDetails />} />
                     <Route path="/services/editSubService/:categoryId" element={<EditSubServiceDetails />} />
                     <Route path="/services/editSubSubService/:categoryId" element={<EditSubSubServiceDetails />} />
-
                     <Route path="/services/createImage/:categoryId" element={<CreateServiceImage />} />
                     <Route path="/services/createImage/:categoryId/:subcategoryId" element={<NewSubGalleryForm />} />
                     <Route path="/services/createImage/:categoryId/:subcategoryId/:subsubcategoryId" element={<NewSubSubGalleryForm />} />
-
                     <Route path="/industries/createImage/:categoryId" element={<CreateIndustryImage />} />
                     <Route path="/industries/createImage/:categoryId/:subcategoryId" element={<CreateSubIndustryImage />} />
                     <Route path="/industries/createImage/:categoryId/:subcategoryId/:subsubcategoryId" element={<CreateSubSubIndustryImage />} />
-
-
-
                     <Route path="/services/editImages/:categoryId" element={<EditServiceImages />} />
                     <Route path="/industries/editImages/:categoryId" element={<EditIndustryImage />} />
-
                     <Route path="/services/designProcess/:categoryId" element={<DesignProcessForm />} />
                     <Route path="/services/designProcess/:categoryId/:subcategoryId" element={<DesignSubProcessForm />} />
                     <Route path="/services/designProcess/:categoryId/:subcategoryId/:subsubcategoryId" element={<DesignSubSubProcessForm />} />
-
                     <Route path="/services/editDesignProcess/:processId" element={<EditDesignProcess />} />
                     <Route path="/extrapages/:contentType" element={<EditWebSolutionDetails />} />
                     <Route path="/menulisting/createSubmenu" element={<NewSubmenuListingForm />} />
@@ -468,30 +431,20 @@ function App() {
                     <Route path="/industries/edit-subsubcategory/:categoryId/:subcategoryId/:subsubcategoryId" element={<EditIndustiresSubsubPage />} />
                     <Route path="/industries/createIndustries/:categoryId" element={<NewIndustriesForm />} />
                     <Route path="/industries/editIndustries/:categoryId" element={<EditIndustriesForm />} />
-
                     <Route path="/industries/createIndustries/:categoryId/:subcategoryId" element={<NewIndustriesSubForm />} />
                     <Route path="/industries/editSubIndustries/:categoryId" element={<EditIndustriesSubForm />} />
-
                     <Route path="/industries/createIndustries/:categoryId/:subcategoryId/:subsubcategoryId" element={<NewIndustriesSubSubForm />} />
                     <Route path="/industries/editSubsubIndustries/:categoryId" element={<EditIndustriesSubSubForm />} />
-
                     <Route path="/newsletter" element={<Newsletter />} />
-
                     <Route path="/logotype" element={<Logotype />} />
                     <Route path="/logotype/createLogotype" element={<CreateLogoType />} />
                     <Route path="/logotype/editLogotype/:id" element={<EditLogotype />} />
-
                   </Route></>
-
             )}
           </Routes>
         </>
-
       )}
     </BrowserRouter>
-
-
   );
 }
-
 export default App;

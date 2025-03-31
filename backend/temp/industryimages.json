@@ -1,0 +1,470 @@
+[
+  {
+    "_id": "673324638b13fbd192ad8597",
+    "images": "images_1731404898759.webp",
+    "alt": "Teetime",
+    "imgtitle": "Teetime",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T09:48:19.119Z",
+    "updatedAt": "2024-11-12T09:48:19.124Z",
+    "__v": 0
+  },
+  {
+    "_id": "67332904d1ae53ba8f396717",
+    "images": "images_1731406084053.webp",
+    "alt": "Holiday Sathi",
+    "imgtitle": "Holiday Sathi",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T10:08:04.269Z",
+    "updatedAt": "2024-11-12T10:08:04.273Z",
+    "__v": 0
+  },
+  {
+    "_id": "67332a1fd1ae53ba8f39675d",
+    "images": "images_1731406367348.webp",
+    "alt": "voogyo",
+    "imgtitle": "voogyo",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T10:12:47.556Z",
+    "updatedAt": "2024-11-12T10:12:47.557Z",
+    "__v": 0
+  },
+  {
+    "_id": "67332a9ad1ae53ba8f3967a6",
+    "images": "images_1731406490669.webp",
+    "alt": "Travel Sathi",
+    "imgtitle": "Travel Sathi",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T10:14:50.845Z",
+    "updatedAt": "2024-11-12T10:14:50.846Z",
+    "__v": 0
+  },
+  {
+    "_id": "673331523d725824917bd93a",
+    "images": "images_1731408209766.webp",
+    "alt": "UFPPL",
+    "imgtitle": "UFPPL",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-seo",
+    "subcategory": "6713861e0b7471940be35d12",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:43:30.201Z",
+    "updatedAt": "2024-11-12T10:43:30.205Z",
+    "__v": 0
+  },
+  {
+    "_id": "673334494b12b399704895f1",
+    "images": "images_1731408969704.webp",
+    "alt": "Shivam Packaging Industry",
+    "imgtitle": "Shivam Packaging Industry",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-seo",
+    "subcategory": "6713861e0b7471940be35d12",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:56:09.890Z",
+    "updatedAt": "2024-11-12T10:56:09.894Z",
+    "__v": 0
+  },
+  {
+    "_id": "673334614b12b39970489637",
+    "images": "images_1731408993063.webp",
+    "alt": "Sanghvi",
+    "imgtitle": "Sanghvi",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-seo",
+    "subcategory": "6713861e0b7471940be35d12",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:56:33.270Z",
+    "updatedAt": "2024-11-12T10:56:33.270Z",
+    "__v": 0
+  },
+  {
+    "_id": "6733347e4b12b3997048967d",
+    "images": "images_1731409021772.webp",
+    "alt": "Prakash Paradise",
+    "imgtitle": "Prakash Paradise",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-seo",
+    "subcategory": "6713861e0b7471940be35d12",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:57:02.061Z",
+    "updatedAt": "2024-11-12T10:57:02.061Z",
+    "__v": 0
+  },
+  {
+    "_id": "673334934b12b399704896bd",
+    "images": "images_1731409043556.webp",
+    "alt": "Travel Sathi",
+    "imgtitle": "Travel Sathi",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-ppc",
+    "subcategory": "671386290b7471940be35d32",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:57:23.592Z",
+    "updatedAt": "2024-11-12T10:57:23.593Z",
+    "__v": 0
+  },
+  {
+    "_id": "673334cc4b12b399704896ff",
+    "images": "images_1731409100149.webp",
+    "alt": "The light space",
+    "imgtitle": "The light space",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-ppc",
+    "subcategory": "671386290b7471940be35d32",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:58:20.667Z",
+    "updatedAt": "2024-11-12T10:58:20.667Z",
+    "__v": 0
+  },
+  {
+    "_id": "673334e24b12b39970489741",
+    "images": "images_1731409122397.webp",
+    "alt": "Tectoks",
+    "imgtitle": "Tectoks",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-ppc",
+    "subcategory": "671386290b7471940be35d32",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:58:42.925Z",
+    "updatedAt": "2024-11-12T10:58:42.926Z",
+    "__v": 0
+  },
+  {
+    "_id": "673334f94b12b39970489783",
+    "images": "images_1731409145060.webp",
+    "alt": "Shanti Patra",
+    "imgtitle": "Shanti Patra",
+    "categoryId": [
+      "66e970335195a9a344589b3b"
+    ],
+    "photoType": "company",
+    "slug": "chemical-marketing-ppc",
+    "subcategory": "671386290b7471940be35d32",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T10:59:05.171Z",
+    "updatedAt": "2024-11-12T10:59:05.172Z",
+    "__v": 0
+  },
+  {
+    "_id": "673335854b12b39970489800",
+    "images": "images_1731409285533.webp",
+    "alt": "Shah Finserv",
+    "imgtitle": "Shah Finserv",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T11:01:25.643Z",
+    "updatedAt": "2024-11-12T11:01:25.643Z",
+    "__v": 0
+  },
+  {
+    "_id": "6733359d4b12b3997048984b",
+    "images": "images_1731409309573.webp",
+    "alt": "Spikeel",
+    "imgtitle": "Spikeel",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T11:01:49.932Z",
+    "updatedAt": "2024-11-12T11:01:49.932Z",
+    "__v": 0
+  },
+  {
+    "_id": "673335b94b12b39970489896",
+    "images": "images_1731409337053.webp",
+    "alt": "The Light Space",
+    "imgtitle": "The Light Space",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T11:02:17.534Z",
+    "updatedAt": "2024-11-12T11:02:17.534Z",
+    "__v": 0
+  },
+  {
+    "_id": "673335ec4b12b399704898e1",
+    "images": "images_1731409388125.webp",
+    "alt": "Skycraft",
+    "imgtitle": "Skycraft",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing",
+    "isVisible": true,
+    "headingType": "main",
+    "createdAt": "2024-11-12T11:03:08.189Z",
+    "updatedAt": "2024-11-12T11:03:08.189Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336004b12b3997048992c",
+    "images": "images_1731409408485.webp",
+    "alt": "Shivam Packaging Industry",
+    "imgtitle": "Shivam Packaging Industry",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-seo",
+    "subcategory": "671386530b7471940be35d94",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:03:28.671Z",
+    "updatedAt": "2024-11-12T11:03:28.671Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336184b12b39970489979",
+    "images": "images_1731409432407.webp",
+    "alt": "Teetime",
+    "imgtitle": "Teetime",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-seo",
+    "subcategory": "671386530b7471940be35d94",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:03:52.744Z",
+    "updatedAt": "2024-11-12T11:03:52.744Z",
+    "__v": 0
+  },
+  {
+    "_id": "6733362e4b12b399704899c6",
+    "images": "images_1731409454165.webp",
+    "alt": "Holiday Sathi",
+    "imgtitle": "Holiday Sathi",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-seo",
+    "subcategory": "671386530b7471940be35d94",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:04:14.372Z",
+    "updatedAt": "2024-11-12T11:04:14.372Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336524b12b39970489a4d",
+    "images": "images_1731409489622.webp",
+    "alt": "Tectoks",
+    "imgtitle": "Tectoks",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-seo",
+    "subcategory": "671386530b7471940be35d94",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:04:50.143Z",
+    "updatedAt": "2024-11-12T11:04:50.143Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336904b12b39970489b0e",
+    "images": "images_1731409551836.webp",
+    "alt": "Travel Jockey",
+    "imgtitle": "Travel Jockey",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-branding",
+    "subcategory": "6713866c0b7471940be35de9",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:05:52.134Z",
+    "updatedAt": "2024-11-12T11:05:52.134Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336a44b12b39970489b59",
+    "images": "images_1731409571902.webp",
+    "alt": "Voogyo",
+    "imgtitle": "voogyo",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-branding",
+    "subcategory": "6713866c0b7471940be35de9",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:06:12.122Z",
+    "updatedAt": "2024-11-12T11:06:12.123Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336cd4b12b39970489c8d",
+    "images": "images_1731409613461.webp",
+    "alt": "Tech fabrication",
+    "imgtitle": "Tech fabrication",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-branding",
+    "subcategory": "6713866c0b7471940be35de9",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:06:53.733Z",
+    "updatedAt": "2024-11-12T11:06:53.733Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336e04b12b39970489cd8",
+    "images": "images_1731409631524.webp",
+    "alt": "Vastram",
+    "imgtitle": "Vastram",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-branding",
+    "subcategory": "6713866c0b7471940be35de9",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:07:12.013Z",
+    "updatedAt": "2024-11-12T11:07:12.013Z",
+    "__v": 0
+  },
+  {
+    "_id": "673336f64b12b39970489d5d",
+    "images": "images_1731409654356.webp",
+    "alt": "Shivam Packaging Industry",
+    "imgtitle": "Shivam Packaging Industry",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-smm",
+    "subcategory": "6713865e0b7471940be35dbc",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:07:34.542Z",
+    "updatedAt": "2024-11-12T11:07:34.543Z",
+    "__v": 0
+  },
+  {
+    "_id": "6733371c4b12b39970489da8",
+    "images": "images_1731409692132.webp",
+    "alt": "Prakash Industrial",
+    "imgtitle": "Prakash Industrial",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-smm",
+    "subcategory": "6713865e0b7471940be35dbc",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:08:12.334Z",
+    "updatedAt": "2024-11-12T11:08:12.335Z",
+    "__v": 0
+  },
+  {
+    "_id": "673337364b12b39970489df3",
+    "images": "images_1731409718083.webp",
+    "alt": "The Light Space",
+    "imgtitle": "The Light Space",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-smm",
+    "subcategory": "6713865e0b7471940be35dbc",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:08:38.570Z",
+    "updatedAt": "2024-11-12T11:08:38.570Z",
+    "__v": 0
+  },
+  {
+    "_id": "6733374d4b12b39970489e3e",
+    "images": "images_1731409741452.webp",
+    "alt": "Urban Nest",
+    "imgtitle": "Urban Nest",
+    "categoryId": [
+      "671386430b7471940be35d55"
+    ],
+    "photoType": "company",
+    "slug": "travel-marketing-smm",
+    "subcategory": "6713865e0b7471940be35dbc",
+    "isVisible": true,
+    "headingType": "sub",
+    "createdAt": "2024-11-12T11:09:01.855Z",
+    "updatedAt": "2024-11-12T11:09:01.856Z",
+    "__v": 0
+  }
+]

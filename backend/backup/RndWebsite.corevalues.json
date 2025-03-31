@@ -1,0 +1,58 @@
+[{
+  "_id": {
+    "$oid": "66c5be190fafeee418b9867d"
+  },
+  "title": "Integrity",
+  "description": "<p><span style=\"background-color: transparent;\">We understand that professionalism implies that we conduct all our business with the highest levels of ethical standards. The company acts in accordance with its core values which refer to ethical principles and operations based on the honest and complete disclosure of information with clients and business partners.</span></p>",
+  "photo": [
+    "photo_1728661350492.png"
+  ],
+  "alt": [
+    "core value"
+  ],
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-08-21T10:14:49.330Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-21T10:14:49.330Z"
+  },
+  "__v": 4,
+  "imgtitle": [
+    "core value"
+  ]
+},
+{
+  "_id": {
+    "$oid": "66c5be560fafeee418b98681"
+  },
+  "title": "Innovation",
+  "description": "<p class=\"ql-align-justify\"><span style=\"background-color: transparent;\">We encourage creativity and innovation so that our solutions are as unique as they are innovative. That is why we will strive to remain at the cutting edge with trends as this would help us deliver optimized solutions to our clients.</span></p>",
+  "photo": [],
+  "alt": [],
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-08-21T10:15:50.264Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-21T10:15:50.264Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "66c5be900fafeee418b98685"
+  },
+  "title": " Excellence",
+  "description": "<p class=\"ql-align-justify\"><span style=\"background-color: transparent;\">It is our policy to provide quality work in all projects we embark on. This obsession with quality guarantees that our offerings in products and services stand to reach, and even surpass, organizational successes.</span></p>",
+  "photo": [],
+  "alt": [],
+  "status": "active",
+  "createdAt": {
+    "$date": "2024-08-21T10:16:48.562Z"
+  },
+  "updatedAt": {
+    "$date": "2024-08-21T10:16:48.562Z"
+  },
+  "__v": 0
+}]

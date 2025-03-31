@@ -1,0 +1,26 @@
+[{
+  "_id": {
+    "$oid": "66b355b45a670b4fd05d0f7b"
+  },
+  "email": "mansihande09@gmail.com",
+  "password": "$2b$10$mQBZVk04zWB3swRIXhvas.GUCwDmLuAkGy1Sqql456igDVwm.oiq2",
+  "resetPasswordOTP": null,
+  "resetPasswordExpires": null,
+  "firstname": "Mansi1",
+  "lastname": "Hande",
+  "photo": null,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "674071dfeb0d89f0b38daf2b"
+  },
+  "email": "admin@rndtechnosoft.com",
+  "password": "$2a$10$FGS.Mo1PX5j2vgIxqEbDeeyWfvOkxp5VmGaRX.nj6hseB3ugfxIzC",
+  "resetPasswordOTP": null,
+  "resetPasswordExpires": null,
+  "firstname": "RND",
+  "lastname": "Technosoft",
+  "photo": "photo_1737971952486.webp",
+  "__v": 0
+}]
