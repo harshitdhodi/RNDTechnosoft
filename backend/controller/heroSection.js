@@ -2,27 +2,54 @@ const HeroSection = require('../model/heroSection'); // Adjust the path as neces
 const ServiceCategory = require('../model/serviceCategory'); // Import the ServiceCategory model
 
 // Get HeroSection by category ID
-const getHeroSectionByCategory = async (req, res) => {
-  const { categoryId } = req.params; // Get categoryId from request parameters
+const mongoose = require('mongoose'); // Make sure this is imported
 
+const getHeroSectionByCategory = async (req, res) => {
+  const { categoryId } = req.params;
+  
   try {
-    const heroSection = await HeroSection.findOne({ category: categoryId }).populate('category');
+    // Convert the string categoryId to a MongoDB ObjectId
+    const objectIdCategoryId = new mongoose.Types.ObjectId(categoryId);
+    
+    // Find hero section where category equals the ObjectId version
+    const heroSection = await HeroSection.findOne({ category: objectIdCategoryId });
+    
     if (heroSection) {
       return res.status(200).json({
         heading: heroSection.heading,
         subheading: heroSection.subheading,
-        title:heroSection.title,
+        title: heroSection.title,
+        slug: heroSection.slug,
         category: heroSection.category,
+        headingType: heroSection.headingType,
+        isVisible: heroSection.isVisible
       });
     } else {
-      return res.status(404).json({ message: 'Hero section not found' });
+      // If exact match not found, try to find by slug that matches the category
+      const heroSectionBySlug = await HeroSection.findOne({ 
+        slug: 'graphic-designing', // or whatever main slug for this category
+        category: objectIdCategoryId
+      });
+      
+      if (heroSectionBySlug) {
+        return res.status(200).json({
+          heading: heroSectionBySlug.heading,
+          subheading: heroSectionBySlug.subheading,
+          title: heroSectionBySlug.title,
+          slug: heroSectionBySlug.slug,
+          category: heroSectionBySlug.category,
+          headingType: heroSectionBySlug.headingType,
+          isVisible: heroSectionBySlug.isVisible
+        });
+      } else {
+        return res.status(404).json({ message: 'Hero section not found' });
+      }
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Error retrieving hero section' });
+    res.status(500).json({ message: 'Error retrieving hero section', error: err.message });
   }
 };
-
 // Get HeroSection by category ID
 const getHeroSectionByCategorySub = async (req, res) => {
   const { categoryId, subcategoryId} = req.params; // Get categoryId from request parameters
