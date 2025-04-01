@@ -147,16 +147,21 @@ const Footer = () => {
 
   useEffect(() => {
     const fetchLogos = async () => {
-      try {
-        const response = await axios.get('/api/logo/footercolor', { withCredentials: true });
-        setLogo(response.data);
-      } catch (error) {
-        console.error(error);
-      }
+        try {
+            const response = await axios.get('/api/logo', { withCredentials: true });
+            const footerColorLogo = response.data.find(item => item.type === 'headerColor');
+            console.log(footerColorLogo)
+            if (footerColorLogo) {
+                setLogo(footerColorLogo);
+            }
+        } catch (error) {
+            console.error('Error fetching footer logo:', error);
+        }
     };
 
     fetchLogos();
-  }, []);
+}, []);
+
 
   if (!footerData) {
     return null;
@@ -176,7 +181,7 @@ const Footer = () => {
                 title={logo.imgtitle}
                 loading='lazy'
                 fetchPriority='high'
-                className="mb-4 h-16"
+                className="mb-4 h-16 object-contain"
               />
             </Link>
             <p className='text-sm text-left text-gray-600'>
