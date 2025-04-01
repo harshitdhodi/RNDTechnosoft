@@ -141,15 +141,21 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchHeaderColorLogo = async () => {
-      try {
-        const response = await axios.get("/api/logo/headercolor");
-        setColorLogo(response.data);
-      } catch (err) {
-        console.log(err);
-      }
+        try {
+            const response = await axios.get('/api/logo');
+            const headerColorLogo = response.data.find(logo => logo.type === 'headerColor');
+           console.log(headerColorLogo)
+            if (headerColorLogo) {
+                setColorLogo(headerColorLogo);
+            }
+        } catch (err) {
+           console.log(err);
+        }
     };
+
     fetchHeaderColorLogo();
-  }, []);
+}, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,7 +187,7 @@ const Navbar = () => {
             <NavLink to="/">
               {/* <img src={rndlogo} alt="Logo" className="h-12" /> */}
               <img
-                src={`/api/image/download/${colorlogo.photo}`}
+                src={`/api/logo/download/${colorlogo.photo}`}
                 alt={colorlogo.alt}
                 title={colorlogo.imgTitle}
                 className="h-18 w-[27%]"
