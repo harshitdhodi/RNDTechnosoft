@@ -278,24 +278,27 @@ const insertTestimonialForSubSubCategory = async (req, res) => {
 
 const getTestimonials = async (req, res) => {
   try {
-    const { page = 1,categoryId } = req.query;
+    const { page = 1, categoryId } = req.query;
     const limit = 5; // Number of records per page
-    let query = { headingType: 'main' };
 
-    if (categoryId) {
-      query.category = categoryId;
-    }
+    // Fetch all testimonials with headingType 'main'
+    const allTestimonials = await Testimonial.find({ headingType: 'main' });
 
-    const count = await Testimonial.countDocuments(query); // Get total count first
-    const testimonials = await Testimonial.find(query)
-      .skip((page - 1) * limit) // Skip records for previous pages
-      .limit(limit);
+    // Filter testimonials dynamically based on categoryId
+    const filteredTestimonials = allTestimonials.filter(testimonial => {
+      // Ensure the category exists before trying to convert it to a string
+      return !categoryId || (testimonial.category && testimonial.category.toString() === categoryId);
+    });
+
+    // Paginate the filtered testimonials
+    const total = filteredTestimonials.length;
+    const paginatedTestimonials = filteredTestimonials.slice((page - 1) * limit, page * limit);
 
     res.status(200).json({
-      data: testimonials,
-      total: count,
-      currentPage: page,
-      hasNextPage: count > page * limit
+      data: paginatedTestimonials,
+      total,
+      currentPage: Number(page),
+      hasNextPage: total > page * limit
     });
   } catch (error) {
     console.error("Error retrieving testimonials:", error);
@@ -306,30 +309,32 @@ const getTestimonials = async (req, res) => {
     res.status(500).json({ message: errorMessage });
   }
 };
+
 
 
 const getTestimonialsSub = async (req, res) => {
   try {
-    const { page = 1, categoryId, subcategoryId} = req.query;
+    const { page = 1, categoryId, subcategoryId } = req.query;
     const limit = 5; // Number of records per page
-    let query = { headingType: 'sub' };
 
-    if (categoryId) {
-      query.category = categoryId;
-    }
-    if (subcategoryId) {
-      query.subcategory = subcategoryId;
-    }
-    const count = await Testimonial.countDocuments(query); // Get total count first
-    const testimonials = await Testimonial.find(query)
-      .skip((page - 1) * limit) // Skip records for previous pages
-      .limit(limit);
+    // Fetch all testimonials with headingType 'sub'
+    const allTestimonials = await Testimonial.find({ headingType: 'sub' });
+
+    // Filter testimonials dynamically based on categoryId and subcategoryId
+    const filteredTestimonials = allTestimonials.filter(testimonial => {
+      return (!categoryId || (testimonial.category && testimonial.category.toString() === categoryId)) &&
+             (!subcategoryId || (testimonial.subcategory && testimonial.subcategory.toString() === subcategoryId));
+    });
+
+    // Paginate the filtered testimonials
+    const total = filteredTestimonials.length;
+    const paginatedTestimonials = filteredTestimonials.slice((page - 1) * limit, page * limit);
 
     res.status(200).json({
-      data: testimonials,
-      total: count,
-      currentPage: page,
-      hasNextPage: count > page * limit
+      data: paginatedTestimonials,
+      total,
+      currentPage: Number(page),
+      hasNextPage: total > page * limit
     });
   } catch (error) {
     console.error("Error retrieving testimonials:", error);
@@ -340,6 +345,7 @@ const getTestimonialsSub = async (req, res) => {
     res.status(500).json({ message: errorMessage });
   }
 };
+
 
 
 const getTestimonialsSubSub = async (req, res) => {
@@ -347,31 +353,25 @@ const getTestimonialsSubSub = async (req, res) => {
     const { page = 1, categoryId, subcategoryId, subsubcategoryId } = req.query;
     const limit = 5; // Number of records per page
 
-    // Build query object
-    let query = { headingType: 'subsub' };
+    // Fetch all testimonials with headingType 'subsub'
+    const allTestimonials = await Testimonial.find({ headingType: 'subsub' });
 
-    if (categoryId) {
-      query.category = categoryId;
-    }
+    // Filter testimonials dynamically based on categoryId, subcategoryId, and subsubcategoryId
+    const filteredTestimonials = allTestimonials.filter(testimonial => {
+      return (!categoryId || (testimonial.category && testimonial.category.toString() === categoryId)) &&
+             (!subcategoryId || (testimonial.subcategory && testimonial.subcategory.toString() === subcategoryId)) &&
+             (!subsubcategoryId || (testimonial.subsubcategory && testimonial.subsubcategory.toString() === subsubcategoryId));
+    });
 
-    if (subcategoryId) {
-      query.subcategory = subcategoryId;
-    }
-
-    if (subsubcategoryId) {
-      query.subsubcategory = subsubcategoryId;
-    }
-
-    const count = await Testimonial.countDocuments(query); // Count documents matching the query
-    const testimonials = await Testimonial.find(query)
-      .skip((page - 1) * limit) // Skip records for previous pages
-      .limit(limit);
+    // Paginate the filtered testimonials
+    const total = filteredTestimonials.length;
+    const paginatedTestimonials = filteredTestimonials.slice((page - 1) * limit, page * limit);
 
     res.status(200).json({
-      data: testimonials,
-      total: count,
-      currentPage: page,
-      hasNextPage: count > page * limit
+      data: paginatedTestimonials,
+      total,
+      currentPage: Number(page),
+      hasNextPage: total > page * limit
     });
   } catch (error) {
     console.error("Error retrieving testimonials:", error);
@@ -382,6 +382,7 @@ const getTestimonialsSubSub = async (req, res) => {
     res.status(500).json({ message: errorMessage });
   }
 };
+
 
 
 const getTestimonialRating = async (req, res) => {

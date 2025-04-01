@@ -1,7 +1,8 @@
 const DesignProcess = require('../model/designProcess'); // Update to the correct model path
 const path = require('path');
 const fs = require('fs');
-const ServiceCategory = require('../model/serviceCategory')
+const ServiceCategory = require('../model/serviceCategory');
+const { default: mongoose } = require('mongoose');
 const insertDesignProcess = async (req, res) => {
     try {
       const {
@@ -182,83 +183,77 @@ const insertDesignProcess = async (req, res) => {
 
   const getDesignProcesses = async (req, res) => {
     try {
-        const { categoryId } = req.query;
-      
-        let query = { headingType: 'main' };
-
-        if (categoryId) {
-          query.category = categoryId;
-        }
-    
-        // Fetch all design processes without pagination
-        const designProcesses = await DesignProcess.find(query);
-
-        res.status(200).json({
-            data: designProcesses
-        });
+      const { categoryId } = req.query;
+      console.log("Received categoryId:", categoryId);
+  
+      // Fetch all design processes of type 'main'
+      const allDesignProcesses = await DesignProcess.find({ headingType: "main" });
+  
+      // Filter the fetched design processes based on query parameters
+      const filteredProcesses = allDesignProcesses.filter(process => {
+        return !categoryId || process.category.toString() === categoryId;
+      });
+  
+      console.log("Fetched Data:", filteredProcesses);
+  
+      res.status(200).json({
+        success: true,
+        message: "Design processes fetched successfully",
+        data: filteredProcesses
+      });
     } catch (error) {
-        console.error("Error retrieving design processes:", error);
-        res.status(500).json({ message: 'Error fetching design processes' });
+      console.error("Error retrieving design processes:", error);
+      res.status(500).json({ success: false, message: 'Error fetching design processes' });
     }
-};
-
+  };
+  
 
 
 const getSubDesignProcesses = async (req, res) => {
   try {
-      const { categoryId, subcategoryId } = req.query;
+    const { categoryId, subcategoryId } = req.query;
 
-      let query = { headingType: 'sub' };
+    // Fetch all design processes
+    const allDesignProcesses = await DesignProcess.find({ headingType: 'sub' });
 
-      if (categoryId) {
-          query.category = categoryId;
-      }
-      if (subcategoryId) {
-          query.subcategory = subcategoryId;
-      }
+    // Filter the fetched design processes based on query parameters
+    const filteredProcesses = allDesignProcesses.filter(process => {
+      return (!categoryId || process.category.toString() === categoryId) &&
+             (!subcategoryId || process.subcategory.toString() === subcategoryId);
+    });
 
-      // Fetch all design processes without pagination
-      const designProcesses = await DesignProcess.find(query);
-
-      res.status(200).json({
-          data: designProcesses
-      });
+    res.status(200).json({
+      data: filteredProcesses
+    });
   } catch (error) {
-      console.error("Error retrieving design processes:", error);
-      res.status(500).json({ message: 'Error fetching design processes' });
+    console.error("Error retrieving design processes:", error);
+    res.status(500).json({ message: 'Error fetching design processes' });
   }
 };
 
 
 
+
 const getSubSubDesignProcesses = async (req, res) => {
   try {
-      const { categoryId, subcategoryId, subsubcategoryId } = req.query;
+    const { categoryId, subcategoryId, subsubcategoryId } = req.query;
 
-      // Build query object
-      let query = { headingType: 'subsub' };
+    // Fetch all design processes of type 'subsub'
+    const allDesignProcesses = await DesignProcess.find({ headingType: 'subsub' });
 
-      if (categoryId) {
-          query.category = categoryId;
-      }
+    // Filter the fetched design processes based on query parameters
+    const filteredProcesses = allDesignProcesses.filter(process => {
+      return (!categoryId || process.category.toString() === categoryId) &&
+             (!subcategoryId || process.subcategory.toString() === subcategoryId) &&
+             (!subsubcategoryId || process.subsubcategory.toString() === subsubcategoryId);
+    });
 
-      if (subcategoryId) {
-          query.subcategory = subcategoryId;
-      }
-
-      if (subsubcategoryId) {
-          query.subsubcategory = subsubcategoryId;
-      }
-
-      // Fetch all design processes without pagination
-      const designProcesses = await DesignProcess.find(query);
-
-      res.status(200).json({
-          data: designProcesses
-      });
+    res.status(200).json({
+      data: filteredProcesses
+    });
   } catch (error) {
-      console.error("Error retrieving design processes:", error);
-      res.status(500).json({ message: 'Error fetching design processes' });
+    console.error("Error retrieving design processes:", error);
+    res.status(500).json({ message: 'Error fetching design processes' });
   }
 };
 
