@@ -181,7 +181,7 @@ const Navbar = () => {
             <NavLink to="/">
               {/* <img src={rndlogo} alt="Logo" className="h-12" /> */}
               <img
-                src={`/api/logo/download/${colorlogo.photo}`}
+                src={`/api/image/download/${colorlogo.photo}`}
                 alt={colorlogo.alt}
                 title={colorlogo.imgTitle}
                 className="h-18 w-[27%]"

@@ -25,7 +25,7 @@ router.post('/insertSubServiceDetail', requireAuth, uploadMedia, insertSubServic
 router.post('/insertSubSubServiceDetail', requireAuth, uploadMedia, insertSubSubServiceDetail);
 
 
-router.get('/getServiceDetails', requireAuth, getServiceDetailsByCategory);
+router.get('/getServiceDetails',requireAuth,  getServiceDetailsByCategory);
 router.get('/getSubServiceDetails', requireAuth, getServiceDetailsBySubcategory);
 router.get('/getSubSubServiceDetails', requireAuth, getServiceDetailsBySubSubcategory);
 

@@ -2,79 +2,167 @@ const HeroSection = require('../model/heroSection'); // Adjust the path as neces
 const ServiceCategory = require('../model/serviceCategory'); // Import the ServiceCategory model
 
 // Get HeroSection by category ID
+const mongoose = require('mongoose'); // Make sure this is imported
+
 const getHeroSectionByCategory = async (req, res) => {
-  const { categoryId } = req.params; // Get categoryId from request parameters
+  const { categoryId } = req.params;
 
   try {
-    const heroSection = await HeroSection.findOne({ category: categoryId }).populate('category');
-    if (heroSection) {
-      return res.status(200).json({
-        heading: heroSection.heading,
-        subheading: heroSection.subheading,
-        title:heroSection.title,
-        category: heroSection.category,
-      });
-    } else {
-      return res.status(404).json({ message: 'Hero section not found' });
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({ message: 'Invalid category ID format' });
     }
+
+    // Query the database
+    const heroSection = await HeroSection.findOne({
+      'category.$oid': categoryId // Try to query with the nested $oid structure first
+    }).populate('category');
+
+    // If not found, try the standard ObjectId query
+    if (!heroSection) {
+      const heroSectionAlt = await HeroSection.findOne({
+        category: mongoose.Types.ObjectId(categoryId)
+      }).populate('category');
+      
+      if (!heroSectionAlt) {
+        return res.status(404).json({ message: 'Hero section not found' });
+      }
+      
+      return res.status(200).json({
+        _id: heroSectionAlt._id,
+        heading: heroSectionAlt.heading,
+        subheading: heroSectionAlt.subheading,
+        title: heroSectionAlt.title,
+        category: heroSectionAlt.category,
+        headingType: heroSectionAlt.headingType,
+        slug: heroSectionAlt.slug,
+        isVisible: heroSectionAlt.isVisible,
+        createdAt: heroSectionAlt.createdAt
+      });
+    }
+
+    return res.status(200).json({
+      _id: heroSection._id,
+      heading: heroSection.heading,
+      subheading: heroSection.subheading,
+      title: heroSection.title,
+      category: heroSection.category,
+      headingType: heroSection.headingType,
+      slug: heroSection.slug,
+      isVisible: heroSection.isVisible,
+      createdAt: heroSection.createdAt
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error retrieving hero section' });
+    console.error('Error retrieving hero section:', err);
+    return res.status(500).json({ 
+      message: 'Error retrieving hero section',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
 
 // Get HeroSection by category ID
 const getHeroSectionByCategorySub = async (req, res) => {
-  const { categoryId, subcategoryId} = req.params; // Get categoryId from request parameters
-   console.log(categoryId, subcategoryId)
+  const { categoryId, subcategoryId } = req.params;
+  console.log(categoryId, subcategoryId);
+
   try {
-    const heroSection = await HeroSection.findOne({ category: categoryId,subcategory:subcategoryId }).populate('category');
-    if (heroSection) {
-      return res.status(200).json({
-        heading: heroSection.heading,
-        subheading: heroSection.subheading,
-        title:heroSection.title,
-        category: heroSection.category,
-      });
-    } else {
+    // Validate both IDs
+    if (!mongoose.Types.ObjectId.isValid(categoryId) || !mongoose.Types.ObjectId.isValid(subcategoryId)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
+
+    // First try with the $oid structure
+    let heroSection = await HeroSection.findOne({
+      'category.$oid': categoryId,
+      'subcategory.$oid': subcategoryId
+    }).populate('category subcategory');
+
+    // If not found, try standard ObjectId query
+    if (!heroSection) {
+      heroSection = await HeroSection.findOne({
+        category: mongoose.Types.ObjectId(categoryId),
+        subcategory: mongoose.Types.ObjectId(subcategoryId)
+      }).populate('category subcategory');
+    }
+
+    if (!heroSection) {
       return res.status(404).json({ message: 'Hero section not found' });
     }
+
+    return res.status(200).json({
+      _id: heroSection._id,
+      heading: heroSection.heading,
+      subheading: heroSection.subheading,
+      title: heroSection.title,
+      category: heroSection.category,
+      subcategory: heroSection.subcategory,
+      headingType: heroSection.headingType,
+      slug: heroSection.slug,
+      isVisible: heroSection.isVisible,
+      createdAt: heroSection.createdAt
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error retrieving hero section' });
+    console.error('Error retrieving hero section:', err);
+    return res.status(500).json({ 
+      message: 'Error retrieving hero section',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
 // Get HeroSection by category ID, subcategory ID, and subsubcategory ID
 const getHeroSectionByCategorySubSub = async (req, res) => {
-  const { categoryId, subcategoryId, subsubcategoryId } = req.params; // Get categoryId, subcategoryId, subsubcategoryId from request parameters
+  const { categoryId, subcategoryId, subsubcategoryId } = req.params;
   console.log(categoryId, subcategoryId, subsubcategoryId);
 
   try {
-    // Find the hero section that matches the category, subcategory, and subsubcategory
-    const heroSection = await HeroSection.findOne({
-      category: categoryId,
-      subcategory: subcategoryId,
-      subsubcategory: subsubcategoryId, // Add subsubcategory to the query
-    }).populate('category').populate('subcategory').populate('subsubcategory');
+    // Validate all IDs
+    if (!mongoose.Types.ObjectId.isValid(categoryId) || 
+        !mongoose.Types.ObjectId.isValid(subcategoryId) ||
+        !mongoose.Types.ObjectId.isValid(subsubcategoryId)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
 
-    if (heroSection) {
-      return res.status(200).json({
-        heading: heroSection.heading,
-        subheading: heroSection.subheading,
-        title:heroSection.title,
-        category: heroSection.category,
-        subcategory: heroSection.subcategory,
-        subsubcategory: heroSection.subsubcategory,
-      });
-    } else {
+    // First try with the $oid structure
+    let heroSection = await HeroSection.findOne({
+      'category.$oid': categoryId,
+      'subcategory.$oid': subcategoryId,
+      'subsubcategory.$oid': subsubcategoryId
+    }).populate('category subcategory subsubcategory');
+
+    // If not found, try standard ObjectId query
+    if (!heroSection) {
+      heroSection = await HeroSection.findOne({
+        category: mongoose.Types.ObjectId(categoryId),
+        subcategory: mongoose.Types.ObjectId(subcategoryId),
+        subsubcategory: mongoose.Types.ObjectId(subsubcategoryId)
+      }).populate('category subcategory subsubcategory');
+    }
+
+    if (!heroSection) {
       return res.status(404).json({ message: 'Hero section not found' });
     }
+
+    return res.status(200).json({
+      _id: heroSection._id,
+      heading: heroSection.heading,
+      subheading: heroSection.subheading,
+      title: heroSection.title,
+      category: heroSection.category,
+      subcategory: heroSection.subcategory,
+      subsubcategory: heroSection.subsubcategory,
+      headingType: heroSection.headingType,
+      slug: heroSection.slug,
+      isVisible: heroSection.isVisible,
+      createdAt: heroSection.createdAt
+    });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Error retrieving hero section' });
+    console.error('Error retrieving hero section:', err);
+    return res.status(500).json({ 
+      message: 'Error retrieving hero section',
+      error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
-
 
 const getHeroSectionBySlug = async (req, res) => {
   const { slug } = req.params; // Get slug from request parameters

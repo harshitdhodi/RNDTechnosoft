@@ -18,7 +18,7 @@ router.post('/insertSubDesignProcess', requireAuth,  uploadImage, designProcessC
 router.post('/insertSubSubDesignProcess', requireAuth,  uploadImage, designProcessController.insertSubSubDesignProcess);
 
 // Route to get all design processes with pagination
-router.get('/category', requireAuth, designProcessController.getDesignProcesses);
+router.get('/category',requireAuth,  designProcessController.getDesignProcesses);
 
 // Route to get all design processes with pagination
 router.get('/sub/category', requireAuth, designProcessController.getSubDesignProcesses);
