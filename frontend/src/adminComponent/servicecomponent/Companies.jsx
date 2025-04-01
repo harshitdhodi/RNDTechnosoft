@@ -18,7 +18,7 @@ const Companies = ({ categoryId }) => {
   const [companies, setCompanies] = useState([]);
   const [loadings, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [photoType, setPhotoType] = useState("company"); // Changed to "company"
+  const [photoType, setPhotoType] = useState("company");
   const navigate = useNavigate();
 
   const filteredCompanies = useMemo(() => {
@@ -40,15 +40,23 @@ const Companies = ({ categoryId }) => {
       {
         Header: "Category",
         accessor: "categoryName",
-        Cell: ({ row }) => (
-          <span
-            className="hover:text-blue-500 cursor-pointer"
-            onClick={() => navigate(`/companies/edit/${row.original._id}`)}
-          >
-            {row.original.categoryName}
-          </span>
-        ),
+        Cell: ({ row }) => {
+          // Get category name from categoryId array (if it exists)
+          const categoryName = row.original.categoryId && 
+                               row.original.categoryId.length > 0 ? 
+                               row.original.categoryId[0].category : 
+                               "No Category";
+          return (
+            <span
+              className="hover:text-blue-500 cursor-pointer"
+              onClick={() => navigate(`/companies/edit/${row.original._id}`)}
+            >
+              {categoryName}
+            </span>
+          );
+        },
       },
+   
       {
         Header: "Images",
         accessor: "images",
@@ -82,7 +90,7 @@ const Companies = ({ categoryId }) => {
         disableSortBy: true,
       },
     ],
-    []
+    [categoryId, photoType, navigate]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -130,7 +138,7 @@ const Companies = ({ categoryId }) => {
     if (categoryId) {
       fetchData(categoryId);
     }
-  }, [categoryId, photoType]); // Include photoType in dependencies
+  }, [categoryId, photoType]); 
 
   return (
     <div className="p-4 overflow-x-auto">

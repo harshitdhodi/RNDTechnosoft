@@ -33,16 +33,20 @@ exports.getAllImages = async (req, res) => {
   
       console.log("Query Parameters:", { categoryId, photoType });
   
-      // Fetch all ServiceImage documents
-      const allServiceImages = await ServiceImage.find({}).lean();
+      // Fetch all ServiceImage documents with populated categoryId
+      const allServiceImages = await ServiceImage.find({})
+        .populate('categoryId')  // Populate the categoryId field
+        .lean();
+        
       console.log("All Service Images:", allServiceImages);
   
       // Filter the data in memory
       const filteredImages = allServiceImages.filter(image => {
         // Check if categoryId exists, is an array, and its first element matches
+        // Since categoryId is now populated, we need to compare the _id
         const categoryMatch = Array.isArray(image.categoryId) && 
                              image.categoryId.length > 0 && 
-                             image.categoryId[0] === categoryId;
+                             image.categoryId[0]._id.toString() === categoryId;
         
         // Check photoType and headingType
         const photoTypeMatch = image.photoType === photoType;
