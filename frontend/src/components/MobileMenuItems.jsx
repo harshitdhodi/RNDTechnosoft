@@ -63,15 +63,19 @@ const MobileNavbar = () => {
   useEffect(() => {
     const fetchHeaderColorLogo = async () => {
         try {
-            const response = await axios.get('/api/logo/headercolor');
-            setColorLogo(response.data || []);
+            const response = await axios.get('/api/logo');
+            const headerColorLogo = response.data.find(logo => logo.type === 'headerColor');
+            if (headerColorLogo) {
+                setColorLogo(headerColorLogo);
+            }
         } catch (err) {
-           console.log(err)
+           console.log(err);
         }
     };
 
     fetchHeaderColorLogo();
 }, []);
+
 
   useEffect(() => {
     const fetchData = async () => {
