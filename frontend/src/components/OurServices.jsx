@@ -353,9 +353,9 @@ const ServiceCard = ({ service, isLarge }) => {
           {hasImage && (
             <Link
               to={`/${service.slug}`}
-              className="w-full hidden xl:flex  relative flex-col justify-center items-center "
+              className="w-full hidden   relative flex-col justify-center items-center "
             >
-              <div className="relative   group-hover:scale-105 transition-transform duration-500 h-full ">
+              {/* <div className="relative    group-hover:scale-105 transition-transform duration-500 h-full ">
                 <img
                   src={service.image}
                   alt={service.alt}
@@ -364,7 +364,7 @@ const ServiceCard = ({ service, isLarge }) => {
                   className="xl:h-full xl:w-full  object-contain object-center relative z-10 
                     transition-all duration-500 group-hover:rotate-1"
                 />
-              </div>
+              </div> */}
             </Link>
           )}
         </div>
@@ -438,3 +438,4 @@ const ServicesGrid = ({ serviceData }) => {
 };
 
 export default ServicesGrid;
+ 

@@ -101,12 +101,12 @@ const Companies = ({ categoryId }) => {
         `/api/serviceImages/getGallery?categoryId=${categoryId}&photoType=${photoType}`,
         { withCredentials: true }
       );
-      const companiesWithIds = response.data.map((item, index) => ({
+      const companiesWithIds = response.data.data.map((item, index) => ({
         ...item,
         id: index + 1,
       }));
       setCompanies(companiesWithIds);
-    } catch (error) {
+    } catch (error) { 
       console.error(error);
     } finally {
       setLoading(false);
