@@ -5,8 +5,8 @@ const { uploadImage } = require('../middleware/imageUpload'); // Adjust the path
 const { requireAuth } = require('../middleware/authmiddleware'); // Adjust the path as needed
 
 // Get all images with optional categoryId and photoType filters
-router.get('/getGallery', requireAuth, galleryController.getAllImages);
-
+router.get('/getGallery',  galleryController.getAllImages);
+router.get('/getAllServiceImages',galleryController.getAllServiceImages)
 // Get all images with optional categoryId and photoType filters
 router.get('/getSubGallery', requireAuth, galleryController.getAllSubImages);
 

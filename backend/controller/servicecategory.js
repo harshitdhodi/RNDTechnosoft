@@ -598,11 +598,42 @@ const deletesubsubcategory = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await ServiceCategory.find();
+    const categories = await ServiceCategory.find().lean();
+    
+    // Transform the data to convert ObjectId format
+    const transformedCategories = categories.map(category => {
+      // Convert main category ID
+      if (category._id && category._id.$oid) {
+        category._id = category._id.$oid;
+      }
+      
+      // Convert subcategory IDs
+      if (category.subCategories && Array.isArray(category.subCategories)) {
+        category.subCategories = category.subCategories.map(subCat => {
+          if (subCat._id && subCat._id.$oid) {
+            subCat._id = subCat._id.$oid;
+          }
+          
+          // Convert subsubcategory IDs
+          if (subCat.subSubCategory && Array.isArray(subCat.subSubCategory)) {
+            subCat.subSubCategory = subCat.subSubCategory.map(subSubCat => {
+              if (subSubCat._id && subSubCat._id.$oid) {
+                subSubCat._id = subSubCat._id.$oid;
+              }
+              return subSubCat;
+            });
+          }
+          
+          return subCat;
+        });
+      }
+      
+      return category;
+    });
 
-    res.status(200).json(categories);
+    res.status(200).json(transformedCategories);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 

@@ -95,7 +95,7 @@ const exportAndBackupAllCollectionsmonthly = async (req, res) => {
           fileName: fileName,
           filePath: filePath,
           createdAt: now
-      });
+      }); 
       await monthlyBackup.save();
       
 
