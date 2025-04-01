@@ -160,6 +160,12 @@ export default function Sidebar() {
       ]
     },
     {
+      title: "Job Applications", icon: <Newspaper size={20} />, submenu: [
+        { title: "Application Request", icon: <LayoutGrid size={20} />, path: "/application-req" },
+        // { title: "News/Blogs", icon: <NewspaperClip size={20} />, path: "/news" },
+      ]
+    },
+    {
       title: "Settings", icon: <Settings size={20} />, submenu: [
         { title: "Menu Listing", icon: <ListOrdered size={20} />, path: "/menulisting" },
         { title: "Manage Section Visibility", icon: < Globe2 size={20} />, path: "/managesectionvisibility" },
