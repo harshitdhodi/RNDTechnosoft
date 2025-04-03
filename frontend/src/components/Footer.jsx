@@ -238,6 +238,11 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link to="/job-application-form">
+                <span className='text-gray-600'> Job Application</span>
+                </Link>
+               </li>
             </ul>
           </div>
 

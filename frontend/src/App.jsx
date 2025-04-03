@@ -195,6 +195,9 @@ import EditIndustryImage from "./adminComponent/Pages/EditIndustryImage"
 import Loader from "../src/assets/loader.mp4"
 import MainPackageComponent from "./adminComponent/Pages/package/NewsTable";
 import MainFaqSection from "./adminComponent/Pages/faq/MainFaqSection";
+import JobApplicationForm from "./components/jobApplication/JobApplicationForm";
+import JobApplicationsPage from "./components/jobApplication/JobApplicationPage";
+import JobApplicationsTable from "./components/jobApplication/JobApplicationTable";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -273,8 +276,10 @@ function App() {
                   <Route path="/privacy-policy" element={<PrivacyPolicysss />} />
                   <Route path="/contact-us" element={<ContactUs />} />
                   <Route path="/career" element={<Career />} />
+                  <Route path="/job-application-form" element={<JobApplicationForm />} />
                   <Route path="/thankyou" element={<Thankyou />} />
                   <Route path="/portfolios" element={<Portfolios />} />
+              
                 </Route>
             {!isLoggedIn ? (
             <>
@@ -296,6 +301,8 @@ function App() {
               <><Route path="/login" element={<Navigate to="/dashboard" />} /><Route path="/" element={<Sidebar />}>
                     <Route index element={<Dashboard />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    
+                    <Route path="/application-req" element={<JobApplicationsTable />} />
                     <Route path="/services" element={<ServicesBack />} />
                     <Route path="/ServiceCategory" element={<ServiceCategory />} />
                     <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
