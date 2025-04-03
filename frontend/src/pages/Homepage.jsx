@@ -13,9 +13,11 @@ import Faq from '../components/Faq';
 import StandardPackage from '../components/StandardPackage';
 import PremiumTemplatesSection from '../components/PrimiumTemplateSection';
 import { useDispatch } from 'react-redux';
+
 export default function Homepage() {
   const serviceGridRef = useRef(null);
   const dispatch = useDispatch();
+  
   // Fetch data using RTK Query
   const { 
     data, 
@@ -24,13 +26,23 @@ export default function Homepage() {
     error 
   } = useGetCombinedDataQuery();
 
-console.log(data) 
-useEffect(() => {
-  if (data?.navigation) {
-    dispatch(setNavData(data.navigation)); // Save navigation data to Redux
-  }
-}, [data, dispatch]);
+  useEffect(() => {
+    if (data?.navigation) {
+      dispatch(setNavData(data.navigation)); // Save navigation data to Redux
+    }
+  }, [data, dispatch]);
 
+  // Add meta tag dynamically
+  useEffect(() => {
+    const metaTag = document.createElement('meta');
+    metaTag.name = 'google-site-verification';
+    metaTag.content = 'VNlAtnMc5L2_z9_Vh3JDiyG8iXuEVPKzi7OoE473UDM';
+    document.head.appendChild(metaTag);
+
+    return () => {
+      document.head.removeChild(metaTag); // Cleanup when component unmounts
+    };
+  }, []);
 
   // Handle loading state
   if (isLoading) {
@@ -42,32 +54,22 @@ useEffect(() => {
     return <div>Error: {error.message}</div>;
   }
 
-  // Once data is available, render the components with the appropriate data
   return (
     <div>
-      <HeroSection 
-        serviceGridRef={serviceGridRef}
-        heroData={data?.homehero} // Pass hero data
-      />
-      <Marquee 
-        marqueeData={data?.homepage?.marquee} // Pass marquee data
-      />
-      <OurWorkComponent 
-        ourWorkData={data?.homepage?.ourwork} // Pass our work data
-      />
+      <HeroSection serviceGridRef={serviceGridRef} heroData={data?.homehero} />
+      <Marquee marqueeData={data?.homepage?.marquee} />
+      <OurWorkComponent ourWorkData={data?.homepage?.ourwork} />
       <div ref={serviceGridRef}>
-        <ServiceGrid 
-          serviceData={data?.services?.categories} // Pass service categories
-        />
+        <ServiceGrid serviceData={data?.services?.categories} />
       </div>
       <WeAreExpert expertData={data?.WeAreExpert} />
-      <TrustedSection homecard1={data?.homecard1} homecard2 ={data?.homecard2}/>
-      <WhatYouGet everyPlan = {data?.everyplan} />
-      <StandardPackage packagesData = {data?.packages} />
+      <TrustedSection homecard1={data?.homecard1} homecard2={data?.homecard2} />
+      <WhatYouGet everyPlan={data?.everyplan} />
+      <StandardPackage packagesData={data?.packages} />
       <Faq />
       <BookAcall />
       <PremiumTemplatesSection />
-      <GlobalSolution globalData = {data?.globalsolution} />
+      <GlobalSolution globalData={data?.globalsolution} />
     </div>
   );
 }
