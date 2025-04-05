@@ -171,7 +171,6 @@ const ContactUs = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     const newErrors = {
       name: validateName(name),
       email: validateEmail(email),
@@ -179,9 +178,7 @@ const ContactUs = () => {
       subject: validateSubject(subject),
       message: validateMessage(message)
     };
-
     setErrors(newErrors);
-
     if (Object.values(newErrors).some(error => error !== '')) {
       return;
     }
