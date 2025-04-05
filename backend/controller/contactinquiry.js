@@ -165,7 +165,6 @@ exports.createInquiry = async (req, res) => {
 
         // Send email
         await transporter.sendMail(mailOptions);
-
         try {
             await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
                 API_KEY: "A78A8BC90C6F6235",

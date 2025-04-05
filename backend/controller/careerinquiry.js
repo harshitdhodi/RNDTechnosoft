@@ -114,9 +114,7 @@ exports.CreateCareerInquiry = async (req, res) => {
         }
       ]
     };
-
     console.log(mailOptions)
-
     // Send email
     await transporter.sendMail(mailOptions);
     // Send data to external API
