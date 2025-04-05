@@ -74,19 +74,25 @@ exports.updateCareer = async (req, res) => {
     const updateFields = req.body;
 
     try {
-        const existingCareerOption = await Career.findById(id);
+        // Fetch all careers
+        const allCareers = await Career.find();
+
+        // Find the one with the matching id
+        const existingCareerOption = allCareers.find(c => c._id.toString() === id);
 
         if (!existingCareerOption) {
             return res.status(404).json({ message: 'Career option not found' });
         }
 
+        // Handle photo update logic
         if (req.files && req.files['photo'] && req.files['photo'].length > 0) {
-            const newPhotoPaths = req.files['photo'].map(file => file.filename); // Using filename to get the stored file names
+            const newPhotoPaths = req.files['photo'].map(file => file.filename);
             updateFields.photo = [...existingCareerOption.photo, ...newPhotoPaths];
         } else {
             updateFields.photo = existingCareerOption.photo;
         }
 
+        // Perform the update
         const updatedCareerOption = await Career.findByIdAndUpdate(
             id,
             updateFields,
@@ -98,6 +104,7 @@ exports.updateCareer = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
 
 exports.deletePhotoAndAltText = async (req, res) => {
     const { id, imageFilename, index } = req.params;
