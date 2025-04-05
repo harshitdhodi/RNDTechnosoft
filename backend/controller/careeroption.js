@@ -48,16 +48,25 @@ exports.getAllActiveCareers = async (req, res) => {
 // Get a single career by ID
 exports.getCareerById = async (req, res) => {
     try {
-        const { id } = req.query
-        const career = await Career.findById(id);
+        const { id } = req.query;
+        console.log(id);
+
+        // Get all career data
+        const allCareers = await Career.find();
+
+        // Find the career with the matching id
+        const career = allCareers.find(c => c._id.toString() === id);
+
         if (!career) {
             return res.status(404).json({ message: 'Career not found' });
         }
+
         res.status(200).json(career);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
 
 // Update a career by ID
 exports.updateCareer = async (req, res) => {
