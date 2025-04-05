@@ -1,15 +1,16 @@
 const CareerInquiry = require('../model/carrerinquiry');
 const path = require('path')
 const nodemailer = require('nodemailer');
+const { default: axios } = require('axios');
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Gmail SMTP server
-    port: 587, // Port
-    secure: false, // Use `true` for 465, `false` for other ports
-    auth: {
-        user: process.env.EMAIL_HR,
-        pass: process.env.HR_PASS
-    }
+  host: 'smtp.gmail.com', // Gmail SMTP server
+  port: 587, // Port
+  secure: false, // Use `true` for 465, `false` for other ports
+  auth: {
+    user: process.env.EMAIL_HR,
+    pass: process.env.HR_PASS
+  }
 });
 
 exports.CreateCareerInquiry = async (req, res) => {
@@ -113,11 +114,24 @@ exports.CreateCareerInquiry = async (req, res) => {
         }
       ]
     };
-
     console.log(mailOptions)
-
     // Send email
     await transporter.sendMail(mailOptions);
+    // Send data to external API
+    try {
+      await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
+        API_KEY: "A78A8BC90C6F6235",
+        API_ID: "MW1V",
+        name: newInquiry.name,
+        email: newInquiry.email,
+        phone: newInquiry.mobileNo,
+        subject: "Career Inquiry",
+        message: newInquiry.message
+      });
+    } catch (externalError) {
+      console.error('Failed to send data to external DB:', externalError.message);
+      // Optional: log more details or notify internally
+    }
 
     // Respond to the client
     res.status(201).json({ success: true, data: newInquiry });
