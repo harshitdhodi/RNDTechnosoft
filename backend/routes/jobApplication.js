@@ -15,7 +15,6 @@ router.get('/getJobById/:id', jobApplicationController.getJobApplicationById);
 
 // Update a job application
 router.put('/UpdateJobById/:id',uploadPhoto, jobApplicationController.updateJobApplication);
-
 // Delete a job application
 router.delete('/deleteJob/:id', jobApplicationController.deleteJobApplication);
 
