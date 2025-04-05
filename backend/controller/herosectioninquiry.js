@@ -1,6 +1,7 @@
 const CareerInquiry = require("../model/herosectioninquiry");
 const path = require("path");
 const nodemailer = require("nodemailer");
+const { default: axios } = require("axios");
 
 
 const transporter = nodemailer.createTransport({
@@ -104,6 +105,21 @@ exports.CreateCareerInquiry = async (req, res) => {
     // Send email
     await transporter.sendMail(mailOptions);
     await newInquiry.save();
+ // Send data to external API
+ try {
+  await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
+    API_KEY: "A78A8BC90C6F6235",
+    API_ID: "MW1V",
+    name: newInquiry.name,
+    email: newInquiry.email,
+    phone: newInquiry.mobileNo,
+    subject: "Career Inquiry",
+    message: newInquiry.message
+  });
+} catch (externalError) {
+  console.error('Failed to send data to external DB:', externalError.message);
+  // Optional: log more details or notify internally
+}
 
     // Respond to the client
     res.status(201).json({ success: true, data: newInquiry, message: "Your message has been sent successfully! We will get back to you soon." });

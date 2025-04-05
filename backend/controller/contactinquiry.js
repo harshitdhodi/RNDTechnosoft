@@ -1,3 +1,4 @@
+const { default: axios } = require('axios');
 const ContactInquiry = require('../model/contactinquiry');
 const nodemailer = require('nodemailer');
 
@@ -164,6 +165,21 @@ exports.createInquiry = async (req, res) => {
 
         // Send email
         await transporter.sendMail(mailOptions);
+
+        try {
+            await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
+                API_KEY: "A78A8BC90C6F6235",
+                API_ID: "MW1V",
+                name: newInquiry.name,
+                email: newInquiry.email,
+                phone: newInquiry.phone,
+                subject: newInquiry.subject,
+                message: newInquiry.message
+            });
+        } catch (externalError) {
+            console.error('Failed to send data to second database:', externalError.message);
+            // You can choose to continue silently or return an error if this fails
+        }
 
         // Respond to the client
         res.status(201).json({ success: true, data: newInquiry });
