@@ -162,7 +162,6 @@ exports.createInquiry = async (req, res) => {
             subject: 'New Contact Inquiry',
             html: emailHTML
         };
-
         // Send email
         await transporter.sendMail(mailOptions);
         try {
