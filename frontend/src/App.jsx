@@ -7,7 +7,8 @@ import {
   Routes,
 useLocation 
 } from "react-router-dom";
-  
+import 'react-quill/dist/quill.snow.css'; // Or quill.bubble.css, depending on what you used
+
 // backend 
 import Sidebar from './adminComponent/Sidebar';
 import ServicesBack from './adminComponent/Pages/Services';

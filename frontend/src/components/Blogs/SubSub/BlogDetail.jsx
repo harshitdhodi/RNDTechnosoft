@@ -67,11 +67,16 @@ export default function BlogDetail() {
         <div className="mb-4">
           <p className="text-sm md:text-lg text-black mb-2">
             {details ? (
-              <div dangerouslySetInnerHTML={{ __html: details }} />
+           <div
+           className="prose max-w-none prose-a:text-blue-600 prose-a:underline hover:prose-a:text-blue-800"
+           dangerouslySetInnerHTML={{ __html: details }}
+         />
+         
             ) : (
-              "Easily manage your design projects with our convenient portal. Provide important details like"
+              "Easily manage your design projects with our convenient portal..."
             )}
           </p>
+
         </div>
       </div>
 
