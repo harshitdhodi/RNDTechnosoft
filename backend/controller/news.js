@@ -85,7 +85,7 @@ const getNews = async (req, res) => {
 const getNewsFront = async (req, res) => {
   try {
     // Fetch all news and sort by date in descending order to get the latest news first
-    const news = await News.find().sort({ date: -1 });
+    const news = await News.find().sort({ createdAt: -1 });
 
     // Map over the news and fetch the associated category and service category names
     const newsWithCategoryAndService = await Promise.all(news.map(async (newsItem) => {

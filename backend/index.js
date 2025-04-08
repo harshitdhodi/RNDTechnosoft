@@ -138,6 +138,7 @@ app.use("/api/packagedescription", cacheMiddleware(3600), require('./routes/pack
 app.use("/api/allData", cacheMiddleware(3600), require('./combineApi/combineRoute'));
 app.use("/api/allData2", cacheMiddleware(3600), require('./combineApi/combineRoute2')); 
 app.use("/api/jobApplication", require('./routes/jobApplication'))
+app.use("/api/cache",require('./routes/cache'))
 // Swagger setup
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
