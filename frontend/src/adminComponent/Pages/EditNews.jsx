@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+// import 'react-quill/dist/quill.snow.css';
 
 
 const EditNews = () => {
@@ -61,6 +61,9 @@ const EditNews = () => {
       matchVisual: false,
     }
   };
+
+
+  
   const fetchServiceCategories = async () => {
     try {
       const response = await axios.get('/api/services/getAll', { withCredentials: true });
