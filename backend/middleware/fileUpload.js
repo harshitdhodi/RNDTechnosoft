@@ -1,13 +1,12 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const sharp = require('sharp');
 
-// Define the directories for catalogue, photo, and resume uploads
+// Define the directories
 const catalogueDir = path.join(__dirname, '../catalogues');
 const photoDir = path.join(__dirname, '../images');
 const resumeDir = path.join(__dirname, '../resumes');
-const tempDir = path.join(__dirname, '../temp'); // Add temporary directory
+const tempDir = path.join(__dirname, '../temp');
 
 // Ensure the directories exist
 [photoDir, catalogueDir, resumeDir, tempDir].forEach(dir => {
@@ -16,17 +15,16 @@ const tempDir = path.join(__dirname, '../temp'); // Add temporary directory
   }
 });
 
+// Multer storage setup
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let uploadDir;
     if (file.fieldname === 'catalogue') {
-      uploadDir = catalogueDir;
+      cb(null, catalogueDir);
     } else if (file.fieldname === 'photo') {
-      uploadDir = tempDir; // Store photos in temp directory initially
+      cb(null, tempDir); // Save temporarily
     } else if (file.fieldname === 'resume') {
-      uploadDir = resumeDir;
+      cb(null, resumeDir);
     }
-    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     let fileName;
@@ -34,7 +32,7 @@ const storage = multer.diskStorage({
       fileName = file.originalname;
       req.fileName = fileName;
     } else if (file.fieldname === 'photo') {
-      fileName = `${file.fieldname}_${Date.now()}.webp`;
+      fileName = `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`;
     } else if (file.fieldname === 'resume') {
       fileName = `resume_${Date.now()}${path.extname(file.originalname)}`;
     }
@@ -44,14 +42,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50MB
+  limits: { fileSize: 50 * 1024 * 1024 }, // Max 50MB
   fileFilter: function (req, file, cb) {
-    // No file type validation, allow all types
-    cb(null, true);
+    cb(null, true); // Accept all file types
   }
 });
 
-
+// Middleware to move photo files from temp to final directory
 const uploadPhoto = (req, res, next) => {
   upload.fields([
     { name: 'catalogue', maxCount: 1 },
@@ -62,55 +59,23 @@ const uploadPhoto = (req, res, next) => {
       return res.status(400).send({ error: err.message });
     }
 
-    if (req.files && req.files['photo']) {
-      const photos = req.files['photo'];
-      const processPromises = photos.map(async (photo) => {
-        const tempPath = path.join(tempDir, photo.filename);
-        const finalPath = path.join(photoDir, photo.filename);
+    try {
+      if (req.files && req.files['photo']) {
+        for (const photo of req.files['photo']) {
+          const tempPath = path.join(tempDir, photo.filename);
+          const finalPath = path.join(photoDir, photo.filename);
 
-        try {
-          // Check if the temp file exists
-          if (!fs.existsSync(tempPath)) {
-            throw new Error(`Temporary file does not exist: ${tempPath}`);
-          }
-
-          // Process the image with reduced quality if needed
-          const processedImage = sharp(tempPath)
-            .resize({ width: 1024, withoutEnlargement: true })
-            .webp({ quality: 100 });
-
-          // Check file size before saving
-          const buffer = await processedImage.toBuffer();
-          if (buffer.length > 100 * 1024) {  // If size > 100KB
-            await sharp(buffer)
-              .webp({ quality: 80 })
-              .toFile(finalPath);
-          } else {
-            await processedImage.toFile(finalPath);
-          }
-
-          // Clean up temporary file
-          fs.unlinkSync(tempPath);
-
-        } catch (err) {
-          // Clean up temp file if it exists
           if (fs.existsSync(tempPath)) {
-            fs.unlinkSync(tempPath);
+            fs.renameSync(tempPath, finalPath); // Move file to final location
+          } else {
+            throw new Error(`Temporary file not found: ${photo.filename}`);
           }
-          console.error(`Error processing photo ${photo.filename}:`, err);
-          throw new Error(`Error processing photo ${photo.filename}: ${err.message}`);
         }
-      });
-
-      try {
-        await Promise.all(processPromises);
-        next();
-      } catch (err) {
-        console.error('Error processing images:', err);
-        res.status(500).send({ error: `Error processing images: ${err.message}` });
       }
-    } else {
       next();
+    } catch (moveErr) {
+      console.error('Error moving photo:', moveErr);
+      return res.status(500).send({ error: `Error moving photo: ${moveErr.message}` });
     }
   });
 };
