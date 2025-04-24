@@ -69,7 +69,8 @@ const CareerOptionTable = () => {
             className="hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/careeroption/editCareerOption/${row.original._id}`)}
           >
-            {row.original.description}
+            <p dangerouslySetInnerHTML={{ __html: row.original.description }}></p>
+         
           </span>
         ),
       },
@@ -300,9 +301,9 @@ const CareerOptionTable = () => {
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Banner Details"
-        className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
+        className="fixed inset-0 flex items-center   justify-center bg-gray-800 bg-opacity-50"
       >
-        <div className="bg-white p-8 rounded shadow-lg w-96 relative">
+        <div className="bg-white p-8 rounded overflow-auto shadow-lg w-96 h-[80%] relative">
         <button onClick={closeModal} className="absolute top-5 right-5 text-gray-500 hover:text-gray-700">
             <X size={20} />
           </button>
@@ -311,7 +312,9 @@ const CareerOptionTable = () => {
             <div className="">
               <div className="flex mt-2">
                 <p className="mr-2 font-semibold font-serif">Priority :</p>
-                <p>{selectedCoption.title}</p>
+                <p dangerouslySetInnerHTML={{ __html: selectedCoption.title }}></p>
+
+                
               </div>
               <div className="flex mt-2">
                 <p className="mr-2 font-semibold font-serif">Section :</p>
