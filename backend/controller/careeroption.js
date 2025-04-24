@@ -108,7 +108,6 @@ exports.updateCareer = async (req, res) => {
 
 exports.deletePhotoAndAltText = async (req, res) => {
     const { id, imageFilename, index } = req.params;
-
     try {
         const careerOption = await Career.findById(id);
 
@@ -145,22 +144,11 @@ exports.deleteCareer = async (req, res) => {
             return res.status(404).json({ message: 'Career not found' });
         }
 
-        // Assuming `deletedCareer.photo` contains the path to the image
-        if (deletedCareer.photo) {
-            // Construct the full path to the image file
-            const imagePath = path.join(__dirname, '..', 'images', deletedCareer.photo);
-
-            // Delete the image file
-            fs.unlink(imagePath, (err) => {
-                if (err) {
-                    console.error('Error deleting the image:', err);
-                    return res.status(500).json({ message: 'Career deleted, but error deleting the image', error: err });
-                }
-            });
-        }
+    
 
         res.status(200).json({ message: 'Career deleted successfully' });
     } catch (error) {
+        console.log('Error deleting career:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
