@@ -72,7 +72,7 @@ exports.getCareerById = async (req, res) => {
 exports.updateCareer = async (req, res) => {
     const { id } = req.query;
     const updateFields = req.body;
-
+console.log(req.files);
     try {
         // Fetch all careers
         const allCareers = await Career.find();
@@ -101,6 +101,7 @@ exports.updateCareer = async (req, res) => {
 
         res.status(200).json(updatedCareerOption);
     } catch (error) {
+        console.log('Error updating career option:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
