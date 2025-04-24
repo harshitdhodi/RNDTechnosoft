@@ -10,7 +10,7 @@ router.post('/createCareeroption',requireAuth,uploadPhoto, careerController.crea
 router.get('/getCareeroption', requireAuth,careerController.getAllCareers);
 router.get('/getActiveCareeroption',careerController.getAllActiveCareers);
 router.get('/getCareeroptionById', careerController.getCareerById);
-router.put('/updateCareeroption',requireAuth,uploadPhoto, careerController.updateCareer);
+router.put('/updateCareeroption',uploadPhoto, careerController.updateCareer);
 router.delete('/deleteCareeroption', requireAuth,careerController.deleteCareer);
 router.delete('/:id/image/:imageFilename/:index', requireAuth,careerController.deletePhotoAndAltText);
 
