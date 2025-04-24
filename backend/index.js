@@ -95,7 +95,7 @@ app.use("/api/mission", cacheMiddleware(86400), require('./routes/mission'));
 app.use("/api/vision", cacheMiddleware(86400), require('./routes/vision'));
 app.use("/api/corevalue", cacheMiddleware(86400), require('./routes/corevalue'));
 app.use("/api/aboutcompany", cacheMiddleware(3600), require('./routes/aboutcompany'));
-app.use("/api/careeroption", cacheMiddleware(3600), require('./routes/careeroption'));
+app.use("/api/careeroption", require('./routes/careeroption'));
 app.use("/api/careerInquiries", cacheMiddleware(300), require('./routes/careerinquiry'));
 app.use("/api/footer", cacheMiddleware(86400), require('./routes/footer'));
 app.use("/api/header", cacheMiddleware(86400), require('./routes/header'));
