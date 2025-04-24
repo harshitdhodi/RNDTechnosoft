@@ -238,11 +238,11 @@ const Footer = () => {
                   </Link>
                 </li>
               ))}
-              <li>
+              {/* <li>
                 <Link to="/job-application-form">
                 <span className='text-gray-600'> Job Application</span>
                 </Link>
-               </li>
+               </li> */}
             </ul>
           </div>
 
