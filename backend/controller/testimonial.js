@@ -310,8 +310,6 @@ const getTestimonials = async (req, res) => {
   }
 };
 
-
-
 const getTestimonialsSub = async (req, res) => {
   try {
     const { page = 1, categoryId, subcategoryId } = req.query;
@@ -345,8 +343,6 @@ const getTestimonialsSub = async (req, res) => {
     res.status(500).json({ message: errorMessage });
   }
 };
-
-
 
 const getTestimonialsSubSub = async (req, res) => {
   try {
@@ -382,8 +378,6 @@ const getTestimonialsSubSub = async (req, res) => {
     res.status(500).json({ message: errorMessage });
   }
 };
-
-
 
 const getTestimonialRating = async (req, res) => {
   try {
@@ -462,7 +456,6 @@ const getTestimonialsHigh = async (req, res) => {
     res.status(500).json({ message: errorMessage });
   }
 };
-
 
 
 const updateTestimonial = async (req, res) => {

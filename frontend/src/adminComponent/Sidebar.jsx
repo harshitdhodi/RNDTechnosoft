@@ -113,6 +113,8 @@ export default function Sidebar() {
       title: "Packages", icon: <Package size={20} />, submenu: [
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PackageCategory" },
         { title: "Packages", icon: <Wrench size={20} />, path: "/package" },
+        { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
+        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
       ]
     },
 
