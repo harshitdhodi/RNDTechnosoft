@@ -1,6 +1,6 @@
 const express = require('express');
 const {
-  getHeroSectionByCategory,upsertHeroSectionSubSub,
+  getHeroSectionByCategory,upsertHeroSectionSubSub,normalizeHeroSectionIds,
   upsertHeroSection,getHeroSectionByCategorySubSub,
   getHeroSectionBySlug,upsertHeroSectionSub,getHeroSectionByCategorySub
 } = require('../controller/heroSection'); // Adjust the path as necessary
@@ -12,6 +12,7 @@ router.get('/:categoryId', getHeroSectionByCategory);
 router.get('/sub/:categoryId/:subcategoryId', getHeroSectionByCategorySub);
 router.get('/subsub/:categoryId/:subcategoryId/:subsubcategoryId',getHeroSectionByCategorySubSub)
 router.get('/front/:slug',getHeroSectionBySlug)
+router.put('/update', normalizeHeroSectionIds);
 // Route to insert/update HeroSection by category ID
 router.put('/main/:categoryId', upsertHeroSection);
 router.put('/sub/:categoryId/:subcategoryId',upsertHeroSectionSub)

@@ -10,7 +10,6 @@ router.get('/getAllServiceImages',galleryController.getAllServiceImages)
 // Get all images with optional categoryId and photoType filters
 router.get('/getSubGallery', requireAuth, galleryController.getAllSubImages);
 
-
 // Get all images with optional categoryId and photoType filters
 router.get('/getSubSubGallery', requireAuth, galleryController.getAllSubSubImages);
 

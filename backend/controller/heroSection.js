@@ -231,7 +231,7 @@ const upsertHeroSection = async (req, res) => {
     if (title) heroSection.title = title;
     heroSection.headingType =  'main'; // Default to 'main' if not provided
     heroSection.slug = slug; // Update the slug from the category
-
+console.log(heroSection)
     await heroSection.save();
     res.status(200).json({
       message: `Hero section updated for category ${categoryId}`,
@@ -385,7 +385,31 @@ const upsertHeroSectionSubSub = async (req, res) => {
   }
 };
 
+const normalizeHeroSectionIds = async (req, res) => {
+  try {
+    const heroSections = await HeroSection.find().lean(); // return plain JS objects
+
+    const formatted = heroSections.map(doc => ({
+      _id: doc._id,
+      heading: doc.heading,
+      subheading: doc.subheading,
+      title: doc.title,
+      category: doc.category?.toString(), // Flatten ObjectId
+      subcategory: doc.subcategory?.toString(),
+      subsubcategory: doc.subsubcategory?.toString(),
+      slug: doc.slug,
+      isVisible: doc.isVisible,
+      headingType: doc.headingType,
+      createdAt: doc.createdAt,
+      __v: doc.__v,
+    }));
+
+    res.status(200).json(formatted);
+  } catch (error) {
+    console.error('Error fetching HeroSections:', error);
+    res.status(500).json({ message: 'Failed to fetch data', error });
+  }
+}; 
 
 
-
-module.exports = { upsertHeroSectionSubSub,getHeroSectionByCategory,getHeroSectionByCategorySub,getHeroSectionByCategorySubSub,upsertHeroSectionSub, upsertHeroSection ,getHeroSectionBySlug};
+module.exports = { upsertHeroSectionSubSub,normalizeHeroSectionIds,getHeroSectionByCategory,getHeroSectionByCategorySub,getHeroSectionByCategorySubSub,upsertHeroSectionSub, upsertHeroSection ,getHeroSectionBySlug};

@@ -13,6 +13,9 @@ import Pagination from "./Pegination"
 import EditPriceModal from "./EditPrizeModel"
 import ManagePackageTable from "./ManagepackageTable"
 import NewsTable from "../PackageDescription"
+import EditExtraPage from "../WebSolution"
+import GetInTouch from "./GetInTouch"
+import PremiumTemplate from "./PremiumTemplate"
 
 const PackageMainComponent = () => {
   const [heading, setHeading] = useState("")
@@ -151,7 +154,7 @@ const PackageMainComponent = () => {
         setSubheading={setSubheading}
         saveHeadings={saveHeadings}
       />
-      
+        <NewsTable />
       <PackageFilters 
         metaFilter={metaFilter}
         setMetaFilter={setMetaFilter}
@@ -186,7 +189,8 @@ const PackageMainComponent = () => {
         </>
       )}
       
-      <NewsTable />
+    
+     
       {/* <ManagePackageTable /> */}
       {editingPrice && (
         <EditPriceModal 

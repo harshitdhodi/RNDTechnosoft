@@ -12,10 +12,6 @@ const HeroSection = ({ categoryId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const notifySuccess = useCallback(() => {
-    toast.success("Updated Successfully!");
-  }, []);
-
   const modules = {
     toolbar: [
       [{ font: [] }],
@@ -71,7 +67,7 @@ const HeroSection = ({ categoryId }) => {
         },
         { withCredentials: true }
       );
-      notifySuccess();
+      toast.success("Updated Successfully!");
     } catch (error) {
       console.error(error);
       setError("Failed to save headings. Please try again.");

@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 
-const NewGalleryForm = () => {
-    const { categoryId,subcategoryId } = useParams(); // Get categoryId from URL params
+const CompanyGalleryForm = () => {
+    const { categoryId } = useParams(); // Get categoryId from URL params
     const location = useLocation(); // Get current location
     const queryParams = new URLSearchParams(location.search); // Parse query parameters
     const photoType = queryParams.get('photoType'); // Get photoType from query params
@@ -31,9 +31,8 @@ const NewGalleryForm = () => {
             formData.append('imgtitle', imgtitle);
             formData.append('images', images);
             formData.append('photoType', photoType); // Use photoType from query params
-            formData.append('subcategoryId', subcategoryId); // Use categoryId from URL params
 
-            await axios.post('/api/serviceImages/sub/createGallery', formData, {
+            await axios.post('/api/serviceImages/createGallery', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -124,4 +123,4 @@ const NewGalleryForm = () => {
     );
 };
 
-export default NewGalleryForm;
+export default CompanyGalleryForm;
