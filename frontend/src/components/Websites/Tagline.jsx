@@ -18,7 +18,7 @@ export default function () {
             const response = await axios.get(`/api/heroSection/front/${slug}`, { withCredentials: true });
             const heroData = response.data;
             setHeroSection(heroData);
-    
+     
             // Simulate loading delay of 2 seconds
             setTimeout(() => {
               setIsLoading(false); // Set loading to false after 2 seconds

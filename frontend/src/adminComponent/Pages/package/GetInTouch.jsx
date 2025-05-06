@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
-const GetInTouch = () => {
+const GetInTouchCard = () => {
   const { contentType } = useParams();
   const [photo, setPhoto] = useState([]);
   const [video, setVideo] = useState("");
@@ -445,4 +445,4 @@ const GetInTouch = () => {
   );
 };
 
-export default GetInTouch;
+export default GetInTouchCard;

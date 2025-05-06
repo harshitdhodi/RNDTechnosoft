@@ -3,8 +3,10 @@ import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import SubsectionsComponent from "../SubsectionEditor";
+import QuestionsComponent from "../QuestionEditor";
 
-const PremiumTemplate = () => {
+const WhyPartnerUs = () => {
   const { contentType } = useParams();
   const [photo, setPhoto] = useState([]);
   const [video, setVideo] = useState("");
@@ -17,7 +19,7 @@ const PremiumTemplate = () => {
     { photo: "", photoAlt: "", title: "", description: "" },
   ]);
   const [status, setStatus] = useState(false);
-
+ 
   const [contentId, setContentId] = useState("");
 
   const [videotitle, setVideotitle] = useState("")
@@ -39,7 +41,7 @@ const PremiumTemplate = () => {
 
   const fetchContentDetails = async () => {
     try {
-      const response = await axios.get(`/api/content/types/premiumtemplates`, {
+      const response = await axios.get(`/api/content/types/whyPartnerus`, {
         withCredentials: true,
       });
       const content = response.data[0];
@@ -228,7 +230,7 @@ const PremiumTemplate = () => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="p-4">
-        <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-left">Edit Template Card</h1>
+        <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Testimonial</h1>
         {/* Heading */}
         <div className="mb-4">
           <label htmlFor="heading" className="block font-semibold mb-2">
@@ -440,9 +442,22 @@ const PremiumTemplate = () => {
         </div>
       </form>
 
+      {/* Subsections Component */}
+      <SubsectionsComponent
+        subsections={subsections}
+        setSubsections={setSubsections}
+        contentId={contentId}
+      />
+
+      {/* Questions Component */}
+      <QuestionsComponent
+        questions={questions}
+        setQuestions={setQuestions}
+        contentId={contentId}
+      />
     </div>
 
   );
 };
 
-export default PremiumTemplate;
+export default WhyPartnerUs;

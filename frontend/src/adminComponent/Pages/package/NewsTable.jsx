@@ -154,7 +154,7 @@ const PackageMainComponent = () => {
         setSubheading={setSubheading}
         saveHeadings={saveHeadings}
       />
-      
+        <NewsTable />
       <PackageFilters 
         metaFilter={metaFilter}
         setMetaFilter={setMetaFilter}
@@ -189,9 +189,8 @@ const PackageMainComponent = () => {
         </>
       )}
       
-      <NewsTable />
-      <GetInTouch/>
-      <PremiumTemplate/>
+    
+     
       {/* <ManagePackageTable /> */}
       {editingPrice && (
         <EditPriceModal 
