@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import HeroSection from "../components/Websites/HeroSection";
 import Review from "../components/Websites/Review";
 import CraftLeft from "../components/Websites/CraftLeft";
@@ -15,8 +15,24 @@ import WeAreExpert from "../components/WeAreExpert";
 import Logotypes from "../components/Websites/Logotype"
 import Tagline from "../components/Websites/Tagline";
 import ServiceSlider from "../components/Websites/ServiceSlider";
-
+import { useGetCombinedDataQuery } from "../redux/slices/homepageSlice";
+import { useDispatch } from 'react-redux';
+import Companies from "../components/Design/companies";
 export default function Website() {
+    const dispatch = useDispatch();
+   // Fetch data using RTK Query
+    const { 
+      data, 
+      isLoading, 
+      isError, 
+      error 
+    } = useGetCombinedDataQuery();
+
+     useEffect(() => {
+        if (data?.navigation) {
+          dispatch(setNavData(data.navigation)); // Save navigation data to Redux
+        }
+      }, [data, dispatch]);
   return (
     <div>
       <HeroSection />
@@ -25,12 +41,12 @@ export default function Website() {
       <CraftLeft />
       <ServiceSlider/>
       <Tagline/>
-      <WeAreExpert /> 
-      <Logotypes/>
+      <WeAreExpert expertData={data?.WeAreExpert} />
       <Review />
+      <Logotypes/>
       {/* <Companies /> */}
       <WhyPartnerWithUs />
-      <PricingSection />
+      {/* <PricingSection /> */}
       <De />
       {/* <DesignProcess/> */}
       <FAQ />

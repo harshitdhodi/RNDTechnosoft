@@ -14,7 +14,7 @@ const Companies = ({ serviceSlug }) => {
           `/api/serviceImages/front/${serviceSlug}/${photoType}`,
           { withCredentials: true }
         );
-        
+        console.log("Company data:", response.data); // Debugging line
         // Check if the response has data
         if (response.data) {
           setCompanies(response.data);

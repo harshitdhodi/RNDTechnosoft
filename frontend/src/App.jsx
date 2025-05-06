@@ -199,6 +199,13 @@ import MainFaqSection from "./adminComponent/Pages/faq/MainFaqSection";
 import JobApplicationForm from "./components/jobApplication/JobApplicationForm";
 import JobApplicationsPage from "./components/jobApplication/JobApplicationPage";
 import JobApplicationsTable from "./components/jobApplication/JobApplicationTable";
+import CompanyCategories from "./adminComponent/Pages/CompanyCategories";
+import EditCompanyInfo from "./adminComponent/Pages/EditCompanyInfo";
+import CompanyGalleryForm from "./adminComponent/Pages/package/CompanyGalleryForm";
+import PremiumTemplate from "./adminComponent/Pages/package/PremiumTemplate";
+import GetInTouchCard from "./adminComponent/Pages/package/GetInTouch";
+import WeAreExpert from "./adminComponent/Pages/serviceComp/WeAreExpert";
+import WhyPartnerUs from "./adminComponent/Pages/serviceComp/WhyPartnerUs";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -305,7 +312,15 @@ function App() {
                     
                     <Route path="/application-req" element={<JobApplicationsTable />} />
                     <Route path="/services" element={<ServicesBack />} />
+                    <Route path="/company-category" element={<CompanyCategories />} />
+                    <Route path="/edit-category-company/:categoryId" element={<EditCompanyInfo />} />
+                   <Route path="/company-gallery-form/:categoryId" element={<CompanyGalleryForm />} />
+                   <Route path="/edit-template-card" element={<PremiumTemplate />} />
+                   <Route path="/edit-card" element={<GetInTouchCard />} />
+                   <Route path="/why-partner-us" element={<WhyPartnerUs />} />
                     <Route path="/ServiceCategory" element={<ServiceCategory />} />
+                    <Route path="/we-are-expert" element={<WeAreExpert />} />
+                    
                     <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
                     <Route path="/ServiceCategory/editServiceCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditServiceCategory />} />
                     <Route path="/PackageCategory" element={<PackageCategory />} />

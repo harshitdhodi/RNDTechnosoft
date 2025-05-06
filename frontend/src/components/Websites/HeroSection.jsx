@@ -6,6 +6,8 @@ import { FaStarOfLife } from "react-icons/fa6";
 import { X } from "lucide-react";
 import axios from "axios";
 import "../../../src/quill.css"
+import QuoteModel from "../../pages/GetInTouchButton";
+
 const AutocompleteInput = ({
   value,
   onChange,
@@ -536,13 +538,14 @@ const HeroSection = () => {
             theme="bubble"
             className="quill-content text-white"
           />
-        <Link to="/contact">   
+          <QuoteModel/>
+        {/* <Link to="/contact">   
         <button
            className=" px-8 py-2 bg-gradient-to-r from-yellow-300 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-lg "
          >
-           Reaquest Proposal
+          Get Quote
          </button>
-        </Link>
+        </Link> */}
           {/* <button
             onClick={() => setIsModalOpen(true)}
             className="md:hidden px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-lg hover:from-yellow-500 hover:to-yellow-600 transform hover:scale-105 transition-all duration-300 shadow-lg w-full"

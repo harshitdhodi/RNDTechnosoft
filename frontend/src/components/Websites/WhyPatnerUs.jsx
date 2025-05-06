@@ -33,7 +33,7 @@ const WhyPartnerWithUs = () => {
         <img
           src={Wave3}
           alt="background"
-          className="w-full h-auto transform rotate-180"
+          className="w-full -mb-2 h-auto transform rotate-180"
         />
       </div>
 
