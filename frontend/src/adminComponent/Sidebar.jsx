@@ -100,6 +100,10 @@ export default function Sidebar() {
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
         { title: "Services", icon: <Wrench size={20} />, path: "/services" },
         { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
+        { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
+        { title: "Why Partner With Us", icon: <Wrench size={20} />, path: "/why-partner-us" },
+        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
     },
     {
@@ -113,6 +117,12 @@ export default function Sidebar() {
       title: "Packages", icon: <Package size={20} />, submenu: [
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PackageCategory" },
         { title: "Packages", icon: <Wrench size={20} />, path: "/package" },
+        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        { title: "companies", icon: <Wrench size={20} />, path: "/company-category" },
+        { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
+        { title: "Template Card", icon: <Wrench size={20} />, path: "/edit-template-card" },
+        
+        { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
     },
 

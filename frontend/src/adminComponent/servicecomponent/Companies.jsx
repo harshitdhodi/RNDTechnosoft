@@ -15,6 +15,7 @@ import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 
 const Companies = ({ categoryId }) => {
+  console.log(categoryId);
   const [companies, setCompanies] = useState([]);
   const [loadings, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -150,7 +151,7 @@ const Companies = ({ categoryId }) => {
         </h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
           <Link
-            to={`/services/createImage/${categoryId}?photoType=${photoType}`}
+            to={`/company-gallery-form/${categoryId}?photoType=${photoType}`}
           >
             <FaPlus size={15} />
           </Link>
