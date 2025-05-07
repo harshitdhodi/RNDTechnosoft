@@ -353,7 +353,7 @@ const deleteDesignProcess = async (req, res) => {
 const getDesignProcessById = async (req, res) => {
     try {
         const { processId } = req.query;
-
+console.log(processId)
         const designProcess = await DesignProcess.findById(processId);
 
         if (!designProcess) {
@@ -361,6 +361,7 @@ const getDesignProcessById = async (req, res) => {
         }
         res.status(200).json({ data: designProcess });
     } catch (error) {
+      console.log(error)
         res.status(500).json({ message: "Server error" });
     }
 };
