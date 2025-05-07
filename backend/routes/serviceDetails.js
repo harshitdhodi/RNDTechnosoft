@@ -29,7 +29,7 @@ router.get('/getServiceDetails',requireAuth,  getServiceDetailsByCategory);
 router.get('/getSubServiceDetails', requireAuth, getServiceDetailsBySubcategory);
 router.get('/getSubSubServiceDetails', requireAuth, getServiceDetailsBySubSubcategory);
 
-router.put('/updateServiceDetail', requireAuth, uploadMedia, updateServiceDetail);
+router.put('/updateServiceDetail',  uploadMedia, updateServiceDetail);
 router.put('/updateSubServiceDetail', requireAuth, uploadMedia, updateSubServiceDetail);
 router.put('/updateSubSubServiceDetail', requireAuth, uploadMedia, updateSubSubServiceDetail);
 

@@ -5,40 +5,30 @@ const ServiceCategory = require('../model/serviceCategory'); // Import the Servi
 const mongoose = require('mongoose'); // Make sure this is imported
 
 const getHeroSectionByCategory = async (req, res) => {
+    // Set cache control headers to prevent caching
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
   const { categoryId } = req.params;
+
+  console.log("categoryId:", categoryId);
+  console.log("Querying HeroSection for category:", categoryId);
 
   try {
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       return res.status(400).json({ message: 'Invalid category ID format' });
     }
 
-    // Query the database
+    // Query the database with ObjectId
     const heroSection = await HeroSection.findOne({
-      'category.$oid': categoryId // Try to query with the nested $oid structure first
+      category: categoryId // Mongoose handles ObjectId conversion automatically
     }).populate('category');
-
-    // If not found, try the standard ObjectId query
+ 
     if (!heroSection) {
-      const heroSectionAlt = await HeroSection.findOne({
-        category: mongoose.Types.ObjectId(categoryId)
-      }).populate('category');
-      
-      if (!heroSectionAlt) {
-        return res.status(404).json({ message: 'Hero section not found' });
-      }
-      
-      return res.status(200).json({
-        _id: heroSectionAlt._id,
-        heading: heroSectionAlt.heading,
-        subheading: heroSectionAlt.subheading,
-        title: heroSectionAlt.title,
-        category: heroSectionAlt.category,
-        headingType: heroSectionAlt.headingType,
-        slug: heroSectionAlt.slug,
-        isVisible: heroSectionAlt.isVisible,
-        createdAt: heroSectionAlt.createdAt
-      });
+      return res.status(404).json({ message: 'Hero section not found' });
     }
+
+    console.log("Found HeroSection:", heroSection);
 
     return res.status(200).json({
       _id: heroSection._id,
@@ -53,7 +43,7 @@ const getHeroSectionByCategory = async (req, res) => {
     });
   } catch (err) {
     console.error('Error retrieving hero section:', err);
-    return res.status(500).json({ 
+    return res.status(500).json({
       message: 'Error retrieving hero section',
       error: process.env.NODE_ENV === 'development' ? err.message : undefined
     });
@@ -73,8 +63,8 @@ const getHeroSectionByCategorySub = async (req, res) => {
 
     // First try with the $oid structure
     let heroSection = await HeroSection.findOne({
-      'category.$oid': categoryId,
-      'subcategory.$oid': subcategoryId
+      'category': categoryId,
+      'subcategory': subcategoryId
     }).populate('category subcategory');
 
     // If not found, try standard ObjectId query
@@ -124,9 +114,9 @@ const getHeroSectionByCategorySubSub = async (req, res) => {
 
     // First try with the $oid structure
     let heroSection = await HeroSection.findOne({
-      'category.$oid': categoryId,
-      'subcategory.$oid': subcategoryId,
-      'subsubcategory.$oid': subsubcategoryId
+      'category': categoryId,
+      'subcategory': subcategoryId,
+      'subsubcategory': subsubcategoryId
     }).populate('category subcategory subsubcategory');
 
     // If not found, try standard ObjectId query
@@ -387,29 +377,102 @@ const upsertHeroSectionSubSub = async (req, res) => {
 
 const normalizeHeroSectionIds = async (req, res) => {
   try {
-    const heroSections = await HeroSection.find().lean(); // return plain JS objects
+    // Step 1: Check for potential duplicates
+    const duplicates = await HeroSection.aggregate([
+      {
+        $match: {
+          // Use dot notation for accessing nested fields instead of '$' prefix
+          'category.oid': { $exists: true },
+          'subcategory.oid': { $exists: true },
+          'subcategory.slug': { $exists: true }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            // Use dot notation for nested fields
+            category: '$category.oid',
+            subcategory: '$subcategory.oid',
+            headingType: '$headingType',
+            subsubcategory: '$subsubcategory'
+          },
+          count: { $sum: 1 },
+          docs: { $push: { _id: '$_id', slug: '$subcategory.slug', heading: '$heading', subheading: '$subheading', title: '$title' } }
+        }
+      },
+      {
+        $match: {
+          count: { $gt: 1 }
+        }
+      }
+    ]);
 
-    const formatted = heroSections.map(doc => ({
-      _id: doc._id,
-      heading: doc.heading,
-      subheading: doc.subheading,
-      title: doc.title,
-      category: doc.category?.toString(), // Flatten ObjectId
-      subcategory: doc.subcategory?.toString(),
-      subsubcategory: doc.subsubcategory?.toString(),
-      slug: doc.slug,
-      isVisible: doc.isVisible,
-      headingType: doc.headingType,
-      createdAt: doc.createdAt,
-      __v: doc.__v,
-    }));
+    // Step 2: Handle duplicates (keep first, delete others)
+    if (duplicates.length > 0) {
+      for (const group of duplicates) {
+        const keepId = group.docs[0]._id;
+        const deleteIds = group.docs.slice(1).map(doc => doc._id);
+        // Optionally merge content (e.g., combine headings)
+        const combinedHeading = group.docs.map(doc => doc.heading).join('<br>');
+        const combinedSubheading = group.docs.map(doc => doc.subheading).filter(s => s).join(' ');
+        const combinedTitle = group.docs.map(doc => doc.title).filter(t => t).join(' - ');
 
-    res.status(200).json(formatted);
+        // Update the kept document
+        await HeroSection.findByIdAndUpdate(
+          keepId,
+          {
+            $set: {
+              heading: combinedHeading,
+              subheading: combinedSubheading,
+              title: combinedTitle,
+              slug: group.docs[0].slug // Use the first slug
+            }
+          },
+          { new: true }
+        );
+
+        // Delete duplicates
+        await HeroSection.deleteMany({ _id: { $in: deleteIds } });
+      }
+      console.log(`Handled ${duplicates.length} duplicate groups`);
+    }
+
+    // Step 3: Update all documents to the new format
+    const result = await HeroSection.updateMany(
+      {
+        // Fix the match criteria to use dot notation
+        'category.oid': { $exists: true },
+        'subcategory.oid': { $exists: true },
+        'subcategory.slug': { $exists: true }
+      },
+      [
+        {
+          $set: {
+            category: { $toObjectId: '$category.oid' }, // Convert to ObjectId
+            subcategory: { $toObjectId: '$subcategory.oid' }, // Convert to ObjectId
+            slug: '$subcategory.slug', // Move slug to top-level
+            createdAt: { $dateToString: { format: '%Y-%m-%dT%H:%M:%S.%L%z', date: '$createdAt' } } // Convert to string
+          }
+        }
+      ]
+    );
+
+    // Step 4: Verify and respond
+    console.log(`Matched: ${result.matchedCount}, Modified: ${result.modifiedCount}`);
+    res.status(200).json({
+      message: 'HeroSections updated successfully',
+      matchedCount: result.matchedCount,
+      modifiedCount: result.modifiedCount,
+      duplicatesHandled: duplicates.length
+    });
   } catch (error) {
-    console.error('Error fetching HeroSections:', error);
-    res.status(500).json({ message: 'Failed to fetch data', error });
+    console.error('Error converting HeroSections:', error);
+    res.status(500).json({
+      message: 'Error converting HeroSections',
+      error: error.message
+    });
   }
-}; 
+};
 
 
 module.exports = { upsertHeroSectionSubSub,normalizeHeroSectionIds,getHeroSectionByCategory,getHeroSectionByCategorySub,getHeroSectionByCategorySubSub,upsertHeroSectionSub, upsertHeroSection ,getHeroSectionBySlug};
