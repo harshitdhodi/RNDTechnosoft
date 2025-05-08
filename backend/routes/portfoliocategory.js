@@ -31,7 +31,7 @@ router.put("/updatesubsubcategory",requireAuth,uploadLogo,updatesubsubcategory);
 router.delete("/deletecategory", requireAuth, deletecategory);
 router.delete("/deletesubcategory", requireAuth, deletesubcategory);
 router.delete("/deletesubsubcategory", requireAuth, deletesubsubcategory);
-router.get("/getAll", requireAuth, getAll);
+router.get("/getAll",  getAll);
 router.get("/getAllCategory", getAllCategory);
 router.get("/getSpecificCategory", requireAuth, getSpecificCategory);
 router.get("/getSpecificSubcategory", requireAuth, getSpecificSubcategory);

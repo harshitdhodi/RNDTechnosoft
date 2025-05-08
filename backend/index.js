@@ -13,7 +13,7 @@ const rateLimit = require('express-rate-limit');
 const fs = require('fs').promises;
 const http = require('http');
 const NodeCache = require("node-cache");
-
+const { generateAllSitemaps } = require('./routes/mySitemap');
 const apiCache = new NodeCache({
     stdTTL: 0,            // No default expiration (set per route)
     checkperiod: 60,      // Check every minute
@@ -71,6 +71,17 @@ app.use(express.static('dist', {
     }
   } 
 }));
+
+// Add a route to trigger sitemap generation
+app.get('/api/generate-sitemaps', async (req, res) => {
+    try {
+      await generateAllSitemaps(); // Call the method to generate all sitemaps
+      res.status(200).json({ message: 'Sitemaps generated successfully' });
+    } catch (error) {
+      console.error('Error generating sitemaps:', error);
+      res.status(500).json({ error: 'Failed to generate sitemaps' });
+    }
+  });
 // API Routes first
 app.use('/api/product',  require('./routes/product'));
 app.use('/api/services',  require('./routes/services'));
@@ -295,39 +306,13 @@ const configureWebAssembly = () => {
     }
 };
 
-// Performance logger implementation
-const performanceLogger = {
-    async logMetrics() {
-        const used = process.memoryUsage();
-        const metrics = {
-            timestamp: new Date().toISOString(),
-            heapUsed: Math.round(used.heapUsed / 1024 / 1024),
-            heapTotal: Math.round(used.heapTotal / 1024 / 1024),
-            rss: Math.round(used.rss / 1024 / 1024),
-            external: Math.round(used.external / 1024 / 1024),
-            cpuUsage: process.cpuUsage()
-        };
-
-        try {
-            const logDir = path.join(__dirname, 'logs');
-            await fs.mkdir(logDir, { recursive: true });
-            await fs.appendFile(
-                path.join(logDir, 'performance.log'),
-                JSON.stringify(metrics) + '\n'
-            );
-        } catch (error) {
-            console.error('Error logging metrics:', error);
-        }
-    }
-};
-
-
 
 // Enhanced database connection with retry mechanism
 const connectWithRetry = async (retries = 5) => {
     try {
         await mongoose.connect(process.env.DATABASE_URI, mongooseOptions);
         console.log("Connected to MongoDB");
+        generateAllSitemaps()
         restartAttempts = 0;
     } catch (error) {
         console.error("MongoDB connection error:", error);
