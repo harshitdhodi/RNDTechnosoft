@@ -67,7 +67,7 @@ const HeroSection = ({ categoryId }) => {
         },
         { withCredentials: true }
       );
-      toast.success("Updated Successfully!");
+      // toast.success("Updated Successfully!");
     } catch (error) {
       console.error(error);
       setError("Failed to save headings. Please try again.");

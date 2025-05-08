@@ -127,14 +127,14 @@ const WhyPartnerUs = () => {
         console.log(`${key}: ${value}`);
       }
 
-      await axios.put(`/api/content/${contentType}`, formData, {
+      await axios.put(`/api/content/whyPartnerus`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
 
-      navigate(`/extrapages/${contentType}`);
+      navigate(`/extrapages/whyPartnerus`);
     } catch (error) {
       console.error(error);
     }

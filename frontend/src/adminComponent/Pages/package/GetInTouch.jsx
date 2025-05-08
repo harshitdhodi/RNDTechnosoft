@@ -125,14 +125,14 @@ const GetInTouchCard = () => {
         console.log(`${key}: ${value}`);
       }
 
-      await axios.put(`/api/content/${contentType}`, formData, {
+      await axios.put(`/api/content/bookcall`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
 
-      navigate(`/extrapages/${contentType}`);
+      navigate(`/edit-card`);
     } catch (error) {
       console.error(error);
     }
