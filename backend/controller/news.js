@@ -515,5 +515,33 @@ const fetchUrlmetaById = async (req, res) => {
 };
 
 
+const getAllNews = async (req, res) => {
+  try {
+  
+    const count = await News.countDocuments();
+    const news = await News.find()
+      
+    const newsWithCategoryName = await Promise.all(news.map(async (news) => {
+      const category = await newsCategory.findOne({ 'slug': news.categories });
+      const categoryName = category ? category.category : 'Uncategorized';
+      return {
+        ...news.toJSON(),
+        categoryName
+      };
+    }));
+    res.status(200).json({
+      data: newsWithCategoryName,
+     
+    });
+  } catch (error) {
+    console.error("Error retrieving products:", error);
+    let errorMessage = 'Server error';
+    if (error.name === 'CastError') {
+      errorMessage = 'Invalid query parameter format';
+    }
+    res.status(500).json({ message: errorMessage, error });
+  }
+};
 
-module.exports = { updateBlogVisits,getNewsFront,getNewsBySlug,insertNews, getNews,getLatestBlogs, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, getCategoryNews, getSubcategoryNews, getSubSubcategoryNews, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById, fetchUrlmeta, editUrlmeta, fetchUrlmetaById };
+
+module.exports = { updateBlogVisits,getAllNews,getNewsFront,getNewsBySlug,insertNews, getNews,getLatestBlogs, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, getCategoryNews, getSubcategoryNews, getSubSubcategoryNews, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById, fetchUrlmeta, editUrlmeta, fetchUrlmetaById };
