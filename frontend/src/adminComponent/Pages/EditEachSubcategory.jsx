@@ -9,7 +9,6 @@ import TestimonialsTable from "../servicecomponent/subService/Testimonial";
 const EditSubServicePage = () => {
   // Extract both categoryId and subcategoryId from the URL parameters
   const { categoryId, subcategoryId } = useParams();
-  console.log(categoryId, subcategoryId )
   return (
     <div className="p-4">
       <div className="mt-6">

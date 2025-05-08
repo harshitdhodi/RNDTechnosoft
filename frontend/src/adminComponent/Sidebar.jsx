@@ -103,6 +103,7 @@ export default function Sidebar() {
         { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
         { title: "Why Partner With Us", icon: <Wrench size={20} />, path: "/why-partner-us" },
         { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
         { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
     },
