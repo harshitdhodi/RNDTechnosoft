@@ -1019,6 +1019,7 @@ await generateIndustrialSubcategorySitemap();
 await generateBlogSitemap();
 await generatePortfolioCategorySitemap();
 await generateMainSitemap();
+await generateStaticPagesSitemap();
 };
 
 
@@ -1035,6 +1036,7 @@ generateIndustrialCategorySitemap,
 generateIndustrialSubcategorySitemap,
 generateBlogSitemap,
 generatePortfolioCategorySitemap,
-generateMainSitemap
+generateMainSitemap,
+generateStaticPagesSitemap
 };
 

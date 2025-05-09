@@ -25,15 +25,15 @@ router.delete("/:slugs/image/:imageFilename/:index",requireAuth,deletePhotoAndAl
 router.post("/insertCategory", requireAuth, uploadLogo, insertCategory);
 router.post("/insertSubCategory", requireAuth, uploadLogo, insertSubCategory);
 router.post("/insertSubSubCategory",requireAuth,uploadLogo,insertSubSubCategory);
-router.put("/updateCategory", requireAuth, uploadLogo, updateCategory);
+router.put("/updateCategory",  uploadLogo, updateCategory);
 router.put("/updateSubCategory", requireAuth, uploadLogo, updateSubCategory);
 router.put("/updatesubsubcategory",requireAuth,uploadLogo,updatesubsubcategory);
 router.delete("/deletecategory", requireAuth, deletecategory);
 router.delete("/deletesubcategory", requireAuth, deletesubcategory);
 router.delete("/deletesubsubcategory", requireAuth, deletesubsubcategory);
 router.get("/getAll",  getAll);
-router.get("/getAllCategory", getAllCategory);
-router.get("/getSpecificCategory", requireAuth, getSpecificCategory);
+router.get("/getAllCategory", getAllCategory); 
+router.get("/getSpecificCategory",  getSpecificCategory);
 router.get("/getSpecificSubcategory", requireAuth, getSpecificSubcategory);
 router.get("/getSpecificSubSubcategory",requireAuth,getSpecificSubSubcategory);
 router.get("/getAllSubcategoriesBySlug",getAllSubcategoriesBySlug);
