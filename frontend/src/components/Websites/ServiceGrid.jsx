@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+"use client"
+
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
 const bgColors = [
   "#333333", // Charcoal Black
@@ -19,12 +21,12 @@ const bgColors = [
   "#5A4B3A", // Darker Soft Tan
   "#4C4A57", // Darker Deep Slate
   "#5C4D7A", // Darker Dusty Purple
-];
+]
 
 const getUniqueColors = (count) => {
-  const shuffled = [...bgColors].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, count);
-};
+  const shuffled = [...bgColors].sort(() => Math.random() - 0.5)
+  return shuffled.slice(0, count)
+}
 
 // Array of different pattern generators
 const patternTypes = [
@@ -32,14 +34,7 @@ const patternTypes = [
   (color) => ({
     id: "dots",
     pattern: (
-      <pattern
-        id={`dots-${color.replace("#", "")}`}
-        x="0"
-        y="0"
-        width="20"
-        height="20"
-        patternUnits="userSpaceOnUse"
-      >
+      <pattern id={`dots-${color.replace("#", "")}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
         <circle cx="2" cy="2" r="1" fill={color} />
         <circle cx="10" cy="10" r="1.5" fill={color} />
         <circle cx="18" cy="18" r="1" fill={color} />
@@ -58,22 +53,8 @@ const patternTypes = [
         height="60"
         patternUnits="userSpaceOnUse"
       >
-        <circle
-          cx="30"
-          cy="30"
-          r="20"
-          fill="none"
-          stroke={color}
-          strokeWidth="1"
-        />
-        <circle
-          cx="30"
-          cy="30"
-          r="10"
-          fill="none"
-          stroke={color}
-          strokeWidth="0.5"
-        />
+        <circle cx="30" cy="30" r="20" fill="none" stroke={color} strokeWidth="1" />
+        <circle cx="30" cy="30" r="10" fill="none" stroke={color} strokeWidth="0.5" />
       </pattern>
     ),
   }),
@@ -81,14 +62,7 @@ const patternTypes = [
   (color) => ({
     id: "lines",
     pattern: (
-      <pattern
-        id={`lines-${color.replace("#", "")}`}
-        x="0"
-        y="0"
-        width="40"
-        height="40"
-        patternUnits="userSpaceOnUse"
-      >
+      <pattern id={`lines-${color.replace("#", "")}`} x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
         <line x1="0" y1="0" x2="40" y2="40" stroke={color} strokeWidth="0.5" />
         <line x1="40" y1="0" x2="0" y2="40" stroke={color} strokeWidth="0.5" />
       </pattern>
@@ -106,12 +80,7 @@ const patternTypes = [
         height="43.4"
         patternUnits="userSpaceOnUse"
       >
-        <path
-          d="M25 0 L50 14.4 L50 38.4 L25 43.4 L0 38.4 L0 14.4 Z"
-          fill="none"
-          stroke={color}
-          strokeWidth="0.5"
-        />
+        <path d="M25 0 L50 14.4 L50 38.4 L25 43.4 L0 38.4 L0 14.4 Z" fill="none" stroke={color} strokeWidth="0.5" />
       </pattern>
     ),
   }),
@@ -119,32 +88,20 @@ const patternTypes = [
   (color) => ({
     id: "grid",
     pattern: (
-      <pattern
-        id={`grid-${color.replace("#", "")}`}
-        x="0"
-        y="0"
-        width="20"
-        height="20"
-        patternUnits="userSpaceOnUse"
-      >
-        <path
-          d="M 20 0 L 0 0 0 20"
-          fill="none"
-          stroke={color}
-          strokeWidth="0.5"
-        />
+      <pattern id={`grid-${color.replace("#", "")}`} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke={color} strokeWidth="0.5" />
       </pattern>
     ),
   }),
-];
+]
 
 const BackgroundPattern = ({ color }) => {
   // Randomly select 2-3 patterns to combine
-  const numPatterns = Math.floor(Math.random() * 2) + 2;
+  const numPatterns = Math.floor(Math.random() * 2) + 2
   const selectedPatterns = [...patternTypes]
     .sort(() => Math.random() - 0.5)
     .slice(0, numPatterns)
-    .map((generator) => generator(color));
+    .map((generator) => generator(color))
 
   return (
     <div className="absolute inset-0 overflow-hidden opacity-10">
@@ -161,43 +118,23 @@ const BackgroundPattern = ({ color }) => {
         ))}
       </svg>
     </div>
-  );
-};
+  )
+}
 
 const decorativePatterns = [
   // Abstract waves
   (color) => (
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M10,50 C30,60 70,40 90,50 C70,60 30,40 10,50"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-      />
-      <path
-        d="M10,30 C30,40 70,20 90,30 C70,40 30,20 10,30"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-      />
-      <path
-        d="M10,70 C30,80 70,60 90,70 C70,80 30,60 10,70"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-      />
+      <path d="M10,50 C30,60 70,40 90,50 C70,60 30,40 10,50" fill="none" stroke={color} strokeWidth="2" />
+      <path d="M10,30 C30,40 70,20 90,30 C70,40 30,20 10,30" fill="none" stroke={color} strokeWidth="2" />
+      <path d="M10,70 C30,80 70,60 90,70 C70,80 30,60 10,70" fill="none" stroke={color} strokeWidth="2" />
     </svg>
   ),
 
   // Geometric shapes
   (color) => (
     <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <polygon
-        points="50,10 90,90 10,90"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-      />
+      <polygon points="50,10 90,90 10,90" fill="none" stroke={color} strokeWidth="2" />
       <rect
         x="30"
         y="30"
@@ -208,14 +145,7 @@ const decorativePatterns = [
         strokeWidth="2"
         transform="rotate(45 50 50)"
       />
-      <circle
-        cx="50"
-        cy="50"
-        r="20"
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-      />
+      <circle cx="50" cy="50" r="20" fill="none" stroke={color} strokeWidth="2" />
     </svg>
   ),
 
@@ -290,98 +220,100 @@ const decorativePatterns = [
       ))}
     </svg>
   ),
-];
+]
 
 const DecorativeElement = ({ color }) => {
   // Get a random pattern from the array
-  const randomPattern =
-    decorativePatterns[Math.floor(Math.random() * decorativePatterns.length)];
-  return (
-    <div className="absolute top-0 right-0 w-32 h-32 opacity-10 transform rotate-45">
-      {randomPattern(color)}
-    </div>
-  );
-};
+  const randomPattern = decorativePatterns[Math.floor(Math.random() * decorativePatterns.length)]
+  return <div className="w-28 h-28 opacity-80">{randomPattern(color)}</div>
+}
 
 const ServiceCard = ({ service, isLarge }) => {
-  const hasImage = service.image && service.image !== "null";
-// console.log(service)
+  const hasImage = service.image && service.image !== "null"
+
   return (
     <div
-      className={`group overflow-hidden transition-all duration-300 hover:shadow-xl relative
-        ${
-          isLarge
-            ? "col-span-4 md:col-span-4"
-            : "col-span-4 md:col-span-4 lg:col-span-4"
-        }`}
+      className={`group overflow-hidden rounded-lg transition-all duration-300 hover:shadow-xl relative
+        ${isLarge ? "col-span-4 md:col-span-4 lg:col-span-6" : "col-span-4 md:col-span-4 lg:col-span-4"}`}
       style={{
         backgroundColor: service.bgColor,
       }}
     >
       <BackgroundPattern color="white" />
 
-      <div className="relative z-10 backdrop-blur-[2px]">
-        <div className="flex flex-col  md:flex-row ">
-          <div className={`p-8 w-full space-y-6 relative `}>
-            {/* Replace the old circle SVG with our new random DecorativeElement */}
-            <DecorativeElement color="white" />
+      <div className="relative z-10 h-full">
+        <div className="flex flex-col h-full">
+          <div className="p-6 flex-grow space-y-4 relative">
+            {/* Tag at the top */}
+            <Link
+              to={`/${service.slug}`}
+              className="inline-block bg-white/90 text-black text-xs font-medium px-3 py-1 rounded-full 
+              shadow-sm transition-transform duration-300 group-hover:scale-105 relative z-10"
+            >
+              <span>{service.tag}</span>
+            </Link>
 
-            <Link
-              to={`/${service.slug}`}
-              className="inline-block bg-white text-black text-sm font-medium px-4 py-1 rounded-full 
-              shadow-sm transition-transform duration-300 group-hover:scale-105 relative z-10 "
-            >
-              <span className="my-4">{service.tag}</span>
+            {/* Title */}
+            <Link to={`/${service.slug}`} className="block">
+              <h3 className="text-2xl font-serif font-medium text-white relative z-10">{service.title}</h3>
             </Link>
-            <Link
-              to={`/${service.slug}`}
-              className="text-2xl font-serif font-medium text-white relative z-10"
-            >
-              <h3 className="my-8">{service.title}</h3>
-            </Link>
-            <Link
-              to={`/${service.slug}`}
-              className="prose text-white/90 relative z-10 "
-            >
+
+            {/* Description */}
+            <Link to={`/${service.slug}`} className="block">
               <div
-                className=""
+                className="text-white/90 text-sm leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: service.description }}
               />
             </Link>
           </div>
 
-          {hasImage && (
-            <Link
-              to={`/${service.slug}`}
-              className="w-full hidden   relative flex-col justify-center items-center "
-            >
-            </Link>
-          )}
+          {/* Illustration */}
+          <div className="p-4 flex justify-end items-end">
+            {hasImage ? (
+              <img
+                src={service.image || "/placeholder.svg"}
+                alt={service.alt || service.title}
+                className="w-32 h-32 object-contain"
+              />
+            ) : (
+              <DecorativeElement color="white" />
+            )}
+          </div>
         </div>
       </div>
     </div>
-  );
-};
-
+  )
+}
 
 const ServicesGrid = ({ serviceData }) => {
-  console.log("Service Data:", serviceData);
-
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (serviceData && serviceData.length > 0) {
-      const transformedData = transformServices(serviceData);
-      setServices(transformedData);
-      setLoading(false);
+      const transformedData = transformServices(serviceData)
+      setServices(transformedData)
+      setLoading(false)
     } else {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [serviceData]);
+  }, [serviceData])
 
   const transformServices = (apiData) => {
-    const uniqueColors = getUniqueColors(apiData.length);
+    // Define specific colors to match the image
+    const serviceColors = [
+      "#1E6A8D", // Website Development - blue
+      "#4A5568", // Brand Development - dark gray
+      "#D4A017", // UI/UX - gold
+      "#6B3FA0", // PPC Services - purple
+      "#E9B949", // Graphic Designing - yellow
+      "#8B4513", // Content Marketing - brown
+      "#2A7D8B", // Software Development - teal
+      "#3B5998", // Video Production - facebook blue
+      "#4CAF50", // SSM Services - green
+      "#1976D2", // SEO Services - blue
+      "#388E3C", // Mobile App Development - green
+    ]
 
     return apiData.map((service, index) => ({
       title: service.category,
@@ -391,41 +323,34 @@ const ServicesGrid = ({ serviceData }) => {
       imgtitle: service.imgtitle || "",
       alt: service.alt || "",
       slug: service.slug,
-      bgColor: uniqueColors[index],
-    }));
-  };
+      bgColor: serviceColors[index % serviceColors.length],
+    }))
+  }
 
   if (loading) {
-    return <div className="text-center py-16 text-gray-600">Loading services...</div>;
+    return <div className="text-center py-16 text-gray-600">Loading services...</div>
   }
 
   if (!services.length) {
-    return <div className="text-center py-16 text-gray-600">No services available</div>;
+    return <div className="text-center py-16 text-gray-600">No services available</div>
   }
 
   return (
-    <section className="md:my-20 md:py-16 py-4 px-4 bg-gray-50">
-      <div className="w-[85%] mx-auto">
-        <h2 className="text-4xl md:text-5xl font-serif text-center font-medium">
+    <section className="py-16 px-4 bg-gray-50">
+      <div className="max-w-7xl mx-auto">
+        <h2 className="text-4xl md:text-5xl font-serif text-center font-medium mb-4">
           Our <span className="text-yellow-500">Services</span>
         </h2>
-        <h3 className="md:text-[23px] text-center pb-16 mt-4">
-          Dedicated to Your Success
-        </h3>
+        <h3 className="text-xl text-center text-gray-600 mb-16">Dedicated to Your Success</h3>
 
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-6">
           {services.map((service, index) => (
-            <ServiceCard
-              key={index}
-              service={service}
-              isLarge={[0, 4, 7, 9, 10].includes(index)}
-            />
+            <ServiceCard key={index} service={service} isLarge={[0, 1, 2, 5, 6, 10].includes(index)} />
           ))}
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default ServicesGrid;
- 
+export default ServicesGrid

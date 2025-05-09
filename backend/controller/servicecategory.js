@@ -640,11 +640,18 @@ const getAll = async (req, res) => {
 const getSpecificCategory = async (req, res) => {
   try {
     const { categoryId } = req.query;
-    const categories = await ServiceCategory.findOne({ slug: categoryId });
+    
+    // Disable caching for this response
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    
+    const categories = await ServiceCategory.findOne({ slug: categoryId })
+      .lean() // Get plain JS object
+      .setOptions({ overwrite: true }); // Bypass any mongoose cache
 
     if (!categories) {
       return res.status(404).json({ message: "Category not found" });
     }
+    
     res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
@@ -1076,6 +1083,11 @@ const getCategory = async (req, res) => {
     const categories = await ServiceCategory.find().select(
       "category description photo alt imgtitle slug tag"
     );
+
+    // Set cache-control headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
 
     res.status(200).json(categories);
   } catch (error) {
