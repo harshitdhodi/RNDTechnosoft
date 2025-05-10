@@ -13,6 +13,8 @@ import Faq from '../components/Faq';
 import StandardPackage from '../components/StandardPackage';
 import PremiumTemplatesSection from '../components/PrimiumTemplateSection';
 import { useDispatch } from 'react-redux';
+import ServicesPage from '../components/Websites/ServicePage';
+import GridLayout from '../components/Websites/GridLayout';
 
 export default function Homepage() {
   const serviceGridRef = useRef(null);
@@ -60,7 +62,8 @@ export default function Homepage() {
       <Marquee marqueeData={data?.homepage?.marquee} />
       <OurWorkComponent ourWorkData={data?.homepage?.ourwork} />
       <div ref={serviceGridRef}>
-        <ServiceGrid serviceData={data?.services?.categories} />
+        {/* <ServiceGrid serviceData={data?.services?.categories} /> */}
+        <GridLayout serviceData={data?.services?.categories}/>
       </div>
       <WeAreExpert expertData={data?.WeAreExpert} />
       <TrustedSection homecard1={data?.homecard1} homecard2={data?.homecard2} />
