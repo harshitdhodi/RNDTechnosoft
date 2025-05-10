@@ -89,7 +89,7 @@ const OurWorkComponent = ({ ourWorkData }) => {
         className="relative flex justify-center items-end h-64 mx-3 overflow-hidden group"
       >
         <img 
-          src={project.photo} // Use the provided image URL directly
+          src={`/api/logo/download/${project.photo}`} // Use the provided image URL directly
           alt={project.alt || project.name} 
           title={project.imgtitle} 
           loading='lazy'
@@ -125,7 +125,7 @@ const OurWorkComponent = ({ ourWorkData }) => {
   }
 
   return (
-    <div className="relative z-20 py-16 w-[90%] mx-auto">
+    <div className="relative z-20 py-16 w-[98%] mx-auto">
       <h2 className="text-4xl md:text-5xl text-center font-serif capitalize">
         See our <span className="text-yellow-500">work</span>
       </h2>
