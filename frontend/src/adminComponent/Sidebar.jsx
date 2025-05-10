@@ -97,7 +97,7 @@ export default function Sidebar() {
     { title: "Popup Inquiry", icon: <MessagesSquare size={20} />, path: "/popup-inquiry" },
     {
       title: "Services", icon: <Headset size={20} />, submenu: [
-        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
+        { title: "Meta Info", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
         { title: "Services", icon: <Wrench size={20} />, path: "/services" },
         { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
         { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },

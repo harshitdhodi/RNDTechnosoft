@@ -1,34 +1,22 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const sitemapSchema = new Schema({
-  url: {
+const sitemapSchema = new mongoose.Schema({
+  name: {
     type: String,
     required: true,
-    unique: true
+    unique: true, // Ensure the name is unique
   },
-  changeFreq: {
-    type: String,
-  },
-  lastmod: {
+  timestamp: {
     type: Date,
-    default: Date.now
+    default: Date.now, // Set the default timestamp to the current date and time
   },
-  priority: {
-    type: Number,
-    min: 0,
-    max: 1,
-    required: true
-  },
-  metatitle: { type: String },
-  metadescription: { type: String },
-  metakeywords: { type: String },
-  metacanonical: { type: String },
-  metalanguage: { type: String },
-  metaschema: { type: String },
-  otherMeta: { type: String },
+  priority: { type: Number, default: 0.5 } // Add priority field with default
 });
 
-const Sitemap = mongoose.model('Sitemap', sitemapSchema);
+// Middleware to update the timestamp automatically on save
+sitemapSchema.pre('save', function (next) {
+  this.timestamp = Date.now(); // Update the timestamp before saving
+  next();
+});
 
-module.exports = Sitemap;
+module.exports = mongoose.model('mysitemap', sitemapSchema);
