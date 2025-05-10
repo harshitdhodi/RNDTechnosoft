@@ -69,8 +69,8 @@ const imagePositionStyle = () => {
       ? rowSpan > 1
         ? "flex flex-col"
         : index === 10
-        ? "flex flex-row-reverse"
-        : "flex flex-row"
+        ? "md:flex flex-row-reverse"
+        : "flex md:flex-row flex-col"
       : "flex flex-col"
   }`}
 >
