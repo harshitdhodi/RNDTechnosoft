@@ -101,7 +101,7 @@ const ImageBubble = ({ homeHero }) => {
             key={index}
             src={photo}
             alt={`Staff ${index}`}
-            className="absolute object-cover rounded-full"
+            className="absolute object-cointain rounded-full"
             style={{
               top: position.top,
               left: position.left,

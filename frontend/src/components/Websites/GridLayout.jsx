@@ -93,7 +93,7 @@ export default function GridLayout({ serviceData }) {
   ];
 
   return (
-    <div className="grid w-full max-w-[72rem] mx-auto gap-4 grid-cols-4 grid-rows-[repeat(4,minmax(200px,auto))]">
+    <div className="grid w-full max-w-[82rem] mx-auto gap-4 grid-cols-4 grid-rows-[repeat(4,minmax(200px,auto))]">
       {services.map((service, index) => (
         <Card
           key={service._id}
