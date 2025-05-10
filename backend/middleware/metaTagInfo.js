@@ -22,15 +22,15 @@ const fetchAllMetaData = async () => {
       axios.get(API_ENDPOINTS.Blog),
       axios.get(API_ENDPOINTS.Portfolio_Category)
     ]);
-
+ console.log("services",services.data)
     return {
-      services: services.data?.data || [],
+      services: services.data || [],
       packages: packages.data?.data || [],
       industries: industries.data?.data || [],
       blogs: blogs.data?.data || [],
       portfolios: portfolios.data?.data || [],
     };
-    console.log(services)
+   
   } catch (err) {
     console.error('Error fetching meta data:', err.message);
     return { services: [], packages: [], industries: [], blogs: [], portfolios: [] };
@@ -62,9 +62,9 @@ const generateMetaTags = async (req, res, next) => {
   const $ = cheerio.load(indexHtml);
 
   let metaInfo = {
-    title: 'Apurva Chemicals - Home',
-    description: 'Welcome to Apurva Chemicals, your trusted source for high-quality chemical products.',
-    keywords: 'chemicals, apurva, home',
+    title: 'RND Technosoft - Home',
+    description: 'Welcome to RND Technosoft, your trusted source for high-quality chemical products.',
+    keywords: ' RND Technosoft, home',
     ogImage: '/path/to/default-image.jpg'
   };
 
