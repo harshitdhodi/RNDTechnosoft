@@ -5,10 +5,64 @@ import Card from "./Card";
 
 export default function GridLayout({ serviceData }) {
   const [isMounted, setIsMounted] = useState(false);
-  console.log("Raw serviceData:", serviceData);
+  const [cardConfigs, setCardConfigs] = useState([]);
 
   useEffect(() => {
     setIsMounted(true);
+
+    const updateCardConfigs = () => {
+      if (window.matchMedia("(min-width: 1025px)").matches) {
+        // Large screens
+        setCardConfigs([
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 2, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "start" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "start" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 2, justifySelf: "auto" },
+          { colSpan: 3, rowSpan: 1, justifySelf: "auto" },
+        ]);
+      } else if (window.matchMedia("(min-width: 1024px)").matches) {
+        // Medium screens
+        setCardConfigs([
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "start" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 2, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "start" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+        ]);
+      } else {
+        // Small screens
+        setCardConfigs([
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "start" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "start" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+        ]);
+      }
+    };
+
+    updateCardConfigs(); // Initial call
+    window.addEventListener("resize", updateCardConfigs); // Update on resize
+
+    return () => window.removeEventListener("resize", updateCardConfigs); // Cleanup
   }, []);
 
   if (!isMounted) {
@@ -58,20 +112,6 @@ export default function GridLayout({ serviceData }) {
 
   const services = sortedServices.slice(0, 11);
 
-  const cardConfigs = [
-    { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
-    { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
-    { colSpan: 1, rowSpan: 2, justifySelf: "auto" },
-    { colSpan: 1, rowSpan: 1, justifySelf: "start" },
-    { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
-    { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
-    { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
-    { colSpan: 1, rowSpan: 1, justifySelf: "start" },
-    { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
-    { colSpan: 1, rowSpan: 2, justifySelf: "auto" },
-    { colSpan: 3, rowSpan: 1, justifySelf: "auto" },
-  ];
-
   const cardColors = [
     "#396C89", "#6E777F", "#C59B34", "#60456E", "#EFC27B",
     "#482620", "#367275", "#0E4869", "#2E7469", "#396C89", "#114038"
@@ -93,7 +133,17 @@ export default function GridLayout({ serviceData }) {
   ];
 
   return (
-    <div className="grid w-full max-w-[82rem] mx-auto gap-4 grid-cols-4 grid-rows-[repeat(4,minmax(200px,auto))]">
+    <>
+    <div>
+        <h2 className="text-4xl md:text-5xl font-serif text-center font-medium">
+          Our <span className="text-yellow-500">Services</span>
+        </h2>
+        <h3 className="md:text-[23px] text-center text-gray-700 pb-10 mt-4">
+          Dedicated to Your Success
+        </h3>
+    </div>
+    <div className="sm:grid flex flex-col px-4 w-full overflow-hidden max-w-[82rem] mx-auto gap-4  xl:grid-cols-4 grid-rows-[repeat(4,minmax(200px,auto))]">
+    
       {services.map((service, index) => (
         <Card
           key={service._id}
@@ -103,16 +153,17 @@ export default function GridLayout({ serviceData }) {
           description={service.description ? 
             service.description.replace(/<\/?[^>]+(>|$)/g, "") : 
             `Service information for ${service.category}`}
-          className={`col-span-${cardConfigs[index].colSpan} row-span-${cardConfigs[index].rowSpan} justify-self-${cardConfigs[index].justifySelf}`}
-          colSpan={cardConfigs[index].colSpan}
-          rowSpan={cardConfigs[index].rowSpan}
+          className={`col-span-${cardConfigs[index]?.colSpan || 1} row-span-${cardConfigs[index]?.rowSpan || 1} justify-self-${cardConfigs[index]?.justifySelf || "auto"}`}
+          colSpan={cardConfigs[index]?.colSpan || 1}
+          rowSpan={cardConfigs[index]?.rowSpan || 1}
           imageUrl={service.photo ? `/api/logo/download/${service.photo}` : null}
-          imageClassName={imageClasses[index]} // <-- pass image class here
+          imageClassName={imageClasses[index]} // Pass image class here
           tag={service.tag || service.category}
           slug={service.slug}
           index={index}
         />
       ))}
     </div>
+    </>
   );
 }

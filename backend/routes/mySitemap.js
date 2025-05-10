@@ -9,8 +9,8 @@ const Service_Category = `${BASE_URL}api/services/getall`;
 const Package_Category = `${BASE_URL}api/packages/getAll`;
 const Industrial_Category = `${BASE_URL}api/industries/getAll`;
 const Blog = `${BASE_URL}api/news/getAllNews`
-const SITEMAP_API_URL = `${BASE_URL}api/sitemap/get`;
 const Portfolio_Category = `${BASE_URL}api/portfolio/getAll`
+const SITEMAP_API_URL = `${BASE_URL}api/sitemap/get`;
 // Directory to store sitemaps
 const PUBLIC_DIR = path.join(__dirname, "..", "public");
 
@@ -932,7 +932,7 @@ const generateMainSitemap = async () => {
         xmlContent += `    <loc>https://www.rndtechnosoft.com/sitemap1.xml</loc>\n`;
         xmlContent += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;
         xmlContent += `  </sitemap>\n`;
-  
+   
         xmlContent += `  <sitemap>\n`;
         xmlContent += `    <loc>https://www.rndtechnosoft.com/blog-sitemap.xml</loc>\n`;
         xmlContent += `    <lastmod>${new Date().toISOString()}</lastmod>\n`;

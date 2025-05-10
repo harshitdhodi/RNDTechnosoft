@@ -20,7 +20,7 @@ export default function WhatYouGet({ everyPlan }) {
   }
 
   return (
-    <div className='relative md:pt-56 pt-32 pb-10'>
+    <div className='relative  pt-32 pb-10'>
       <div className="relative md:pb-20">
         <div className="relative mx-auto px-6 z-10">
           <h2

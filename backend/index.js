@@ -6,10 +6,12 @@ const cron = require('node-cron');
 const { generateAllSitemaps } = require('./routes/mySitemap');
 const { exportAndBackupAllCollectionsmonthly } = require('./controller/Backup');
 const fs = require('fs').promises;
+
+const cookieParser = require('cookie-parser');
 require('dotenv').config();
-
+const generateMetaTags = require('./middleware/metaTagInfo');
 const app = express();
-
+app.use(cookieParser()); 
 // Middleware
 app.use(cors({ 
     origin: true,
@@ -23,9 +25,6 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 // Update your sitemap route to use fs.promises correctly
 app.get('/sitemap.xml', async (req, res) => {
     try {
-      // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'sitemap.xml');
-      
       try {
         // First try in dist directory
         await fs.access(filePath);
@@ -53,9 +52,6 @@ app.get('/sitemap.xml', async (req, res) => {
   // Update your sitemap route to use fs.promises correctly
 app.get('/sitemap1.xml', async (req, res) => {
     try {
-      // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'sitemap1.xml');
-      
       try {
         // First try in dist directory
         await fs.access(filePath);
@@ -82,9 +78,6 @@ app.get('/sitemap1.xml', async (req, res) => {
 
 app.get('/blog-sitemap.xml', async (req, res) => {
     try {
-      // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'blog-sitemap.xml');
-      
       try {
         // First try in dist directory
         await fs.access(filePath);
@@ -109,54 +102,234 @@ app.get('/blog-sitemap.xml', async (req, res) => {
     }
   });
 
-  
-// Consolidated Sitemap Route (Before API, Static, and Catch-All Routes)
-app.get('/:sitemapFile([\\w-]+\\.xml)', async (req, res) => {
-    const sitemapFile = req.params.sitemapFile;
-    console.log(`✅ Sitemap request received for: ${sitemapFile}`);
-
-    const allowedSitemaps = [
-        
-        'industrial-category-sitemap.xml',
-        'industrial-subcategory-sitemap.xml',
-        'package-category-sitemap.xml',
-        'package-subcategory-sitemap.xml',
-        'package-subsubcategory-sitemap.xml',
-        'portfolio-category-sitemap.xml',
-        'service-subcategories-sitemap.xml',
-        'service-subsubcategories-sitemap.xml',
-    ];
-
-    if (!allowedSitemaps.includes(sitemapFile)) {
-        console.warn(`⛔ Unauthorized sitemap request: ${sitemapFile}`);
-        return res.status(404).send('Sitemap not found');
-    }
-
-    try {
-        let filePath = path.join(__dirname, 'dist', sitemapFile);
-        console.log(`🔍 Trying to access: ${filePath}`);
-
+app.get('/industrial-category-sitemap.xml', async (req, res) => {
+    try {     
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'industrial-category-sitemap.xml');
         try {
-            await fs.access(filePath);
-        } catch (error) {
-            console.warn(`❌ Not found in dist/, trying public/: ${sitemapFile}`);
-            filePath = path.join(__dirname, 'public', sitemapFile);
-            try {
-                await fs.access(filePath);
-            } catch (err) {
-                console.error(`❌ Sitemap not found in either dist/ or public/: ${sitemapFile}`);
-                return res.status(404).send('Sitemap not found');
-            }
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
         }
-
-        const data = await fs.readFile(filePath);
-        res.set('Content-Type', 'application/xml');
-        res.send(data);
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
     } catch (err) {
-        console.error(`🚨 Error serving sitemap ${sitemapFile}:`, err);
-        res.status(500).send('Error serving sitemap');
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
     }
-});
+  });  
+
+app.get('/industrial-subcategory-sitemap.xml', async (req, res) => {
+    try {
+      // Look for sitemap in both possible locations
+      let filePath = path.join(__dirname, 'dist', 'industrial-subcategory-sitemap.xml');
+      
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'industrial-subcategory-sitemap.xml');
+        try {
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
+        }
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
+    } catch (err) {
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
+    }
+  }); 
+
+app.get('/package-category-sitemap.xml', async (req, res) => {
+    try {
+      // Look for sitemap in both possible locations
+      let filePath = path.join(__dirname, 'dist', 'package-category-sitemap.xml');
+      
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'package-category-sitemap.xml');
+        try {
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
+        }
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
+    } catch (err) {
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
+    }
+  });
+
+app.get('/package-subcategory-sitemap.xml', async (req, res) => {
+    try {
+      // Look for sitemap in both possible locations
+      let filePath = path.join(__dirname, 'dist', 'package-subcategory-sitemap.xml');
+      
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'package-subcategory-sitemap.xml');
+        try {
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
+        }
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
+    } catch (err) {
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
+    }
+  });
+
+app.get('/package-subsubcategory-sitemap.xml', async (req, res) => {
+    try {
+      // Look for sitemap in both possible locations
+      let filePath = path.join(__dirname, 'dist', 'package-subsubcategory-sitemap.xml');
+      
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'package-subsubcategory-sitemap.xml');
+        try {
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
+        }
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
+    } catch (err) {
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
+    }
+  });
+
+app.get('/portfolio-category-sitemap.xml', async (req, res) => {
+    try {
+      // Look for sitemap in both possible locations
+      let filePath = path.join(__dirname, 'dist', 'portfolio-category-sitemap.xml');
+      
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'portfolio-category-sitemap.xml');
+        try {
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
+        }
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
+    } catch (err) {
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
+    }
+  });
+
+app.get('/service-subcategories-sitemap.xml', async (req, res) => {
+    try {
+      // Look for sitemap in both possible locations
+      let filePath = path.join(__dirname, 'dist', 'service-subcategories-sitemap.xml');
+      
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'service-subcategories-sitemap.xml');
+        try {
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
+        }
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
+    } catch (err) {
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
+    }
+  });
+
+app.get('/service-subsubcategories-sitemap.xml', async (req, res) => {
+    try {
+      // Look for sitemap in both possible locations
+      let filePath = path.join(__dirname, 'dist', 'service-subsubcategories-sitemap.xml');
+      
+      try {
+        // First try in dist directory
+        await fs.access(filePath);
+      } catch (error) {
+        // If not found in dist, try in public directory
+        filePath = path.join(__dirname, 'public', 'service-subsubcategories-sitemap.xml');
+        try {
+          await fs.access(filePath);
+        } catch (err) {
+          console.error('Sitemap not found in either location:', err);
+          return res.status(404).send('Sitemap not found');
+        }
+      }
+      
+      // Read the file
+      const data = await fs.readFile(filePath);
+      res.set('Content-Type', 'application/xml');
+      res.send(data);
+    } catch (err) {
+      console.error('Error serving sitemap:', err);
+      return res.status(500).send('Error serving sitemap');
+    }
+  });  
 
 // Cron Job for Daily Sitemap Generation
 cron.schedule('0 0 * * *', async () => {
@@ -191,6 +364,7 @@ app.get('/api/generate-sitemaps', async (req, res) => {
     }
 });
 
+app.get('*', generateMetaTags);
 // Other API Routes
 app.use('/api/product', require('./routes/product'));
 app.use('/api/services', require('./routes/services'));
@@ -263,6 +437,7 @@ app.use('/api/cache', require('./routes/cache'));
 // Swagger Setup
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swaggerConfig');
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Static Files (After Sitemap and API Routes)
@@ -296,12 +471,14 @@ app.use((err, req, res, next) => {
 // Server Initialization
 async function startServer() {
     try {
-        await mongoose.connect(process.env.DATABASE_URI, {
-            serverSelectionTimeoutMS: 10000,
-            socketTimeoutMS: 60000,
-            maxPoolSize: 10,
-            minPoolSize: 2,
-        });
+         await mongoose.connect(process.env.DATABASE_URI, {
+         serverSelectionTimeoutMS: 10000,
+         socketTimeoutMS: 60000,
+         maxPoolSize: 10,
+         minPoolSize: 2,
+       
+        
+     });
         console.log('Connected to MongoDB');
         // generateAllSitemaps()
         const port = process.env.PORT || 3000;
