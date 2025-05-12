@@ -61,12 +61,13 @@ const generateMetaTags = async (req, res, next) => {
   const indexHtml = fs.readFileSync(indexPath, 'utf8');
   const $ = cheerio.load(indexHtml);
 
-  let metaInfo = {
-    title: 'Apurva Chemicals - Home',
-    description: 'Welcome to Apurva Chemicals, your trusted source for high-quality chemical products.',
-    keywords: 'chemicals, apurva, home',
-    ogImage: '/path/to/default-image.jpg'
-  };
+ let metaInfo = {
+  title: 'RND Technosoft - Custom Software Solutions for All Sectors',
+  description: 'RND Technosoft, founded in 2018, delivers tailored software solutions for startups, incubators, and enterprises across all sectors without discrimination.',
+  keywords: 'RND Technosoft, software development, custom solutions, startups, enterprise IT, technology services, IT company',
+  ogImage: '/path/to/rnd-technosoft-og-image.jpg'
+};
+
 
   const currentPath = req.path.replace(/^\/|\/$/g, '');
   const metaDatasets = await fetchAllMetaData();
