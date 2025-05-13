@@ -1031,34 +1031,34 @@ const generateMainSitemap = async () => {
 const generateAllSitemaps = async () => {
    
     await generatePackageSubCategorySitemap();
-//    await generatePackageCategorySitemap();
-//   await generateServiceCategorySitemap();
-//   await generateServiceSubCategorySitemap();
-//   await generateServiceSubSubCategorySitemap(); 
-// await generatePackageSubSubCategorySitemap();
-// await generateIndustrialCategorySitemap();
-// await generateIndustrialSubcategorySitemap();
-// await generateBlogSitemap();
-// await generatePortfolioCategorySitemap();
-// await generateMainSitemap();
-// await generateStaticPagesSitemap();
+   await generatePackageCategorySitemap();
+  await generateServiceCategorySitemap();
+  await generateServiceSubCategorySitemap();
+  await generateServiceSubSubCategorySitemap(); 
+await generatePackageSubSubCategorySitemap();
+await generateIndustrialCategorySitemap();
+await generateIndustrialSubcategorySitemap();
+await generateBlogSitemap();
+await generatePortfolioCategorySitemap();
+await generateMainSitemap();
+await generateStaticPagesSitemap();
 };
 
 
 // Add the new function to the exports
 module.exports = {
  generatePackageSubCategorySitemap,
-//   generateServiceCategorySitemap,
-//   generateServiceSubCategorySitemap,
-//   generateServiceSubSubCategorySitemap,
+  generateServiceCategorySitemap,
+  generateServiceSubCategorySitemap,
+  generateServiceSubSubCategorySitemap,
   generateAllSitemaps,
-//   generatePackageCategorySitemap, // Export the new function
-// generatePackageSubSubCategorySitemap,
-// generateIndustrialCategorySitemap,
-// generateIndustrialSubcategorySitemap,
-// generateBlogSitemap,
-// generatePortfolioCategorySitemap,
-// generateMainSitemap,
-// generateStaticPagesSitemap
+  generatePackageCategorySitemap, // Export the new function
+generatePackageSubSubCategorySitemap,
+generateIndustrialCategorySitemap,
+generateIndustrialSubcategorySitemap,
+generateBlogSitemap,
+generatePortfolioCategorySitemap,
+generateMainSitemap,
+generateStaticPagesSitemap
 };
 
