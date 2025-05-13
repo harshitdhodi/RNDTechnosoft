@@ -105,24 +105,16 @@ const generatePackageSubCategorySitemap = async () => {
         xmlContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
         packages.forEach((pkg, index) => {
-            const lastModified = pkg.lastmod; // Use lastmod directly from the data
+            const lastModified = pkg.lastmod; // Use lastmod from the data
             const subCategories = Array.isArray(pkg.subCategories) ? pkg.subCategories : [];
+            console.log(subCategories);
 
-            if (!pkg.slug || !lastModified) {
+            if (!lastModified) {
                 console.warn(`Skipping invalid package at index ${index}:`, pkg);
                 return;
             }
 
-            // Add package URL
-            const packageUrl = encodeURI(`${BASE_URL}${pkg.slug}`);
-            xmlContent += `  <url>\n`;
-            xmlContent += `    <loc>${packageUrl}</loc>\n`;
-            xmlContent += `    <lastmod>${new Date(lastModified).toISOString()}</lastmod>\n`;
-            xmlContent += `    <changefreq>${pkg.changeFreq || 'weekly'}</changefreq>\n`; // Use changeFreq from data or default to 'weekly'
-            xmlContent += `    <priority>${pkg.priority || 0.8}</priority>\n`; // Use priority from data or default to 0.8
-            xmlContent += `  </url>\n`;
-
-            // Add subcategory URLs
+            // Only process subcategory URLs (skip package/category URL)
             subCategories.forEach((subcat) => {
                 if (subcat.slug) {
                     const subcatUrl = encodeURI(`${BASE_URL}${subcat.slug}`); // Use subcat.url or construct from slug
@@ -1038,35 +1030,35 @@ const generateMainSitemap = async () => {
 // Generate all sitemaps
 const generateAllSitemaps = async () => {
    
-   await generatePackageCategorySitemap();
-  await generateServiceCategorySitemap();
-  await generateServiceSubCategorySitemap();
-  await generateServiceSubSubCategorySitemap(); 
-  await generatePackageSubCategorySitemap();
-await generatePackageSubSubCategorySitemap();
-await generateIndustrialCategorySitemap();
-await generateIndustrialSubcategorySitemap();
-await generateBlogSitemap();
-await generatePortfolioCategorySitemap();
-await generateMainSitemap();
-await generateStaticPagesSitemap();
+    await generatePackageSubCategorySitemap();
+//    await generatePackageCategorySitemap();
+//   await generateServiceCategorySitemap();
+//   await generateServiceSubCategorySitemap();
+//   await generateServiceSubSubCategorySitemap(); 
+// await generatePackageSubSubCategorySitemap();
+// await generateIndustrialCategorySitemap();
+// await generateIndustrialSubcategorySitemap();
+// await generateBlogSitemap();
+// await generatePortfolioCategorySitemap();
+// await generateMainSitemap();
+// await generateStaticPagesSitemap();
 };
 
 
 // Add the new function to the exports
 module.exports = {
-  generateServiceCategorySitemap,
-  generateServiceSubCategorySitemap,
-  generateServiceSubSubCategorySitemap,
+ generatePackageSubCategorySitemap,
+//   generateServiceCategorySitemap,
+//   generateServiceSubCategorySitemap,
+//   generateServiceSubSubCategorySitemap,
   generateAllSitemaps,
-  generatePackageCategorySitemap, // Export the new function
-generatePackageSubCategorySitemap,
-generatePackageSubSubCategorySitemap,
-generateIndustrialCategorySitemap,
-generateIndustrialSubcategorySitemap,
-generateBlogSitemap,
-generatePortfolioCategorySitemap,
-generateMainSitemap,
-generateStaticPagesSitemap
+//   generatePackageCategorySitemap, // Export the new function
+// generatePackageSubSubCategorySitemap,
+// generateIndustrialCategorySitemap,
+// generateIndustrialSubcategorySitemap,
+// generateBlogSitemap,
+// generatePortfolioCategorySitemap,
+// generateMainSitemap,
+// generateStaticPagesSitemap
 };
 
