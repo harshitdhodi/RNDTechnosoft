@@ -481,8 +481,6 @@ async function startServer() {
          socketTimeoutMS: 60000,
          maxPoolSize: 10,
          minPoolSize: 2,
-       
-        
      });
         console.log('Connected to MongoDB');
         // generateAllSitemaps()
