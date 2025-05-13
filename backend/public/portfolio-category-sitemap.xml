@@ -1,30 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/websites-portfolio</loc>
+    <lastmod>2025-05-12T18:30:01.149Z</lastmod>
+=======
     <loc>https://www.rndtechnosoft.com/websites-portfolio</loc>
     <lastmod>2024-09-28T07:12:56.689Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
     <changefreq>hourly</changefreq>
     <priority>1</priority>
   </url>
   <url>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/web-application</loc>
+    <lastmod>2025-05-12T18:30:01.148Z</lastmod>
+=======
     <loc>https://www.rndtechnosoft.com/web-application</loc>
     <lastmod>2024-11-08T10:20:59.342Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/ecommerce</loc>
-    <lastmod>2024-11-08T10:22:25.706Z</lastmod>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/ecommerce</loc>
+    <lastmod>2025-05-12T18:30:01.149Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/graphic-designing-potfolios</loc>
-    <lastmod>2024-10-09T06:51:31.136Z</lastmod>
+    <loc>http://localhost:3021/graphic-designing-potfolios</loc>
+    <lastmod>2025-05-12T18:30:01.151Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.98</priority>
   </url>
   <url>
+    <loc>http://localhost:3021/brochure-design</loc>
+    <lastmod>2025-05-12T18:30:01.151Z</lastmod>
+=======
+    <loc>https://www.rndtechnosoft.com/ecommerce</loc>
+    <lastmod>2024-11-08T10:22:25.706Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/ui-ux</loc>
+    <lastmod>2025-05-12T18:30:01.151Z</lastmod>
+=======
+    <loc>https://www.rndtechnosoft.com/graphic-designing-potfolios</loc>
+    <lastmod>2024-10-09T06:51:31.136Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
+    <changefreq>weekly</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/social-media</loc>
+    <lastmod>2025-05-12T18:30:01.153Z</lastmod>
+=======
     <loc>https://www.rndtechnosoft.com/brochure-design</loc>
     <lastmod>2024-10-19T04:14:42.813Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -39,12 +75,18 @@
   <url>
     <loc>https://www.rndtechnosoft.com/social-media</loc>
     <lastmod>2024-10-09T06:53:12.113Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
     <changefreq>undefined</changefreq>
     <priority>0.98</priority>
   </url>
   <url>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/website-social-media-template</loc>
+    <lastmod>2025-05-12T18:30:01.153Z</lastmod>
+=======
     <loc>https://www.rndtechnosoft.com/website-social-media-template</loc>
     <lastmod>2024-11-09T03:31:57.951Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
   </url>

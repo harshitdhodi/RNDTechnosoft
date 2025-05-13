@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/graphic-designing-packages</loc>
+    <lastmod>2025-05-12T18:30:00.777Z</lastmod>
+=======
     <loc>https://www.rndtechnosoft.com/graphic-designing-packages</loc>
     <lastmod>2024-10-23T02:48:35.780Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -123,12 +127,138 @@
   <url>
     <loc>https://www.rndtechnosoft.com/software-development-packages</loc>
     <lastmod>2024-11-09T06:51:21.017Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
+<<<<<<< HEAD
+    <loc>http://localhost:3021/graphic-designing-</loc>
+    <lastmod>2025-05-12T18:30:00.777Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/brand-development-packages</loc>
+    <lastmod>2025-05-12T18:30:00.786Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/brand-development</loc>
+    <lastmod>2025-05-12T18:30:00.786Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/video-production-packages</loc>
+    <lastmod>2025-05-12T18:30:00.792Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/video-production</loc>
+    <lastmod>2025-05-12T18:30:00.792Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/seo-packages</loc>
+    <lastmod>2025-05-12T18:30:00.798Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/seo-packages</loc>
+    <lastmod>2025-05-12T18:30:00.798Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/smm-packages</loc>
+    <lastmod>2025-05-12T18:30:00.817Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/smm-packages</loc>
+    <lastmod>2025-05-12T18:30:00.817Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/ppc-packages</loc>
+    <lastmod>2025-05-12T18:30:00.822Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/ppc-packages</loc>
+    <lastmod>2025-05-12T18:30:00.822Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/content-marketing-packages</loc>
+    <lastmod>2025-05-12T18:30:00.824Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/content-marketing</loc>
+    <lastmod>2025-05-12T18:30:00.824Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/uiux-packages</loc>
+    <lastmod>2025-05-12T18:30:00.826Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/ui/ux</loc>
+    <lastmod>2025-05-12T18:30:00.826Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/web-development-packages</loc>
+    <lastmod>2025-05-12T18:30:00.832Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/web-development</loc>
+    <lastmod>2025-05-12T18:30:00.832Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/mobile-app-development-packages</loc>
+    <lastmod>2025-05-12T18:30:00.833Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/mobile-app-development</loc>
+    <lastmod>2025-05-12T18:30:00.833Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/software-development-packages</loc>
+    <lastmod>2025-05-12T18:30:00.834Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://localhost:3021/software-development</loc>
+    <lastmod>2025-05-12T18:30:00.834Z</lastmod>
+=======
     <loc>https://www.rndtechnosoft.com/software-development</loc>
     <lastmod>2024-11-09T06:51:21.017Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
