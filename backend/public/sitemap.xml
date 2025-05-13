@@ -2,6 +2,7 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://www.rndtechnosoft.com/sitemap1.xml</loc>
+<<<<<<< HEAD
     <lastmod>2025-05-12T18:30:01.171Z</lastmod>
   </sitemap>
   <sitemap>
@@ -39,5 +40,44 @@
   <sitemap>
     <loc>https://www.rndtechnosoft.com/service-subsubcategories-sitemap.xml</loc>
     <lastmod>2025-05-12T18:30:01.171Z</lastmod>
+=======
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/blog-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/industrial-category-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/industrial-subcategory-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/package-category-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/package-subcategory-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/package-subsubcategory-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/portfolio-category-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/service-subcategories-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.rndtechnosoft.com/service-subsubcategories-sitemap.xml</loc>
+    <lastmod>2025-05-13T10:11:45.956Z</lastmod>
+>>>>>>> e0fd48302937d20593dafbd3899cef3d07b97317
   </sitemap>
 </sitemapindex>

@@ -1,22 +1,16 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { Edit,  //Edit
- Trash2,  //Trash2
- ArrowUp,  //ArrowUp
- ArrowDown,  //ArrowDown
- Plus  //Plus
-} from 'lucide-react';
+import { Edit, Trash2, ArrowUp, ArrowDown, Plus } from 'lucide-react';
 import { BsArrowReturnRight } from "react-icons/bs";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 
-
 const CategoryTable = () => {
   const [categories, setCategories] = useState([]);
   const [loadings, setLoading] = useState(true);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const columns = useMemo(
     () => [
@@ -79,16 +73,28 @@ const CategoryTable = () => {
       const categoriesWithAutoIncrementId = response.data.map((category, index) => ({
         ...category,
         autoIncrementId: index + 1,
+        subCategories: category.subCategories?.map(sub => ({
+          ...sub,
+          _id: sub._id || sub.id, // Normalize _id
+        })) || [],
+        subSubCategory: category.subSubCategory?.map(subSub => ({
+          ...subSub,
+          _id: subSub._id || subSub.id, // Normalize _id
+        })) || [],
       }));
       setCategories(categoriesWithAutoIncrementId);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching categories:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const deleteCategory = async ({ id, categoryId, subCategoryId, subSubCategoryId }) => {
+    if (!id && !categoryId && !subCategoryId && !subSubCategoryId) {
+      alert("Invalid category ID");
+      return;
+    }
     let url = '';
     if (categoryId && subCategoryId && subSubCategoryId) {
       url = `/api/industries/deletesubsubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${subSubCategoryId}`;
@@ -102,7 +108,8 @@ const CategoryTable = () => {
       await axios.delete(url, { withCredentials: true });
       fetchCategories();
     } catch (error) {
-      console.error(error);
+      console.error("Error deleting category:", error);
+      alert("Failed to delete category");
     }
   };
 
@@ -113,7 +120,7 @@ const CategoryTable = () => {
   return (
     <div className="p-4 overflow-x-auto">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Categories</h1>
+        <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">Categories</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
           <Link to="/IndustriesCategory/CreateIndustriesCategory"><Plus size={15} /></Link>
         </button>
@@ -121,108 +128,140 @@ const CategoryTable = () => {
       {loadings ? (
         <div className="flex justify-center"><UseAnimations animation={loading} size={56} /></div>
       ) : (
-        <>{categories.length == 0 ? <div className="flex justify-center items-center"><iframe className="w-96 h-96" src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"></iframe></div>
-          : <table className="w-full mt-4 border-collapse" {...getTableProps()}>
-            <thead className="bg-slate-700 hover:bg-slate-800 text-white">
-              {headerGroups.map((headerGroup) => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      className="py-2 px-4 border-b border-gray-300 cursor-pointer uppercase font-serif"
-                    >
-                      <div className="flex items-center gap-2 ">
-                        <span>{column.render("Header")}</span>
-                        {column.canSort && (
-                          <span className="ml-1">
-                            {column.isSorted ? (
-                              column.isSortedDesc ? (
-                                <ArrowDown />
+        <>
+          {categories.length === 0 ? (
+            <div className="flex justify-center items-center">
+              <iframe className="w-96 h-96" src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"></iframe>
+            </div>
+          ) : (
+            <table className="w-full mt-4 border-collapse" {...getTableProps()}>
+              <thead className="bg-slate-700 hover:bg-slate-800 text-white">
+                {headerGroups.map((headerGroup) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
+                      <th
+                        {...column.getHeaderProps(column.getSortByToggleProps())}
+                        className="py-2 px-4 border-b border-gray-300 cursor-pointer uppercase font-serif"
+                      >
+                        <div className="flex items-center gap-2">
+                          <span>{column.render("Header")}</span>
+                          {column.canSort && (
+                            <span className="ml-1">
+                              {column.isSorted ? (
+                                column.isSortedDesc ? (
+                                  <ArrowDown />
+                                ) : (
+                                  <ArrowUp />
+                                )
                               ) : (
-                                <ArrowUp />
-                              )
-                            ) : (
-                              <ArrowDown className="text-gray-400" />
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
-                prepareRow(row);
-                return (
-                  <React.Fragment key={row.id}>
-                    <tr {...row.getRowProps()} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
-                      {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()} className="py-2 px-4 ">
-                          {cell.render("Cell")}
-                        </td>
-                      ))}
-                    </tr>
-                    {row.original.subCategories && row.original.subCategories.map((subcategory, subIndex) => (
-                      <React.Fragment key={subIndex}>
-                        <tr className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
-                          <td></td>
-                          <td className="py-2 px-8 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory._id}`)}><BsArrowReturnRight />{subcategory.photo && <img src={`/api/logo/download/${subcategory.photo}`} alt={subcategory.alt} className="w-6 h-6" />}<span>{subcategory.category}</span></td>
-                          <td className="py-2 px-4">
-                            <div className="flex gap-4">
-                              <button className="text-blue-500 hover:text-blue-700 transition">
-                                <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory._id}`}>
-                                  <Edit />
-                                </Link>
-                              </button>
-                              <button
-                                className="text-red-500 hover:text-red-700 transition"
-                                onClick={() => deleteCategory({
-                                  categoryId: row.original._id,
-                                  subCategoryId: subcategory._id
-                                })}
-                              >
-                                <Trash2 />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                        {subcategory.subSubCategory && subcategory.subSubCategory.map((subSubcategory, subSubIndex) => (
-                          <tr key={subSubIndex} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
-                            <td></td>
-                            <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subSubcategory._id}`)} ><BsArrowReturnRight />{subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}<span>{subSubcategory.category}</span></td>
-                            <td className="py-2 px-4">
-                              <div className="flex gap-4">
-                                <button className="text-blue-500 hover:text-blue-700 transition">
-                                  <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory._id}/${subSubcategory._id}`}>
-                                    <Edit />
-                                  </Link>
-                                </button>
-                                <button
-                                  className="text-red-500 hover:text-red-700 transition"
-                                  onClick={() => deleteCategory({
-                                    categoryId: row.original._id,
-                                    subCategoryId: subcategory._id,
-                                    subSubCategoryId: subSubcategory._id
-                                  })}
-                                >
-                                  <Trash2 />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        ))}
-                      </React.Fragment>
+                                <ArrowDown className="text-gray-400" />
+                              )}
+                            </span>
+                          )}
+                        </div>
+                      </th>
                     ))}
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </table>
-        }
+                  </tr>
+                ))}
+              </thead>
+              <tbody {...getTableBodyProps()}>
+                {rows.map((row) => {
+                  prepareRow(row);
+                  return (
+                    <React.Fragment key={row.id}>
+                      <tr {...row.getRowProps()} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
+                        {row.cells.map((cell) => (
+                          <td {...cell.getCellProps()} className="py-2 px-4">
+                            {cell.render("Cell")}
+                          </td>
+                        ))}
+                      </tr>
+                      {row.original.subCategories && row.original.subCategories.map((subcategory, subIndex) => {
+                        console.log("Subcategory:", subcategory); // Log subcategory for debugging
+                        return (
+                          <React.Fragment key={subIndex}>
+                            <tr className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
+                              <td></td>
+                              <td className="py-2 px-8 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}`)}>
+                                <BsArrowReturnRight />
+                                {subcategory.photo && <img src={`/api/logo/download/${subcategory.photo}`} alt={subcategory.alt} className="w-6 h-6" />}
+                                <span>{subcategory.category}</span>
+                              </td>
+                              <td className="py-2 px-4">
+                                <div className="flex gap-4">
+                                  <button className="text-blue-500 hover:text-blue-700 transition">
+                                    <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}`}>
+                                      <Edit />
+                                    </Link>
+                                  </button>
+                                  <button
+                                    className="text-red-500 hover:text-red-700 transition"
+                                    onClick={() => {
+                                      if (!subcategory.slug) {
+                                        console.error("Subcategory ID is undefined:", subcategory);
+                                        alert("Cannot delete: Subcategory ID is missing");
+                                        return;
+                                      }
+                                      deleteCategory({
+                                        categoryId: row.original._id,
+                                        subCategoryId: subcategory.slug
+                                      });
+                                    }}
+                                  >
+                                    <Trash2 />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                            {subcategory.subSubCategory && subcategory.subSubCategory.map((subSubcategory, subSubIndex) => {
+                              console.log("SubSubcategory:", subSubcategory); // Log sub-subcategory for debugging
+                              return (
+                                <tr key={subSubIndex} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
+                                  <td></td>
+                                  <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}/${subSubcategory._id}`)}>
+                                    <BsArrowReturnRight />
+                                    {subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}
+                                    <span>{subSubcategory.category}</span>
+                                  </td>
+                                  <td className="py-2 px-4">
+                                    <div className="flex gap-4">
+                                      <button className="text-blue-500 hover:text-blue-700 transition">
+                                        <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}/${subSubcategory._id}`}>
+                                          <Edit />
+                                        </Link>
+                                      </button>
+                                      <button
+                                        className="text-red-500 hover:text-red-700 transition"
+                                        onClick={() => {
+                                          if (!subSubcategory._id) {
+                                            console.error("SubSubcategory ID is undefined:", subSubcategory);
+                                            alert("Cannot delete: SubSubcategory ID is missing");
+                                            return;
+                                          }
+                                          deleteCategory({
+                                            categoryId: row.original._id,
+                                            subCategoryId: subcategory.slug,
+                                            subSubCategoryId: subSubcategory._id
+                                          });
+                                        }}
+                                      >
+                                        <Trash2 />
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </React.Fragment>
+                        );
+                      })}
+                    </React.Fragment>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
         </>
-
       )}
     </div>
   );
