@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const Sitemap = require("../model/sitemap");
-
 // Base configuration
 const BASE_URL = "https://www.rndtechnosoft.com/";
 const Service_Category = `${BASE_URL}api/services/getall`;
