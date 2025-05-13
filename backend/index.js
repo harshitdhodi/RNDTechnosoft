@@ -484,7 +484,7 @@ async function startServer() {
         
      });
         console.log('Connected to MongoDB');
-        generateAllSitemaps()
+        // generateAllSitemaps()
         const port = process.env.PORT || 3000;
         app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
