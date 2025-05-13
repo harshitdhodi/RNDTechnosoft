@@ -290,14 +290,15 @@ const updateCategory = async (req, res) => {
 };
 
 const updateSubCategory = async (req, res) => {
+  // Get IDs from query params
   const { categoryId, subCategoryId } = req.query;
 
   const {
     category,
     tag,
     description,
-    alt,
     status,
+    alt,
     imgtitle,
     slug,
     metatitle,
@@ -312,48 +313,56 @@ const updateSubCategory = async (req, res) => {
     changeFreq,
   } = req.body;
 
-  let photo = req.body.photo;
-
+  // Check for photo file
+  let photo;
   if (req.file) {
-    photo = req.file.filename; // Use uploaded file's filename
+    photo = req.file.filename;
+  }
+
+  // Prepare update object
+  const updateData = {
+    category,
+    tag,
+    description,
+    status,
+    alt,
+    imgtitle,
+    slug,
+    metatitle,
+    metadescription,
+    metakeywords,
+    metacanonical, 
+    metalanguage,
+    metaschema,
+    otherMeta,
+    url,
+    changeFreq,
+  };
+
+  // Only set photo if it exists
+  if (photo) {
+    updateData.photo = photo;
+  }
+
+  // Only set priority if it's a number
+  if (typeof priority === "number") {
+    updateData.priority = priority;
   }
 
   try {
-    const categoryDoc = await ServiceCategory.findOne({ slug: categoryId });
-    if (!categoryDoc) {
-      return res.status(404).json({ message: "Category not found" });
+    const updatedCategory = await ServiceCategory.findOneAndUpdate(
+      { slug: categoryId, "subCategories.slug": subCategoryId },
+      { $set: { "subCategories.$": updateData } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({ message: "Category or subcategory not found" });
     }
 
-    const subCategory = categoryDoc.subCategories.find(sub => sub.slug === subCategoryId);
-    if (!subCategory) {
-      return res.status(404).json({ message: "Subcategory not found" });
-    }
-
-    // Update subcategory fields
-    subCategory.category = category || subCategory.category;
-    subCategory.tag = tag || subCategory.tag;
-    subCategory.description = description || subCategory.description;
-    subCategory.status = status || subCategory.status;
-    subCategory.photo = photo || subCategory.photo; // Only update if provided
-    subCategory.alt = alt || subCategory.alt;
-    subCategory.imgtitle = imgtitle || subCategory.imgtitle;
-    subCategory.slug = slug || subCategory.slug;
-    subCategory.metatitle = metatitle || subCategory.metatitle;
-    subCategory.metadescription = metadescription || subCategory.metadescription;
-    subCategory.metakeywords = metakeywords || subCategory.metakeywords;
-    subCategory.metacanonical = metacanonical || subCategory.metacanonical;
-    subCategory.metalanguage = metalanguage || subCategory.metalanguage;
-    subCategory.metaschema = metaschema || subCategory.metaschema;
-    subCategory.otherMeta = otherMeta || subCategory.otherMeta;
-    subCategory.url = url || subCategory.url;
-    subCategory.priority = priority || subCategory.priority;
-    subCategory.changeFreq = changeFreq || subCategory.changeFreq;
-
-    await categoryDoc.save();
-
-    res.status(200).json(categoryDoc);
+    res.status(200).json(updatedCategory);
   } catch (error) {
-    console.error("Error updating subcategory:", error);
+    console.log(error);
     res.status(500).json({ message: "Server error", error });
   }
 };

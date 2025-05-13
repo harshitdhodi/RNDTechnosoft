@@ -158,36 +158,42 @@ const updateCategory = async (req, res) => {
 
 
 const updateSubCategory = async (req, res) => {
-  // Update category
-  const { categoryId, subCategoryId } = req.query;
- 
+  const { categoryId, subCategorySlug } = req.query; // Now uses slug instead of ID
+  const {
+    category, alt, status, imgtitle, slug,
+    metatitle, metadescription, metakeywords,
+    metacanonical, metalanguage, metaschema,
+    otherMeta, url, priority, changeFreq
+  } = req.body;
 
-  const { category,alt,status,imgtitle,slug, metatitle, metadescription, metakeywords, metacanonical, metalanguage, metaschema, otherMeta, url, priority, changeFreq  } = req.body;
-  let photo = req.body.photo; 
-
+  let photo = req.body.photo;
   if (req.file) {
-    photo = req.file.filename; 
+    photo = req.file.filename;
   }
 
   try {
+    // 1. Find the parent category
     const categoryDoc = await IndustriesCategory.findById(categoryId);
     if (!categoryDoc) {
       return res.status(404).json({ message: 'Category not found' });
     }
 
-    const subCategory = categoryDoc.subCategories.id(subCategoryId);
+    // 2. Find the subcategory by slug (instead of _id)
+    const subCategory = categoryDoc.subCategories.find(
+      (subCat) => subCat.slug === subCategorySlug
+    );
+
     if (!subCategory) {
       return res.status(404).json({ message: 'Subcategory not found' });
     }
- 
 
+    // 3. Update the subcategory fields
     subCategory.category = category || subCategory.category;
     subCategory.status = status || subCategory.status;
-
     subCategory.photo = photo || subCategory.photo;
     subCategory.alt = alt || subCategory.alt;
     subCategory.imgtitle = imgtitle || subCategory.imgtitle;
-    subCategory.slug = slug || subCategory.slug;
+    subCategory.slug = slug || subCategory.slug; // Updates slug if provided
     subCategory.metatitle = metatitle || subCategory.metatitle;
     subCategory.metadescription = metadescription || subCategory.metadescription;
     subCategory.metakeywords = metakeywords || subCategory.metakeywords;
@@ -199,11 +205,8 @@ const updateSubCategory = async (req, res) => {
     subCategory.priority = priority || subCategory.priority;
     subCategory.changeFreq = changeFreq || subCategory.changeFreq;
 
+    // 4. Save the parent document
     await categoryDoc.save();
-
-    if (!categoryDoc) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
 
     res.status(200).json(categoryDoc);
   } catch (error) {
@@ -388,14 +391,13 @@ const deletesubsubcategory = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await IndustriesCategory.find();
-
+    const categories = await IndustriesCategory.find()
+      .select('+subCategories +subCategories.subSubCategory'); // Force-include
     res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
-}
-
+};
 const getSpecificCategory = async (req, res) => {
   try {
     const { categoryId } = req.query;
@@ -411,21 +413,30 @@ const getSpecificCategory = async (req, res) => {
 }
 
 const getSpecificSubcategory = async (req, res) => {
-  const { categoryId, subCategoryId } = req.query;
+  const { categoryId, subCategoryId } = req.query; // Now expects `subCategorySlug` instead of `subCategoryId`
+  console.log(subCategoryId)
   try {
+    // 1. Find the parent category
     const category = await IndustriesCategory.findById(categoryId);
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
     }
-    const subCategory = category.subCategories.id(subCategoryId);
+
+    // 2. Find the subcategory by slug (instead of _id)
+    const subCategory = category.subCategories.find(
+      (subCat) => subCat.slug === subCategoryId
+    );
+
     if (!subCategory) {
       return res.status(404).json({ message: 'Subcategory not found' });
     }
+
+    // 3. Return the matched subcategory
     res.status(200).json(subCategory);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error });
   }
-}
+};
 
 const getSpecificSubSubcategory = async (req, res) => {
   const { categoryId, subCategoryId, subSubCategoryId } = req.query;

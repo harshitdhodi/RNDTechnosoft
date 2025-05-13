@@ -21,8 +21,6 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-// Update your sitemap route to use fs.promises correctly
 app.get('/sitemap.xml', async (req, res) => {
     try {
       try {
@@ -48,6 +46,8 @@ app.get('/sitemap.xml', async (req, res) => {
       return res.status(500).send('Error serving sitemap');
     }
   });
+
+// Update your sitemap route to use fs.promises correctly
 
   // Update your sitemap route to use fs.promises correctly
 app.get('/sitemap1.xml', async (req, res) => {
@@ -331,6 +331,7 @@ app.get('/service-subsubcategories-sitemap.xml', async (req, res) => {
     }
   });  
 
+app.get('*', generateMetaTags);
 // Cron Job for Daily Sitemap Generation
 cron.schedule('0 0 * * *', async () => {
     try {
@@ -364,7 +365,7 @@ app.get('/api/generate-sitemaps', async (req, res) => {
     }
 });
 
-app.get('*', generateMetaTags);
+
 // Other API Routes
 app.use('/api/product', require('./routes/product'));
 app.use('/api/services', require('./routes/services'));
@@ -397,6 +398,7 @@ app.use('/api/globalpresence', require('./routes/globalpresence'));
 app.use('/api/whatsappsettings', require('./routes/whatsappsettings'));
 app.use('/api/googlesettings', require('./routes/googlesettings'));
 app.use('/api/menulisting', require('./routes/menulisting'));
+app.use('/api/navbar', require('./routes/NavData'));
 app.use('/api/infrastructure', require('./routes/infrastructure'));
 app.use('/api/qualitycontrol', require('./routes/qualitycontrol'));
 app.use('/api/sitemap', require('./routes/sitemap'));
@@ -433,6 +435,8 @@ app.use('/api/allData', require('./combineApi/combineRoute'));
 app.use('/api/allData2', require('./combineApi/combineRoute2'));
 app.use('/api/jobApplication', require('./routes/jobApplication'));
 app.use('/api/cache', require('./routes/cache'));
+app.use('/api/staticMeta', require('./routes/staticMeta'));
+
 
 // Swagger Setup
 const swaggerUi = require('swagger-ui-express');
@@ -480,7 +484,7 @@ async function startServer() {
         
      });
         console.log('Connected to MongoDB');
-        // generateAllSitemaps()
+        generateAllSitemaps()
         const port = process.env.PORT || 3000;
         app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
