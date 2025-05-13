@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://localhost:3021/travel-marketing</loc>
-    <lastmod>2025-05-10T07:01:42.666Z</lastmod>
+    <loc>http://localhost:3021/chemical-marketing</loc>
+    <lastmod>2025-05-12T18:30:00.953Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://localhost:3021/chemical-marketing</loc>
-    <lastmod>2025-05-10T07:01:42.667Z</lastmod>
+    <loc>http://localhost:3021/travel-marketing</loc>
+    <lastmod>2025-05-12T18:30:00.960Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
