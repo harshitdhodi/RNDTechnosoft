@@ -124,31 +124,44 @@ export default function HowRndHelp() {
         </div>
       </div>
 
-      {/* Cards grid */}
-      <div
-        ref={fadeInContainerRef}
-        className="grid lg:grid-cols-2 justify-center items-center gap-4 w-[80%] mx-auto mt-12 pb-20 my-20"
-      >
-        {cards.map((card, index) => (
-          <div key={index} className="flex flex-col">
-            <div className={`bg-white text-gray-900 p-6 md:p-12 rounded-3xl shadow-lg transition-transform duration-300 w-full h-full ${isLargeScreen ? 'fade-in' : ''}`}>
-              <img src={`/api/icon/download/${card.icon}`} alt={card.title} className="h-12 w-12 mb-4" />
-              <h3 className="text-xl md:text-3xl font-bold mb-4">{card.title}</h3>
-              <div>
-                {card.questionsAndAnswers.map((feature, i) => (
-                  <div key={i} className="flex flex-col gap-3 mb-2">
-                    <div className="flex items-center gap-2 justify-start">
-                      <FaCheckCircle className="text-xl" />
-                      <span className="text-lg md:text-xl font-bold" dangerouslySetInnerHTML={{ __html: feature.question }}></span>
-                    </div>
-                    <span className="pl-6" dangerouslySetInnerHTML={{ __html: feature.answer }}></span>
-                  </div>
-                ))}
-              </div>
+
+{/* Cards grid */}
+<div
+  ref={fadeInContainerRef}
+  className="grid lg:grid-cols-2 justify-center items-center gap-6 w-[90%] mx-auto mt-12 pb-20 my-20"
+>
+  {cards.map((card, index) => (
+    <div
+      key={index}
+      className={`flex flex-col bg-white text-gray-900 p-6 md:p-8 rounded-3xl shadow-lg transition-transform duration-300 w-full h-full ${isLargeScreen ? 'fade-in' : ''}`}
+      style={{ minHeight: '500px', maxHeight: '650px' }} // Ensures consistent height
+    >
+      <img
+        src={`/api/icon/download/${card.icon}`}
+        alt={card.title}
+        className="h-12 w-12 mb-4 mx-auto"
+      />
+      <h3 className="text-xl md:text-2xl font-bold mb-4 text-center">{card.title}</h3>
+      <div className="flex flex-col gap-3">
+        {card.questionsAndAnswers.map((feature, i) => (
+          <div key={i} className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 justify-start">
+              <FaCheckCircle className="text-xl text-green-500" />
+              <span
+                className="text-lg md:text-xl font-bold"
+                dangerouslySetInnerHTML={{ __html: feature.question }}
+              ></span>
             </div>
+            <span
+              className="pl-6 text-sm md:text-base"
+              dangerouslySetInnerHTML={{ __html: feature.answer }}
+            ></span>
           </div>
         ))}
       </div>
+    </div>
+  ))}
+</div>
 
       {/* Bottom SVG */}
       <div className="absolute inset-x-0 bottom-0">
