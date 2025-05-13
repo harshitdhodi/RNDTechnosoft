@@ -165,8 +165,11 @@ export default function Sidebar() {
     {
       title: "SEO", icon: <BarChart3 size={20} />, submenu: [
         { title: "Sitemap Generator", icon: <Map size={20} />, path: "/sitemap" },
-        { title: "Meta Tags Settings", icon: <Code size={20} />, path: "/metadetails" },
+        // { title: "Meta Tags Settings", icon: <Code size={20} />, path: "/metadetails" },
+        { title: "Static Page Meta", icon: <Code size={20} />, path: "/meta-table" },
         { title: "Google Tag Manager", icon: <Globe size={20} />, path: "/googleSettings" },
+         { title: "Menu List", icon: <Code size={20} />, path: "/navbar-data" },
+        
         { title: "Inquiries", icon: <Phone size={20} />, path: "/Inquiry" },
       ]
     },

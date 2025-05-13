@@ -206,6 +206,12 @@ import PremiumTemplate from "./adminComponent/Pages/package/PremiumTemplate";
 import GetInTouchCard from "./adminComponent/Pages/package/GetInTouch";
 import WeAreExpert from "./adminComponent/Pages/serviceComp/WeAreExpert";
 import WhyPartnerUs from "./adminComponent/Pages/serviceComp/WhyPartnerUs";
+import StaticMetaForm from "./components/MetaInfo/MetaInfoForm";
+import MetaList from "./components/MetaInfo/MetaList";
+import MenuListingTable from "./adminComponent/Pages/Menulisting";
+import NavbarDataTable from "./components/MetaInfo/NavBarData";
+import AddNavbarData from "./components/MetaInfo/AddNavbar";
+import EditNavbar from "./components/MetaInfo/EditNavbarData";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -320,7 +326,16 @@ function App() {
                    <Route path="/why-partner-us" element={<WhyPartnerUs />} />
                     <Route path="/ServiceCategory" element={<ServiceCategory />} />
                     <Route path="/we-are-expert" element={<WeAreExpert />} />
-                    
+
+
+                    <Route path="/meta-form" element={<StaticMetaForm />} />
+                     <Route path="/meta/edit-meta-form/:id" element={<StaticMetaForm />} />
+                     <Route path="/meta-table" element={<MetaList />} />
+                     <Route path="/navbar-data" element={<NavbarDataTable />} />
+                     <Route path="/add-navbar-data" element={<AddNavbarData />} />
+                     <Route path="/edit-navbar-data/:id" element={<EditNavbar />} />
+                                                       
+                   
                     <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
                     <Route path="/ServiceCategory/editServiceCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditServiceCategory />} />
                     <Route path="/PackageCategory" element={<PackageCategory />} />

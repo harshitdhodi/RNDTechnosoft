@@ -5,6 +5,7 @@ import "react-quill/dist/quill.snow.css";
 import { FaStarOfLife } from "react-icons/fa6";
 import { X } from "lucide-react";
 import axios from "axios";
+import QuoteButton from "../../pages/GetInTouchButton";
 
 const AutocompleteInput = ({ 
   value, 
@@ -186,12 +187,13 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
         name="service"
       />
 
-      <AutocompleteInput
+      <input
         value={formData.budget}
         onChange={handleInputChange}
         suggestions={budgetOptions}
         placeholder="Your Monthly Budget(INR)"
         name="budget"
+         className="w-full mb-4 px-3 py-1 rounded-lg bg-white/5 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-yellow-400 transition-colors duration-300"
       />
 
       <button
@@ -344,15 +346,24 @@ export default function HeroSection() {
             value={heroSection.heading}
             modules={{ toolbar: false }}
             theme="bubble"
-            className="quill-content"
+            className="quill-content text-white"
           />
- <Link to="/contact">
-        <button
-           className=" px-8 mt-3 py-2 mb-10 bg-gradient-to-r from-yellow-300 to-yellow-500 text-black font-semibold rounded-full hover:from-yellow-400 hover:to-yellow-500 transform hover:scale-105 transition-all duration-300 shadow-lg "
-         >
-           Reaquest Proposal
-         </button>
-        </Link>
+
+ <QuoteButton/>
+
+{isModalOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="bg-white p-8 rounded-lg shadow-lg">
+      <button
+        onClick={() => setIsModalOpen(false)}
+        className="absolute top-2 right-2 text-black font-semibold"
+      >
+        Close
+      </button>
+      <QuoteModel />
+    </div>
+  </div>
+)}
           <button
             onClick={() => setIsModalOpen(true)}
             className="md:hidden px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black font-semibold rounded-lg hover:from-yellow-500 hover:to-yellow-600 transform hover:scale-105 transition-all duration-300 shadow-lg w-full"
