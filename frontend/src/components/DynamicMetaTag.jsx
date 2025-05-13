@@ -4,164 +4,287 @@ import { Helmet } from "react-helmet";
 import { useLocation } from "react-router-dom";
 
 const DynamicMetaTags = () => {
-    const [metaData, setMetaData] = useState({});
+    const [metaTitle, setMetaTitle] = useState("RND Technosoft - Home");
+    const [metaDescription, setMetaDescription] = useState("Welcome to RND Technosoft, your trusted source for high-quality solutions.");
+    const [metaKeywords, setMetaKeywords] = useState("RND Technosoft, home");
+    const [ogImage, setOgImage] = useState("/path/to/default-image.jpg");
     const [googleSettings, setGoogleSettings] = useState({});
-    const [favicon, setFavicon] = useState(""); // State for favicon
+    const [favicon, setFavicon] = useState("");
     const location = useLocation();
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchMetaData = async () => {
             try {
+                let currentPath = location.pathname.replace(/^\/|\/$/g, '').toLowerCase();
+                console.log('Processed currentPath:', currentPath);
+
+                // Fetch all data in parallel
                 const [
-                    dataResponse,
-                    productResponse,
-                    productCategoryResponse,
-                    newsResponse,
-                    newsCategoryResponse,
+                    Service_Category,
+                    Package_Category,
+                    Industrial_Category,
+                    Portfolio_Category,
+                    Static_Meta,
+                    Google_Settings,
+                    Favicon
                 ] = await Promise.all([
-                    axios.get(`/api/sitemap/fetchSitemaps`, { withCredentials: true }),
-                    axios.get(`/api/product/fetchUrlmeta`, { withCredentials: true }),
-                    axios.get(`/api/product/fetchCategoryUrlmeta`, { withCredentials: true }),
-                    axios.get(`/api/news/fetchUrlmeta`, { withCredentials: true }),
-                    axios.get(`/api/news/fetchCategoryUrlmeta`, { withCredentials: true }),
+                    axios.get(`/api/services/getall`, { withCredentials: true }).catch(() => ({ data: [] })),
+                    axios.get(`/api/packages/getAll`, { withCredentials: true }).catch(() => ({ data: [] })),
+                    axios.get(`/api/industries/getAll`, { withCredentials: true }).catch(() => ({ data: [] })),
+                    axios.get(`/api/portfolio/getAll`, { withCredentials: true }).catch(() => ({ data: [] })),
+                    axios.get(`/api/staticMeta/get-meta`, { withCredentials: true }).catch(() => ({ data: { data: [] } })),
+                    axios.get(`/api/googlesettings/getGoogleSettings`, { withCredentials: true }).catch(() => ({ data: {} })),
+                    axios.get(`/api/logo/getfavicon`, { withCredentials: true }).catch(() => ({ data: null }))
                 ]);
 
-                const allResponses = [
-                    ...(dataResponse?.data || []),
-                    ...(productResponse?.data || []),
-                    ...(productCategoryResponse?.data || []),
-                    ...(newsResponse?.data || []),
-                    ...(newsCategoryResponse?.data || []),
+                // Check service category data
+                const serviceData = Service_Category.data.find(item => item.slug?.toLowerCase() === currentPath);
+                if (serviceData) {
+                    setMetaTitle(serviceData.metatitle || "Professional Services | RND Technosoft");
+                    setMetaDescription(serviceData.metadescription || "Discover RND Technosoft's services solutions for your business.");
+                    setMetaKeywords(serviceData.metakeywords || "services, RND Technosoft");
+                    if (serviceData.photo && serviceData.photo.length > 0) {
+                        setOgImage(`/uploads/${serviceData.photo}`);
+                    }
+                    return;
+                }
+
+                // Check package category data
+                const packageData = Package_Category.data.find(item => item.slug?.toLowerCase() === currentPath);
+                if (packageData) {
+                    setMetaTitle(packageData.metatitle || "Professional Packages | RND Technosoft");
+                    setMetaDescription(packageData.metadescription || "Discover RND Technosoft's packages solutions for your business.");
+                    setMetaKeywords(packageData.metakeywords || "packages, RND Technosoft");
+                    if (packageData.photo && packageData.photo.length > 0) {
+                        setOgImage(`/uploads/${packageData.photo}`);
+                    }
+                    return;
+                }
+
+                // Check industrial category data
+                const industrialData = Industrial_Category.data.find(item => item.slug?.toLowerCase() === currentPath);
+                if (industrialData) {
+                    setMetaTitle(industrialData.metatitle || "Professional Industries | RND Technosoft");
+                    setMetaDescription(industrialData.metadescription || "Discover RND Technosoft's industries solutions for your business.");
+                    setMetaKeywords(industrialData.metakeywords || "industries, RND Technosoft");
+                    if (industrialData.photo && industrialData.photo.length > 0) {
+                        setOgImage(`/uploads/${industrialData.photo}`);
+                    }
+                    return;
+                }
+
+                // Check portfolio data
+                const portfolioData = Portfolio_Category.data.find(item => item.slug?.toLowerCase() === currentPath);
+                if (portfolioData) {
+                    setMetaTitle(portfolioData.metatitle || "Professional Portfolio | RND Technosoft");
+                    setMetaDescription(portfolioData.metadescription || "Discover RND Technosoft's portfolio solutions for your business.");
+                    setMetaKeywords(portfolioData.metakeywords || "portfolio, RND Technosoft");
+                    if (portfolioData.photo && portfolioData.photo.length > 0) {
+                        setOgImage(`/uploads/${portfolioData.photo}`);
+                    }
+                    return;
+                }
+
+                // Check subcategories and sub-subcategories
+                const categories = [
+                    { name: 'services', data: Service_Category.data },
+                    { name: 'packages', data: Package_Category.data },
+                    { name: 'industries', data: Industrial_Category.data },
+                    { name: 'portfolios', data: Portfolio_Category.data }
                 ];
 
-                const currentUrl = window.location.href;
+                for (const category of categories) {
+                    for (const item of category.data) {
+                        if (Array.isArray(item.subCategories)) {
+                            const matchedSubcategory = item.subCategories.find(sub => sub.slug?.toLowerCase() === currentPath);
+                            if (matchedSubcategory) {
+                                setMetaTitle(matchedSubcategory.metatitle || `Professional ${category.name} | RND Technosoft`);
+                                setMetaDescription(matchedSubcategory.metadescription || `Discover RND Technosoft's ${category.name.toLowerCase()} solutions.`);
+                                setMetaKeywords(matchedSubcategory.metakeywords || `${category.name.toLowerCase()}, RND Technosoft`);
+                                if (matchedSubcategory.photo) {
+                                    setOgImage(`/uploads/${matchedSubcategory.photo}`);
+                                }
+                                return;
+                            }
 
-                const matchedMeta = allResponses.find(
-                    (item) => item.url === currentUrl
+                            for (const subcategory of item.subCategories) {
+                                if (Array.isArray(subcategory.subSubCategory)) {
+                                    const matchedSubSubcategory = subcategory.subSubCategory.find(subSub => subSub.slug?.toLowerCase() === currentPath);
+                                    if (matchedSubSubcategory) {
+                                        setMetaTitle(matchedSubSubcategory.metatitle || `Professional ${category.name} | RND Technosoft`);
+                                        setMetaDescription(matchedSubSubcategory.metadescription || `Discover RND Technosoft's ${category.name.toLowerCase()} solutions.`);
+                                        setMetaKeywords(matchedSubSubcategory.metakeywords || `${category.name.toLowerCase()}, RND Technosoft`);
+                                        if (matchedSubSubcategory.photo) {
+                                            setOgImage(`/uploads/${matchedSubSubcategory.photo}`);
+                                        }
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Check static meta data
+                const metaDataList = Static_Meta.data.data || [];
+                let matchedMeta = metaDataList.find(
+                    (meta) =>
+                        meta.pageSlug &&
+                        (meta.pageSlug.toLowerCase() === currentPath ||
+                            meta.pageSlug.toLowerCase() === `/${currentPath}`)
                 );
 
-                if (matchedMeta) {
-                    setMetaData({
-                        title: matchedMeta.metatitle,
-                        description: matchedMeta.metadescription,
-                        canonical: matchedMeta.metacanonical,
-                        keywords: matchedMeta.metakeywords,
-                        language: matchedMeta.metalanguage,
-                        otherMeta: matchedMeta.otherMeta,
-                        schema: matchedMeta.metaschema,
-                    });
-                } else {
-                    console.warn("No matching metadata found for this URL.");
+                if (currentPath === "" || currentPath === "/") {
+                    matchedMeta = metaDataList.find(
+                        (meta) => meta.pageSlug === "/" || meta.pageSlug === ""
+                    );
                 }
 
-                // Fetch Google settings
-                const googleResponse = await axios.get("/api/googlesettings/getGoogleSettings");
-                setGoogleSettings(googleResponse.data || "");
-                
-                // Fetch favicon
-                const faviconResponse = await axios.get("/api/logo/getfavicon");
-                if (faviconResponse.data) {
-                    setFavicon(faviconResponse.data);
+                if (matchedMeta) {
+                    setMetaTitle(matchedMeta.metaTitle || "RND Technosoft - Home");
+                    setMetaDescription(matchedMeta.metaDescription || "Welcome to RND Technosoft, your trusted source for high-quality solutions.");
+                    setMetaKeywords(matchedMeta.metaKeyword || "RND Technosoft, home");
+                    setOgImage(matchedMeta.metaImage || "/path/to/default-image.jpg");
+                } else {
+                    const staticPageMeta = metaDataList.find(
+                        (meta) => meta.pageSlug && meta.pageSlug.toLowerCase() === "static-page"
+                    );
+
+                    if (staticPageMeta) {
+                        setMetaTitle(staticPageMeta.metaTitle || "RND Technosoft - Home");
+                        setMetaDescription(staticPageMeta.metaDescription || "Welcome to RND Technosoft, your trusted source for high-quality solutions.");
+                        setMetaKeywords(staticPageMeta.metaKeyword || "RND Technosoft, home");
+                    }
+                }
+
+                // Set Google settings
+                setGoogleSettings(Google_Settings.data || {});
+
+                // Set favicon
+                if (Favicon.data) {
+                    setFavicon(Favicon.data);
                 }
             } catch (error) {
-                console.error("Error fetching metadata:", error);
+                console.error("Error fetching meta data:", error);
+                setMetaTitle("RND Technosoft - Home");
+                setMetaDescription("Welcome to RND Technosoft, your trusted source for high-quality solutions.");
+                setMetaKeywords("RND Technosoft, home");
+                setOgImage("/path/to/default-image.jpg");
             }
         };
 
-        fetchData();
-    }, [location]);
+        fetchMetaData();
+    }, [location.pathname]);
 
     useEffect(() => {
+        const createdTags = [];
+
+        const updateMetaTag = (name, content, type = "name") => {
+            let tag = document.querySelector(`meta[${type}="${name}"]`);
+            if (!tag && content) {
+                tag = document.createElement("meta");
+                tag.setAttribute(type, name);
+                document.head.appendChild(tag);
+                createdTags.push(tag);
+            }
+            if (tag && content) {
+                tag.setAttribute("content", content);
+            }
+        };
+
+        // Update meta tags
+        document.title = metaTitle;
+        updateMetaTag("description", metaDescription);
+        updateMetaTag("keywords", metaKeywords);
+        updateMetaTag("og:title", metaTitle, "property");
+        updateMetaTag("og:description", metaDescription, "property");
+        updateMetaTag("og:type", "website", "property");
+        updateMetaTag("og:url", window.location.href, "property");
+        updateMetaTag("og:image", ogImage ? `${window.location.origin}${ogImage}` : "", "property");
+        updateMetaTag("twitter:card", "summary_large_image");
+        updateMetaTag("twitter:title", metaTitle);
+        updateMetaTag("twitter:description", metaDescription);
+        updateMetaTag("twitter:image", ogImage ? `${window.location.origin}${ogImage}` : "");
+
+        // Update canonical link
+        let canonicalLink = document.querySelector('link[rel="canonical"]');
+        if (!canonicalLink) {
+            canonicalLink = document.createElement('link');
+            canonicalLink.setAttribute('rel', 'canonical');
+            document.head.appendChild(canonicalLink);
+            createdTags.push(canonicalLink);
+        }
+        canonicalLink.setAttribute('href', window.location.origin + location.pathname);
+
+        // Handle Google settings scripts
         if (googleSettings) {
-            // Handle header script injection (if exists)
             if (googleSettings.headerscript) {
                 const existingHeaderScript = document.querySelector('script[data-type="header"]');
                 if (existingHeaderScript) {
-                    document.head.removeChild(existingHeaderScript);
+                    existingHeaderScript.remove();
                 }
-
                 const headerScript = document.createElement("script");
                 headerScript.type = "text/javascript";
                 headerScript.dataset.type = "header";
                 headerScript.text = googleSettings.headerscript;
                 document.head.appendChild(headerScript);
+                createdTags.push(headerScript);
             }
 
-            // Handle body script injection (if exists)
             if (googleSettings.bodyscript) {
                 const existingBodyScript = document.querySelector('script[data-type="body"]');
                 if (existingBodyScript) {
-                    document.body.removeChild(existingBodyScript);
+                    existingBodyScript.remove();
                 }
-
                 const bodyScript = document.createElement("script");
                 bodyScript.type = "text/javascript";
                 bodyScript.dataset.type = "body";
                 bodyScript.text = googleSettings.bodyscript;
                 document.body.appendChild(bodyScript);
+                createdTags.push(bodyScript);
             }
 
-            // Handle footer script injection (if exists)
             if (googleSettings.footerscript) {
                 const existingFooterScript = document.querySelector('script[data-type="footer"]');
                 if (existingFooterScript) {
-                    document.body.removeChild(existingFooterScript);
+                    existingFooterScript.remove();
                 }
-
                 const footerScript = document.createElement("script");
                 footerScript.type = "text/javascript";
                 footerScript.dataset.type = "footer";
                 footerScript.text = googleSettings.footerscript;
                 document.body.appendChild(footerScript);
+                createdTags.push(footerScript);
             }
         }
 
-        // Cleanup meta tags and schema script on unmount
-        return () => {
-            if (metaData.otherMeta) {
-                const metaTags = new DOMParser().parseFromString(metaData.otherMeta, "text/html").head.querySelectorAll("meta");
-                metaTags.forEach((meta) => {
-                    const name = meta.getAttribute("name");
-                    if (name) {
-                        const metaElement = document.querySelector(`meta[name="${name}"]`);
-                        if (metaElement) {
-                            document.head.removeChild(metaElement);
-                        }
-                    }
-                });
-            }
-
-            const existingSchema = document.querySelector('script[type="application/ld+json"]');
-            if (existingSchema) {
-                document.head.removeChild(existingSchema);
-            }
-        };
-    }, [metaData, googleSettings]);
-
-    useEffect(() => {
-        if (favicon) {
+        // Handle favicon
+        if (favicon && favicon.photo) {
             const existingLink = document.querySelector("link[rel='icon']");
             if (existingLink) {
-                document.head.removeChild(existingLink);
+                existingLink.remove();
             }
-
             const link = document.createElement("link");
             link.rel = "icon";
             link.href = `/api/logo/download/${favicon.photo}`;
             document.head.appendChild(link);
+            createdTags.push(link);
         }
-    }, [favicon]);
+
+        // Cleanup on unmount
+        return () => {
+            createdTags.forEach((tag) => tag.remove());
+        };
+    }, [metaTitle, metaDescription, metaKeywords, ogImage, googleSettings, favicon, location.pathname]);
 
     return (
-        <>
-            <Helmet>
-                <title>{metaData.title}</title>
-                <meta name="description" content={metaData.description} />
-                <link rel="canonical" href={metaData.canonical} />
-                <meta name="keywords" content={metaData.keywords} />
-                <meta httpEquiv="Content-Language" content={metaData.language} />
-            </Helmet>
-        </>
+        <Helmet>
+            <title>{metaTitle}</title>
+            <meta name="description" content={metaDescription} />
+            <meta name="keywords" content={metaKeywords} />
+            <meta property="og:image" content={ogImage ? `${window.location.origin}${ogImage}` : ""} />
+            <link rel="canonical" href={window.location.origin + location.pathname} />
+        </Helmet>
     );
 };
 

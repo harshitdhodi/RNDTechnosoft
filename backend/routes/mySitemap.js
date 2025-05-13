@@ -4,7 +4,7 @@ const axios = require("axios");
 const Sitemap = require("../model/sitemap");
 
 // Base configuration
-const BASE_URL = "http://localhost:3021/";
+const BASE_URL = "https://www.rndtechnosoft.com/";
 const Service_Category = `${BASE_URL}api/services/getall`;
 const Package_Category = `${BASE_URL}api/packages/getAll`;
 const Industrial_Category = `${BASE_URL}api/industries/getAll`;
@@ -309,138 +309,168 @@ const generateServiceCategorySitemap = async () => {
 
 // Generate chemical sitemap
 const generateServiceSubCategorySitemap = async () => {
-    try {
-      console.log('Fetching service category data from:', Service_Category);
-      const response = await axios.get(Service_Category);
-      const serviceCategories = Array.isArray(response.data) ? response.data : [];
-  
-      if (!Array.isArray(serviceCategories)) {
-        throw new Error('Service Category API did not return an array');
-      }
-  
-      console.log(`Processing ${serviceCategories.length} service categories`);
-  
-      let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-      xmlContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-  
-      // Iterate through each service category and its subcategories
-      serviceCategories.forEach((category, catIndex) => {
-        const subCategories = Array.isArray(category.subCategories) ? category.subCategories : [];
-        console.log(`Processing ${subCategories.length} subcategories for category: ${category.category}`);
-  
-        subCategories.forEach((subCategory, subCatIndex) => {
-          if (!subCategory.slug || !subCategory.lastmod) {
-            console.warn(`Skipping invalid subcategory at category index ${catIndex}, subcategory index ${subCatIndex}:`, subCategory);
-            return;
-          }
-          xmlContent += `  <url>\n`;
-          xmlContent += `    <loc>${BASE_URL}${subCategory.slug}</loc>\n`;
-          xmlContent += `    <lastmod>${new Date(subCategory.lastmod['$date']).toISOString()}</lastmod>\n`;
-          xmlContent += `    <changefreq>weekly</changefreq>\n`;
-          xmlContent += `    <priority>0.8</priority>\n`;
-          xmlContent += `  </url>\n`;
-        });
-      });
-  
-      xmlContent += `</urlset>`;
-  
-      if (!fs.existsSync(PUBLIC_DIR)) {
-        console.log('Creating public directory:', PUBLIC_DIR);
-        fs.mkdirSync(PUBLIC_DIR, { recursive: true });
-      }
-  
-      const sitemapPath = path.join(PUBLIC_DIR, 'service-subcategories-sitemap.xml');
-      console.log('Writing service subcategories sitemap to:', sitemapPath);
-      fs.writeFileSync(sitemapPath, xmlContent, { encoding: 'utf8' });
-  
-      console.log('Service subcategories sitemap generated successfully as service-subcategories-sitemap.xml');
-  
-      await Sitemap.findOneAndUpdate(
-        { name: 'service-subcategories-sitemap.xml' },
-        { timestamp: Date.now(), priority: 0.8 },
-        { upsert: true, new: true }
-      );
-  
-      console.log('Service subcategories sitemap record updated in the database');
-    } catch (error) {
-      console.error('Error generating service subcategories sitemap:', error.message);
-      if (error.response) {
-        console.error('API Response Data:', error.response.data);
-        console.error('API Response Status:', error.response.status);
-      }
-      throw error;
+  try {
+    console.log('Fetching service category data from:', Service_Category);
+    const response = await axios.get(Service_Category);
+    const serviceCategories = Array.isArray(response.data) ? response.data : [];
+
+    if (!Array.isArray(serviceCategories)) {
+      throw new Error('Service Category API did not return an array');
     }
-  };
+
+    console.log(`Processing ${serviceCategories.length} service categories`);
+
+    let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xmlContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+    // Iterate through each service category and its subcategories
+    serviceCategories.forEach((category, catIndex) => {
+      const subCategories = Array.isArray(category.subCategories) ? category.subCategories : [];
+      console.log(`Processing ${subCategories.length} subcategories for category: ${category.category}`);
+
+      subCategories.forEach((subCategory, subCatIndex) => {
+        if (!subCategory.slug || !subCategory.lastmod) {
+          console.warn(`Skipping invalid subcategory at category index ${catIndex}, subcategory index ${subCatIndex}:`, subCategory);
+          return;
+        }
+
+        // Validate the lastmod['$date'] field
+        const lastModDate = subCategory.lastmod['$date'];
+        let formattedDate;
+        try {
+          const date = new Date(lastModDate);
+          if (isNaN(date.getTime())) {
+            throw new Error('Invalid date');
+          }
+          formattedDate = date.toISOString();
+        } catch (e) {
+          console.warn(`Invalid lastmod date for subcategory at category index ${catIndex}, subcategory index ${subCatIndex}: ${lastModDate}. Using current date as fallback.`);
+          formattedDate = new Date().toISOString(); // Fallback to current date
+        }
+
+        xmlContent += `<url>\n`;
+        xmlContent += `<loc>${BASE_URL}${subCategory.slug}</loc>\n`;
+        xmlContent += `<lastmod>${formattedDate}</lastmod>\n`;
+        xmlContent += `<changefreq>weekly</changefreq>\n`;
+        xmlContent += `<priority>0.8</priority>\n`;
+        xmlContent += `</url>\n`;
+      });
+    });
+
+    xmlContent += `</urlset>`;
+
+    if (!fs.existsSync(PUBLIC_DIR)) {
+      console.log('Creating public directory:', PUBLIC_DIR);
+      fs.mkdirSync(PUBLIC_DIR, { recursive: true });
+    }
+
+    const sitemapPath = path.join(PUBLIC_DIR, 'service-subcategories-sitemap.xml');
+    console.log('Writing service subcategories sitemap to:', sitemapPath);
+    fs.writeFileSync(sitemapPath, xmlContent, { encoding: 'utf8' });
+
+    console.log('Service subcategories sitemap generated successfully as service-subcategories-sitemap.xml');
+
+    await Sitemap.findOneAndUpdate(
+      { name: 'service-subcategories-sitemap.xml' },
+      { timestamp: Date.now(), priority: 0.8 },
+      { upsert: true, new: true }
+    );
+
+    console.log('Service subcategories sitemap record updated in the database');
+  } catch (error) {
+    console.error('Error generating service subcategories sitemap:', error.message);
+    if (error.response) {
+      console.error('API Response Data:', error.response.data);
+      console.error('API Response Status:', error.response.status);
+    }
+    throw error;
+  }
+};
 
 // Generate main sitemap
 const generateServiceSubSubCategorySitemap = async () => {
-    try {
-      console.log('Fetching service category data from:', Service_Category);
-      const response = await axios.get(Service_Category);
-      const serviceCategories = Array.isArray(response.data) ? response.data : [];
-  
-      if (!Array.isArray(serviceCategories)) {
-        throw new Error('Service Category API did not return an array');
-      }
-  
-      console.log(`Processing ${serviceCategories.length} service categories`);
-  
-      let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-      xmlContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
-  
-      // Iterate through each service category, its subcategories, and sub-subcategories
-      serviceCategories.forEach((category, catIndex) => {
-        const subCategories = Array.isArray(category.subCategories) ? category.subCategories : [];
-        console.log(`Processing ${subCategories.length} subcategories for category: ${category.category}`);
-  
-        subCategories.forEach((subCategory, subCatIndex) => {
-          const subSubCategories = Array.isArray(subCategory.subSubCategory) ? subCategory.subSubCategory : [];
-          console.log(`Processing ${subSubCategories.length} sub-subcategories for subcategory: ${subCategory.category || 'unknown'}`);
-  
-          subSubCategories.forEach((subSubCategory, subSubCatIndex) => {
-            if (!subSubCategory.slug || !subSubCategory.lastmod) {
-              console.warn(`Skipping invalid sub-subcategory at category index ${catIndex}, subcategory index ${subCatIndex}, sub-subcategory index ${subSubCatIndex}:`, subSubCategory);
-              return;
+  try {
+    console.log('Fetching service category data from:', Service_Category);
+    const response = await axios.get(Service_Category);
+    const serviceCategories = Array.isArray(response.data) ? response.data : [];
+
+    if (!Array.isArray(serviceCategories)) {
+      throw new Error('Service Category API did not return an array');
+    }
+
+    console.log(`Processing ${serviceCategories.length} service categories`);
+
+    let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+    xmlContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+    // Iterate through each service category, its subcategories, and sub-subcategories
+    serviceCategories.forEach((category, catIndex) => {
+      const subCategories = Array.isArray(category.subCategories) ? category.subCategories : [];
+      console.log(`Processing ${subCategories.length} subcategories for category: ${category.category}`);
+
+      subCategories.forEach((subCategory, subCatIndex) => {
+        const subSubCategories = Array.isArray(subCategory.subSubCategory) ? subCategory.subSubCategory : [];
+        console.log(`Processing ${subSubCategories.length} sub-subcategories for subcategory: ${subCategory.category || 'unknown'}`);
+
+        subSubCategories.forEach((subSubCategory, subSubCatIndex) => {
+          if (!subSubCategory.slug || !subSubCategory.lastmod) {
+            console.warn(`Skipping invalid sub-subcategory at category index ${catIndex}, subcategory index ${subCatIndex}, sub-subcategory index ${subSubCatIndex}:`, subSubCategory);
+            return;
+          }
+
+          // Validate the lastmod['$date'] field
+          const lastModDate = subSubCategory.lastmod['$date'];
+          let formattedDate;
+          try {
+            const date = new Date(lastModDate);
+            if (isNaN(date.getTime())) {
+              throw new Error('Invalid date');
             }
-            xmlContent += `  <url>\n`;
-            xmlContent += `    <loc>${BASE_URL}${subSubCategory.slug}</loc>\n`;
-            xmlContent += `    <lastmod>${new Date(subSubCategory.lastmod['$date']).toISOString()}</lastmod>\n`;
-            xmlContent += `    <changefreq>weekly</changefreq>\n`;
-            xmlContent += `    <priority>0.7</priority>\n`;
-            xmlContent += `  </url>\n`;
-          });
+            formattedDate = date.toISOString();
+          } catch (e) {
+            console.warn(`Invalid lastmod date for sub-subcategory at category index ${catIndex}, subcategory index ${subCatIndex}, sub-subcategory index ${subSubCatIndex}: ${lastModDate}. Using current date as fallback.`);
+            formattedDate = new Date().toISOString(); // Fallback to current date
+          }
+
+          xmlContent += `  <url>\n`;
+          xmlContent += `    <loc>${BASE_URL}${subSubCategory.slug}</loc>\n`;
+          xmlContent += `    <lastmod>${formattedDate}</lastmod>\n`;
+          xmlContent += `    <changefreq>weekly</changefreq>\n`;
+          xmlContent += `    <priority>0.7</priority>\n`;
+          xmlContent += `  </url>\n`;
         });
       });
-  
-      xmlContent += `</urlset>`;
-  
-      if (!fs.existsSync(PUBLIC_DIR)) {
-        console.log('Creating public directory:', PUBLIC_DIR);
-        fs.mkdirSync(PUBLIC_DIR, { recursive: true });
-      }
-  
-      const sitemapPath = path.join(PUBLIC_DIR, 'service-subsubcategories-sitemap.xml');
-      console.log('Writing service sub-subcategories sitemap to:', sitemapPath);
-      fs.writeFileSync(sitemapPath, xmlContent, { encoding: 'utf8' });
-  
-      console.log('Service sub-subcategories sitemap generated successfully as service-subsubcategories-sitemap.xml');
-  
-      await Sitemap.findOneAndUpdate(
-        { name: 'service-subsubcategories-sitemap.xml' },
-        { timestamp: Date.now(), priority: 0.7 },
-        { upsert: true, new: true }
-      );
-  
-      console.log('Service sub-subcategories sitemap record updated in the database');
-    } catch (error) {
-      console.error('Error generating service sub-subcategories sitemap:', error.message);
-      if (error.response) {
-        console.error('API Response Data:', error.response.data);
-        console.error('API Response Status:', error.response.status);
-      }
-      throw error;
+    });
+
+    xmlContent += `</urlset>`;
+
+    if (!fs.existsSync(PUBLIC_DIR)) {
+      console.log('Creating public directory:', PUBLIC_DIR);
+      fs.mkdirSync(PUBLIC_DIR, { recursive: true });
     }
-  };
+
+    const sitemapPath = path.join(PUBLIC_DIR, 'service-subsubcategories-sitemap.xml');
+    console.log('Writing service sub-subcategories sitemap to:', sitemapPath);
+    fs.writeFileSync(sitemapPath, xmlContent, { encoding: 'utf8' });
+
+    console.log('Service sub-subcategories sitemap generated successfully as service-subsubcategories-sitemap.xml');
+
+    await Sitemap.findOneAndUpdate(
+      { name: 'service-subsubcategories-sitemap.xml' },
+      { timestamp: Date.now(), priority: 0.7 },
+      { upsert: true, new: true }
+    );
+
+    console.log('Service sub-subcategories sitemap record updated in the database');
+  } catch (error) {
+    console.error('Error generating service sub-subcategories sitemap:', error.message);
+    if (error.response) {
+      console.error('API Response Data:', error.response.data);
+      console.error('API Response Status:', error.response.status);
+    }
+    throw error;
+  }
+};
 
 // Middleware to serve sitemaps
 const generateStaticPagesSitemap = async () => {
@@ -1009,11 +1039,11 @@ const generateMainSitemap = async () => {
 const generateAllSitemaps = async () => {
    
    await generatePackageCategorySitemap();
-//   await generateServiceCategorySitemap();
-//   await generateServiceSubCategorySitemap();
-//   await generateServiceSubSubCategorySitemap(); 
-//   await generatePackageSubCategorySitemap();
-// await generatePackageSubSubCategorySitemap();
+  await generateServiceCategorySitemap();
+  await generateServiceSubCategorySitemap();
+  await generateServiceSubSubCategorySitemap(); 
+  await generatePackageSubCategorySitemap();
+await generatePackageSubSubCategorySitemap();
 await generateIndustrialCategorySitemap();
 await generateIndustrialSubcategorySitemap();
 await generateBlogSitemap();
@@ -1025,13 +1055,13 @@ await generateStaticPagesSitemap();
 
 // Add the new function to the exports
 module.exports = {
-//   generateServiceCategorySitemap,
-//   generateServiceSubCategorySitemap,
-//   generateServiceSubSubCategorySitemap,
+  generateServiceCategorySitemap,
+  generateServiceSubCategorySitemap,
+  generateServiceSubSubCategorySitemap,
   generateAllSitemaps,
   generatePackageCategorySitemap, // Export the new function
-// generatePackageSubCategorySitemap,
-// generatePackageSubSubCategorySitemap,
+generatePackageSubCategorySitemap,
+generatePackageSubSubCategorySitemap,
 generateIndustrialCategorySitemap,
 generateIndustrialSubcategorySitemap,
 generateBlogSitemap,
