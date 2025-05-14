@@ -196,15 +196,18 @@ const JobCard = ({ job, onApply }) => {
   );
 };
 
+
+
 const JobApplicationModal = ({ job, isOpen, onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [message, setMessage] = useState("");
   const [resume, setResume] = useState(null);
+  const [linkedin, setLinkedin] = useState(""); // New LinkedIn state
   const [clientIp, setClientIp] = useState("");
   const [utmParams, setUtmParams] = useState({});
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleFileChange = (e) => {
@@ -238,7 +241,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       await axios.post(
         "/api/careerInquiries/createCareerInquiry",
@@ -248,6 +251,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           mobileNo,
           resume,
           message,
+          linkedin, // Add LinkedIn to the payload
           ipaddress: clientIp,
           ...utmParams,
         },
@@ -263,10 +267,11 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
       setMobileNo("");
       setMessage("");
       setResume(null);
+      setLinkedin(""); // Reset LinkedIn field
     } catch (err) {
       console.error("Failed to submit application", err);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -287,6 +292,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
             <input
               type="text"
               name="name"
+              placeholder="John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full p-2 border rounded-lg"
@@ -301,6 +307,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
               type="text"
               name="mobileNo"
               value={mobileNo}
+              placeholder="1234567890"
               onChange={(e) => setMobileNo(e.target.value)}
               className="w-full p-2 border rounded-lg"
               required
@@ -311,10 +318,24 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
             <input
               type="email"
               name="email"
+              placeholder="name@gmail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-2 border rounded-lg"
               required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-1">
+              LinkedIn Profile
+            </label>
+            <input
+              type="url"
+              name="linkedin"
+              value={linkedin}
+              onChange={(e) => setLinkedin(e.target.value)}
+              className="w-full p-2 border rounded-lg"
+              placeholder="https://linkedin.com/in/your-profile"
             />
           </div>
           <div className="mb-4">
@@ -343,7 +364,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
             className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg w-full ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
-            disabled={loading} // Disable button when loading
+            disabled={loading}
           >
             {loading ? "Submitting..." : "Submit Application"}
           </button>
@@ -352,6 +373,8 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
     </div>
   );
 };
+
+
 
 
 const CareerPage = () => {

@@ -9,6 +9,10 @@ const careerInquirySchema = new mongoose.Schema({
     type: String,
    
   },
+  linkedin: {
+    type: String,
+   
+  },
   email: {
     type: String,
    
