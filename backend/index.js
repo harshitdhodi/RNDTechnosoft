@@ -22,17 +22,7 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.get('/robots.txt', async (req, res) => {
-    try {
-        const filePath = path.join(__dirname, 'public', 'robots.txt');
-        const data = await fs.readFile(filePath);
-        res.set('Content-Type', 'text/plain');
-        res.send(data);
-    } catch (err) {
-        console.error('Error serving robots.txt:', err);
-        res.status(404).send('robots.txt not found');
-    }
-});
+
 app.get('/sitemap.xml', async (req, res) => {
     try {
         let filePath = path.join(__dirname, 'public', 'sitemap.xml'); // Local variable
@@ -344,7 +334,17 @@ app.get('/service-subsubcategories-sitemap.xml', async (req, res) => {
     }
   });  
 
-
+app.get('/robots.txt', async (req, res) => {
+    try {
+        const filePath = path.join(__dirname, 'public', 'robots.txt');
+        const data = await fs.readFile(filePath);
+        res.set('Content-Type', 'text/plain');
+        res.send(data);
+    } catch (err) {
+        console.error('Error serving robots.txt:', err);
+        res.status(404).send('robots.txt not found');
+    }
+});
 
 // Static Files Middleware
 app.use(express.static(path.join(__dirname, 'dist'), {
