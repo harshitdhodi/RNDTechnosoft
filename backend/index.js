@@ -24,6 +24,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.get('/sitemap.xml', async (req, res) => {
     try {
+        let filePath = path.join(__dirname, 'public', 'sitemap.xml'); // Local variable
       try {
         // First try in dist directory
         await fs.access(filePath);
@@ -47,12 +48,10 @@ app.get('/sitemap.xml', async (req, res) => {
       return res.status(500).send('Error serving sitemap');
     }
   });
-
-// Update your sitemap route to use fs.promises correctly
-
   // Update your sitemap route to use fs.promises correctly
 app.get('/sitemap1.xml', async (req, res) => {
     try {
+        let filePath = path.join(__dirname, 'public', 'sitemap1.xml'); // Local variable
       try {
         // First try in dist directory
         await fs.access(filePath);
@@ -79,6 +78,7 @@ app.get('/sitemap1.xml', async (req, res) => {
 
 app.get('/blog-sitemap.xml', async (req, res) => {
     try {
+        let filePath = path.join(__dirname, 'public', 'blog-sitemap.xml'); // Local variable
       try {
         // First try in dist directory
         await fs.access(filePath);
@@ -104,7 +104,8 @@ app.get('/blog-sitemap.xml', async (req, res) => {
   });
 
 app.get('/industrial-category-sitemap.xml', async (req, res) => {
-    try {     
+    try { 
+      let filePath = path.join(__dirname, 'public', 'industrial-category-sitemap.xml'); // Local variable    
       try {
         // First try in dist directory
         await fs.access(filePath);
@@ -161,7 +162,7 @@ app.get('/industrial-subcategory-sitemap.xml', async (req, res) => {
 app.get('/package-category-sitemap.xml', async (req, res) => {
     try {
       // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'package-category-sitemap.xml');
+      let filePath = path.join(__dirname, 'public', 'package-category-sitemap.xml');
       
       try {
         // First try in dist directory
@@ -190,7 +191,7 @@ app.get('/package-category-sitemap.xml', async (req, res) => {
 app.get('/package-subcategory-sitemap.xml', async (req, res) => {
     try {
       // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'package-subcategory-sitemap.xml');
+      let filePath = path.join(__dirname, 'public', 'package-subcategory-sitemap.xml');
       
       try {
         // First try in dist directory
@@ -219,7 +220,7 @@ app.get('/package-subcategory-sitemap.xml', async (req, res) => {
 app.get('/package-subsubcategory-sitemap.xml', async (req, res) => {
     try {
       // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'package-subsubcategory-sitemap.xml');
+      let filePath = path.join(__dirname, 'public', 'package-subsubcategory-sitemap.xml');
       
       try {
         // First try in dist directory
@@ -248,7 +249,7 @@ app.get('/package-subsubcategory-sitemap.xml', async (req, res) => {
 app.get('/portfolio-category-sitemap.xml', async (req, res) => {
     try {
       // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'portfolio-category-sitemap.xml');
+      let filePath = path.join(__dirname, 'public', 'portfolio-category-sitemap.xml');
       
       try {
         // First try in dist directory
@@ -277,7 +278,7 @@ app.get('/portfolio-category-sitemap.xml', async (req, res) => {
 app.get('/service-subcategories-sitemap.xml', async (req, res) => {
     try {
       // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'service-subcategories-sitemap.xml');
+      let filePath = path.join(__dirname, 'public', 'service-subcategories-sitemap.xml');
       
       try {
         // First try in dist directory
@@ -306,7 +307,7 @@ app.get('/service-subcategories-sitemap.xml', async (req, res) => {
 app.get('/service-subsubcategories-sitemap.xml', async (req, res) => {
     try {
       // Look for sitemap in both possible locations
-      let filePath = path.join(__dirname, 'dist', 'service-subsubcategories-sitemap.xml');
+      let filePath = path.join(__dirname, 'public', 'service-subsubcategories-sitemap.xml');
       
       try {
         // First try in dist directory
@@ -481,8 +482,6 @@ async function startServer() {
          socketTimeoutMS: 60000,
          maxPoolSize: 10,
          minPoolSize: 2,
-       
-        
      });
         console.log('Connected to MongoDB');
         // generateAllSitemaps()
