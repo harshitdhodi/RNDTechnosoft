@@ -7,7 +7,6 @@ const { generateAllSitemaps } = require('./routes/mySitemap');
 const { exportAndBackupAllCollectionsmonthly } = require('./controller/Backup');
 const fs = require('fs').promises;
 
-
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const generateMetaTags = require('./middleware/metaTagInfo');
@@ -22,6 +21,9 @@ app.use(cors({
 }));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+
+
 
 app.get('/sitemap.xml', async (req, res) => {
     try {
@@ -345,20 +347,7 @@ app.get('/robots.txt', async (req, res) => {
         res.status(404).send('robots.txt not found');
     }
 });
-
-// Static Files Middleware
-app.use(express.static(path.join(__dirname, 'dist'), {
-    setHeaders: (res, filePath) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        if (filePath.endsWith('.js')) {
-            res.setHeader('Content-Type', 'application/javascript');
-        }
-        if (filePath.endsWith('.css')) {
-            res.setHeader('Content-Type', 'text/css');
-        }
-    },
-}));
-
+ 
 app.get('*', generateMetaTags);
 // Cron Job for Daily Sitemap Generation
 cron.schedule('0 0 * * *', async () => {
@@ -486,9 +475,9 @@ app.use(express.static(path.join(__dirname, 'dist'), {
 }));
 
 // Catch-All Route for SPA (Last)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+// });
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
