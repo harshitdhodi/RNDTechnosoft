@@ -10,6 +10,21 @@ const DynamicPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  // List of slugs to exclude (e.g., sitemap pages)
+  const excludedSlugs = [
+    'sitemap.xml',
+    'sitemap1.xml',
+    'blog-sitemap.xml',
+    'industrial-category-sitemap.xml',
+    'industrial-subcategory-sitemap.xml',
+    'package-category-sitemap.xml',
+    'package-subcategory-sitemap.xml',
+    'package-subsubcategory-sitemap.xml',
+    'portfolio-category-sitemap.xml',
+    'service-subcategories-sitemap.xml',
+    'service-subsubcategories-sitemap.xml',
+  ];
+
   // Fetch the slug-to-component map on component mount
   useEffect(() => {
     const fetchComponentMap = async () => {
@@ -25,6 +40,11 @@ const DynamicPage = () => {
     };
     fetchComponentMap();
   }, [slug]);
+
+  // Exclude specific slugs from rendering anything
+  if (excludedSlugs.includes(slug)) {
+    return null; // Render nothing for excluded slugs
+  }
 
   // Show a loading state while fetching the component map
   if (loading) {

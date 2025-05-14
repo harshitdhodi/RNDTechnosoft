@@ -13,14 +13,13 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       svgr({ svgrOptions: { icon: true, ref: true } }),
-     
-      viteCompression({ 
+      viteCompression({
         algorithm: 'brotliCompress',
         threshold: 512,
         compressionOptions: { level: 11 },
         deleteOriginFile: false,
       }),
-      viteCompression({ 
+      viteCompression({
         algorithm: 'gzip',
         threshold: 512,
         compressionOptions: { level: 9 },
@@ -37,12 +36,13 @@ export default defineConfig(({ mode }) => {
           ],
         },
       }),
-      isProd && visualizer({
-        filename: 'stats.html',
-        gzipSize: true,
-        brotliSize: true,
-        open: false,
-      }),
+      isProd &&
+        visualizer({
+          filename: 'stats.html',
+          gzipSize: true,
+          brotliSize: true,
+          open: false,
+        }),
     ],
 
     resolve: {
@@ -50,51 +50,28 @@ export default defineConfig(({ mode }) => {
     },
 
     build: {
-      sourcemap: !isProd,
-      assetsInlineLimit: 4096,
-      rollupOptions: {
-        input: {
-          main: path.resolve(__dirname, 'index.html'),
-          'service-worker': path.resolve(__dirname, 'public/service-worker.js'),
-        },
-        output: {
-          manualChunks: (id) => {
-            // React Quill specific chunk
-            if (id.includes('node_modules/react-quill')) {
-              return 'vendor-react-quill';
-            }
-
-            // React Icons specific chunk
-            if (id.includes('node_modules/react-icons')) {
-              return 'vendor-react-icons';
-            }
-
-          
-          },
-     
-        },
-      },
-      chunkSizeWarningLimit: 700,
-      target: 'esnext',
-      minify: 'terser',
+      sourcemap: true, // Enable source maps
+      chunkSizeWarningLimit: 600, // Set chunk size warning limit
+      target: 'esnext', // Target modern browsers
+      minify: 'terser', // Use terser for minification
       terserOptions: {
         compress: {
-          drop_console: isProd,
-          drop_debugger: isProd,
-          pure_funcs: isProd ? ['console.log', 'console.info', 'console.debug'] : [],
-          passes: 3,
-          unsafe: true,
-          unsafe_arrows: true,
-          unsafe_comps: true,
-          unsafe_Function: true,
-          unsafe_math: true,
-          unsafe_methods: true,
-          unsafe_proto: true,
-          unsafe_regexp: true,
-          unsafe_undefined: true,
+          drop_console: true, // Remove console logs
+          pure_funcs: ['console.log', 'console.info'], // Remove specific console functions
         },
-        mangle: { safari10: true },
-        format: { comments: false, ecma: 2020 },
+      },
+      rollupOptions: {
+        input: {
+          main: './index.html', // Define the main entry point
+        },
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom'], // Vendor chunk
+            utils: ['axios'], // Utility chunk
+          },
+          chunkFileNames: 'assets/[name]-[hash].js', // Chunk file naming pattern
+          entryFileNames: 'assets/[name]-[hash].js', // Entry file naming pattern
+        },
       },
     },
 
@@ -103,25 +80,25 @@ export default defineConfig(({ mode }) => {
         'react',
         'react-dom',
         'react-router-dom',
-        'react-quill',      // Added for better dev-time optimization
-        'react-icons'       // Added for better dev-time optimization
+        'react-quill', // Added for better dev-time optimization
+        'react-icons', // Added for better dev-time optimization
       ],
       esbuildOptions: {
         target: 'esnext',
         define: {
           'process.env.NODE_ENV': JSON.stringify(mode),
-          '__DEV__': JSON.stringify(mode !== 'production'),
+          __DEV__: JSON.stringify(mode !== 'production'),
         },
-      }
+      },
     },
 
     server: {
       port: 3001,
-      headers: { "Service-Worker-Allowed": "/" },
-      mimeTypes: { "application/javascript": ["js"] },
+      headers: { 'Service-Worker-Allowed': '/' },
+      mimeTypes: { 'application/javascript': ['js'] },
       proxy: {
-        "/api": {
-          target: "http://localhost:3021",
+        '/api': {
+          target: 'http://localhost:3021',
           changeOrigin: false,
           secure: false,
         },
