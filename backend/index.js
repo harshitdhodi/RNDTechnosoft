@@ -332,7 +332,6 @@ app.get('/service-subsubcategories-sitemap.xml', async (req, res) => {
       return res.status(500).send('Error serving sitemap');
     }
   });  
-
 app.get('*', generateMetaTags);
 // Cron Job for Daily Sitemap Generation
 cron.schedule('0 0 * * *', async () => {
