@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://rndtechnosoft.com/chemical-marketing-seo</loc>
-    <lastmod>2024-10-19T10:12:46.485Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1</priority>
-  </url>
-  <url>
-    <loc>https://rndtechnosoft.com/chemical-marketing-ppc</loc>
-    <lastmod>2024-10-19T10:12:57.694Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1</priority>
-  </url>
-  <url>
     <loc>https://rndtechnosoft.com/travel-marketing-seo</loc>
     <lastmod>2024-10-19T10:13:39.147Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -27,6 +15,18 @@
   <url>
     <loc>https://rndtechnosoft.com/travel-marketing-branding</loc>
     <lastmod>2024-10-19T10:14:04.546Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://rndtechnosoft.com/chemical-marketing-seo</loc>
+    <lastmod>2024-10-19T10:12:46.485Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://rndtechnosoft.com/chemical-marketing-ppc</loc>
+    <lastmod>2024-10-19T10:12:57.694Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1</priority>
   </url>
