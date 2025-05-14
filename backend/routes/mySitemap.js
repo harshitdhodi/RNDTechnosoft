@@ -23,8 +23,6 @@ const generatePackageCategorySitemap = async () => {
             throw new Error('Package API did not return an array');
         }
 
-        console.log(`Processing ${packages.length} package entries`);
-
         let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;
         xmlContent += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 
@@ -469,14 +467,15 @@ const generateStaticPagesSitemap = async () => {
       console.log('Generating static pages sitemap');
 
       const staticPages = [
+        { slug: '', priority: 1.0 },
           { slug: 'about-us', priority: 0.8 },
-          { slug: 'contact-us', priority: 0.8 },
-          { slug: 'cookies-policy', priority:0.8},
-          { slug: 'privacy-policy', priority:0.8},
-          { slug:'terms-conditions', priority:0.8},
-          {slug:'helpCenter', priority:0.8},
-          {slug:'blogs', priority:0.8},
-          {slug:'contact', priority:0.8}
+          { slug: 'contact-us', priority: 0.7 },
+          { slug: 'cookies-policy', priority:0.6},
+          { slug: 'privacy-policy', priority:0.4},
+          { slug:'terms-conditions', priority:0.2},
+          {slug:'helpCenter', priority:0.9},
+          {slug:'blogs', priority:0.3},
+          {slug:'contact', priority:0.5}
       ];
 
       let xmlContent = `<?xml version="1.0" encoding="UTF-8"?>\n`;

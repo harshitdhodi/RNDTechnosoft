@@ -38,7 +38,16 @@ exports.getAllCareers = async (req, res) => {
 
 exports.getAllActiveCareers = async (req, res) => {
     try {
-        const careers = await Career.find({ status: 'active' });
+        const careers = await Career.aggregate([
+            { $match: { status: 'active' } },
+            {
+                $addFields: {
+                    lowerJobtitle: { $toLower: { $trim: { input: '$jobtitle' } } } // Trim spaces
+                }
+            },
+            { $sort: { lowerJobtitle: 1 } }, // Sort A to Z
+            { $project: { lowerJobtitle: 0 } } // Remove temporary field
+        ]);
         res.status(200).json(careers);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });

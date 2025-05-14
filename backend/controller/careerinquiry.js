@@ -19,6 +19,7 @@ exports.CreateCareerInquiry = async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       mobileNo: req.body.mobileNo,
+      linkedin: req.body.linkedin,
       message: req.body.message,
       resume: req.files['resume'] ? req.files['resume'][0].filename : null
     });
@@ -91,6 +92,7 @@ exports.CreateCareerInquiry = async (req, res) => {
             <p><span class="field">Name:</span> ${newInquiry.name}</p>
             <p><span class="field">Email:</span> ${newInquiry.email}</p>
             <p><span class="field">Phone:</span> ${newInquiry.mobileNo}</p>
+            <p><span class="field">LinkedIn:</span> ${newInquiry.linkedin}</p>
             <p>${newInquiry.message}</p>
         </div>
       </body>
@@ -125,6 +127,7 @@ exports.CreateCareerInquiry = async (req, res) => {
         name: newInquiry.name,
         email: newInquiry.email,
         phone: newInquiry.mobileNo,
+        linkedin: newInquiry.linkedin,
         subject: "Career Inquiry",
         message: newInquiry.message
       });
