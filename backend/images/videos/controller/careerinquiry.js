@@ -85,7 +85,7 @@ exports.CreateCareerInquiry = async (req, res) => {
             <p>${newInquiry.message}</p>
         </div>
       </body>
-      </html>
+      </html> 
       `;
 
     // Resume file from Multer
@@ -94,6 +94,7 @@ exports.CreateCareerInquiry = async (req, res) => {
     const mailOptions = {
       from: newInquiry.email,
       to: process.env.EMAIL_USER,
+        cc: process.env.OWNER_EMAIL,
       subject: 'New Career Inquiry',
       html: emailHTML,
       attachments: [
