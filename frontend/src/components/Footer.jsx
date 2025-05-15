@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaLinkedin, FaInstagram, FaGoogle, FaBehance, FaPaperPlane } from 'react-icons/fa';
 
 const Footer = () => {
@@ -9,7 +9,7 @@ const Footer = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [services, setServices] = useState([]);
-
+const navigate = useNavigate();
   // Form state
   const [formData, setFormData] = useState({
     name: '',
@@ -108,6 +108,7 @@ const Footer = () => {
       setMessage(response.data.message);
       setFormData({ name: '', email: '' });
       setTouched({ name: false, email: false });
+      navigate('/thankyou');
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to subscribe');
     } finally {

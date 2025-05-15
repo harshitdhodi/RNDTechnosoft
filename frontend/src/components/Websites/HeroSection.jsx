@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { FaStarOfLife } from "react-icons/fa6";
@@ -111,7 +111,7 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
   const [loadingCities, setLoadingCities] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [resetKey, setResetKey] = useState(0);
-
+  const navigate = useNavigate();
   const budgetOptions = [
     "INR 1 Cr. and Above",
     "INR 50 Lacs - 1 Cr.",
@@ -247,7 +247,7 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
     setFormData(initialFormState);
     setErrors(initialErrorState);
     setResetKey((prev) => prev + 1);
-    setShowSuccessMessage(true);
+    navigate("/thankyou");
     
     setTimeout(() => {
       setShowSuccessMessage(false);
@@ -324,7 +324,7 @@ const ContactForm = React.memo(({ isModal = false, onSubmit, loading }) => {
         <AutocompleteInput
           value={formData.budget}
           onChange={handleInputChange}
-          suggestions={budgetOptions}
+          // suggestions={budgetOptions}
           placeholder="Your Monthly Budget(INR)"
           fieldName="budget"
           resetKey={resetKey}
@@ -381,7 +381,7 @@ const HeroSection = () => {
   const [loading, setLoading] = useState(false); // Loading state for form submission
 
   const location = useLocation();
-
+  
   useEffect(() => {
     const fetchClientIp = async () => {
       try {

