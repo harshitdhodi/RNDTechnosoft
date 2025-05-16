@@ -9,7 +9,6 @@ const Companies = ({ serviceSlug }) => {
     const fetchData = async () => {
       try {
         const photoType = "company"; 
-
         const response = await axios.get(
           `/api/serviceImages/front/${serviceSlug}/${photoType}`,
           { withCredentials: true }

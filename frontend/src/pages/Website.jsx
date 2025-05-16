@@ -44,9 +44,9 @@ export default function Website() {
       <WeAreExpert expertData={data?.WeAreExpert} />
       <Review />
       <Logotypes/>
-      {/* <Companies /> */}
+      <Companies />
       <WhyPartnerWithUs />
-      {/* <PricingSection /> */}
+      <PricingSection />
       <De />
       {/* <DesignProcess/> */}
       <FAQ />

@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 
 exports.addEmail = async (req, res) => {
     try {
-        const { email,name } = req.body;
+        const { email, name } = req.body;
 
         // Check if the email already exists
         const existingEmail = await Newsletter.findOne({ email });
@@ -21,15 +21,16 @@ exports.addEmail = async (req, res) => {
             return res.status(400).json({ message: 'Email already subscribed' });
         }
 
-        const newEmail = new Newsletter({ email,name });
+        const newEmail = new Newsletter({ email, name });
         await newEmail.save();
 
         // Send confirmation email
         const mailOptions = {
             from: process.env.EMAIL_USER,
             to: email,
+            cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
             subject: 'Newsletter Subscription Confirmation',
-            text: `Hello,${name}\n\nThank you for subscribing to our newsletter! You will now receive updates from us.\n\nBest regards,\nRND Technosoft.`
+            text: `Hello, ${name}\n\nThank you for subscribing to our newsletter! You will now receive updates from us.\n\nBest regards,\nRND Technosoft.`
         };
 
         // Send the email
