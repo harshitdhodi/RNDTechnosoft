@@ -25,11 +25,11 @@ export default function HeroSection() {
   }, [location]);
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center text-center sm:pt-44 md:pt-24 pt-24 pb-16 p-6">
-      <h1 className="text-white text-6xl md:text-4xl lg:text-7xl font-serif mb-7">
+    <div className="bg-gradient-to-br  from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center text-center sm:pt-44 md:pt-24 pt-24 pb-16 p-6">
+      <h1 className="text-white text-6xl md:text-4xl lg:text-7xl mt-16 font-serif mb-7">
         {heroSection.heading || "Blogs"}
       </h1>
-      <p className="text-white text-lg md:text-xl lg:text-2xl mb-6">
+      <p className="text-white text-lg md:text-xl w-[75%]  lg:text-2xl mb-6">
         {heroSection.subheading || "This is the blog page"}
       </p>
 
