@@ -7,13 +7,13 @@ import TrustedSection from '../components/BigCards';
 import WeAreExpert from '../components/WeAreExpert';
 import WhatYouGet from '../components/WhatYouGet';
 import BookAcall from '../components/BookAcall';
-import ServiceGrid from '../components/OurServices';
+// import ServiceGrid from '../components/OurServices';
 import GlobalSolution from '../components/GlobalSolution';
 import Faq from '../components/Faq';
 import StandardPackage from '../components/StandardPackage';
 import PremiumTemplatesSection from '../components/PrimiumTemplateSection';
 import { useDispatch } from 'react-redux';
-import ServicesPage from '../components/Websites/ServicePage';
+// import ServicesPage from '../components/Websites/ServicePage';
 import GridLayout from '../components/Websites/GridLayout';
 
 export default function Homepage() {

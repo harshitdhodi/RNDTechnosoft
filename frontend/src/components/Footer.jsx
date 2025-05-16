@@ -250,19 +250,29 @@ const navigate = useNavigate();
           {/* Legal Column */}
           <div className="col-span-1">
             <h4 className="font-bold text-md mb-6 uppercase">Legal</h4>
-            <ul className="space-y-2">
-              {footerData.legalLinks.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    to={link.path} 
-                    rel='noopener noreferrer' 
-                    className="text-gray-600  text-sm cursor-pointer hover:text-[#f3ca0d] transition-colors duration-300"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+           <ul className="space-y-2">
+  {footerData.legalLinks.map((link, index) => (
+    <li key={index}>
+      {link.path.startsWith('http') ? (
+        <a
+          href={link.path}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-gray-600  text-sm cursor-pointer hover:text-[#f3ca0d] transition-colors duration-300"
+        >
+          {link.name}
+        </a>
+      ) : (
+        <Link
+          to={link.path}
+          className="text-gray-600  text-sm cursor-pointer hover:text-[#f3ca0d] transition-colors duration-300"
+        >
+          {link.name}
+        </Link>
+      )}
+    </li>
+  ))}
+</ul>
           </div>
 
           {/* Newsletter Column */}
@@ -351,7 +361,7 @@ const transformIncomingData = (data) => {
       { name: "Terms & Conditions", path: "/terms-conditions" },
       { name: "Privacy Policy", path: "/privacy-policy" },
       { name: "Cookies Policy", path: "/cookies-policy" },
-      { name: "Templates", path: "/https://codecanyon.net/user/rndtechnosoft/portfolio?sso=1&_gl=1*1x7xliu*_gcl_aw*R0NMLjE3Mjg5ODAzMDYuQ2owS0NRandnck80QmhDMkFSSXNBS1E3elVrdlNjNXJ1YVpfRTEyNkstNFoyZDd3RFRvNWVjSVdJMWRVbXltOTNCQlBnQ3otZXlYbldpd2FBalNnRUFMd193Y0I.*_gcl_au*MTkxMTIzNTE3MS4xNzI4OTExMjg1*_ga*NjI3NDIwNDc1LjE3Mjg5MTEyODU.*_ga_ZKBVC1X78F*MTczMDE3MjI0Ny4zLjEuMTczMDE3MjQxNy4xNi4wLjA.&_ga=2.201880597.585621995.1730172247-627420475.1728911285&_gac=1.186169947.1729055186.Cj0KCQjwgrO4BhC2ARIsAKQ7zUkvSc5ruaZ_E126K-4Z2d7wDTo5ecIWI1dUmym93BBPgCz-eyXnWiwaAjSgEALw_wcB" }
+      { name: "Templates", path: "https://codecanyon.net/user/rndtechnosoft/portfolio?sso=1&_gl=1*1x7xliu*_gcl_aw*R0NMLjE3Mjg5ODAzMDYuQ2owS0NRandnck80QmhDMkFSSXNBS1E3elVrdlNjNXJ1YVpfRTEyNkstNFoyZDd3RFRvNWVjSVdJMWRVbXltOTNCQlBnQ3otZXlYbldpd2FBalNnRUFMd193Y0I.*_gcl_au*MTkxMTIzNTE3MS4xNzI4OTExMjg1*_ga*NjI3NDIwNDc1LjE3Mjg5MTEyODU.*_ga_ZKBVC1X78F*MTczMDE3MjI0Ny4zLjEuMTczMDE3MjQxNy4xNi4wLjA.&_ga=2.201880597.585621995.1730172247-627420475.1728911285&_gac=1.186169947.1729055186.Cj0KCQjwgrO4BhC2ARIsAKQ7zUkvSc5ruaZ_E126K-4Z2d7wDTo5ecIWI1dUmym93BBPgCz-eyXnWiwaAjSgEALw_wcB" }
     ]
   };
 };

@@ -23,6 +23,7 @@ const Inquiry = () => {
   const [gpmCount, setGpmCount] = useState(0);
   const [seoCount, setSeoCount] = useState(0);
   const itemsPerPage = 20;
+  const [pendingDelete, setPendingDelete] = useState(null); // Add this state
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -44,7 +45,7 @@ const Inquiry = () => {
         ...newData.newsletters,
         ...newData.popupInquiries
       ].length);
-      
+
       setCareerInquiriesCount(responseData.careerInquiriesCount || 0);
       setGpmCount(responseData.gpmCount || 0);
       setSeoCount(responseData.seoCount || 0);
@@ -104,6 +105,16 @@ const Inquiry = () => {
     }
     return selectedData;
   }, [selectedCategory, data, searchTerm]);
+    // Add this function to handle confirmation
+const confirmDelete = async () => {
+  if (pendingDelete) {
+    await deleteInquiry(pendingDelete.id, pendingDelete.category);
+    setPendingDelete(null);
+  }
+};
+
+// Add this function to handle cancel
+const cancelDelete = () => setPendingDelete(null);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -142,11 +153,11 @@ const Inquiry = () => {
         accessor: "mobileNo",
         Cell: ({ value, row }) => <div>{value || row.original.phone || "N/A"}</div>,
       },
-      {
-        Header: "Subject",
-        accessor: "subject",
-        Cell: ({ value }) => <div>{value || "N/A"}</div>,
-      },
+      // {
+      //   Header: "Subject",
+      //   accessor: "subject",
+      //   Cell: ({ value }) => <div>{value || "N/A"}</div>,
+      // },
       {
         Header: "Category",
         accessor: "category",
@@ -158,18 +169,18 @@ const Inquiry = () => {
           return "N/A";
         },
       },
-      {
-        Header: "PM Assigned",
-        accessor: "assignedPM",
-        Cell: ({ row }) => (
-          <div>{row.original.assignedPM || row.original.pmStatus || "Unassigned"}</div>
-        ),
-      },
-      {
-        Header: "Source",
-        accessor: "source",
-        Cell: ({ row }) => <div>{row.original.source || "N/A"}</div>,
-      },
+      // {
+      //   Header: "PM Assigned",
+      //   accessor: "assignedPM",
+      //   Cell: ({ row }) => (
+      //     <div>{row.original.assignedPM || row.original.pmStatus || "Unassigned"}</div>
+      //   ),
+      // },
+      // {
+      //   Header: "Source",
+      //   accessor: "source",
+      //   Cell: ({ row }) => <div>{row.original.source || "N/A"}</div>,
+      // },
       {
         Header: "Options",
         Cell: ({ row }) => (
@@ -187,10 +198,10 @@ const Inquiry = () => {
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => {
                 const category = data.careerInquiries.includes(row.original) ? 'Career' :
-                                data.inquiries.includes(row.original) ? 'Inquiry' :
-                                data.newsletters.includes(row.original) ? 'Newsletter' :
-                                data.popupInquiries.includes(row.original) ? 'Popup' : 'N/A';
-                deleteInquiry(row.original._id, category);
+                  data.inquiries.includes(row.original) ? 'Inquiry' :
+                    data.newsletters.includes(row.original) ? 'Newsletter' :
+                      data.popupInquiries.includes(row.original) ? 'Popup' : 'N/A';
+                setPendingDelete({ id: row.original._id, category });
               }}
             >
               <FaTrashAlt />
@@ -222,7 +233,7 @@ const Inquiry = () => {
       let endpoint;
       switch (category) {
         case 'Career':
-          endpoint = `/api/career/deleteCareerInquiries?id=${id}`;
+          endpoint = `/api/careerInquiries/deleteCareerInquiries?id=${id}`;
           break;
         case 'Inquiry':
           endpoint = `/api/inquiry/deleteInquiries?id=${id}`;
@@ -260,6 +271,7 @@ const Inquiry = () => {
       ([key]) => !excludedFields.includes(key)
     );
 
+
     return (
       <div className="grid grid-cols-1 gap-4">
         {fields.map(([key, value]) => (
@@ -281,7 +293,7 @@ const Inquiry = () => {
   return (
     <div className="p-4 overflow-x-auto">
       <h1 className="text-xl font-bold text-gray-700 font-serif uppercase mb-4">Inquiries</h1>
-      
+
       <div className="mb-4">
         <input
           type="text"
@@ -432,9 +444,8 @@ const Inquiry = () => {
                     <button
                       key={page}
                       onClick={() => handlePageChange(page)}
-                      className={`px-4 py-2 border rounded-md ${
-                        currentPage === page ? "bg-blue-500 text-white" : ""
-                      }`}
+                      className={`px-4 py-2 border rounded-md ${currentPage === page ? "bg-blue-500 text-white" : ""
+                        }`}
                     >
                       {page}
                     </button>
@@ -452,7 +463,29 @@ const Inquiry = () => {
           )}
         </>
       )}
-
+{/* // Add this modal just before the closing </div> of your main return */}
+{pendingDelete && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+      <h2 className="text-lg font-bold mb-4 text-gray-800">Confirm Deletion</h2>
+      <p className="mb-6 text-gray-700">Are you sure you want to delete this inquiry?</p>
+      <div className="flex justify-end gap-4">
+        <button
+          onClick={cancelDelete}
+          className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 transition"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={confirmDelete}
+          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto">

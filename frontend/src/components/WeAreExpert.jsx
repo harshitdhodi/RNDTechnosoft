@@ -1,6 +1,19 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
+// Utility to extract inner HTML of <h2> tag and preserve styling
+const parseHeadingHtml = (html) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  const h2 = div.querySelector("h2");
+  if (h2) {
+    // Return the inner HTML of the <h2> tag (includes <span>, <strong>, etc.)
+    return h2.innerHTML;
+  }
+  // Fallback: return the input HTML (could be plain text or other tags)
+  return html;
+};
+
 export default function WeAreExpert({ expertData }) {
   const { slug } = useParams();
   const data = Array.isArray(expertData) && expertData.length > 0 ? expertData[0] : {};
@@ -62,14 +75,18 @@ export default function WeAreExpert({ expertData }) {
     </div>
   );
 
+  // Parse heading and subheading to extract inner content
+  const parsedHeading = parseHeadingHtml(heading);
+  const parsedSubheading = parseHeadingHtml(subheading);
+
   return (
     <div className="max-w-[82rem] mx-auto px-4 my-16">
       <h2
-        dangerouslySetInnerHTML={{ __html: heading }}
+        dangerouslySetInnerHTML={{ __html: parsedHeading }}
         className="capitalize text-3xl md:text-4xl lg:text-5xl font-serif text-center mt-8 md:mt-12"
       />
       <h2
-        dangerouslySetInnerHTML={{ __html: subheading }}
+        dangerouslySetInnerHTML={{ __html: parsedSubheading }}
         className="text-[20px] text-center mt-4 mb-12"
       />
 

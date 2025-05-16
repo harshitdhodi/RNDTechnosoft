@@ -6,12 +6,13 @@ const cron = require('node-cron');
 const { generateAllSitemaps } = require('./routes/mySitemap');
 const { exportAndBackupAllCollectionsmonthly } = require('./controller/Backup');
 const fs = require('fs').promises;
-
+const compression = require('compression');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 const generateMetaTags = require('./middleware/metaTagInfo');
 const app = express();
 app.use(cookieParser()); 
+app.use(compression({ threshold: 1024 }));
 // Middleware
 app.use(cors({ 
     origin: true,
@@ -455,7 +456,7 @@ app.use('/api/cache', require('./routes/cache'));
 app.use('/api/staticMeta', require('./routes/staticMeta'));
 app.use('/api/all-inquiries', require('./routes/allInquiries'));
 
-// Swagger Setup
+// Swagger Setup 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swaggerConfig');
 

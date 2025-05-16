@@ -92,7 +92,7 @@ const OurWorkComponent = ({ ourWorkData }) => {
           src={`/api/logo/download/${project.photo}`} // Use the provided image URL directly
           alt={project.alt || project.name} 
           title={project.imgtitle} 
-          loading='lazy'
+          loading='preload'
           className="w-full h-full transition-transform duration-300" 
         />
         <span className="project-button bg-white text-gray-950 font-semibold text-sm rounded-full 
