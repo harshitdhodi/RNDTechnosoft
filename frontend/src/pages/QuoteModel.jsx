@@ -1,14 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const QuoteModel = ({ closeModal }) => {
-  // Get the slug from URL params
   const { slug } = useParams();
-  // console.log("Slug from URL:", slug);
-  
-  // Initialize URL parameters state
   const [urlParams, setUrlParams] = useState({
     path: '',
     utmSource: '',
@@ -37,7 +32,6 @@ const QuoteModel = ({ closeModal }) => {
   const [touched, setTouched] = useState({});
   const navigate = useNavigate();
 
-  // Validation rules
   const validateField = (name, value) => {
     switch (name) {
       case 'firstName':
@@ -80,11 +74,8 @@ const QuoteModel = ({ closeModal }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // This effect runs only once on component mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    
-    // Set URL parameters and slug in a separate state
     setUrlParams({
       path: slug || '',
       utmSource: params.get('utm_source') || '',
@@ -108,7 +99,7 @@ const QuoteModel = ({ closeModal }) => {
     };
 
     fetchIP();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -144,13 +135,12 @@ const QuoteModel = ({ closeModal }) => {
       return;
     }
 
-    // Combine form data with URL parameters for submission
     const dataToSubmit = {
       firstname: formData.firstName,
       lastname: formData.lastName,
       email: formData.email,
       mobileNo: formData.phone,
-      path: urlParams.path, // Use path from urlParams
+      path: urlParams.path,
       companysize: formData.companySize,
       activeuser: formData.activeUsers,
       topic: formData.topic,
@@ -169,7 +159,7 @@ const QuoteModel = ({ closeModal }) => {
     try {
       await axios.post('/api/inquiries/addInquiry', dataToSubmit);
       navigate("/thankyou");
-      closeModal(); // Close modal on successful submission
+      closeModal();
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Error submitting form');
@@ -177,169 +167,174 @@ const QuoteModel = ({ closeModal }) => {
   };
 
   return (
-    <div className="bg-white text-black py-4 px-6 rounded-lg w-full mx-auto">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-3xl text-black font-bold">Get in touch</h2>
-        <button onClick={closeModal} className="text-gray-900 hover:text-gray-700">
-          ✕
-        </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="bg-white text-black rounded-lg w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto">
+        <div className="flex justify-between items-center p-4 sm:p-6 border-b">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Get in touch</h2>
+          <button 
+            onClick={closeModal} 
+            className="text-gray-900 hover:text-gray-700 text-xl sm:text-2xl"
+            aria-label="Close modal"
+          >
+            ✕
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 mt-20 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
+            <div>
+              <label className="block text-sm font-medium mb-1">First Name *</label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full p-2 bg-gray-100 rounded border ${errors.firstName && touched.firstName ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-yellow-500`}
+              />
+              {errors.firstName && touched.firstName && (
+                <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Last Name *</label>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full p-2 bg-gray-100 rounded border ${errors.lastName && touched.lastName ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-yellow-500`}
+              />
+              {errors.lastName && touched.lastName && (
+                <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+              )}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Company Email *</label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`w-full p-2 bg-gray-100 rounded border ${errors.email && touched.email ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-yellow-500`}
+              />
+              {errors.email && touched.email && (
+                <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Phone *</label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                maxLength={10}
+                onBlur={handleBlur}
+                className={`w-full p-2 bg-gray-100 rounded border ${errors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-yellow-500`}
+              />
+              {errors.phone && touched.phone && (
+                <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
+              )}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Company Size *</label>
+            <div className="flex flex-wrap gap-2">
+              {['1-250', '251-1000', '1000+'].map((size) => (
+                <button
+                  key={size}
+                  type="button"
+                  onClick={() => {
+                    setFormData({ ...formData, companySize: size });
+                    setTouched(prev => ({ ...prev, companySize: true }));
+                    setErrors(prev => ({ ...prev, companySize: '' }));
+                  }}
+                  className={`px-4 py-2 rounded text-sm ${formData.companySize === size ? 'bg-red-200 text-black' : 'bg-gray-100 text-gray-700'} hover:bg-red-300 transition-colors`}
+                >
+                  {size}
+                </button>
+              ))}
+            </div>
+            {errors.companySize && touched.companySize && (
+              <p className="text-red-500 text-xs mt-1">{errors.companySize}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Active Users *</label>
+            <div className="flex flex-wrap gap-2">
+              {['<100k+', '>100k+', 'Unknown'].map((users) => (
+                <button
+                  key={users}
+                  type="button"
+                  onClick={() => {
+                    setFormData({ ...formData, activeUsers: users });
+                    setTouched(prev => ({ ...prev, activeUsers: true }));
+                    setErrors(prev => ({ ...prev, activeUsers: '' }));
+                  }}
+                  className={`px-4 py-2 rounded text-sm ${formData.activeUsers === users ? 'bg-red-200 text-black' : 'bg-gray-100 text-gray-700'} hover:bg-red-300 transition-colors`}
+                >
+                  {users}
+                </button>
+              ))}
+            </div>
+            {errors.activeUsers && touched.activeUsers && (
+              <p className="text-red-500 text-xs mt-1">{errors.activeUsers}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Topic *</label>
+            <select
+              name="topic"
+              value={formData.topic}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={`w-full p-2 bg-gray-100 rounded border ${errors.topic && touched.topic ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-yellow-500`}
+            >
+              <option value="">Select a topic</option>
+              <option>I want to change my plan</option>
+              <option>Pricing question</option>
+              <option>Product question</option>
+              <option>Free Demo</option>
+            </select>
+            {errors.topic && touched.topic && (
+              <p className="text-red-500 text-xs mt-1">{errors.topic}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">How can we help *</label>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={`w-full p-2 bg-gray-100 rounded border ${errors.message && touched.message ? 'border-red-500' : 'border-gray-300'} focus:outline-none focus:ring-2 focus:ring-yellow-500 resize-y`}
+              rows="4"
+            ></textarea>
+            {errors.message && touched.message && (
+              <p className="text-red-500 text-xs mt-1">{errors.message}</p>
+            )}
+          </div>
+          <div className="flex justify-end gap-4">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="px-4 sm:px-6 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition-colors text-sm sm:text-base"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 sm:px-6 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors text-sm sm:text-base"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
       </div>
-      {/* Path from slug is: {urlParams.path} */}
-      <form onSubmit={handleSubmit} className="space-y-2">
-        <div className="flex space-x-4">
-          <div className="w-1/2">
-            <label className="block text-sm font-medium mb-1">First Name *</label>
-            <input
-              type="text"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`w-full p-2 bg-gray-100 rounded ${errors.firstName && touched.firstName ? 'border-2 border-red-500' : ''}`}
-            />
-            {errors.firstName && touched.firstName && (
-              <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
-            )}
-          </div>
-          <div className="w-1/2">
-            <label className="block text-sm font-medium mb-1">Last Name *</label>
-            <input
-              type="text"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`w-full p-2 bg-gray-100 rounded ${errors.lastName && touched.lastName ? 'border-2 border-red-500' : ''}`}
-            />
-            {errors.lastName && touched.lastName && (
-              <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
-            )}
-          </div>
-        </div>
-        <div className="flex space-x-4">
-          <div className="w-1/2">
-            <label className="block text-sm font-medium mb-1">Company Email *</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`w-full p-2 bg-gray-100 rounded ${errors.email && touched.email ? 'border-2 border-red-500' : ''}`}
-            />
-            {errors.email && touched.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-            )}
-          </div>
-          <div className="w-1/2">
-            <label className="block text-sm font-medium mb-1">Phone *</label>
-            <input
-              type="tel"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              maxLength={10}
-              onBlur={handleBlur}
-              className={`w-full p-2 bg-gray-100 rounded ${errors.phone && touched.phone ? 'border-2 border-red-500' : ''}`}
-            />
-            {errors.phone && touched.phone && (
-              <p className="text-red-500 text-xs mt-1">{errors.phone}</p>
-            )}
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Company Size *</label>
-          <div className="flex space-x-2">
-            {['1-250', '251-1000', '1000+'].map((size) => (
-              <button
-                key={size}
-                type="button"
-                onClick={() => {
-                  setFormData({ ...formData, companySize: size });
-                  setTouched(prev => ({ ...prev, companySize: true }));
-                  setErrors(prev => ({ ...prev, companySize: '' }));
-                }}
-                className={`px-4 py-2 rounded ${formData.companySize === size ? 'bg-red-200' : 'bg-gray-100'}`}
-              >
-                {size}
-              </button>
-            ))}
-          </div>
-          {errors.companySize && touched.companySize && (
-            <p className="text-red-500 text-xs mt-1">{errors.companySize}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Active Users *</label>
-          <div className="flex space-x-2">
-            {['<100k+', '>100k+', 'Unknown'].map((users) => (
-              <button
-                key={users}
-                type="button"
-                onClick={() => {
-                  setFormData({ ...formData, activeUsers: users });
-                  setTouched(prev => ({ ...prev, activeUsers: true }));
-                  setErrors(prev => ({ ...prev, activeUsers: '' }));
-                }}
-                className={`px-4 py-2 rounded ${formData.activeUsers === users ? 'bg-red-200' : 'bg-gray-100'}`}
-              >
-                {users}
-              </button>
-            ))}
-          </div>
-          {errors.activeUsers && touched.activeUsers && (
-            <p className="text-red-500 text-xs mt-1">{errors.activeUsers}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Topic *</label>
-          <select
-            name="topic"
-            value={formData.topic}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`w-full p-2 bg-gray-100 rounded ${errors.topic && touched.topic ? 'border-2 border-red-500' : ''}`}
-          >
-            <option value="">Select a topic</option>
-            <option>I want to change my plan</option>
-            <option>Pricing question</option>
-            <option>Product question</option>
-            <option>Free Demo</option>
-          </select>
-          {errors.topic && touched.topic && (
-            <p className="text-red-500 text-xs mt-1">{errors.topic}</p>
-          )}
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">How can we help *</label>
-          <textarea
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`w-full bg-gray-100 rounded ${errors.message && touched.message ? 'border-2 border-red-500' : ''}`}
-            rows="3"
-          ></textarea>
-          {errors.message && touched.message && (
-            <p className="text-red-500 text-xs mt-1">{errors.message}</p>
-          )}
-        </div>
-        <div className="flex justify-end space-x-4">
-          <button
-            type="button"
-            onClick={closeModal}
-            className="px-6 py-2 bg-gray-300 text-black rounded hover:bg-gray-400 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-colors"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
     </div>
   );
 };

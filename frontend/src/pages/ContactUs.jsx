@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const ContactUs = () => {
   const navigate = useNavigate();
-  
+
   const [contactInfos, setContactInfos] = useState([]);
   const [heading, setHeading] = useState('');
   const [subheading, setSubheading] = useState('');
@@ -140,8 +140,8 @@ const ContactUs = () => {
 
   const handleInputChange = (e, validator) => {
     const { name, value } = e.target;
-    
-    switch(name) {
+
+    switch (name) {
       case 'name':
         setName(value);
         break;
@@ -269,9 +269,8 @@ const ContactUs = () => {
                       type="text"
                       id="name"
                       name="name"
-                      className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${
-                        errors.name ? 'border-red-500' : ''
-                      }`}
+                      className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${errors.name ? 'border-red-500' : ''
+                        }`}
                       value={name}
                       onChange={(e) => handleInputChange(e, validateName)}
                       required
@@ -284,9 +283,8 @@ const ContactUs = () => {
                       type="email"
                       id="email"
                       name="email"
-                      className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${
-                        errors.email ? 'border-red-500' : ''
-                      }`}
+                      className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${errors.email ? 'border-red-500' : ''
+                        }`}
                       value={email}
                       onChange={(e) => handleInputChange(e, validateEmail)}
                       required
@@ -300,9 +298,8 @@ const ContactUs = () => {
                     type="tel"
                     id="phone"
                     name="phone"
-                    className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${
-                      errors.phone ? 'border-red-500' : ''
-                    }`}
+                    className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${errors.phone ? 'border-red-500' : ''
+                      }`}
                     value={phone}
                     onChange={(e) => handleInputChange(e, validatePhone)}
                     maxLength={10}
@@ -316,9 +313,8 @@ const ContactUs = () => {
                     type="text"
                     id="subject"
                     name="subject"
-                    className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${
-                      errors.subject ? 'border-red-500' : ''
-                    }`}
+                    className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${errors.subject ? 'border-red-500' : ''
+                      }`}
                     value={subject}
                     onChange={(e) => handleInputChange(e, validateSubject)}
                     required
@@ -331,9 +327,8 @@ const ContactUs = () => {
                     id="message"
                     name="message"
                     rows="4"
-                    className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${
-                      errors.message ? 'border-red-500' : ''
-                    }`}
+                    className={`w-full p-2 border rounded focus:border-yellow-500 outline-none ${errors.message ? 'border-red-500' : ''
+                      }`}
                     value={message}
                     onChange={(e) => handleInputChange(e, validateMessage)}
                     required
@@ -356,15 +351,17 @@ const ContactUs = () => {
 
             <div className="flex-1">
               <h2 className="text-2xl mb-4 text-black font-serif">Our Location</h2>
-              <iframe
-                src={location}
-                width="100%"
-                height="450"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                title="Location map"
-              ></iframe>
+              {window.location.pathname === "/contact-us" && (
+                <iframe
+                  src={location}
+                  width="100%"
+                  height="450"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  title="Location map"
+                ></iframe>
+              )}
             </div>
           </div>
         </div>

@@ -1,9 +1,25 @@
 import React from 'react';
 
+// Utility to extract inner HTML of <h2> tag and preserve styling
+const parseHeadingHtml = (html) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  const h2 = div.querySelector("h2");
+  if (h2) {
+    // Return the inner HTML of the <h2> tag (includes <span>, <strong>, etc.)
+    return h2.innerHTML;
+  }
+  // Fallback: return plain text if no <h2> tag is found
+  return div.textContent || div.innerText || "";
+};
+
 const GlobalSolution = ({ globalData }) => {
   if (!globalData || globalData.length === 0) return null;
 
   const globalSolution = globalData[0]; // Assuming there's only one global solution entry
+
+  // Extract inner HTML of the heading (e.g., <span> and <strong> tags)
+  const headingContent = parseHeadingHtml(globalSolution.heading);
 
   return (
     <section className="relative bg-[#333] overflow-hidden mt-5">
@@ -26,9 +42,10 @@ const GlobalSolution = ({ globalData }) => {
       <div className="relative sm:pt-32 pt-24">
         <div className="container mx-auto py-12 sm:px-4 px-2 w-full sm:w-[67%]">
           <div className="text-center">
-            <h2 className="sm:text-5xl text-3xl font-semibold mb-4 font-serif text-white">
-              <span dangerouslySetInnerHTML={{ __html: globalSolution.heading }} />
-            </h2>
+            <h2
+              className="sm:text-5xl text-3xl font-semibold mb-4 font-serif text-white ql-align-center"
+              dangerouslySetInnerHTML={{ __html: headingContent }}
+            />
             <p className="sm:text-lg text-base mb-8 text-white font-inter sm:pt-10 pt-7">
               <span dangerouslySetInnerHTML={{ __html: globalSolution.description }} />
             </p>
