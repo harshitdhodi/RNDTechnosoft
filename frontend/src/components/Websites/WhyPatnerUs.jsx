@@ -2,6 +2,19 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Wave3 from '../../images/Wave3.svg';
 
+// Utility to extract inner HTML of <h2> tag and preserve styling
+const parseHeadingHtml = (html) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  const h2 = div.querySelector("h2");
+  if (h2) {
+    // Return the inner HTML of the <h2> tag (includes <span>, <strong>, etc.)
+    return h2.innerHTML;
+  }
+  // Fallback: return the input HTML (could be plain text or other tags)
+  return html;
+};
+
 const WhyPartnerWithUs = () => {
   const [webSolutionData, setWebSolutionData] = useState(null);
   const [videoUrl, setVideoUrl] = useState('');
@@ -27,6 +40,9 @@ const WhyPartnerWithUs = () => {
     return null;
   }
 
+  // Parse heading to extract inner content
+  const parsedHeading = parseHeadingHtml(webSolutionData.heading);
+
   return (
     <div>
       <div className="relative">
@@ -43,7 +59,7 @@ const WhyPartnerWithUs = () => {
           <div className="md:w-[60%]">
             <h2
               className="text-3xl sm:text-4xl lg:text-5xl font-semibold mb-4 font-playfair"
-              dangerouslySetInnerHTML={{ __html: webSolutionData.heading }}
+              dangerouslySetInnerHTML={{ __html: parsedHeading }}
             />
             <p
               className="text-base sm:text-lg lg:text-xl mb-4 font-inter pt-6 lg:pt-8"

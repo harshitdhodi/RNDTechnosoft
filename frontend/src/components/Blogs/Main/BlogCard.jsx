@@ -77,12 +77,12 @@ export default function HowRndHelp() {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 pb-20">
+      <div  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 pb-20">
         {filteredData.slice(0, visibleCount).map((blog) => (
           <div
             key={blog._id}
-          
-            className="relative blog-card border  border-lg border-black rounded-xl p-4 sm:p-6 flex flex-col gap-3 items-center bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105"
+          onClick={(e) => handleReadMore(blog.slug, e)}
+            className="relative blog-card border cursor-pointer  border-lg border-black rounded-xl p-4 sm:p-6 flex flex-col gap-3 items-center bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105"
           >
             <p className="bg-[#333] rounded-xl text-white px-3 py-1 absolute top-2 right-2">
               {blog.serviceCategoryName}
@@ -105,13 +105,13 @@ export default function HowRndHelp() {
                 )}
               </p>
 
-              <button
+              {/* <button
                 onClick={(e) => handleReadMore(blog.slug, e)} // Use blog.slug to navigate
                 className="relative mt-3 py-1 px-4 text-mg font-bold bg-[#f3ca0d] text-white rounded-3xl overflow-hidden group"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-[#f3ca0d] to-yellow-800 transform origin-left scale-x-0 transition-transform duration-500 ease-out group-hover:scale-x-100" />
                 <span className="relative z-10">Read More</span>
-              </button>
+              </button> */}
             </div>
             <div className="flex justify-between w-full items-center">
               <div className="flex gap-2 items-center  text-gray-500">
