@@ -1,17 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const QuoteModel = ({ closeModal }) => {
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: '',
-    companySize: '',
-    activeUsers: '',
-    topic: '',
-    message: '',
+  // Get the slug from URL params
+  const { slug } = useParams();
+  // console.log("Slug from URL:", slug);
+  
+  // Initialize URL parameters state
+  const [urlParams, setUrlParams] = useState({
+    path: '',
     utmSource: '',
     utmMedium: '',
     utmCampaign: '',
@@ -21,6 +20,17 @@ const QuoteModel = ({ closeModal }) => {
     utmContent: '',
     utmTerm: '',
     ipaddress: ''
+  });
+  
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    companySize: '',
+    activeUsers: '',
+    topic: '',
+    message: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -70,31 +80,35 @@ const QuoteModel = ({ closeModal }) => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // This effect runs only once on component mount
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    setFormData(prevData => ({
-      ...prevData,
-      utmSource: urlParams.get('utm_source') || '',
-      utmMedium: urlParams.get('utm_medium') || '',
-      utmCampaign: urlParams.get('utm_campaign') || '',
-      utmId: urlParams.get('utm_id') || '',
-      gclid: urlParams.get('gclid') || '',
-      gcidSource: urlParams.get('gcid_source') || '',
-      utmContent: urlParams.get('utm_content') || '',
-      utmTerm: urlParams.get('utm_term') || ''
-    }));
+    const params = new URLSearchParams(window.location.search);
+    
+    // Set URL parameters and slug in a separate state
+    setUrlParams({
+      path: slug || '',
+      utmSource: params.get('utm_source') || '',
+      utmMedium: params.get('utm_medium') || '',
+      utmCampaign: params.get('utm_campaign') || '',
+      utmId: params.get('utm_id') || '',
+      gclid: params.get('gclid') || '',
+      gcidSource: params.get('gcid_source') || '',
+      utmContent: params.get('utm_content') || '',
+      utmTerm: params.get('utm_term') || '',
+      ipaddress: ''
+    });
 
     const fetchIP = async () => {
       try {
         const response = await axios.get('https://api.ipify.org?format=json');
-        setFormData(prevData => ({ ...prevData, ipaddress: response.data.ip }));
+        setUrlParams(prevParams => ({ ...prevParams, ipaddress: response.data.ip }));
       } catch (error) {
         console.error('Error fetching IP address:', error);
       }
     };
 
     fetchIP();
-  }, []);
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -130,24 +144,26 @@ const QuoteModel = ({ closeModal }) => {
       return;
     }
 
+    // Combine form data with URL parameters for submission
     const dataToSubmit = {
       firstname: formData.firstName,
       lastname: formData.lastName,
       email: formData.email,
       mobileNo: formData.phone,
+      path: urlParams.path, // Use path from urlParams
       companysize: formData.companySize,
       activeuser: formData.activeUsers,
       topic: formData.topic,
       message: formData.message,
-      utm_source: formData.utmSource || '',
-      utm_medium: formData.utmMedium || '',
-      utm_campaign: formData.utmCampaign || '',
-      utm_id: formData.utmId || '',
-      gclid: formData.gclid || '',
-      gcid_source: formData.gcidSource || '',
-      utm_content: formData.utmContent || '',
-      utm_term: formData.utmTerm || '',
-      ipaddress: formData.ipaddress || ''
+      utm_source: urlParams.utmSource || '',
+      utm_medium: urlParams.utmMedium || '',
+      utm_campaign: urlParams.utmCampaign || '',
+      utm_id: urlParams.utmId || '',
+      gclid: urlParams.gclid || '',
+      gcid_source: urlParams.gcidSource || '',
+      utm_content: urlParams.utmContent || '',
+      utm_term: urlParams.utmTerm || '',
+      ipaddress: urlParams.ipaddress || ''
     };
 
     try {
@@ -168,6 +184,7 @@ const QuoteModel = ({ closeModal }) => {
           ✕
         </button>
       </div>
+      {/* Path from slug is: {urlParams.path} */}
       <form onSubmit={handleSubmit} className="space-y-2">
         <div className="flex space-x-4">
           <div className="w-1/2">

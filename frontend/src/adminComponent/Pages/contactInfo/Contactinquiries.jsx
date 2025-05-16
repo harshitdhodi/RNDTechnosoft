@@ -5,8 +5,6 @@ import axios from 'axios';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 
-
-
 const Inquiry = () => {
     const [inquiries, setInquiries] = useState([]);
     const [loadings, setLoading] = useState(true);
@@ -24,7 +22,7 @@ const Inquiry = () => {
             const response = await axios.get(`
 /api/contactinquiries/getcontactInquiries`, { withCredentials: true });
             const { totalCount, countWithFields, countWithoutFields, dataWithFields, dataWithoutFields, inquiries } = response.data;
-
+console.log(countWithFields);
             setTotalCount(totalCount);
             setCountWithFields(countWithFields);
             setCountWithoutFields(countWithoutFields);

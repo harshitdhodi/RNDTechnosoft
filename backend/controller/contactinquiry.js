@@ -158,12 +158,15 @@ exports.createInquiry = async (req, res) => {
         const mailOptions = {
             from: newInquiry.email,
             to: process.env.EMAIL_USER,
+            cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
             replyTo: newInquiry.email,
             subject: 'New Contact Inquiry',
             html: emailHTML
         };
+
         // Send email 
         await transporter.sendMail(mailOptions);
+
         try {
             await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
                 API_KEY: "A78A8BC90C6F6235",

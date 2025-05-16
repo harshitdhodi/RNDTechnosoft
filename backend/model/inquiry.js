@@ -17,6 +17,9 @@ const inquirySchema = new mongoose.Schema({
   mobileNo: {
     type: String,
   },
+  path: {
+    type: String,
+  },
   companysize: {
     type: String,
   },

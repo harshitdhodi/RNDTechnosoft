@@ -19,21 +19,28 @@ export default function WeAreExpert({ expertData }) {
   if (!experts.length) return null;
 
   // Define four custom rows
-let rowsToRender = [];
+  let rowsToRender = [];
 
-if (selectedCategory === "all") {
-  rowsToRender = [
-    filteredExperts.slice(0, 6),
-    filteredExperts.slice(6, 13),
-    filteredExperts.slice(13, 19),
-    filteredExperts.slice(19, 26),
-  ];
-} else {
-  for (let i = 0; i < filteredExperts.length; i += 7) {
-    rowsToRender.push(filteredExperts.slice(i, i + 7));
+  if (selectedCategory === "all") {
+    rowsToRender = [
+      filteredExperts.slice(0, 6),
+      filteredExperts.slice(6, 13),
+      filteredExperts.slice(13, 19),
+      filteredExperts.slice(19, 26),
+    ];
+  } else {
+    for (let i = 0; i < filteredExperts.length; i += 7) {
+      rowsToRender.push(filteredExperts.slice(i, i + 7));
+    }
   }
-}
 
+  // Utility function to format category names
+  const formatCategoryName = (category) => {
+    return category
+      .split("-") // Split by "-"
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize each word
+      .join(" "); // Join with a space
+  };
 
   const renderRow = (data, justify = "center") => (
     <div className={`flex flex-wrap ${justify} gap-4 md:gap-6 mb-6`}>
@@ -84,16 +91,13 @@ if (selectedCategory === "all") {
               selectedCategory === category ? "bg-yellow-400 text-white" : "bg-gray-100"
             }`}
           >
-            {category}
+            {formatCategoryName(category)}
           </button>
         ))}
       </div>
 
       {/* Render 4 Custom Rows */}
-   {rowsToRender.map((row, index) => (
-  renderRow(row, "justify-center")
-))}
-
+      {rowsToRender.map((row, index) => renderRow(row, "justify-center"))}
     </div>
   );
 }

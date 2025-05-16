@@ -94,6 +94,7 @@ exports.CreateCareerInquiry = async (req, res) => {
     const mailOptions = {
       from: newInquiry.email,
       to: process.env.EMAIL_USER,
+      cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
       subject: 'New Career Inquiry',
       html: emailHTML,
       attachments: [
