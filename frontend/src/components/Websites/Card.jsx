@@ -99,6 +99,8 @@ const imagePositionStyle = () => {
             <img
               src={imageUrl || "/api/placeholder/120/80"}
               alt={title}
+              loading="lazy"
+              fetchpriority="low"
               className={`w-full h-48 object-contain rounded-md ${imageClassName}`}
             />
           </div>
