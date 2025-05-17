@@ -40,7 +40,7 @@ const PremiumTemplatesSection = () => {
   const cleanHeading = stripHtml(content.heading);
 
   return (
-    <section className="relative bg-[#f9f7f1] text-black md:mx-40 mx-6 my-16 sm:h-auto rounded-lg shadow-lg">
+    <section className="relative bg-[#f9f7f1] text-black md:mx-6 lg:mx-40 py-5    mx-6 my-16 sm:h-auto rounded-lg shadow-lg">
       <div className="container mx-auto flex flex-wrap items-center justify-between">
         <div className="w-full lg:w-1/2 p-4 sm:ml-10 sn:space-y-7">
           <div className="flex flex-col">
@@ -69,6 +69,8 @@ const PremiumTemplatesSection = () => {
             src={`/api/image/download/${content.photo[0]}`}
             alt={content.photoAlt}
             title={content.imgtitle}
+            loading="lazy"
+            fetchpriority="low"
           />
         </div>
       </div>

@@ -18,13 +18,13 @@ export default function Mainpage() {
   return (
     <div className="min-h-screen flex flex-col ">
       <Navbar />
-      <div className="">
+      <div className="overflow-hidden flex-grow">
         <Outlet />
       </div>
       <Footer />
       <ScrollToTop />
       <Suspense fallback={<div>Loading...</div>}>
-        <Chatbot />
+        {/* <Chatbot /> */}
         <Whatsapp />
       </Suspense>
     </div>

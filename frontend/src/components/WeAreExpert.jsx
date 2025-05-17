@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 // Utility to extract inner HTML of <h2> tag and preserve styling
@@ -23,6 +23,24 @@ export default function WeAreExpert({ expertData }) {
 
   const categories = [...new Set(experts.map(expert => expert.serviceparentCategoryId))];
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const [itemsPerRow, setItemsPerRow] = useState(6); // default for md
+
+  // Responsive items per row
+  useEffect(() => {
+    const updateItemsPerRow = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setItemsPerRow(3); // small devices
+      } else if (width < 1025) {
+        setItemsPerRow(6); // md devices
+      } else {
+        setItemsPerRow(null); // large devices, use default logic
+      }
+    };
+    updateItemsPerRow();
+    window.addEventListener("resize", updateItemsPerRow);
+    return () => window.removeEventListener("resize", updateItemsPerRow);
+  }, []);
 
   const filteredExperts =
     selectedCategory === "all"
@@ -31,19 +49,26 @@ export default function WeAreExpert({ expertData }) {
 
   if (!experts.length) return null;
 
-  // Define four custom rows
   let rowsToRender = [];
 
-  if (selectedCategory === "all") {
-    rowsToRender = [
-      filteredExperts.slice(0, 6),
-      filteredExperts.slice(6, 13),
-      filteredExperts.slice(13, 19),
-      filteredExperts.slice(19, 26),
-    ];
+  if (itemsPerRow) {
+    // Responsive: split by itemsPerRow
+    for (let i = 0; i < filteredExperts.length; i += itemsPerRow) {
+      rowsToRender.push(filteredExperts.slice(i, i + itemsPerRow));
+    }
   } else {
-    for (let i = 0; i < filteredExperts.length; i += 7) {
-      rowsToRender.push(filteredExperts.slice(i, i + 7));
+    // Large device: use your default logic
+    if (selectedCategory === "all") {
+      rowsToRender = [
+        filteredExperts.slice(0, 6),
+        filteredExperts.slice(6, 13),
+        filteredExperts.slice(13, 19),
+        filteredExperts.slice(19, 26),
+      ];
+    } else {
+      for (let i = 0; i < filteredExperts.length; i += 7) {
+        rowsToRender.push(filteredExperts.slice(i, i + 7));
+      }
     }
   }
 
@@ -55,25 +80,34 @@ export default function WeAreExpert({ expertData }) {
       .join(" "); // Join with a space
   };
 
-  const renderRow = (data, justify = "center") => (
-    <div className={`flex flex-wrap ${justify} gap-4 md:gap-6 mb-6`}>
-      {data.map((expert, index) => (
-        <div
-          key={`expert-${index}`}
-          className="w-[12.5%] min-w-[90px] flex flex-col items-center"
-        >
-          <img
-            src={`/api/image/download/${expert.photo}`}
-            alt={expert.title || "Expert"}
-            className="w-20 h-20 md:w-28 md:h-28 rounded-full shadow-md object-cover"
-          />
-          {expert.title && (
-            <p className="mt-2 text-center text-sm font-medium">{expert.title}</p>
-          )}
-        </div>
-      ))}
-    </div>
-  );
+// ...existing code...
+const renderRow = (data, justify = "center") => (
+  <div className={`flex flex-wrap ${justify} gap-5 md:gap-6 mb-6`}>
+    {data.map((expert, index) => (
+      <div
+        key={`expert-${index}`}
+        className="w-[12.5%] min-w-[90px] flex flex-col items-center"
+        style={{
+          maxWidth: "180px",
+          minWidth: "90px",
+          maxHeight: "260px",
+          minHeight: "140px",
+        }}
+      >
+       <img
+          src={`/api/image/download/${expert.photo}`}
+          alt={expert.title || "Expert"}
+          loading="lazy"
+          fetchpriority="low"
+          className="max-w-[112px] min-w-[80px] max-h-[90px] min-h-[80px] rounded-full shadow-md md:object-contain object-cover"
+        />
+        {expert.title && (
+          <p className="mt-2 text-center text-sm font-medium">{expert.title}</p>
+        )}
+      </div>
+    ))}
+  </div>
+);
 
   // Parse heading and subheading to extract inner content
   const parsedHeading = parseHeadingHtml(heading);
@@ -113,7 +147,7 @@ export default function WeAreExpert({ expertData }) {
         ))}
       </div>
 
-      {/* Render 4 Custom Rows */}
+      {/* Render Custom Rows */}
       {rowsToRender.map((row, index) => renderRow(row, "justify-center"))}
     </div>
   );
