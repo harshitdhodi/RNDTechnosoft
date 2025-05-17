@@ -39,7 +39,7 @@ const PricingPackage = ({ packagesData }) => {
           <h2 className="text-[29px] font-bold mb-2 max-w-[90%]">
             {title || "Ultimate Growth Package: A One-Time Investment for Lifelong Growth"}
           </h2>
-          <p className="text-4xl font-bold mb-2">₹{price} Lakh/month</p>
+          <p className="text-4xl font-bold mb-2">₹{price} Lakhs/month</p>
         </div>
 
         {/* Content Section */}
