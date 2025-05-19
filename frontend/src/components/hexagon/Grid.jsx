@@ -34,6 +34,7 @@ const HexGridDemo = ({ expertData }) => {
                 newConfig.hexagonsPerRow = Math.min(filteredSubsections.length, 2);
             }
 
+
             setGridConfig(newConfig);
         };
 
@@ -140,8 +141,8 @@ const HexGridDemo = ({ expertData }) => {
         <div className="flex justify-center gap-4 mb-8 flex-wrap">
             <div
                 className={`px-4 py-2 rounded-md ${selectedCategory === "all"
-                        ? "bg-yellow-400 text-white"
-                        : "bg-gray-100 hover:bg-gray-200"
+                    ? "bg-yellow-400 text-white"
+                    : "bg-gray-100 hover:bg-gray-200"
                     } cursor-pointer text-sm`}
                 onClick={() => handleCategoryChange("all")}
             >
@@ -151,8 +152,8 @@ const HexGridDemo = ({ expertData }) => {
                 <div
                     key={index}
                     className={`px-4 py-2 rounded-md ${selectedCategory === category
-                            ? "bg-yellow-400 text-white"
-                            : "bg-gray-100 hover:bg-gray-200"
+                        ? "bg-yellow-400 text-white"
+                        : "bg-gray-100 hover:bg-gray-200"
                         } cursor-pointer text-sm`}
                     onClick={() => handleCategoryChange(category)}
                 >
