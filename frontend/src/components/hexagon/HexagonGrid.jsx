@@ -7,6 +7,7 @@ import times from "lodash/times"
 
 // Helper function to get grid dimensions
 const getGridDimensions = (gridWidth, gridHeight, N) => {
+  console.log("Grid Width:", N);
   const a = (5 * gridHeight) / (gridWidth * Math.sqrt(2))
   const b = gridHeight / (2 * gridWidth) - 2
 
