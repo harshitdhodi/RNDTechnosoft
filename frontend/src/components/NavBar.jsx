@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
-import flames from "../images/flames.png";
-// import rndlogo from "../images/rndlogo.png";
 import MobileNavbar from "./MobileMenuItems";
 import { FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -64,6 +62,18 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
   const fontSize =
     depth === 0 ? "text-lg" : depth === 1 ? "text-base " : "text-sm";
 
+  // Check if we need to display in two columns
+  const useTwoColumns = item.subItems && item.subItems.length > 15;
+  
+  // If using two columns, split the items into two balanced arrays
+  const firstColumnItems = useTwoColumns
+    ? item.subItems.slice(0, Math.ceil(item.subItems.length / 2))
+    : item.subItems;
+    
+  const secondColumnItems = useTwoColumns
+    ? item.subItems.slice(Math.ceil(item.subItems.length / 2))
+    : [];
+
   return (
     <li
       className={`relative ${depth === 0 ? "group" : ""} list-none`}
@@ -96,26 +106,41 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
       </Link>
 
       {item.subItems && item.subItems.length > 0 && (
-        <ul
+        <div
           className={`absolute ${
             depth === 0
-              ? "left-0 top-full w-max mt-2 "
-              : "left-full top-0 h-max w-max mt-2"
+              ? "left-0 top-full mt-2"
+              : "left-full top-0 mt-2"
           } 
-          ${
-            isHovered ? "block" : "hidden"
-          } bg-white shadow-lg transition-all duration-300 ease-in-out
+          ${isHovered ? "flex" : "hidden"} bg-white shadow-lg transition-all duration-300 ease-in-out
           ${depth === 0 ? "" : "-mt-1 ml-1"}`}
         >
-          {item.subItems.map((subItem) => (
-            <NavItem
-              key={subItem.id}
-              item={subItem}
-              depth={depth + 1}
-              closeMenu={closeMenu}
-            />
-          ))}
-        </ul>
+          {/* First column of items */}
+          <ul className="w-max">
+            {firstColumnItems.map((subItem) => (
+              <NavItem
+                key={subItem.id}
+                item={subItem}
+                depth={depth + 1}
+                closeMenu={closeMenu}
+              />
+            ))}
+          </ul>
+          
+          {/* Second column of items (if needed) */}
+          {useTwoColumns && (
+            <ul className="w-max border-l border-gray-100">
+              {secondColumnItems.map((subItem) => (
+                <NavItem
+                  key={subItem.id}
+                  item={subItem}
+                  depth={depth + 1}
+                  closeMenu={closeMenu}
+                />
+              ))}
+            </ul>
+          )}
+        </div>
       )}
     </li>
   );
@@ -144,7 +169,7 @@ const Navbar = () => {
         try {
             const response = await axios.get('/api/logo');
             const headerColorLogo = response.data.find(logo => logo.type === 'headerColor');
-           console.log(headerColorLogo)
+            console.log(headerColorLogo)
             if (headerColorLogo) {
                 setColorLogo(headerColorLogo);
             }
@@ -155,7 +180,6 @@ const Navbar = () => {
 
     fetchHeaderColorLogo();
 }, []);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,15 +205,13 @@ const Navbar = () => {
         <div className="bg-[#333] text-white text-center py-1  justify-center font-semibold text-xl text-md xl:flex hidden">
           Our website is currently under construction. Please check back later.
         </div>
-
         <div className=" mx-20 flex justify-between items-center py-2">
           <div className="flex items-center space-x-8">
             <NavLink to="/">
-              {/* <img src={rndlogo} alt="Logo" className="h-12" /> */}
               <img
-                src={`/api/logo/download/${colorlogo.photo}`}
-                alt={colorlogo.alt}
-                title={colorlogo.imgTitle}
+                src={colorlogo.photo ? `/api/logo/download/${colorlogo.photo}` : ''}
+                alt={colorlogo.alt || 'Logo'}
+                title={colorlogo.imgTitle || 'Logo'}
                 className="h-18 w-[27%]"
                 loading="lazy"
                 fetchPriority="high"
