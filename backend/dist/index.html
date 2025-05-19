@@ -5,8 +5,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex,nofollow" />
+  <!-- Preconnect to third-party domains -->
+  <link rel="preconnect" href="https://api.ipify.org" crossorigin>
+  <link rel="preconnect" href="https://embed.tawk.to" crossorigin>
+  <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
 
+  <!-- Load critical CSS -->
+  <link rel="stylesheet" href="https://embed.tawk.to/_s/v4/app/6826b3762c6/css/max-widget.css" media="print" onload="this.media='all'" />
   <title>RND Technosoft</title>
+    <link rel="preload" as="image" href="http://localhost:3021/api/logo/download/photo_1746846441411.webp" type="image/webp">
   <link rel="icon" type="image/png" href="/favicon.png">
   <link rel="manifest" href="/manifest.json">
   <script async defer src="https://www.googletagmanager.com/gtag/js?id=G-VQ9S55LZTK"></script>
@@ -16,12 +24,52 @@
     gtag('js', new Date());
     gtag('config', 'G-VQ9S55LZTK');
   </script>
-  <script type="module" crossorigin src="/assets/index-C_2f1bHV-1747448988042.js"></script>
+  <script type="module" crossorigin src="/assets/index-CPFXqKfq-1747643420257.js"></script>
   
 <link rel="stylesheet" href="/assets/main-DdwcwtZ8-1744602663188.css" media="print" onload="this.media='all'" /><link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
 
 <body>
   <div id="root"></div>
+    <script>
+    // Function to load scripts after page load
+    function loadDeferredScripts() {
+      // Load Google Analytics (GTM) after 4 seconds
+      setTimeout(function() {
+        const gaScript = document.createElement('script');
+        gaScript.src = "https://www.googletagmanager.com/gtag/js?id=G-VQ9S55LZTK";
+        gaScript.async = true;
+        gaScript.defer = true;
+        document.head.appendChild(gaScript);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', 'G-VQ9S55LZTK');
+      }, 10000);
+
+      // Load Tawk.to chat widget after 4 seconds
+      setTimeout(function() {
+        var Tawk_API = Tawk_API || {};
+        var Tawk_LoadStart = new Date();
+        (function(){
+          var s1 = document.createElement("script");
+          s1.async = true;
+          s1.defer = true;
+          s1.src = 'https://embed.tawk.to/630dcc4b37898912e96620d6/1gbmuc2sq';
+          s1.setAttribute('crossorigin', '*');
+          document.head.appendChild(s1);
+        })();
+      }, 10000);
+    }
+
+    // Add event listener for when the page has loaded
+    if (document.readyState === 'complete') {
+      loadDeferredScripts();
+    } else {
+      window.addEventListener('load', loadDeferredScripts);
+    }
+  </script>
 </body>
 
 </html>

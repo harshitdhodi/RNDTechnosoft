@@ -118,6 +118,7 @@ const Templates = lazy(() => import('./pages/Templates'));
 const AllReviews = lazy(() => import('./components/WhatWeDo/AllReviews'));
 const HomeHerosection = lazy(() => import('./adminComponent/Pages/HomeHerosection'));
 import DynamicPage from "./pages/DynamicPages";
+import HexGridDemo from "./components/hexagon/Grid";
 const CreatePackage = lazy(() => import('./adminComponent/Pages/CreatePackage'));
 const EditPackageForm = lazy(() => import('./adminComponent/Pages/EditPackage'));
 
@@ -264,6 +265,7 @@ function App() {
           <>
             {/* {!isLoggedIn && <Popup />} */}
             <Routes>
+          <Route path="/hex" element={<HexGridDemo />} />
               <Route path="/" element={<MainPage />}>
                 <Route path="/" index element={
                   <>

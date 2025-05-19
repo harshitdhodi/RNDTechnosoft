@@ -15,7 +15,7 @@ app.use(cookieParser());
 app.use(compression({ threshold: 1024 }));
 // Middleware
 app.use(cors({ 
-    origin: true,
+    origin: true, 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
