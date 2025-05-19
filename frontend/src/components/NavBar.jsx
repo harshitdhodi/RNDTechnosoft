@@ -176,7 +176,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="w-full fixed z-30">
+    <div className="w-full fixed z-30 ">
       <nav className="bg-white border-b border-gray-200 xl:mx-12 rounded-b-lg shadow-lg lg:block hidden">
         <div className="bg-[#333] text-white text-center py-1  justify-center font-semibold text-xl text-md xl:flex hidden">
           Our website is currently under construction. Please check back later.

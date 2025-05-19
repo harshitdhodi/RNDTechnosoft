@@ -9,6 +9,7 @@ import { visualizer } from "file:///C:/Users/Admin/Desktop/RND/RNDTechnosoft/fro
 import critical from "file:///C:/Users/Admin/Desktop/RND/RNDTechnosoft/frontend/node_modules/rollup-plugin-critical/dist/index.js";
 import { purgeCss } from "file:///C:/Users/Admin/Desktop/RND/RNDTechnosoft/frontend/node_modules/vite-plugin-tailwind-purgecss/dist/index.js";
 import cssInjectedByJsPlugin from "file:///C:/Users/Admin/Desktop/RND/RNDTechnosoft/frontend/node_modules/vite-plugin-css-injected-by-js/dist/esm/index.js";
+import postcss from "vite-plugin-postcss";
 var __vite_injected_original_dirname = "C:\\Users\\Admin\\Desktop\\RND\\RNDTechnosoft\\frontend";
 var deferNonCriticalCSS = () => ({
   name: "defer-non-critical-css",

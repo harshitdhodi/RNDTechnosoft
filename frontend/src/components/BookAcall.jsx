@@ -61,6 +61,8 @@ export default function BookAcall() {
           src={`/api/image/download/${call.photo[0]}`}
           alt={call.photoAlt}
           title={call.imgtitle}
+          loading="lazy"
+          fetchpriority="low"
           className="w-full h-auto max-w-[400px] mx-auto"
         />
       </div>

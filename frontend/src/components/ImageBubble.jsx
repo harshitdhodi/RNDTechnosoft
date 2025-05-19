@@ -108,6 +108,7 @@ const ImageBubble = ({ homeHero }) => {
               width: position.size,
               height: position.size,
             }}
+            loading="lazy"
             onError={(e) => {
               console.error(`Image failed to load: ${photo}`);
               e.target.style.display = "none"; // Hide broken images

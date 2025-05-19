@@ -41,7 +41,7 @@ export default defineConfig({
     }),
     // Compression - Brotli and Gzip
     viteCompression({ algorithm: "brotliCompress" }),
-    viteCompression({ algorithm: "gzip" }),
+    // viteCompression({ algorithm: "gzip" }),
     // PWA Configuration
     VitePWA({
       registerType: "autoUpdate",
