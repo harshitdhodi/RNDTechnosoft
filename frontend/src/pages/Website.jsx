@@ -18,6 +18,7 @@ import ServiceSlider from "../components/Websites/ServiceSlider";
 import { useGetCombinedDataQuery } from "../redux/slices/homepageSlice";
 import { useDispatch } from 'react-redux';
 import Companies from "../components/Design/companies";
+import HexGridDemo from "../components/hexagon/Grid";
 export default function Website() {
     const dispatch = useDispatch();
    // Fetch data using RTK Query
@@ -41,7 +42,7 @@ export default function Website() {
       <CraftLeft />
       <ServiceSlider/>
       <Tagline/>
-      <WeAreExpert expertData={data?.WeAreExpert} />
+      <HexGridDemo expertData={data?.WeAreExpert} />
       <Review />
       <Logotypes/>
       <Companies />
