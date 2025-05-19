@@ -23,10 +23,10 @@ const HexGridDemo = ({ expertData }) => {
         newConfig = { width: 500, height: 1500, hexagonsPerRow: 2 };
       } else if (width < 1024) {
         // Medium screens: 3 hexagons per row
-        newConfig = { width: 700, height: 1000, hexagonsPerRow: 3 };
+        newConfig = { width: 700, height: 1100, hexagonsPerRow: 3 };
       } else if (width < 2024) {
         // Medium screens: 3 hexagons per row
-        newConfig = { width: 800, height: 450, hexagonsPerRow: 3 };
+        newConfig = { width: 1000, height: 710, hexagonsPerRow: 3 };
       }
 
       // Adjust hexagonsPerRow if data is insufficient
@@ -165,7 +165,7 @@ const HexGridDemo = ({ expertData }) => {
     <div className="w-full flex flex-col justify-center items-center py-12 px-4">
       <TitleSection />
       <ServiceCategories />
-      <div className="w-full mt-5 flex justify-center ml-20 items-center">
+      <div className="w-full mt-5 flex justify-center ml-20 lg:ml-40 items-center">
         {filteredSubsections.length > 0 ? (
           <HexagonGrid
             gridWidth={gridConfig.width}
