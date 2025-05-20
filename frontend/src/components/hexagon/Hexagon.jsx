@@ -85,8 +85,8 @@ export default function HexagonGrid() {
               key={rowIndex} 
               className="flex justify-center mb-2 relative" // Reduced mb-4 to mb-2
               style={{ 
-                marginLeft: isEvenRow ? '0' : '0',
-                marginTop: rowIndex === 0 ? '1rem' : '-1.9rem' // Increased overlap for less gap
+                marginLeft: isEvenRow ? '0' : '1rem',
+                marginTop: rowIndex === 0 ? '3rem' : '-0.9rem' // Increased overlap for less gap
               }}
             >
               {rowHexagons.map((num) => (
