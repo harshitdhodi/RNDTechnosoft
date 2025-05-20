@@ -169,7 +169,7 @@ const QuoteModel = ({ closeModal }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       <div className="bg-white text-black rounded-lg w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-auto">
-        <div className="flex justify-between items-center p-4 sm:p-6 border-b">
+        <div className="flex justify-between items-center pt-4 px-4 sm:px-6 border-b">
           <h2 className="text-xl sm:text-2xl md:text-3xl font-bold">Get in touch</h2>
           <button 
             onClick={closeModal} 
@@ -179,7 +179,7 @@ const QuoteModel = ({ closeModal }) => {
             ✕
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="p-4 sm:p-6 mt-20 space-y-4">
+        <form onSubmit={handleSubmit} className="p-4 sm:px-6  space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
             <div>
               <label className="block text-sm font-medium mb-1">First Name *</label>
@@ -318,7 +318,7 @@ const QuoteModel = ({ closeModal }) => {
               <p className="text-red-500 text-xs mt-1">{errors.message}</p>
             )}
           </div>
-          <div className="flex justify-end gap-4">
+          <div className="flex justify-start gap-4">
             <button
               type="button"
               onClick={closeModal}
