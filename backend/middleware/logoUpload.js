@@ -40,6 +40,7 @@ const upload = multer({
 });
 
 // Function to process the uploaded logo image
+
 const processLogoImage = async (tempPath, finalPath) => {
   try {
     // Initial processing with high quality
@@ -63,19 +64,26 @@ const processLogoImage = async (tempPath, finalPath) => {
       quality -= 10;
     }
 
+    // Wait a moment to ensure file handles are released
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     // Clean up temporary file
     if (fs.existsSync(tempPath)) {
-      fs.unlinkSync(tempPath);
+      await fs.promises.unlink(tempPath);
     }
 
     return finalPath;
   } catch (err) {
     // Clean up any files if processing fails
-    if (fs.existsSync(tempPath)) {
-      fs.unlinkSync(tempPath);
-    }
-    if (fs.existsSync(finalPath)) {
-      fs.unlinkSync(finalPath);
+    try {
+      if (fs.existsSync(tempPath)) {
+        await fs.promises.unlink(tempPath);
+      }
+      if (fs.existsSync(finalPath)) {
+        await fs.promises.unlink(finalPath);
+      }
+    } catch (cleanupErr) {
+      console.error('Cleanup error:', cleanupErr);
     }
     console.error('Error processing logo image:', err);
     throw new Error('Error processing logo image');
