@@ -30,9 +30,9 @@ const HexGridDemo = ({ expertData }) => {
             let newHexPerRow = 4;
 
             if (width < 640) {
-                newHexPerRow = 2;
-            } else if (width < 1024) {
                 newHexPerRow = 3;
+            } else if (width < 1024) {
+                newHexPerRow = 4;
             }
 
             if (filteredSubsections.length > 0 && filteredSubsections.length < newHexPerRow) {
@@ -102,7 +102,7 @@ const HexGridDemo = ({ expertData }) => {
                             : "/placeholder.svg?height=60&width=60"
                 }
                 alt={subsection.title || "Hexagon image"}
-                className="w-full h-full object-contain object-center"
+                className="w-full h-full object-contain p-1 object-center"
             />
         );
     }, []);
@@ -115,37 +115,84 @@ const HexGridDemo = ({ expertData }) => {
             .join(" ");
     }, []);
 
-  const calculateRows = () => {
-    const rows = [];
-    let currentIndex = 0;
+    const calculateRows = () => {
+        const rows = [];
+        let currentIndex = 0;
 
-    while (currentIndex < filteredSubsections.length) {
-        const remaining = filteredSubsections.length - currentIndex;
-
-        // If only 1 item remains, center it
-        if (remaining === 1) {
+        // Special case for 5 items: 3 in first row, 2 in second row
+        if (filteredSubsections.length === 5) {
             rows.push({
-                hexagons: [filteredSubsections[currentIndex]],
-                isSingle: true,
+                hexagons: filteredSubsections.slice(0, 3),
+                isSingle: false,
+                isLastTwo: false,
             });
-            break;
+            rows.push({
+                hexagons: filteredSubsections.slice(3, 5),
+                isSingle: false,
+                isLastTwo: true,
+            });
+            return rows;
         }
 
-        const isEven = rows.length % 2 === 0;
-        const rowSize = isEven ? hexagonsPerRow : hexagonsPerRow - 1;
-        const take = Math.min(remaining, rowSize);
+        // Special case for 12 items: 3,2,3,2,3,2
+        if (filteredSubsections.length === 12) {
+            for (let i = 0; i < 12;) {
+                rows.push({
+                    hexagons: filteredSubsections.slice(i, i + 3),
+                    isSingle: false,
+                    isLastTwo: false,
+                });
+                i += 3;
+                if (i < 12) {
+                    rows.push({
+                        hexagons: filteredSubsections.slice(i, i + 2),
+                        isSingle: false,
+                        isLastTwo: (i + 2 >= 12),
+                    });
+                    i += 2;
+                }
+            }
+            return rows;
+        }
 
-        rows.push({
-            hexagons: filteredSubsections.slice(currentIndex, currentIndex + take),
-            isSingle: take === 1,
-        });
+        while (currentIndex < filteredSubsections.length) {
+            const remaining = filteredSubsections.length - currentIndex;
 
-        currentIndex += take;
-    }
+            // If only 1 item remains, center it
+            if (remaining === 1) {
+                rows.push({
+                    hexagons: [filteredSubsections[currentIndex]],
+                    isSingle: true,
+                    isLastTwo: false,
+                });
+                break;
+            }
 
-    return rows;
-};
+            // If only 2 items remain, put both in one row
+            if (remaining === 2) {
+                rows.push({
+                    hexagons: filteredSubsections.slice(currentIndex, currentIndex + 2),
+                    isSingle: false,
+                    isLastTwo: true,
+                });
+                break;
+            }
 
+            const isEven = (filteredSubsections.length - currentIndex === 1) ? true : rows.length % 2 === 0;
+            const rowSize = isEven ? hexagonsPerRow : hexagonsPerRow - 1;
+            const take = Math.min(remaining, rowSize);
+
+            rows.push({
+                hexagons: filteredSubsections.slice(currentIndex, currentIndex + take),
+                isSingle: take === 1,
+                isLastTwo: false,
+            });
+
+            currentIndex += take;
+        }
+
+        return rows;
+    };
 
     return (
         <div className="w-full flex flex-col justify-center items-center py-12 px-4">
@@ -182,13 +229,18 @@ const HexGridDemo = ({ expertData }) => {
             </div>
 
             {/* Hexagon Grid */}
-            <div className="w-full mt-20 flex justify-center items-center">
+            <div className="w-full lg:mt-10 flex justify-center items-center">
                 {filteredSubsections.length > 0 ? (
                     <div className="flex flex-col items-center">
                         {calculateRows().map((row, rowIndex) => {
                             const isEven = rowIndex % 2 === 0;
-                            const marginTop = rowIndex === 0 ? "" : "lg:mt-[-4.5rem]";
-                            const justifyClass = row.isSingle ? "justify-center translate-x-[5rem]" : "justify-center";
+                            const marginTop = rowIndex === 0 ? "" : "lg:mt-[-6.3rem] md:mt-[-4.7rem] mt-[-3.5rem]";
+                            const justifyClass =
+                                row.isSingle
+                                    ? "justify-center sm:translate-x-[6.6rem]"
+                                    : row.isLastTwo
+                                        ? "justify-start"
+                                        : "justify-center";
 
                             return (
                                 <div
@@ -196,7 +248,7 @@ const HexGridDemo = ({ expertData }) => {
                                     className={`flex ${justifyClass} mb-2 relative ${marginTop}`}
                                 >
                                     {row.hexagons.map((subsection, idx) => (
-                                        <div key={`${rowIndex}-${idx}`} className="lg:mx-10 md:mx-10 mx-5">
+                                        <div key={`${rowIndex}-${idx}`} className="lg:mx-9 md:mx-6 mx-5">
                                             <Hexagon
                                                 subsection={subsection}
                                                 hexProps={getHexProps(subsection)}
