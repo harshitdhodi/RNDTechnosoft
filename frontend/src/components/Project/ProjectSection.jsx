@@ -204,12 +204,12 @@ const ProjectsSection = () => {
               <p className="text-gray-500 text-lg">No projects found in this category</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
               {portfolios.map((item, index) =>
                 item.photo[0] ? (
                   <div 
                     key={index} 
-                    className="relative h-[280px] sm:h-[320px] rounded-lg overflow-hidden shadow-md border border-gray-200"
+                    className="relative h-[280px] sm:h-[280px] rounded-lg overflow-hidden shadow-md border border-gray-200"
                     ref={el => imageRefs.current[index] = el}
                   >
                     <img
