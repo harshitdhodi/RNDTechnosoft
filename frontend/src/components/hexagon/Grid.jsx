@@ -1,41 +1,45 @@
-import HexagonGrid from "./HexagonGrid";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+
+// Hexagon component
+const Hexagon = ({ subsection, hexProps, renderHexagonContent }) => {
+    return (
+        <div className="relative">
+            <div
+                className="hexagon flex items-center justify-center w-[100px] h-[110px] mx-auto"
+                style={hexProps.style}
+                onClick={hexProps.onClick}
+                role="button"
+                aria-label={`Select ${subsection.title || "service"}`}
+            >
+                {renderHexagonContent(subsection)}
+            </div>
+        </div>
+    );
+};
 
 const HexGridDemo = ({ expertData }) => {
     const [subsections, setSubsections] = useState([]);
     const [filteredSubsections, setFilteredSubsections] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [categories, setCategories] = useState([]);
-    const [gridConfig, setGridConfig] = useState({
-        width: 700,
-        height: 660,
-        hexagonsPerRow: 2,
-    });
+    const [hexagonsPerRow, setHexagonsPerRow] = useState(4);
 
-    // Responsive grid configuration
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
-            let newConfig = { width: 700, height: 900, hexagonsPerRow: 3 };
+            let newHexPerRow = 4;
 
             if (width < 640) {
-                // Small screens: 2 hexagons per row
-                newConfig = { width: 500, height: 1500, hexagonsPerRow: 2 };
+                newHexPerRow = 2;
             } else if (width < 1024) {
-                // Medium screens: 3 hexagons per row
-                newConfig = { width: 700, height: 1100, hexagonsPerRow: 3 };
-            } else if (width < 2024) {
-                // Medium screens: 3 hexagons per row
-                newConfig = { width: 1000, height: 710, hexagonsPerRow: 3 };
+                newHexPerRow = 3;
             }
 
-            // Adjust hexagonsPerRow if data is insufficient
-            if (filteredSubsections.length > 0 && filteredSubsections.length < newConfig.hexagonsPerRow) {
-                newConfig.hexagonsPerRow = Math.min(filteredSubsections.length, 2);
+            if (filteredSubsections.length > 0 && filteredSubsections.length < newHexPerRow) {
+                newHexPerRow = Math.min(filteredSubsections.length, 2);
             }
 
-
-            setGridConfig(newConfig);
+            setHexagonsPerRow(newHexPerRow);
         };
 
         window.addEventListener("resize", handleResize);
@@ -43,150 +47,194 @@ const HexGridDemo = ({ expertData }) => {
         return () => window.removeEventListener("resize", handleResize);
     }, [filteredSubsections.length]);
 
-    // Process expertData
     useEffect(() => {
-        if (expertData && expertData[0] && expertData[0].subsections) {
-            const allSubsections = expertData[0].subsections;
-            console.log("All Subsections:", allSubsections);
-            console.log("Categories:", [
-                ...new Set(
-                    allSubsections
-                        .filter((item) => item.serviceparentCategoryId)
-                        .map((item) => item.serviceparentCategoryId)
-                ),
-            ]);
-            setSubsections(allSubsections);
-            setFilteredSubsections(allSubsections);
-
-            const uniqueCategories = [
-                ...new Set(
-                    allSubsections
-                        .filter((item) => item.serviceparentCategoryId)
-                        .map((item) => item.serviceparentCategoryId)
-                ),
-            ];
-            setCategories(uniqueCategories);
+        if (!expertData?.[0]?.subsections) {
+            setSubsections([]);
+            setFilteredSubsections([]);
+            setCategories([]);
+            return;
         }
+
+        const all = expertData[0].subsections;
+        setSubsections(all);
+        setFilteredSubsections(all);
+
+        const uniqueCategories = [...new Set(all
+            .filter(item => item.serviceparentCategoryId)
+            .map(item => item.serviceparentCategoryId))];
+
+        setCategories(uniqueCategories);
     }, [expertData]);
 
-    const handleCategoryChange = (category) => {
+    const handleCategoryChange = useCallback((category) => {
         setSelectedCategory(category);
         if (category === "all") {
-            console.log("Filtered Subsections (All):", subsections);
             setFilteredSubsections(subsections);
         } else {
-            const filtered = subsections.filter(
-                (item) => item.serviceparentCategoryId === category
-            );
-            console.log(`Filtered Subsections (${category}):`, filtered);
-            setFilteredSubsections(filtered);
+            setFilteredSubsections(subsections.filter(
+                item => item.serviceparentCategoryId === category
+            ));
         }
-    };
+    }, [subsections]);
 
-    const getHexProps = (subsection) => ({
+    const getHexProps = useCallback((subsection) => ({
         style: {
             fill: "white",
             stroke: "inherit",
             strokeWidth: 2,
         },
         onClick: () => {
-            if (subsection && subsection.title) {
+            if (subsection?.title) {
                 alert(`${subsection.title} has been clicked`);
             }
         },
-    });
+    }), []);
 
-    const renderHexagonContent = (subsection) => {
+    const renderHexagonContent = useCallback((subsection) => {
         if (!subsection) return null;
-
         return (
-            <g>
-                <image
-                    href={
-                        subsection.photo
-                            ? `/api/image/download/${subsection.photo}`
-                            : subsection.icon
-                                ? `/icons/${subsection.icon}`
-                                : "/placeholder.svg?height=60&width=60"
-                    }
-                    x="8%"
-                    y="17%"
-                    height="80%"
-                    width="80%"
-                    preserveAspectRatio="xMidYMid meet"
-                />
-
-            </g>
+            <img
+                src={
+                    subsection.photo
+                        ? `/api/image/download/${subsection.photo}`
+                        : subsection.icon
+                            ? `/icons/${subsection.icon}`
+                            : "/placeholder.svg?height=60&width=60"
+                }
+                alt={subsection.title || "Hexagon image"}
+                className="w-full h-full object-contain object-center"
+            />
         );
-    };
+    }, []);
 
-    const TitleSection = () => (
-        <div className="text-center mb-8">
-            <h2 className="text-3xl font-semibold">
-                We Are <span className="text-yellow-400">Experts In</span>
-            </h2>
-            <p className="text-lg mt-2">Harnessing Expertise for Your Success</p>
-        </div>
-    );
-
-    const formatCategoryName = (category) => {
-        if (!category) return "";
+    const formatCategoryName = useCallback((category) => {
+        if (!category || typeof category !== "string") return category;
         return category
             .split("-")
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
             .join(" ");
-    };
+    }, []);
 
-    const ServiceCategories = () => (
-        <div className="flex justify-center gap-4 mb-8 flex-wrap">
-            <div
-                className={`px-4 py-2 rounded-md ${selectedCategory === "all"
-                    ? "bg-yellow-400 text-white"
-                    : "bg-gray-100 hover:bg-gray-200"
-                    } cursor-pointer text-sm`}
-                onClick={() => handleCategoryChange("all")}
-            >
-                All Services
-            </div>
-            {categories.map((category, index) => (
-                <div
-                    key={index}
-                    className={`px-4 py-2 rounded-md ${selectedCategory === category
-                        ? "bg-yellow-400 text-white"
-                        : "bg-gray-100 hover:bg-gray-200"
-                        } cursor-pointer text-sm`}
-                    onClick={() => handleCategoryChange(category)}
-                >
-                    {formatCategoryName(category)}
-                </div>
-            ))}
-        </div>
-    );
+  const calculateRows = () => {
+    const rows = [];
+    let currentIndex = 0;
 
-    const NoResults = () => (
-        <div className="py-12 text-center text-gray-500">
-            <p>No services found in this category.</p>
-        </div>
-    );
+    while (currentIndex < filteredSubsections.length) {
+        const remaining = filteredSubsections.length - currentIndex;
+
+        // If only 1 item remains, center it
+        if (remaining === 1) {
+            rows.push({
+                hexagons: [filteredSubsections[currentIndex]],
+                isSingle: true,
+            });
+            break;
+        }
+
+        const isEven = rows.length % 2 === 0;
+        const rowSize = isEven ? hexagonsPerRow : hexagonsPerRow - 1;
+        const take = Math.min(remaining, rowSize);
+
+        rows.push({
+            hexagons: filteredSubsections.slice(currentIndex, currentIndex + take),
+            isSingle: take === 1,
+        });
+
+        currentIndex += take;
+    }
+
+    return rows;
+};
+
 
     return (
         <div className="w-full flex flex-col justify-center items-center py-12 px-4">
-            <TitleSection />
-            {/* <ServiceCategories /> */}
-            <div className="w-full mt-5 flex justify-center ml-20 lg:ml-40 items-center">
+            <div className="text-center mb-8">
+                <h2 className="text-3xl font-semibold">
+                    We Are <span className="text-yellow-400">Experts In</span>
+                </h2>
+                <p className="text-lg mt-2">Harnessing Expertise for Your Success</p>
+            </div>
+
+            {/* Categories */}
+            <div className="flex justify-center gap-4 mb-8 flex-wrap">
+                <div
+                    className={`px-4 py-2 rounded-md ${selectedCategory === "all"
+                        ? "bg-yellow-400 text-white"
+                        : "bg-gray-100 hover:bg-gray-200"
+                        } cursor-pointer text-sm`}
+                    onClick={() => handleCategoryChange("all")}
+                >
+                    All Services
+                </div>
+                {categories.map((category, index) => (
+                    <div
+                        key={index}
+                        className={`px-4 py-2 rounded-md ${selectedCategory === category
+                            ? "bg-yellow-400 text-white"
+                            : "bg-gray-100 hover:bg-gray-200"
+                            } cursor-pointer text-sm`}
+                        onClick={() => handleCategoryChange(category)}
+                    >
+                        {formatCategoryName(category)}
+                    </div>
+                ))}
+            </div>
+
+            {/* Hexagon Grid */}
+            <div className="w-full mt-20 flex justify-center items-center">
                 {filteredSubsections.length > 0 ? (
-                    <HexagonGrid
-                        gridWidth={gridConfig.width}
-                        gridHeight={gridConfig.height}
-                        hexagonsPerRow={gridConfig.hexagonsPerRow}
-                        hexagons={filteredSubsections}
-                        hexProps={getHexProps}
-                        renderHexagonContent={renderHexagonContent}
-                    />
+                    <div className="flex flex-col items-center">
+                        {calculateRows().map((row, rowIndex) => {
+                            const isEven = rowIndex % 2 === 0;
+                            const marginTop = rowIndex === 0 ? "" : "lg:mt-[-4.5rem]";
+                            const justifyClass = row.isSingle ? "justify-center translate-x-[5rem]" : "justify-center";
+
+                            return (
+                                <div
+                                    key={rowIndex}
+                                    className={`flex ${justifyClass} mb-2 relative ${marginTop}`}
+                                >
+                                    {row.hexagons.map((subsection, idx) => (
+                                        <div key={`${rowIndex}-${idx}`} className="lg:mx-10 md:mx-10 mx-5">
+                                            <Hexagon
+                                                subsection={subsection}
+                                                hexProps={getHexProps(subsection)}
+                                                renderHexagonContent={renderHexagonContent}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            );
+                        })}
+                    </div>
                 ) : (
-                    <NoResults />
+                    <div className="py-12 text-center text-gray-500">
+                        <p>No services found in this category.</p>
+                    </div>
                 )}
             </div>
+
+            <style jsx global>{`
+        .hexagon {
+            background-color: transparent !important;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            width: 140px;
+            height: 154px;
+        }
+        @media (max-width: 768px) {
+            .hexagon {
+                width: 100px !important;
+                height: 110px !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .hexagon {
+                width: 80px !important;
+                height: 90px !important;
+            }
+        }
+      `}</style>
         </div>
     );
 };
