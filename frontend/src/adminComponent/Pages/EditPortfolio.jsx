@@ -593,7 +593,7 @@ const EditPortfolio = () => {
           value={industriesparentCategoryId}
           onChange={handleIndustriesParentCategoryChange}
           className="w-full p-2 border rounded focus:outline-none"
-          required
+     
         >
           <option value="">Select Industries Parent Category</option>
           {industriescategories.map(renderIndustriesCategoryOptions)}
