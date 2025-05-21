@@ -3,22 +3,19 @@ const path = require('path');
 const sharp = require('sharp');
 const multer = require('multer');
 
-// Specify the directories for logos and temporary files
+// Specify the directory for logos
 const uploadDir = path.join(__dirname, '../logos');
-const tempDir = path.join(__dirname, '../temp');
 
-// Create directories if they don't exist
-[uploadDir, tempDir].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
-  }
-});
+// Create logos directory if it doesn't exist
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Define storage for uploaded photos
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Store initially in temp directory
-    cb(null, tempDir);
+    // Store directly in logos directory
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const fileName = `${file.fieldname}_${Date.now()}.webp`; // Always use .webp extension
@@ -39,54 +36,20 @@ const upload = multer({
   }
 });
 
-// Function to process the uploaded logo image
-
-const processLogoImage = async (tempPath, finalPath) => {
+// Process the image in place to ensure WebP format
+const processLogoImage = async (filePath) => {
   try {
-    // Initial processing with high quality
-    await sharp(tempPath)
-      .webp({ quality: 100 })
-      .resize({ width: 1024, withoutEnlargement: true })
-      .toFile(finalPath);
-
-    // Check if the processed file size exceeds 100KB
-    let fileSize = fs.statSync(finalPath).size;
-    let quality = 100;
-
-    // If file is too large, gradually reduce quality until size is acceptable
-    while (fileSize > 100 * 1024 && quality > 10) {
-      await sharp(tempPath)
-        .webp({ quality })
-        .resize({ width: 1024, withoutEnlargement: true })
-        .toFile(finalPath);
-
-      fileSize = fs.statSync(finalPath).size;
-      quality -= 10;
+    // If the file is already a .webp, skip processing
+    if (path.extname(filePath).toLowerCase() === '.webp') {
+      return;
     }
-
-    // Wait a moment to ensure file handles are released
-    await new Promise(resolve => setTimeout(resolve, 100));
-
-    // Clean up temporary file
-    if (fs.existsSync(tempPath)) {
-      await fs.promises.unlink(tempPath);
-    }
-
-    return finalPath;
+    // Otherwise, convert to WebP
+    await sharp(filePath)
+      .webp({ quality: 80 })
+      .toFile(filePath + '.temp');
+    await fs.promises.rename(filePath + '.temp', filePath);
   } catch (err) {
-    // Clean up any files if processing fails
-    try {
-      if (fs.existsSync(tempPath)) {
-        await fs.promises.unlink(tempPath);
-      }
-      if (fs.existsSync(finalPath)) {
-        await fs.promises.unlink(finalPath);
-      }
-    } catch (cleanupErr) {
-      console.error('Cleanup error:', cleanupErr);
-    }
-    console.error('Error processing logo image:', err);
-    throw new Error('Error processing logo image');
+    throw new Error(`Failed to process image: ${err.message}`);
   }
 };
 
@@ -102,23 +65,22 @@ const uploadLogo = async (req, res, next) => {
 
       // If no file is uploaded, proceed without photo processing
       if (!req.file) {
-        return next(); // No file uploaded, just move to next middleware
+        return next();
       }
 
       try {
-        const tempPath = req.file.path;
-        const finalPath = path.join(uploadDir, req.file.filename);
+        const filePath = req.file.path;
+        console.log('File saved to:', filePath);
 
-        // Process the image if file is present
-        await processLogoImage(tempPath, finalPath);
+        // Process the image to ensure it's in WebP format
+        await processLogoImage(filePath);
 
-        // Update req.file with the new path
-        req.file.path = finalPath;
         next();
       } catch (processError) {
         console.error('Processing error:', processError);
         return res.status(500).json({
-          error: 'Error processing the image'
+          error: 'Error processing the image',
+          details: processError.message
         });
       }
     });

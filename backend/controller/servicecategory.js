@@ -293,77 +293,63 @@ const updateSubCategory = async (req, res) => {
   // Get IDs from query params
   const { categoryId, subCategoryId } = req.query;
 
-  const {
-    category,
-    tag,
-    description,
-    status,
-    alt,
-    imgtitle,
-    slug,
-    metatitle,
-    metadescription,
-    metakeywords,
-    metacanonical,
-    metalanguage,
-    metaschema,
-    otherMeta,
-    url,
-    priority,
-    changeFreq,
-  } = req.body;
+  // Prepare update object with only provided fields
+  const updateData = {};
 
-  // Check for photo file
-  let photo;
+  // List of fields to check from req.body
+  const fields = [
+    'category',
+    'tag',
+    'description',
+    'status',
+    'alt',
+    'imgtitle',
+    'slug',
+    'metatitle',
+    'metadescription',
+    'metakeywords',
+    'metacanonical',
+    'metalanguage',
+    'metaschema',
+    'otherMeta',
+    'url',
+    'priority',
+    'changeFreq',
+  ];
+
+  // Add only defined fields from req.body to updateData
+  fields.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      updateData[`subCategories.$.${field}`] = req.body[field];
+    }
+  });
+
+  // Add photo if uploaded
   if (req.file) {
-    photo = req.file.filename;
-  }
-
-  // Prepare update object
-  const updateData = {
-    category,
-    tag,
-    description,
-    status,
-    alt,
-    imgtitle,
-    slug,
-    metatitle,
-    metadescription,
-    metakeywords,
-    metacanonical, 
-    metalanguage,
-    metaschema,
-    otherMeta,
-    url,
-    changeFreq,
-  };
-
-  // Only set photo if it exists
-  if (photo) {
-    updateData.photo = photo;
-  }
-
-  // Only set priority if it's a number
-  if (typeof priority === "number") {
-    updateData.priority = priority;
+    updateData['subCategories.$.photo'] = req.file.filename;
   }
 
   try {
+    // Validate that at least one field is provided to update
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: 'No valid fields provided for update' });
+    }
+
+    // Update the subcategory
     const updatedCategory = await ServiceCategory.findOneAndUpdate(
-      { slug: categoryId, "subCategories.slug": subCategoryId },
-      { $set: { "subCategories.$": updateData } },
+      { slug: categoryId, 'subCategories.slug': subCategoryId },
+      { $set: updateData },
       { new: true, runValidators: true }
     );
 
     if (!updatedCategory) {
-      return res.status(404).json({ message: "Category or subcategory not found" });
+      return res.status(404).json({ message: 'Category or subcategory not found' });
     }
 
     res.status(200).json(updatedCategory);
   } catch (error) {
-    console.log(error); 
-    res.status(500).json({ message: "Server error", error });
+    console.error('Error updating subcategory:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
