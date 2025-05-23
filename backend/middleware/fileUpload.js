@@ -1,6 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const sharp = require('sharp');
 
 // Define the directories
 const catalogueDir = path.join(__dirname, '../catalogues');
@@ -48,6 +49,26 @@ const upload = multer({
   }
 });
 
+const processLogoImage = async (filePath) => {
+  try {
+    if (path.extname(filePath).toLowerCase() === '.webp') {
+      return filePath;
+    }
+    const webpPath = path.join(
+      path.dirname(filePath),
+      path.basename(filePath, path.extname(filePath)) + '.webp'
+    );
+    await sharp(filePath)
+      .webp({ quality: 80 })
+      .toFile(webpPath);
+    await fs.promises.unlink(filePath);
+    return webpPath;
+  } catch (err) {
+    console.error(`Failed to process image at ${filePath}:`, err);
+    throw new Error(`Failed to process image: ${err.message}`);
+  }
+};
+
 // Middleware to move photo files from temp to final directory
 const uploadPhoto = (req, res, next) => {
   upload.fields([
@@ -63,10 +84,15 @@ const uploadPhoto = (req, res, next) => {
       if (req.files && req.files['photo']) {
         for (const photo of req.files['photo']) {
           const tempPath = path.join(tempDir, photo.filename);
-          const finalPath = path.join(photoDir, photo.filename);
+          const finalPath = path.join(
+            photoDir,
+            path.basename(photo.filename, path.extname(photo.filename)) + '.webp'
+          );
 
           if (fs.existsSync(tempPath)) {
-            fs.renameSync(tempPath, finalPath); // Move file to final location
+            const newPath = await processLogoImage(tempPath);
+            await fs.promises.rename(newPath, finalPath); // Move file to final location
+            photo.filename = path.basename(finalPath); // Update filename in req.files
           } else {
             throw new Error(`Temporary file not found: ${photo.filename}`);
           }

@@ -61,7 +61,7 @@ const PricingSection = ({ setServiceSlug }) => {
         const response = await axios.get(`/api/packages/hourlypackage/${slug}`, {
           withCredentials: true,
         });
- 
+
         if (response.data.packages.length > 0) {
           setServiceSlug(response.data.packages[0].servicecategories[0]);
         }
@@ -125,10 +125,10 @@ const PricingSection = ({ setServiceSlug }) => {
             ))}
           </ul>
           {!showHourlyPackages && (
-            <p className="" >
+            <p className="">
               <b>Additional Revisions</b>: After the free virtual meeting,
               any further changes will be charged on an hourly basis.
-              <span className="text-yellow-500 cursor-pointer" onClick={togglePackageView}  >(Hourly Rates)</span>
+              <span className="text-yellow-500 cursor-pointer" onClick={togglePackageView}>(Hourly Rates)</span>
             </p>
           )}
         </div>
@@ -147,13 +147,13 @@ const PricingSection = ({ setServiceSlug }) => {
   };
 
   return (
-    <div className="mt-20">
-      <div className="text-center p-6">
-        <h2 className="text-2xl md:text-4xl font-bold font-serif text-gray-800 mb-8">
-          { heading}
+    <div className="my-16">
+      <div className="text-center px-6">
+        <h2 className="text-2xl md:text-4xl font-bold font-serif text-gray-800 mb-4">
+          {heading}
         </h2>
-        {(
-          <p className="text-lg md:text-2xl px-4 md:px-20 text-gray-600">
+        {subHeading && (
+          <p className="text-lg md:text-2xl text-justify px-4 md:px-20 text-gray-600">
             <ReactQuill
               readOnly={true}
               value={subHeading}
@@ -163,32 +163,43 @@ const PricingSection = ({ setServiceSlug }) => {
             />
           </p>
         )}
-        {showHourlyPackages &&
-          <h2 className="text-2xl md:text-4xl font-bold font-serif text-gray-800 my-8 ">
-          Hourly Packages
-        </h2>
-        }
-       
         {showHourlyPackages && (
-          <button 
+          <h2 className="text-2xl md:text-4xl font-bold font-serif text-gray-800 my-8">
+            Hourly Packages
+          </h2>
+        )}
+        {showHourlyPackages && (
+          <button
             onClick={togglePackageView}
-            className=" px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+            className="px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
           >
             Back to Regular Packages
           </button>
         )}
       </div>
 
-      <div className="mt-10  mb-10 xl:w-[75%] px-6 mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-          {showHourlyPackages
-            ? hourlypackage.map((item) => (
-                <PackageCard key={item._id} item={item} />
-              ))
-            : normalpackage.map((item) => (
-                <PackageCard key={item._id} item={item} />
-              ))}
-        </div>
+      <div className="mt-16 xl:w-[75%] px-6 mx-auto">
+        {normalpackage.length === 0 && hourlypackage.length === 0 ? (
+          <div className="text-center text-gray-600 text-lg md:text-xl">
+            <p>No packages available at the moment. Please check back later or contact us for more information.</p>
+            <button
+              className="mt-4 px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+              onClick={() => navigate(`/contact`)}
+            >
+              Contact Us
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 md:gap-16">
+            {showHourlyPackages
+              ? hourlypackage.map((item) => (
+                  <PackageCard key={item._id} item={item} />
+                ))
+              : normalpackage.map((item) => (
+                  <PackageCard key={item._id} item={item} />
+                ))}
+          </div>
+        )}
       </div>
     </div>
   );

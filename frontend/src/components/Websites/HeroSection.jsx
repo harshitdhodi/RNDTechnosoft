@@ -479,7 +479,7 @@ const HeroSection = () => {
       <div className="relative flex flex-col md:flex-row justify-center gap-10 xl:gap-40 w-11/12 pt-16 lg:w-4/5 mx-auto sm:my-32 my-5">
         <div className="md:w-[50%] space-y-8">
           <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
-            <span className="text-[16px] font-medium bg-yellow-500 rounded-full text-white px-8 py-3 sm:py-0">
+            <span className="text-[16px] font-medium bg-yellow-500 rounded-full text-white px-6 py-3 sm:py-2">
               Best
             </span>
             <span className="ml-2 text-[16px] pr-4 text-gray-700">
@@ -496,7 +496,7 @@ const HeroSection = () => {
           <QuoteModel />
         </div>
 
-        <div className="xl:w-[25%] w-[40%] relative">
+        <div className="xl:w-[25%] md:w-[40%] relative">
           <div className="absolute -top-4 -left-4 z-10">
             <FaStarOfLife className="text-yellow-400 text-4xl animate-[spin_5s_linear_infinite]" />
           </div>

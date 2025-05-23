@@ -32,7 +32,7 @@ console.log(serviceSlug)
         <PremiumTemplatesSection/>
         <FAQ serviceSlug={serviceSlug}/>
         <LatestBlog serviceSlug={serviceSlug}/>
-        <GlobalSolution />
+        {/* <GlobalSolution /> */}
         
         {/* {/* <CraftRight/>
         <CraftLeft/> */}
