@@ -224,6 +224,7 @@ const ContactUs = () => {
           <div className="grid lg:grid-cols-2 xl:grid-cols-4 justify-center gap-8">
             {contactInfos.map((item, index) => (
               <div key={index} className='rounded-md shadow-md px-2 py-2'>
+                
                 <div className="flex gap-2 items-center">
                   <img src={`/api/icon/download/${item.photo}`} alt={`${item.title} icon`} className="w-10 h-10 md:w-20 md:h-20" />
                   <div>
