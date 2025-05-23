@@ -220,7 +220,7 @@ const ContactUs = () => {
       </div>
 
       <div className='py-16'>
-        <div className="w-[90%] mx-auto px-4 py-8">
+        <div className="w-[90%] mx-auto px-4 xl:px-16 " >
           <div className="grid lg:grid-cols-2 xl:grid-cols-4 justify-center gap-8">
             {contactInfos.map((item, index) => (
               <div key={index} className='rounded-md shadow-md px-2 py-2'>
@@ -230,24 +230,24 @@ const ContactUs = () => {
                     {item.type === 'Head Office Address' ? (
                       <>
                         <h3 className="font-bold">{item.title}</h3>
-                        <a href={headOfficeAddress} target='_blank' rel="noopener noreferrer" className='hover:text-blue-500'>{item.address}</a>
+                        <a href={headOfficeAddress} target='_blank' rel="noopener noreferrer" className='hover:text-blue-500  text-sm'>{item.address}</a>
                       </>
                     ) : item.type === 'Phone No' ? (
                       <>
                         <h3 className="font-bold">{item.title}</h3>
-                        <a href={`tel:${item.phone1}`} className='hover:text-blue-500'>{item.phone1}</a><br />
-                        {item.phone2 && <a href={`tel:${item.phone2}`} className='hover:text-blue-500'>{item.phone2}</a>}
+                        <a href={`tel:${item.phone1}`} className='hover:text-blue-500 text-sm'>{item.phone1}</a><br />
+                        {item.phone2 && <a href={`tel:${item.phone2}`} className='hover:text-blue-500 text-sm'>{item.phone2}</a>}
                       </>
                     ) : item.type === 'Email' ? (
                       <>
                         <h3 className="font-bold">{item.title}</h3>
-                        <a href={`mailto:${item.email1}`} className='hover:text-blue-500'>{item.email1}</a><br />
-                        {item.email2 && <a href={`mailto:${item.email2}`} className='hover:text-blue-500'>{item.email2}</a>}
+                        <a href={`mailto:${item.email1}`} className='hover:text-blue-500 text-sm'>{item.email1}</a><br />
+                        {item.email2 && <a href={`mailto:${item.email2}`} className='hover:text-blue-500 text-sm '>{item.email2}</a>}
                       </>
                     ) : (
                       <>
                         <h3 className="font-bold">{item.title}</h3>
-                        <a href={salesOfficeAddress} target='_blank' rel="noopener noreferrer" className='hover:text-blue-500'>{item.address}</a>
+                        <a href={salesOfficeAddress} target='_blank' rel="noopener noreferrer" className='hover:text-blue-500 text-sm'>{item.address}</a>
                       </>
                     )}
                   </div>
@@ -257,7 +257,7 @@ const ContactUs = () => {
           </div>
         </div>
 
-        <div className="w-[90%] mx-auto px-4 py-8">
+        <div className="w-[90%] mx-auto px-4 xl:px-16 py-16">
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex-1">
               <h2 className="text-2xl mb-4 text-black font-serif">Get in Touch</h2>

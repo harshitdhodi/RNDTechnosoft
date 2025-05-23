@@ -98,7 +98,7 @@ function IndustryServiceSlider() {
 
   return (
     <div className="container mx-auto px-4 py-16">
-      <div className="mb-12 text-center">
+      <div className="mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-serif font-medium">
           Our <span className="text-yellow-500">Services</span>
         </h2>
@@ -112,14 +112,14 @@ function IndustryServiceSlider() {
         <div className="service-slider relative">
           <Slider {...settings}>
             {services.map((service) => (
-              <div key={service.slug} className="service-card p-4">
+              <div key={service.slug} className="service-card px-4">
                 <Link to={`/${service.slug}`}>
                   <div className="relative h-56 md:h-72 lg:h-80 overflow-hidden">
                     <img
                       src={`/api/logo/download/${service.photo}`}
                       alt={service.alt}
                       title={service.imgtitle}
-                      className="w-full h-full object-contain transition-transform duration-300 transform hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-300 transform hover:scale-105"
                     />
                   </div>
                 </Link>
@@ -136,14 +136,14 @@ function IndustryServiceSlider() {
         // If services <= 5, show as a grid
         <div className="flex flex-wrap gap-6 justify-center items-center">
           {services.map((service) => (
-            <div key={service.slug} className="service-card p-4 border border-gray-500">
+            <div key={service.slug} className="service-card px-4 border border-gray-500">
               <Link to={`/${service.slug}`}>
                 <div className="relative w-56  lg:h-80 overflow-hidden">
                   <img
                     src={`/api/logo/download/${service.photo}`}
                     alt={service.alt}
                     title={service.imgtitle}
-                    className="w-full h-full object-contain transition-transform duration-300 transform hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-300 transform hover:scale-105"
                   />
                 </div>
               </Link>

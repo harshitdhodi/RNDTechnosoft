@@ -25,8 +25,8 @@ export default function HeroSection() {
   }, [location]);
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center text-center pt-44 pb-16 p-6">
-      <h1 className="text-white text-[30px] md:text-[40px] xl:text-[50px] font-serif mb-4">
+    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black flex flex-col items-center justify-center text-center pt-44 pb-16 md:pb-24 p-6">
+      <h1 className="text-white text-[30px] md:text-[40px]  xl:text-[50px] font-serif mb-4">
         {heroSection.categoryName || "Website"}
       </h1>
       <h2 className='text-gray-300 text-xl'>

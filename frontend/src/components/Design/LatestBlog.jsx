@@ -46,10 +46,10 @@ export default function LatestBlog({serviceSlug}) {
   }
 
   return (
-    <div className="p-4 md:p-8 w-[90%] mx-auto">
+    <div className="px-4 md:px-8  w-[90%] mx-auto">
       <p className="text-center text-[48px] font-serif">Latest Blogs</p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 pb-20">
+      <div className="grid xl:ml-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16 pb-16">
         {blogData.map((blog) => (
           <div
             key={blog._id}

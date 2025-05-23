@@ -135,10 +135,10 @@ export default function GridLayout({ serviceData }) {
   return (
     <>
     <div>
-        <h2 className="text-4xl md:text-5xl font-serif text-center font-medium">
+        <h2 className="text-4xl md:text-5xl mt-1 font-serif text-center font-medium">
           Our <span className="text-yellow-500">Services</span>
         </h2>
-        <h3 className="md:text-[23px] text-center text-gray-700 pb-10 mt-4">
+        <h3 className="md:text-[23px] text-center text-gray-700 pb-16 mt-4">
           Dedicated to Your Success
         </h3>
     </div>

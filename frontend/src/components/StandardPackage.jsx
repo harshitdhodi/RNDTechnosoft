@@ -22,7 +22,7 @@ const PricingPackage = ({ packagesData }) => {
   const features = whatIsTheir ? JSON.parse(whatIsTheir) : [];
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-10 mb-16">
+    <div className="w-full max-w-3xl mx-auto px-10 mb-16">
       <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center font-serif">
         Standard Package
       </h2>
@@ -64,8 +64,8 @@ const PricingPackage = ({ packagesData }) => {
             ))}
           </div>
 
-          <Link to="/contact">
-            <button className="w-full mt-8 bg-yellow-400 text-black py-3 px-6 rounded-lg font-semibold hover:bg-yellow-700 transition-colors duration-200 shadow-lg">
+          <Link to="/contact" className="flex justify-center">
+            <button className="w-1/2 mt-8 item bg-yellow-400 text-black py-3 px-6 rounded-lg font-medium hover:bg-yellow-700 transition-colors duration-200 shadow-lg">
               Get Started Now
             </button>
           </Link>
