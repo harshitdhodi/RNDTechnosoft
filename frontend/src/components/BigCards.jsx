@@ -28,7 +28,7 @@ const TrustedSection = ({ homecard1, homecard2 }) => {
   const secondCard = homecard2[0];
 
   return (
-    <div className="flex flex-wrap justify-center gap-8 p-4 md:p-8 relative mt-16 md:mt-20">
+    <div className="flex flex-wrap justify-center gap-8 p-4 md:p-8 relative mt-16 lg:mt-0 ">
       {/* First Card */}
       {firstCard && (
         <div className="relative rounded-lg w-full max-w-xl bg-[#134C6C] p-4 md:p-8 h-auto flex flex-col text-white">

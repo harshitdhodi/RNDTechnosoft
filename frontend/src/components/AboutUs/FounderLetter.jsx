@@ -32,17 +32,17 @@ const WebSolution = () => {
 
   
   return (
-    <section className="relative bg-white overflow-hidden">
+    <section className="relative lg:max-w-[93rem] mx-5 xl:mx-28 md:mx-auto bg-white overflow-hidden">
       {/* Shape Divider */}
 
-      <div className="mt-16  flex flex-col items-start justify-center md:mx-20 mx-4">
+      <div className="sm:mt-16 mt-5  flex flex-col items-start justify-center md:mx-20 lg:mx-4">
         <div className="flex flex-col-reverse  justify-center items-center lg:flex-row w-full gap-8 lg:gap-16">
           <div className="lg:w-1/2">
-            <h2 className="text-2xl font-bold mb-4 text-center md:text-start">{service?.title}</h2>
+            <h2 className="text-2xl font-bold mb-4 lg:mb-0 relative 2xl:-top-6 text-left md:text-start">{service?.title}</h2>
 
-            <p className="mt-4 text-lg pb-4">
+            <p className="relative 2xl:-top-7 lg:pt-4 text-lg pb-4">
               {service?.description ? (
-                <div className="md:text-justify text-center "
+                <div className="md:text-justify text-justify "
                   dangerouslySetInnerHTML={{ __html: service.description }}
                 />
               ) : (
@@ -51,12 +51,12 @@ const WebSolution = () => {
             </p>
 
           </div>
-          <div className="lg:w-1/2 ">
-            <div className="relative -top-5 w-full">
+          <div className="lg:w-1/2  ">
+            <div className="relative  w-full">
               <img
                 src={videoUrl} 
               
-                className="w-full md:h-[1000px] transition-all duration-300 object-cover"
+                className="w-full md:w-[120vh] md:h-[100vh] lg:h-[1120px] xl:h-[1000px] transition-all duration-300 md:object-cover object-fill xl:object-cover"
               />
             </div>
           </div>

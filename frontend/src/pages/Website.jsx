@@ -47,7 +47,7 @@ export default function Website() {
       <Logotypes/>
       <Companies />
       <WhyPartnerWithUs />
-      <PricingSection />
+      {/* <PricingSection /> */}
       <De />
       {/* <DesignProcess/> */}
       <FAQ />

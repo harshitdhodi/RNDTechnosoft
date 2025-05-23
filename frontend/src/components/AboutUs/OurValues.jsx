@@ -50,37 +50,42 @@ const OurValues = () => {
         </svg>
       </div>
 
-      <div className="bg-dark-green py-8 mt-8  md:mt-32 mx-4 sm:mx-8 lg:mx-20">
+    <div className="sm:max-w-[89rem]  xl:mx-5 mx-auto flex flex-wrap items-center justify-between">
+  <div className="bg-dark-green py-8 mt-8   md:mt-32  sm:mx-8 lg:mx-20">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 sm:mb-8">
+          <h2 className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 sm:mb-4">
             {heroSection}
           </h2>
-          <p className="text-base sm:text-lg md:text-xl lg:text-xl font-bold text-white">
+          <p className="text-base sm:text-lg md:text-xl lg:text-xl font-semibold text-white">
             {subHeading}
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col-reverse md:flex-row justify-around mb-20 md:mb-48 mx-4 sm:mx-8 lg:mx-20">
-        <div className="flex flex-col gap-6 md:gap-8 w-full md:w-1/2">
-          {values.map((value, index) => (
-            <div key={value._id} className="bg-light-beige p-4 sm:p-6 rounded-lg bg-white">
-              <div className="flex items-center gap-2 mb-4">
-                <p className="py-2 px-4 bg-[#333] rounded-full text-white font-bold text-lg sm:text-xl">
-                  {index + 1}
-                </p>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#333]">
-                  {value.title}
-                </h3>
-              </div>
-              <p className="text-base text-justify text-dark-green">
-                <div
-                  dangerouslySetInnerHTML={{ __html: value.description }}
-                />
-              </p>
-            </div>
-          ))}
-        </div>
+      <div className="flex flex-col-reverse md:flex-row justify-around mb-20 md:mb-32 xl:mb-44 mx-8 md:mx-0  lg:mx-12 xl:mx-2">
+      <div className="flex flex-col gap-6 md:gap-8 w-full md:w-1/2">
+  {values.map((value, index) => (
+    <div
+      key={value._id}
+      className="bg-light-beige p-4 overflow-auto sm:p-6 rounded-lg bg-white flex flex-col h-full"
+      style={{ minHeight: "220px" }} // You can adjust minHeight as needed
+    >
+      <div className="flex items-center gap-2 mb-4">
+        <p className="py-2 px-4 bg-[#333] rounded-full text-white font-bold text-lg sm:text-xl">
+          {index + 1}
+        </p>
+        <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#333]">
+          {value.title}
+        </h3>
+      </div>
+      <div className="text-base text-justify text-dark-green flex-1">
+        <div
+          dangerouslySetInnerHTML={{ __html: value.description }}
+        />
+      </div>
+    </div>
+  ))}
+</div>
 
         <div className=" md:flex justify-center items-center w-[20%]  mt-8 md:mt-0 hidden ">
           {values[0]?.photo.length > 0 ? (
@@ -99,10 +104,11 @@ const OurValues = () => {
         </div>
       </div>
 
+    </div>
       {/* Shape Divider Bottom */}
-      <div className="absolute inset-x-0 bottom-0">
+      <div className="absolute  inset-x-0 bottom-0">
         <svg
-          className="w-full"
+          className="w-full relative   md:top-1"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1000 100"
           preserveAspectRatio="none"

@@ -22,7 +22,7 @@ const GlobalSolution = ({ globalData }) => {
   const headingContent = parseHeadingHtml(globalSolution.heading);
 
   return (
-    <section className="relative bg-[#333] overflow-hidden mt-5">
+    <section className="relative bg-[#333] overflow-hidden pb-16 mt-5">
       {/* Shape Divider */}
       <div className="absolute inset-x-0 top-0 py-0">
         <svg
@@ -40,18 +40,18 @@ const GlobalSolution = ({ globalData }) => {
 
       {/* Content Section */}
       <div className="relative sm:pt-32 pt-24">
-        <div className="container mx-auto py-12 sm:px-4 px-2 w-full sm:w-[67%]">
-          <div className="text-center">
+        <div className="container mx-auto  sm:px-4 px-2 w-full sm:w-[67%]">
+          <div className="text-center xl:mt-8">
             <h2
               className="sm:text-5xl text-3xl font-semibold mb-4 font-serif text-white ql-align-center"
               dangerouslySetInnerHTML={{ __html: headingContent }}
             />
-            <p className="sm:text-lg text-base mb-8 text-white font-inter sm:pt-10 pt-7">
+            <p className="sm:text-lg text-base mb-8 text-white font-inter  pt-7">
               <span dangerouslySetInnerHTML={{ __html: globalSolution.description }} />
             </p>
           </div>
 
-          <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:mt-32 mt-24">
+          <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:mt-16 mt-24">
             {globalSolution.subsections?.map((language, index) => (
               <div key={index} className="text-center space-y-6">
                 {language.photo ? (

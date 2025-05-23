@@ -42,7 +42,7 @@ export default function HeroSection({ serviceGridRef }) {
   return (
     <div className="relative">
       <img src={`/api/logo/download/${photo}`} alt={alt} title={imgTitle} className="w-full h-[55vh] object-cover" />
-      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8 pt-16 md:pt-32">
+      <div className="absolute   inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8 pt-16 md:pt-32">
         <h1 className="text-white text-4xl md:text-7xl font-serif capitalize">{heading}</h1>
         <p className="text-xl md:text-2xl text-white text-center">{subHeading}</p>
       </div>

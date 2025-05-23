@@ -195,8 +195,8 @@ const HexGridDemo = ({ expertData }) => {
     };
 
     return (
-        <div className="w-full flex flex-col justify-center items-center py-12 px-4">
-            <div className="text-center mb-8">
+        <div className="w-full flex flex-col justify-center space-y-4 items-center py-16 px-4">
+            <div className="text-center mb-8 space-y-4">
                 <h2 className="text-3xl font-semibold">
                     We Are <span className="text-yellow-400">Experts In</span>
                 </h2>
@@ -204,7 +204,7 @@ const HexGridDemo = ({ expertData }) => {
             </div>
 
             {/* Categories */}
-            <div className="flex justify-center gap-4 mb-8 flex-wrap">
+            <div className="flex justify-center gap-4 relative bottom-[1.5rem] flex-wrap">
                 <div
                     className={`px-4 py-2 rounded-md ${selectedCategory === "all"
                         ? "bg-yellow-400 text-white"
@@ -229,7 +229,7 @@ const HexGridDemo = ({ expertData }) => {
             </div>
 
             {/* Hexagon Grid */}
-            <div className="w-full lg:mt-10 flex justify-center items-center">
+            <div className="w-full lg:mt-16 flex justify-center items-center">
                 {filteredSubsections.length > 0 ? (
                     <div className="flex flex-col items-center">
                         {calculateRows().map((row, rowIndex) => {
