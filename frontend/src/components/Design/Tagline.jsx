@@ -33,7 +33,7 @@ export default function () {
       }, [location]);
 
   return (
-    <div className="bg-[#333333] my-16 flex flex-col items-center justify-center text-center  p-6 ">
+    <div className="bg-[#333333]  flex flex-col items-center justify-center text-center  p-6 ">
       <p className="text-white text-base md:text-lg lg:text-xl xl:text-2xl ">
         {heroSection.subheading || "We create user-centric digital experiences"}
       </p>

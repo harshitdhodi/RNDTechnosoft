@@ -113,7 +113,7 @@ const ProjectsSection = () => {
   };
 
   return (
-    <div ref={sectionRef} className="flex flex-col w-full max-w-7xl mx-auto  px-4 sm:px-6 lg:px-8 py-6 sm:py-5 relative bg-white">
+    <div ref={sectionRef} className="flex flex-col w-full max-w-7xl mx-auto mt-6 xl:px-28  px-4 sm:px-6 lg:px-8 py-6 sm:py-5 relative bg-white">
       {/* Mobile Filter Button */}
       <div className="flex justify-between items-center w-full mb-4 sm:mb-6">
         <button

@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { IoMdClose } from "react-icons/io";
 
-export default function LatestProject({serviceSlug}) {
+export default function LatestProject({ serviceSlug }) {
   const [latestProject, setProjects] = useState([]);
   const [fullscreenImage, setFullscreenImage] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +18,7 @@ export default function LatestProject({serviceSlug}) {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
-  
+
       try {
         const response = await axios.get(
           `/api/Portfolio/getPortfolioByServiceSlug?slug=${serviceSlug}`,
@@ -36,12 +36,11 @@ export default function LatestProject({serviceSlug}) {
         setIsLoading(false);
       }
     };
-  
+
     if (serviceSlug) {
       fetchData();
     }
   }, [serviceSlug]);
-  
 
   const handleImageClick = (image) => {
     setFullscreenImage(image);
@@ -88,26 +87,42 @@ export default function LatestProject({serviceSlug}) {
   };
 
   if (isLoading) {
+    return null; // You can uncomment the loader if desired
+    // <div className="flex items-center justify-center min-h-[400px]">
+    //   <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+    // </div>
+  }
+
+  if (error || latestProject.length === 0) {
     return (
-      // <div className="flex items-center justify-center min-h-[400px]">
-      //   <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
-      // </div>
-      null
+      <div className="py-7 xl:px-1">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif p-4 text-center">
+          Latest <span className="text-[#f3ca0d]">Projects</span>
+        </h2>
+        <p className="text-lg md:text-2xl px-4 md:px-20 text-gray-600 text-center">
+          Discover Our Latest Project Milestones
+        </p>
+        <div className="mx-auto w-[85%] px-2 py-16 text-center">
+          <p className="text-lg md:text-xl text-gray-600">
+            {error || "No projects available at the moment. Please check back later or contact us for more information."}
+          </p>
+          {/* <a
+            href="/contact"
+            className="inline-block mt-4 px-6 py-2 bg-[#f3ca0d] text-white rounded-lg hover:bg-[#e6d43d] transition-colors"
+          >
+            Contact Us
+          </a> */}
+        </div>
+      </div>
     );
   }
 
- 
-
-  if (latestProject.length === 0) {
-    return null;
-  }
-
   const ProjectCard = ({ project, onClick }) => (
-    <div className="relative cursor-pointer group">
+    <div className="relative cursor-pointer group h-[280px] sm:h-[280px] ">
       <img
         src={`/api/image/download/${project.photo[0]}`}
         alt={project.alt || "Project Image"}
-        className="w-full h-96 object-cover rounded-lg shadow-xl border"
+        className="w-full h-full object-fill rounded-lg shadow-xl border"
         loading="lazy"
       />
       <div
@@ -115,9 +130,6 @@ export default function LatestProject({serviceSlug}) {
         className="absolute inset-0 flex items-center justify-center bg-gray-700 bg-opacity-40 opacity-0 group-hover:opacity-100 rounded-lg transition-opacity duration-300 ease-in-out"
       >
         <div className="text-center">
-          <h3 className="text-white text-2xl font-semibold p-2">
-            {project.imgtitle[0]}
-          </h3>
           {project.link && (
             <a
               href={project.link}
@@ -137,7 +149,7 @@ export default function LatestProject({serviceSlug}) {
   );
 
   return (
-    <div className="py-16">
+    <div className="py-7 xl:px-1">
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif p-4 text-center">
         Latest <span className="text-[#f3ca0d]">Projects</span>
       </h2>
@@ -145,7 +157,7 @@ export default function LatestProject({serviceSlug}) {
         Discover Our Latest Project Milestones
       </p>
 
-      <div className="mx-auto w-[85%] px-2 pt-20">
+      <div className="mx-auto w-[85%] px-2 py-16">
         {latestProject.length > 8 ? (
           <Slider {...settings}>
             {latestProject.map((project) => (

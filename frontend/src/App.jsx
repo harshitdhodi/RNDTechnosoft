@@ -278,7 +278,7 @@ function App() {
                 <Route path="/blog/:slug" element={<BlogSubSub />} />
                 <Route path="/all-reviews" element={<AllReviews />} />
                 <Route path="/templates" element={<Templates />} />
-                <Route path="/aboutus" element={<AboutUs />} />
+                <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/collabration" element={<Collabration />} />
                 <Route path="/contact" element={<GetInTouch />} />
                 <Route path="/helpCenter" element={<Faq />} />

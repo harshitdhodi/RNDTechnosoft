@@ -6,7 +6,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { IoMdClose, IoMdFunnel } from "react-icons/io";
 
-
 export default function LatestProject() {
   const [latestProject, setProjects] = useState([]);
   const [fullscreenImage, setFullscreenImage] = useState(null);
@@ -15,7 +14,6 @@ export default function LatestProject() {
   const imageRefs = useRef({});
   const location = useLocation();
   const { slug } = useParams();
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -94,17 +92,27 @@ export default function LatestProject() {
     );
   }
 
-  if (error) {
+  if (error || latestProject.length === 0) {
     return (
-      <div className="text-center py-16 text-gray-600">
-        <p>{error}</p>
+      <div className=" my-16">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif p-4 text-center">
+          Latest <span className="text-[#f3ca0d]">Projects</span>
+        </h2>
+        <p className="text-lg md:text-2xl px-4 md:px-20 text-gray-600 text-center">
+          Discover Our Latest Project Milestones
+        </p>
+        <div className="mx-auto w-[85%] px-2 py-5 text-center">
+          <p className="text-lg md:text-xl text-gray-500">
+            {error || "No projects available at the moment. Please check back later or contact us for more information."}
+          </p>
+          <a
+            href="/contact"
+            className="inline-block mt-4 px-6 py-2 bg-[#f3ca0d] text-white rounded-lg hover:bg-[#e6d43d] transition-colors"
+          >
+            Contact Us
+          </a>
+        </div>
       </div>
-    );
-  }
-
-  if (latestProject.length === 0) {
-    return (
-   null
     );
   }
 
@@ -141,7 +149,7 @@ export default function LatestProject() {
   );
 
   return (
-    <div className="py-16">
+    <div className="py-16 mt-10">
       <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif p-4 text-center">
         Latest <span className="text-[#f3ca0d]">Projects</span>
       </h2>
