@@ -51,7 +51,7 @@ const Companies = ({ serviceSlug }) => {
           <span className="text-[#f3ca0d]">service</span>
         </h1>
       </div>
-      <div className="px-6  sm:mx-8 lg:my-16">
+      <div className="px-6  sm:mx-8 lg:my-5">
         <div className="flex flex-wrap gap-8 justify-center items-center">
           {companies.map((company, index) => (
             <img

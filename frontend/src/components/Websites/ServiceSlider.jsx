@@ -9,6 +9,8 @@ function ServiceSlider() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sliderError, setSliderError] = useState(false);
+  const [showAsGrid, setShowAsGrid] = useState(false);
   const { slug } = useParams();
 
   useEffect(() => {
@@ -31,9 +33,16 @@ function ServiceSlider() {
     fetchData();
   }, [slug]);
 
+  // Handle slider initialization error
+  const handleSliderError = () => {
+    console.warn('Slider failed to initialize, falling back to grid view');
+    setSliderError(true);
+    setShowAsGrid(true);
+  };
+
   if (loading) {
     return (
-      <div className="py-16 text-center">
+      <div className="pb-16 text-center">
         <p className="text-gray-600">Loading...</p>
       </div>
     );
@@ -57,20 +66,24 @@ function ServiceSlider() {
 
   const settings = {
     dots: true,
-    infinite: services.length > 1, // Prevent infinite loop for single item
+    infinite: services.length > 1,
     speed: 500,
-    slidesToShow: 5,
+    slidesToShow: Math.min(5, services.length),
     slidesToScroll: 1,
-    autoplay: services.length > 1, // Disable autoplay for single item
+    autoplay: services.length > 1,
     autoplaySpeed: 3000,
-    pauseOnHover: true, // Pause autoplay on hover
+    pauseOnHover: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
+    onInit: () => {
+      // Slider initialized successfully
+      setSliderError(false);
+    },
     responsive: [
       {
         breakpoint: 1280,
         settings: {
-          slidesToShow: 4,
+          slidesToShow: Math.min(4, services.length),
           slidesToScroll: 1,
           dots: true,
         },
@@ -78,7 +91,7 @@ function ServiceSlider() {
       {
         breakpoint: 1024,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: Math.min(3, services.length),
           slidesToScroll: 1,
           dots: true,
         },
@@ -86,10 +99,10 @@ function ServiceSlider() {
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: Math.min(2, services.length),
           slidesToScroll: 1,
           dots: false,
-          arrows: false, // Hide arrows on smaller screens
+          arrows: false,
         },
       },
       {
@@ -104,9 +117,66 @@ function ServiceSlider() {
     ],
   };
 
+  // Determine whether to show slider or grid
+  // Only show slider if we have 3 or more services AND no errors AND user hasn't manually chosen grid
+  const shouldShowSlider = services.length >= 3 && !sliderError && !showAsGrid;
+
+  const renderServiceCard = (service) => (
+    <div key={service.slug} className="service-card px-2  sm:px-4">
+      <Link to={`/${service.slug}`} className="block">
+        <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden rounded-lg">
+          <img
+            src={`/api/logo/download/${service.photo}`}
+            alt={service.alt}
+            title={service.imgtitle}
+            className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+            loading="lazy"
+            onError={(e) => {
+              console.warn(`Failed to load image: ${service.photo}`);
+              e.target.style.display = 'none';
+            }}
+          />
+        </div>
+        <div className="mt-3 text-center">
+          <span className="text-gray-600 text-sm sm:text-base hover:text-yellow-500 transition-colors">
+            {service.category}
+          </span>
+        </div>
+      </Link>
+    </div>
+  );
+
+  const renderGridCard = (service) => (
+    <div
+      key={service.slug}
+      className="service-card px-4 border  border-gray-300 rounded-lg hover:shadow-lg transition-shadow"
+    >
+      <Link to={`/${service.slug}`} className="block">
+        <div className="relative h-48 sm:h-56 overflow-hidden rounded-lg">
+          <img
+            src={`/api/logo/download/${service.photo}`}
+            alt={service.alt}
+            title={service.imgtitle}
+            className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+            loading="lazy"
+            onError={(e) => {
+              console.warn(`Failed to load image: ${service.photo}`);
+              e.target.style.display = 'none';
+            }}
+          />
+        </div>
+        <div className="mt-3 text-center">
+          <span className="text-gray-600 text-sm sm:text-base hover:text-yellow-500 transition-colors">
+            {service.category}
+          </span>
+        </div>
+      </Link>
+    </div>
+  );
+
   return (
-    <div className="container mx-auto px-4  ">
-      <div className="mb-16 text-center">
+    <div className="container 2xl:max-w-[85rem] 2xl:px-0  mx-auto px-4">
+      <div className="mb-4 text-center">
         <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium">
           Our <span className="text-yellow-500">Services</span>
         </h2>
@@ -115,60 +185,72 @@ function ServiceSlider() {
         </h3>
       </div>
 
-      {services.length >= 5 ? (
+      {/* Toggle button for manual switching - only show if we have enough items for slider */}
+      {/* {services.length >= 3 && (
+        <div className="flex justify-center mb-8">
+          <button
+            onClick={() => setShowAsGrid(!showAsGrid)}
+            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors text-sm"
+          >
+            {showAsGrid ? 'Show as Slider' : 'Show as Grid'}
+          </button>
+        </div>
+      )} */}
+
+      {shouldShowSlider ? (
         <div className="service-slider mb-20 relative">
-          <Slider {...settings}>
-            {services.map((service) => (
-              <div key={service.slug} className="service-card   px-2 sm:px-4">
-                <Link to={`/${service.slug}`} className="block">
-                  <div className="relative h-48 sm:h-56 md:h-64 lg:h-72 overflow-hidden rounded-lg">
-                    <img
-                      src={`/api/logo/download/${service.photo}`}
-                      alt={service.alt}
-                      title={service.imgtitle}
-                      className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
-                      loading="lazy" // Optimize image loading
-                    />
-                  </div>
-                  <div className="mt-3 text-center">
-                    <span className="text-gray-600 text-sm sm:text-base hover:text-yellow-500 transition-colors">
-                      {service.category}
-                    </span>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </Slider>
+          <ErrorBoundary onError={handleSliderError}>
+            <Slider {...settings}>
+              {services.map(renderServiceCard)}
+            </Slider>
+          </ErrorBoundary>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {services.map((service) => (
-            <div
-              key={service.slug}
-              className="service-card p-4 border border-gray-300 rounded-lg hover:shadow-lg transition-shadow"
-            >
-              <Link to={`/${service.slug}`} className="block">
-                <div className="relative h-48 sm:h-56 overflow-hidden rounded-lg">
-                  <img
-                    src={`/api/logo/download/${service.photo}`}
-                    alt={service.alt}
-                    title={service.imgtitle}
-                    className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
-                    loading="lazy"
-                  />
-                </div>
-                <div className="mt-3 text-center">
-                  <span className="text-gray-600 text-sm sm:text-base hover:text-yellow-500 transition-colors">
-                    {service.category}
-                  </span>
-                </div>
-              </Link>
-            </div>
-          ))}
+        <div className={`grid gap-4 mb-20 ${
+          services.length === 1 
+            ? 'grid-cols-1 justify-items-center max-w-sm mx-auto' 
+            : services.length === 4 
+            ? 'grid-cols-1 sm:grid-cols-2 justify-items-center max-w-2xl mx-auto' 
+            : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
+        }`}>
+          {services.map(renderGridCard)}
+        </div>
+      )}
+
+      {sliderError && (
+        <div className="text-center text-sm text-gray-500 mt-4">
+          Slider view unavailable - showing grid layout
         </div>
       )}
     </div>
   );
+}
+
+// Error boundary component to catch slider errors
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Slider error:', error, errorInfo);
+    if (this.props.onError) {
+      this.props.onError();
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null; // Let parent component handle fallback
+    }
+
+    return this.props.children;
+  }
 }
 
 const NextArrow = ({ onClick }) => (

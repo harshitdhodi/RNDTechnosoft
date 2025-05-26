@@ -83,7 +83,7 @@ export default function Logotype() {
 
   return (
     <div className="px-4 mb-16">
-     <div className="md:w-3/2 lg:w-[60%] mt-10 flex flex-col items-center justify-center mx-auto mb-8">
+     <div className="md:w-3/2 lg:w-[60%]  mt-16 flex flex-col items-center justify-center mx-auto mb-5">
      <h2 className="text-3xl md:text-4xl  font-serif mb-4 text-center">{heading}</h2>
      <p className="text-lg md:text-xl mb-8 text-gray-700 text-center">{subheading}</p>
      </div>
