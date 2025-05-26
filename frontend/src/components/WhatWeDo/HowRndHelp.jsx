@@ -108,27 +108,27 @@ export default function HowRndHelp() {
       {/* Main content */}
       <div
         ref={containerRef}
-        className="flex flex-col mx-4 md:mx-20 lg:mx-40 md:flex-row items-center mt-12 md:mt-40 space-y-6 md:space-y-0 md:space-x-8"
+        className="flex flex-col mx-4 md:mx-20 lg:px-0 lg:pl-10 lg:mx-0 xl:px-0 xl:mx-0 2xl:px-10 2xl:mx-0 sm:mx-40 md:flex-row items-center mt-12 md:mt-40 space-y-6 md:space-y-0 md:space-x-8"
       >
-        <div className={`flex flex-col items-center md:w-2/3 space-y-4 ${isLargeScreen ? 'fade-in' : ''}`}>
+        <div className={`flex flex-col items-left 2xl:ml-16 xl:ml-0 xl:pl-24 md:w-2/3 2xl:w-[80%] space-y-4 ${isLargeScreen ? 'fade-in' : ''}`}>
           <h2 className="text-2xl md:text-5xl text-white font-serif font-bold">{heading}</h2>
           <p className="text-white text-lg md:text-xl">{subheading}</p>
         </div>
-        <div className={`md:flex justify-center md:w-1/2 hidden ${isLargeScreen ? 'fade-in' : ''}`}>
+        <div className={`md:flex justify-center md:w-1/2 xl:pl-8 lg:w-[35%] xl:w-[50%] 2xl:w-[40%] hidden ${isLargeScreen ? 'fade-in' : ''}`}>
           <img
             src={`/api/logo/download/${existingPhoto}`}
             alt={alt}
             title={imgTitle}
-            className="w-32 h-32 md:w-52 md:h-52 max-w-sm md:max-w-md rounded-lg"
+            className="w-32 h-32 md:w-52 md:h-52 2xl:h-[30rem] lg:w-[20rem] lg:h-[20rem] xl:h-[28rem] 2xl:w-[35rem] xl:w-[40rem] max-w-sm md:max-w-md rounded-lg"
           />
         </div>
       </div>
 
 
 {/* Cards grid */}
-<div
+<div  
   ref={fadeInContainerRef}
-  className="grid lg:grid-cols-2 justify-center items-center gap-6 w-[90%] mx-auto mt-12 pb-20 my-20"
+  className="grid lg:grid-cols-2 justify-center items-center gap-6 w-[90rem] xl:w-[74rem] lg:w-[55rem] lg:px-0 mx-auto 2xl:px-[60px]  mt-12 pb-20 my-20"
 >
   {cards.map((card, index) => (
     <div

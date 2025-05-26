@@ -95,8 +95,8 @@ export default function LatestProject({ serviceSlug }) {
 
   if (error || latestProject.length === 0) {
     return (
-      <div className="py-7 xl:px-1">
-        <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif p-4 text-center">
+      <div className=" xl:px-1">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif px-4 text-center">
           Latest <span className="text-[#f3ca0d]">Projects</span>
         </h2>
         <p className="text-lg md:text-2xl px-4 md:px-20 text-gray-600 text-center">

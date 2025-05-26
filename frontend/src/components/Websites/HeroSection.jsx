@@ -470,19 +470,19 @@ const HeroSection = () => {
   if (isLoading) return <SkeletonLoader />;
 
   return (
-    <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black md:min-h-[80vh] py-4 flex items-center justify-between text-white overflow-hidden">
+    <div className="relative bg-gradient-to-br  from-gray-900 via-gray-800 to-black md:min-h-[80vh] py-4 flex items-center justify-between text-white overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
       </div>
 
-      <div className="relative flex flex-col md:flex-row justify-center gap-10 xl:gap-40 w-11/12 pt-16 lg:w-4/5 mx-auto sm:my-32 my-5">
-        <div className="md:w-[50%] space-y-8">
+      <div className="relative flex flex-col md:flex-row mx-5 justify-center gap-10 2xl:gap-40  lg:gap-0 pt-16 2xl:px-3 xl:px-0 sm:mx-auto sm:my-32 my-5">
+        <div className="md:w-[50%]  w-full space-y-8">
           <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
-            <span className="text-[16px] font-medium bg-yellow-500 rounded-full text-white px-6 py-3 sm:py-2">
+            <span className="2xl:text-[16px] text-[14px] font-medium bg-yellow-500 rounded-full text-white 2xl:px-6 px-3 py-1 2xl:py-3 sm:py-2">
               Best
             </span>
-            <span className="ml-2 text-[16px] pr-4 text-gray-700">
+            <span className="ml-2 max-w-[80%] 2xl:text-[16px] text-[14px] pr-4 text-gray-700">
               {heroSection.title}
             </span>
           </div>
