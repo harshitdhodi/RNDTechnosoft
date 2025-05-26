@@ -67,7 +67,7 @@ export default function CraftRight() {
   const faqData = service.questions || [];
 
   return (
-    <div className="flex flex-col items-center relative top-20 ">
+    <div className="flex flex-col items-center mb-16 relative top-20 ">
       <div className="flex flex-col lg:flex-row gap-5 px-5 lg:px-12 xl:px-20 xl:ml-16 w-full">
         {/* Text Content for Large Screens */}
         <div className="w-full 2xl:w-[65%] px-4 flex flex-col justify-center order-1">

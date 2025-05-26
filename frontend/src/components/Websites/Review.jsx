@@ -51,7 +51,7 @@ const Review = ({serviceSlug}) => {
 
   return (
   <div className=' bg-[#333333] lg:bg-[url("C:\new-rndtechnosoft-website\RND\src\assets\Testimonial.jpg")] bg-cover w-full  bg-no-repeat '>
-      <div className="p-6 lg:p-10 mx-auto w-[80%]  mt-4">
+      <div className="p-6 lg:p-10 mx-auto w-[80%] ">
       <Swiper
         spaceBetween={30}
         loop={true}
@@ -89,7 +89,7 @@ const Review = ({serviceSlug}) => {
               </div>
               <div className="flex flex-col w-full items-center lg:items-start md:mr-12">
                 <RatingStars rating={review.rating} />
-                <p className="mt-4 text-lg text-white text-center lg:text-left" dangerouslySetInnerHTML={{ __html: review.testimony }}></p>
+                <p className="mt-4 text-lg text-white text-justify sm:text-center lg:text-left" dangerouslySetInnerHTML={{ __html: review.testimony }}></p>
                 <div className="flex flex-col lg:flex-row lg:justify-between items-center lg:items-center mt-4 w-full">
                   <p className="text-lg font-semibold text-white">{review.name}, {review.designation}</p>
                   <NavLink to="/all-reviews" className="mt-2 text-white hover:underline lg:ml-4">

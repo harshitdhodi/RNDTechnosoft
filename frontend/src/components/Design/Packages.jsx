@@ -99,7 +99,7 @@ const PricingSection = ({ setServiceSlug }) => {
     const whatIsNotTheir = parseJsonArray(item.whatIsNotTheir[0]);
 
     return (
-      <div className="bg-[#F7F4EE] border border-gray-300 shadow-lg rounded-lg p-6 mb-10">
+      <div className="bg-[#F7F4EE] border border-gray-300 shadow-lg rounded-lg px-6 ">
         <div className="flex justify-between items-center">
           <h3 className="md:text-2xl font-bold mb-2">{item.title}</h3>
         </div>
@@ -190,7 +190,7 @@ const PricingSection = ({ setServiceSlug }) => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6 md:gap-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-16 md:gap-16">
             {showHourlyPackages
               ? hourlypackage.map((item) => (
                   <PackageCard key={item._id} item={item} />

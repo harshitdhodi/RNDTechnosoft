@@ -71,40 +71,41 @@ const FAQ = () => {
   }
 
   return (
-    <div className="max-w-4xl  mx-auto px-4 sm:px-12 lg:max-w-4xl xl:max-w-7xl">
-      <h2 className="text-3xl sm:text-4xl lg:text-5xl  text-center  font-serif">
-        {heading}
-      </h2>
-      <h3 className=" md:text-[23px]  text-center  pb-16 mt-4 text-gray-700 ">
-        {subheading}
-      </h3>
-      {faqs.map((faq, index) => (
-        <div key={faq._id} className="mb-2 sm:mb-4 max-w-7xl">
-          <div
-            className="flex justify-between items-center px-4 sm:px-7 md:px-10 lg:px-14 bg-[#f9f7f1] rounded-[20px] py-3 sm:py-4 lg:py-[17px] cursor-pointer"
-            onClick={() => toggleFAQ(index)}
-          >
-            <h3 className="text-base sm:text-lg lg:text-xl font-inter font-medium">
-              {faq.question}
-            </h3>
-            <span className="text-lg sm:text-xl lg:text-2xl">
-              {openIndex === index ? <FaMinus /> : <FaPlus />}
-            </span>
-          </div>
-          <div
-            ref={(el) => (answerRefs.current[index] = el)}
-            className={`overflow-hidden ${
-              openIndex === index ? "block" : "hidden"
-            }`}
-          >
-            <div
-              className="p-3 sm:p-4 lg:p-5 px-8 sm:px-10 lg:px-12 font-inter text-sm sm:text-base lg:text-base text-justify"
-              dangerouslySetInnerHTML={{ __html: faq.answer }}
-            />
-          </div>
-        </div>
-      ))}
+<div className="w-full my-16 max-w-[83rem] 2xl:px-0 xl:px-[4.5rem] lg:px-9 md:px-5 px-5 mx-auto">
+  <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center font-serif">
+    {heading}
+  </h2>
+  <h3 className="md:text-[23px] text-center pb-16 mt-4 text-gray-700">
+    {subheading}
+  </h3>
+  {faqs.map((faq, index) => (
+    <div key={faq._id} className="mb-4">
+      <div
+        className="flex justify-between items-center px-4 sm:px-6 lg:px-8 bg-[#f9f7f1] rounded-[20px] py-4 cursor-pointer"
+        onClick={() => toggleFAQ(index)}
+      >
+        <h3 className="text-base sm:text-lg lg:text-xl font-medium font-inter">
+          {faq.question}
+        </h3>
+        <span className="text-lg sm:text-xl lg:text-2xl">
+          {openIndex === index ? <FaMinus /> : <FaPlus />}
+        </span>
+      </div>
+      <div
+        ref={(el) => (answerRefs.current[index] = el)}
+        className={`overflow-hidden transition-all duration-300 ${
+          openIndex === index ? "block" : "hidden"
+        }`}
+      >
+        <div
+          className="p-4 sm:p-5 lg:p-6 font-inter text-sm sm:text-base text-justify"
+          dangerouslySetInnerHTML={{ __html: faq.answer }}
+        />
+      </div>
     </div>
+  ))}
+</div>
+
   );
 };
 

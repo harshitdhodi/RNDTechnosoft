@@ -72,7 +72,7 @@ export default function CraftLeft() {
   const faqData = service.questions || [];
 
   return (
-    <div className="flex flex-col pb-16 items-center">
+    <div className="flex flex-col lg:mt-28 xl:py-0 items-center">
       <div className="flex flex-col lg:flex-row-reverse gap-10 2xl:px-20 w-full">
         {/* Text Content for Large Screens */}
         <div className="w-full 2xl:w-1/2 md:px-5 px-4 flex flex-col justify-center order-1">
