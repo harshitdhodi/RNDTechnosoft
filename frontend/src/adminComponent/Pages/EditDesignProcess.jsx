@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DesignProcessForm = () => {
-  const { categoryId, processId } = useParams(); // Extract categoryId and processId from URL
+  const { processId } = useParams(); // Extract processId from URL params
+  const location = useLocation(); // Get location object
+  const navigate = useNavigate();
+  
+  // Extract categoryId from URL search parameters
+  const searchParams = new URLSearchParams(location.search);
+  const categoryId = searchParams.get('categoryId');
+  
+  console.log('Category ID from URL:', categoryId); // This will log: 6712279f664105f21498fd87
+  console.log('Location object:', location);
 
   const [title, setTitle] = useState(""); // State for title
   const [subheading, setSubheading] = useState(""); // State for subheading
   const [description, setDescription] = useState(""); // State for description
   const [image, setImage] = useState(null); // State for new image
   const [currentImage, setCurrentImage] = useState(""); // State for current image URL
-  // const [hours, setHours] = useState(""); // State for hours in "X-Y hours" or "X-Y days" format
   const [photoAlt, setPhotoAlt] = useState(""); // State for alternative text for the image
   const [status, setStatus] = useState("active"); // State for status (active or inactive)
-  const [imgtitle,setImgtitle]=useState("");
-  const navigate = useNavigate();
+  const [imgtitle, setImgtitle] = useState("");
 
   useEffect(() => {
     // Fetch existing design process data when editing
@@ -26,21 +33,22 @@ const DesignProcessForm = () => {
           withCredentials: true
         });
 
-        const { title, subheading, description,  image, alt,imgtitle } = response.data.data;
+        const { title, subheading, description, image, alt, imgtitle } = response.data.data;
         setTitle(title);
         setSubheading(subheading);
         setDescription(description);
-        // setHours(hours);
         setCurrentImage(image); // Set the current image URL
         setPhotoAlt(alt);
-        setImgtitle(imgtitle)
+        setImgtitle(imgtitle);
       } catch (error) {
         console.error(error);
         toast.error("Failed to load design process data.");
       }
     };
 
-    fetchDesignProcess();
+    if (processId) {
+      fetchDesignProcess();
+    }
   }, [processId]);
 
   const handleImageChange = (e) => {
@@ -49,23 +57,28 @@ const DesignProcessForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check if categoryId exists
+    if (!categoryId) {
+      toast.error("Category ID is missing from URL parameters.");
+      return;
+    }
+    
     try {
       const formData = new FormData();
       formData.append('title', title); // Add title
       formData.append('subheading', subheading); // Add subheading
       formData.append('description', description); // Add description
-
-      // Add new image if it exists, otherwise retain the current image
-  
-        formData.append('alt', photoAlt); // Add alt text for the new image
-        formData.append("imgtitle",imgtitle)
+      formData.append('alt', photoAlt); // Add alt text for the new image
+      formData.append("imgtitle", imgtitle);
+      
       if (image) {
         formData.append("images", image);
       } else if (currentImage) {
         formData.append("images", currentImage);
       }
-      // formData.append('hours', hours); // Add hours
-      formData.append('categoryId', categoryId); // Send categoryId with the request
+      
+      formData.append('categoryId', categoryId); // Send categoryId from URL params
       formData.append('status', status); // Add status (active or inactive)
 
       await axios.put(`/api/designProcess/updateDesignProcess?processId=${processId}`, formData, {
@@ -80,11 +93,11 @@ const DesignProcessForm = () => {
       setSubheading("");
       setDescription("");
       setImage(null); // Reset image
-      // setHours("");
       setPhotoAlt("");
       setImgtitle("");
       setStatus("active"); // Reset status to default
-      navigate('/services'); // Navigate to the desired route
+      
+      navigate(`/services/edit-service/${categoryId}`); // Navigate using the extracted categoryId
       toast.success("Design process updated successfully!"); // Show success notification
     } catch (error) {
       console.error(error);
@@ -96,7 +109,9 @@ const DesignProcessForm = () => {
     <form onSubmit={handleSubmit} className="p-4">
       <ToastContainer />
       <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Design Process</h1>
-
+      
+      {/* Display Category ID for debugging */}
+      
       {/* Title Field */}
       <div className="mb-4">
         <label htmlFor="title" className="block font-semibold mb-2">Title</label>
@@ -145,9 +160,9 @@ const DesignProcessForm = () => {
           className="border rounded focus:outline-none"
           accept="image/*"
         />
-        {(image || currentImage)  && (
+        {(image || currentImage) && (
           <div className="mt-2">
-             <img
+            <img
               src={image ? URL.createObjectURL(image) : `/api/designProcess/download/${currentImage}`}
               alt="Preview"
               className="w-56 h-32 object-cover mt-2"
@@ -170,7 +185,7 @@ const DesignProcessForm = () => {
                 value={imgtitle}
                 onChange={(e) => setImgtitle(e.target.value)}
                 className="w-full p-2 border rounded focus:outline-none"
-                placeholder="Enter alternative text"
+                placeholder="Enter title text"
                 required
               />
             </label>
@@ -178,19 +193,6 @@ const DesignProcessForm = () => {
         )}
       </div>
 
-      {/* Hours Field */}
-      {/* <div className="mt-4">
-        <label htmlFor="hours" className="block font-semibold mb-2">Hours</label>
-        <input
-          type="text"
-          id="hours"
-          value={hours}
-          onChange={(e) => setHours(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-          placeholder="e.g., 1-2 hours or 1-2 days"
-        />
-      </div> */}
       {/* Status Field */}
       <div className="mt-4">
         <label htmlFor="status" className="block font-semibold mb-2">Status</label>

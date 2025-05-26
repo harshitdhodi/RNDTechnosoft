@@ -5,12 +5,10 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { CgCalendarDates } from "react-icons/cg";
 import { FaEye } from "react-icons/fa";
 
-
-
 export default function LatestBlog() {
   const [blogData, setBlogData] = useState([]);
   const navigate = useNavigate();
-  const {slug}=useParams()
+  const { slug } = useParams();
 
   useEffect(() => {
     // Fetch the latest blog data from the API when the component mounts
@@ -21,7 +19,6 @@ export default function LatestBlog() {
         });
         // Update state with the fetched data
         setBlogData(response.data.blogs);
-       
       } catch (error) {
         console.error("Error fetching latest blog data:", error);
       }
@@ -39,19 +36,30 @@ export default function LatestBlog() {
     }
   };
 
-  if(blogData.length===0){
+  if (blogData.length === 0) {
     return null;
   }
+
+  // Determine grid classes based on number of items
+  const getGridClasses = () => {
+    if (blogData.length === 1) {
+      return "grid grid-cols-1 justify-items-center max-w-sm mx-auto";
+    } else if (blogData.length === 2) {
+      return "grid grid-cols-1 sm:grid-cols-2 justify-items-center max-w-2xl mx-auto";
+    } else {
+      return "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
+    }
+  };
 
   return (
     <div className="p-4 md:p-8 w-[90%] mx-auto">
       <p className="text-center text-[48px] font-serif">Latest Blogs</p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 pb-20">
+      <div className={`${getGridClasses()} gap-6 mt-12 pb-16`}>
         {blogData.map((blog) => (
           <div
             key={blog._id}
-            className="relative blog-card border border-lg border-black rounded-xl p-4 sm:p-6 flex flex-col gap-3 items-center bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105"
+            className="relative blog-card border border-lg border-black rounded-xl p-4 sm:p-6 flex flex-col gap-3 items-center bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105 w-full max-w-sm"
           >
             <img
               src={`/api/image/download/${blog.photo[0]}`}
@@ -80,13 +88,12 @@ export default function LatestBlog() {
               </button>
             </div>
             <div className="flex justify-between items-center w-full">
-              <div className="flex gap-2 items-center  text-gray-500">
+              <div className="flex gap-2 items-center text-gray-500">
                 <CgCalendarDates size={20} />
                 <p>{format(new Date(blog.date), "MMMM d, yyyy")}</p>
               </div>
-              <div className="flex gap-2 items-center  text-gray-500">
+              <div className="flex gap-2 items-center text-gray-500">
                 <FaEye />
-
                 <p> {blog.visits || 0}</p>
               </div>
             </div>

@@ -34,7 +34,7 @@ const OurValues = () => {
   }, []);
 
   return (
-    <section className="relative bg-[#333] overflow-hidden">
+    <section className="relative mt-16 bg-[#333] overflow-hidden">
       {/* Shape Divider */}
       <div className="absolute inset-x-0 top-0">
         <svg

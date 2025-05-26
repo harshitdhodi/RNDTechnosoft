@@ -37,7 +37,7 @@ export default function Website() {
   return (
     <div>
       <HeroSection />
-      <LatestProduct />
+      {/* <LatestProduct /> */}
       <CraftRight />
       <CraftLeft />
       <ServiceSlider/>
