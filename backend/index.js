@@ -486,7 +486,7 @@ app.use((err, req, res, next) => {
         error: process.env.NODE_ENV === 'development' ? err : undefined,
     });
 });
-
+ 
 // Server Initialization
 async function startServer() {
     try {
@@ -508,4 +508,4 @@ async function startServer() {
     }
 }
 
-startServer();
+startServer(); 

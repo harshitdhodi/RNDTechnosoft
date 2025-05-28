@@ -54,6 +54,11 @@ const DesignProcess = ({ categoryId ,subcategoryId}) => {
         accessor: "description",
         Cell: ({ value }) => <span>{value}</span>,
       },
+        {
+        Header: "Subheading",
+        accessor: "subheading",
+        Cell: ({ value }) => <span>{value}</span>,
+      },
       {
         Header: "Images",
         accessor: "image",

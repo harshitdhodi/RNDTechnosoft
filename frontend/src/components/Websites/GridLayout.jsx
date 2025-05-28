@@ -142,9 +142,9 @@ export default function GridLayout({ serviceData }) {
           Dedicated to Your Success
         </h3>
     </div>
-    <div className="sm:grid flex flex-col px-4 w-full overflow-hidden max-w-[82rem] mx-auto gap-4  xl:grid-cols-4 grid-rows-[repeat(4,minmax(200px,auto))]">
+    <div className="sm:grid flex flex-col px-4 w-full overflow-hidden max-w-[82rem] 2xl:max-w-[85rem] xl:max-w-[76rem] mx-auto gap-4  xl:grid-cols-4 grid-rows-[repeat(4,minmax(200px,auto))]">
     
-      {services.map((service, index) => (
+      {services.map((service, index) => ( 
         <Card
           key={service._id}
           id={index + 1}
