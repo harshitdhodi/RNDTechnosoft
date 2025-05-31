@@ -45,7 +45,7 @@ const Breadcrumbs = ({ sidebarData }) => {
     <nav className="bg-gray-100 py-3 px-5">
       <ol className="flex">
         <li>
-          <Link to="/" className="text-blue-600 hover:underline">Dashboard</Link>
+          <Link to="/dashboard" className="text-blue-600 hover:underline">Dashboard</Link>
         </li>
         {pathnames.map((value, index) => {
           if (isId(value)) return null;

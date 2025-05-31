@@ -81,13 +81,13 @@ const getFormattedCategoriesFromAllSchemas = async () => {
         component: "MainService",
         subItems: formatCategories(serviceCategories, "2"),
       },
-      {
-        id: "3",
-        name: "Packages",
-        slug: "website-packages",
-        component: "MainPackage",
-        subItems: formatCategories(packageCategories, "3"),
-      },
+      // {
+      //   id: "3",
+      //   name: "Packages",
+      //   slug: "website-packages",
+      //   component: "MainPackage",
+      //   subItems: formatCategories(packageCategories, "3"),
+      // },
       {
         id: "4",
         name: "Industries",

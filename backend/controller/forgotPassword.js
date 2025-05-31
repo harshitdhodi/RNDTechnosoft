@@ -4,16 +4,24 @@ const bcryptjs = require('bcryptjs');
 
 const forgetPassword = async(req,res)=>{
     try{
-        const{email}=req.body;
-       
-        const user = await Admin.findOne({email})
-      
-        if(!user)
-        {
-            return res.status(404).json({success:false,message:'User not found'})
+        const { email } = req.body;
+
+        // Check if email is provided
+        if (!email) {
+            return res.status(400).json({ success: false, message: 'Please enter email' });
         }
 
-        
+        // Email format validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ success: false, message: 'Please enter a valid email address' });
+        }
+
+        const user = await Admin.findOne({ email });
+
+        if(!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
 
         const generateOTP = () => {
             return Math.floor(100000 + Math.random()* 900000);
@@ -26,12 +34,12 @@ const forgetPassword = async(req,res)=>{
 
         await user.save();
 
-        await sendEmail(email,otp);
+        await sendEmail(email, otp);
 
         return res.status(200).json({ success: true, message: 'OTP sent to your email', redirect: '/password/verifyOtp' });
     }
     catch (error) {
-        console.error(error);
+        console.log(error);
         return res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }

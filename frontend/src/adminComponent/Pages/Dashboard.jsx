@@ -276,11 +276,6 @@ const AdminDashboard = () => {
             console.log("Error fetching data", error);
         });
 
-        axios.get('/api/partner/countPartner', { withCredentials: true }).then(response => {
-            setCountPartners(response.data.total);
-        }).catch(error => {
-            console.log("Error fetching data", error);
-        });
     }, []);
 
     const fetchData = async () => {
@@ -374,13 +369,7 @@ const AdminDashboard = () => {
                         <Users2 size={60} />
                     </div>
                     
-                    <div className="bg-lime-500 border border-gray-300 rounded p-4 text-white flex justify-around cursor-pointer" onClick={() => navigate("/clients")}>
-                        <div>
-                            <h3 className="text-4xl font-bold mb-2">{countPartners}</h3>
-                            <p className='font-semibold'>Our Clients</p>
-                        </div>
-                        <Handshake size={60} />
-                    </div>
+                   
                 </div>
             </div>
             

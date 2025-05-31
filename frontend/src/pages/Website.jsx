@@ -43,15 +43,16 @@ export default function Website() {
       <ServiceSlider/>
       <Tagline/>
       <HexGridDemo expertData={data?.WeAreExpert} />
-      <Review />
-      <Logotypes/>
+     
+      {/* <Logotypes/> */}
       <Companies />
       <WhyPartnerWithUs />
-      {/* <PricingSection /> */}
       <De />
+       <Review />
+      {/* <PricingSection /> */}
       {/* <DesignProcess/> */}
+      
       <FAQ />
-      <BookAcall />
       <LatestBlog />
     </div>
   );
