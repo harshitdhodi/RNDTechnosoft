@@ -186,6 +186,7 @@ const Navbar = () => {
       try {
         const response = await fetchNavData();
         if (Array.isArray(response.data)) {
+          console.log("Navigation data fetched:", response.data);
           setNavData(response.data);
         } else {
           console.error("Navigation data is not an array:", response);
