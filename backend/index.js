@@ -452,7 +452,7 @@ app.use('/api/jobApplication', require('./routes/jobApplication'));
 app.use('/api/cache', require('./routes/cache'));
 app.use('/api/staticMeta', require('./routes/staticMeta'));
 app.use('/api/all-inquiries', require('./routes/allInquiries'));
-
+app.use('/api/techCategory', require('./routes/techCategory'));
 // Swagger Setup 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swaggerConfig');

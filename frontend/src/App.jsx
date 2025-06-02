@@ -119,6 +119,7 @@ const AllReviews = lazy(() => import('./components/WhatWeDo/AllReviews'));
 const HomeHerosection = lazy(() => import('./adminComponent/Pages/HomeHerosection'));
 import DynamicPage from "./pages/DynamicPages";
 import HexGridDemo from "./components/hexagon/Grid";
+import TechnologyPage from "./components/technology/Page";
 const CreatePackage = lazy(() => import('./adminComponent/Pages/CreatePackage'));
 const EditPackageForm = lazy(() => import('./adminComponent/Pages/EditPackage'));
 
@@ -281,6 +282,7 @@ function App() {
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/collabration" element={<Collabration />} />
                 <Route path="/contact" element={<GetInTouch />} />
+                <Route path="/technologies" element={<TechnologyPage />} />
                 <Route path="/helpCenter" element={<Faq />} />
                 <Route path="/cookies-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-conditions" element={<TermsCondition />} />
@@ -332,7 +334,7 @@ function App() {
                   <Route path="/add-navbar-data" element={<AddNavbarData />} />
                   <Route path="/edit-navbar-data/:id" element={<EditNavbar />} />
 
-
+                  
                   <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
                   <Route path="/ServiceCategory/editServiceCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditServiceCategory />} />
                   <Route path="/PackageCategory" element={<PackageCategory />} />

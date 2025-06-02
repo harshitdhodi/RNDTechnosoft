@@ -87,7 +87,14 @@ const getFormattedCategoriesFromAllSchemas = async () => {
       //   slug: "website-packages",
       //   component: "MainPackage",
       //   subItems: formatCategories(packageCategories, "3"),
-      // },
+      // },  
+      //   {
+      //   id: "3",
+      //   name: "Technology",
+      //   slug: "website-packages",
+      //   component: "MainPackage",
+      //   subItems: formatCategories(packageCategories, "3"),
+      // },                            
       {
         id: "4",
         name: "Industries",
