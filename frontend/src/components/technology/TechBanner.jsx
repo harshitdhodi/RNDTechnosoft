@@ -5,7 +5,7 @@ import { IoStarSharp, IoStarHalfSharp, IoStarOutline } from 'react-icons/io5';
 
 
 
-export default function HeroSection({ serviceGridRef ,pageType }) {
+export default function TechBanner({ serviceGridRef ,pageType }) {
   const [heading, setHeading] = useState("");
   const [subHeading, setsubHeading] = useState(null);
   const [photo, setPhoto] = useState(null)
@@ -40,11 +40,11 @@ export default function HeroSection({ serviceGridRef ,pageType }) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative ">
       <img src={`/api/logo/download/${photo}`} alt={alt} title={imgTitle} className="w-full h-[55vh] object-cover" />
-      <div className="absolute   inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8 pt-16 md:pt-32">
-        <h1 className="text-white text-4xl md:text-7xl font-serif capitalize">{heading}</h1>
-        <p className="text-xl md:text-2xl text-white text-center">{subHeading}</p>
+      <div className="absolute  inset-0 bg-black bg-opacity-30 flex items-start 2xl:pl-32 justify-center flex-col gap-8 pt-16 md:pt-32">
+        <h1 className="text-white text-4xl md:text-5xl font-serif capitalize">{heading}</h1>
+        <p className="text-xl w-1/2  md:text-2xl text-white text-left">{subHeading}</p>
       </div>
     </div>
   );

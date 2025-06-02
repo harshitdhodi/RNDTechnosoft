@@ -5,20 +5,25 @@ import MobileNavbar from "./MobileMenuItems";
 import { FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// NavItem Component to handle different depths of the menu
+import react from "../images/technology/react.png";
+import css from "../images/technology/css.png";
+import flutter from "../images/technology/flutter.png";
+import html from "../images/technology/html.png";
+import js from "../images/technology/js.png";
+import php from "../images/technology/php.png";
+import next from "../images/technology/next.png";
+import larawel from "../images/technology/larawel.png";
+// NavItem Component (unchanged)
 const NavItem = ({ item, depth = 0, closeMenu }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [closeTimeout, setCloseTimeout] = useState(null);
   const location = useLocation();
   const menuRef = useRef(null);
 
-  // Reset hover state whenever the URL changes
   useEffect(() => {
     setIsHovered(false);
   }, [location.pathname]);
 
-  // Add click outside handler
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -48,31 +53,43 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
   };
 
   const handleClick = () => {
-    // Always close menu when clicking on any menu item
     closeMenu();
     setIsHovered(false);
-    
-    // If this is a link with subItems and at depth 0, don't navigate
     if (item.subItems && item.subItems.length > 0 && depth === 0) {
       return;
     }
   };
 
-  // Set different font sizes based on depth
   const fontSize =
     depth === 0 ? "text-lg" : depth === 1 ? "text-base " : "text-sm";
 
-  // Check if we need to display in two columns
-  const useTwoColumns = item.subItems && item.subItems.length > 15;
-  
-  // If using two columns, split the items into two balanced arrays
+  const useTwoColumns = item.subItems && item.subItems.length > 15 && item.id !== "technology";
   const firstColumnItems = useTwoColumns
     ? item.subItems.slice(0, Math.ceil(item.subItems.length / 2))
     : item.subItems;
-    
   const secondColumnItems = useTwoColumns
     ? item.subItems.slice(Math.ceil(item.subItems.length / 2))
     : [];
+
+  const techIcons = {
+    "React JS": react,
+    "Next JS": next,
+    "CSS": css,
+    "HTML":html,
+    "JS": js,
+    "Express JS": "https://via.placeholder.com/24?text=E",
+    "PHP":php,
+    "Laravel": larawel,
+    "Flutter":flutter,
+    "Android": "https://via.placeholder.com/24?text=A",
+    "Java": "https://via.placeholder.com/24?text=J",
+    "Shopify": "https://via.placeholder.com/24?text=S",
+    "WooCommerce": "https://via.placeholder.com/24?text=W",
+    "Magento": "https://via.placeholder.com/24?text=M",
+    "Figma": "https://via.placeholder.com/24?text=FI",
+    "Adobe XD": "https://via.placeholder.com/24?text=XD",
+    "Sketch": "https://via.placeholder.com/24?text=SK",
+  };
 
   return (
     <li
@@ -106,39 +123,70 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
       </Link>
 
       {item.subItems && item.subItems.length > 0 && (
-        <div
-          className={`absolute ${
-            depth === 0
-              ? "left-0 top-full mt-2"
-              : "left-full top-0 mt-2"
-          } 
-          ${isHovered ? "flex" : "hidden"} bg-white shadow-lg transition-all duration-300 ease-in-out
-          ${depth === 0 ? "" : "-mt-1 ml-1"}`}
-        >
-          {/* First column of items */}
-          <ul className="w-max">
-            {firstColumnItems.map((subItem) => (
-              <NavItem
-                key={subItem.id}
-                item={subItem}
-                depth={depth + 1}
-                closeMenu={closeMenu}
-              />
-            ))}
-          </ul>
-          
-          {/* Second column of items (if needed) */}
-          {useTwoColumns && (
-            <ul className="w-max border-l border-gray-100">
-              {secondColumnItems.map((subItem) => (
-                <NavItem
-                  key={subItem.id}
-                  item={subItem}
-                  depth={depth + 1}
-                  closeMenu={closeMenu}
-                />
+      <div
+  className={`absolute border
+    ${item.id === "technology" ? "-left-32" : ""}
+    ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
+    ${isHovered ? "block border-red-500 bg-white" : "hidden bg-white"}
+    shadow-lg transition-all duration-300 rounded-md ease-in-out
+    ${depth === 0 ? "" : "-mt-1 ml-1"}
+  `}
+>
+  {item.id === "technology" ? (
+   <div className="grid grid-cols-2 gap-3 p-3  w-[700px]">
+              {item.subItems.map((category) => (
+                <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg px-4 py-2 border border-gray-200">
+                  <div>
+                    <img
+                      src={react}
+                      alt={category.name}
+                      className="w-8 h-8 object-contain mb-2"   
+                    />
+                  </div>
+                <div className="">
+                    <h3 className="text-lg font-semibold text-gray-800 ">{category.name}</h3>
+                  <p className="text-sm text-gray-600 pb-2 leading-relaxed">{category.description}</p>
+                  <div className="grid grid-cols-2 gap-4">
+                    {category.technologies.map((tech) => (
+                      <div key={tech} className="flex items-center space-x-2  transition-colors">
+                        <img
+                          src={techIcons[tech]}
+                          alt={tech}
+                          className="w-5 h-5 object-contain flex-shrink-0"
+                        />
+                        <span className="text-sm text-gray-700 font-medium">{tech}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                </div>
               ))}
-            </ul>
+            </div>
+          ) : (
+            <div className="flex">
+              <ul className="w-max">
+                {firstColumnItems.map((subItem) => (
+                  <NavItem
+                    key={subItem.id}
+                    item={subItem}
+                    depth={depth + 1}
+                    closeMenu={closeMenu}
+                  />
+                ))}
+              </ul>
+              {useTwoColumns && (
+                <ul className="w-max border-l border-gray-100">
+                  {secondColumnItems.map((subItem) => (
+                    <NavItem
+                      key={subItem.id}
+                      item={subItem}
+                      depth={depth + 1}
+                      closeMenu={closeMenu}
+                    />
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -146,7 +194,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
   );
 };
 
-// Navbar Component to render the navigation bar
+// Navbar Component
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [navData, setNavData] = useState([]);
@@ -155,7 +203,44 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Reset mobile menu state on route change
+  const technologyMenu = {
+    id: "technology",
+    name: "Technology",
+    slug: "technology",
+    subItems: [
+      {
+        id: "frontend",
+        name: "Front-end Development",
+        description: "Intuitive user experiences with cutting-edge front-end technologies",
+        technologies: ["React JS", "Next JS", "CSS", "HTML"],
+      },
+      {
+        id: "backend",
+        name: "Back-end Development",
+        description: "Our robust backend technologies are the engine driving your innovative & reliable platform",
+        technologies: ["Node JS", "Express JS", "PHP", "Laravel"],
+      },
+      {
+        id: "mobile",
+        name: "Mobile App Development",
+        description: "Our mobile app development technologies are the key to crafting user-friendly solutions",
+        technologies: ["Flutter", "Android", "Java"],
+      },
+      {
+        id: "ecommerce",
+        name: "Ecommerce",
+        description: "Experience seamless online shopping with our ecommerce technologies",
+        technologies: ["Shopify", "WooCommerce", "Magento"],
+      },
+      {
+        id: "uiux",
+        name: "UI/UX",
+        description: "Our UI/UX technologies are a true testament to how design is seamlessly blended functionality",
+        technologies: ["Figma", "Adobe XD", "Sketch"],
+      },
+    ],
+  };
+
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
@@ -166,20 +251,19 @@ const Navbar = () => {
 
   useEffect(() => {
     const fetchHeaderColorLogo = async () => {
-        try {
-            const response = await axios.get('/api/logo');
-            const headerColorLogo = response.data.find(logo => logo.type === 'headerColor');
-            console.log(headerColorLogo)
-            if (headerColorLogo) {
-                setColorLogo(headerColorLogo);
-            }
-        } catch (err) {
-           console.log(err);
+      try {
+        const response = await axios.get('/api/logo');
+        const headerColorLogo = response.data.find(logo => logo.type === 'headerColor');
+        if (headerColorLogo) {
+          setColorLogo(headerColorLogo);
         }
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     fetchHeaderColorLogo();
-}, []);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -200,13 +284,22 @@ const Navbar = () => {
     fetchData();
   }, []);
 
+  // Combine navData and technologyMenu, placing technologyMenu at index 2
+  const combinedNavItems = [...navData];
+  if (combinedNavItems.length >= 2) {
+    combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
+  } else {
+    // If navData has fewer than 2 items, append technologyMenu
+    combinedNavItems.push(technologyMenu);
+  }
+
   return (
-    <div className="w-full fixed z-30 ">
+    <div className="w-full fixed z-30">
       <nav className="bg-white border-b border-gray-200 xl:mx-12 rounded-b-lg shadow-lg lg:block hidden">
-        <div className="bg-[#333] text-white text-center py-1  justify-center font-semibold text-xl text-md xl:flex hidden">
+        <div className="bg-[#333] text-white text-center py-1 justify-center font-semibold text-xl text-md xl:flex hidden">
           Our website is currently under construction. Please check back later.
         </div>
-        <div className=" mx-20 flex justify-between items-center py-2">
+        <div className="mx-20 flex justify-between items-center py-2">
           <div className="flex items-center space-x-8">
             <NavLink to="/">
               <img
@@ -220,8 +313,8 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          <div className="hidden lg:flex items-center space-x-2 relative ">
-            {navData.map((link) => (
+          <div className="hidden lg:flex items-center space-x-2 relative">
+            {combinedNavItems.map((link) => (
               <NavItem key={link.id} item={link} closeMenu={closeMenu} />
             ))}
           </div>
