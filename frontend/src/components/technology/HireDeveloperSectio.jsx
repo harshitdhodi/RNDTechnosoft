@@ -33,7 +33,7 @@ const HireDevelopersSection = () => {
             </h2>
 
             <p className="text-gray-600 mb-8 leading-relaxed">
-              At IT Idol Technologies, we build high-performing, scalable React JS applications tailored to your growth
+              At RND Technosoft, we build high-performing, scalable React JS applications tailored to your growth
               goals. From interactive UIs to enterprise-grade solutions, our React JS services bring speed, flexibility,
               and reliability to every project.
             </p>
