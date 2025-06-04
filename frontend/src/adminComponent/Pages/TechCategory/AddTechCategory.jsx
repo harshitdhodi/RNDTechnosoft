@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, Save, AlertCircle, CheckCircle2, X } from 'lucide-react';
+import axios from 'axios';
 
 const AddTechCategoryForm = () => {
   const [formData, setFormData] = useState({
@@ -87,65 +88,57 @@ const AddTechCategoryForm = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
+  e.preventDefault();
+
+  if (!validateForm()) {
+    return;
+  }
+
+  setIsSubmitting(true);
+  setSubmitStatus(null);
+
+  try {
+    const formPayload = new FormData();
+    formPayload.append('heading', formData.heading);
+    formPayload.append('subheading', formData.subheading);
+    formPayload.append('alt', formData.alt);
+    formPayload.append('imgTitle', formData.imgTitle);
+    if (selectedFile) {
+      formPayload.append('photo', selectedFile);
     }
 
-    setIsSubmitting(true);
-    setSubmitStatus(null);
+    await axios.post('/api/techCategory', formPayload, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    });
 
-    try {
-      // In a real application, you would first upload the file to get a URL
-      // const uploadedPhotoUrl = await uploadFile(selectedFile);
-      
-      const response = await fetch('/api/techCategory', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          // photo: uploadedPhotoUrl // Use the actual uploaded file URL
-        }),
-      });
-
-      if (response.ok) {
-        setSubmitStatus('success');
-        // Reset form
-        setFormData({
-          heading: '',
-          subheading: '',
-          photo: '',
-          alt: '',
-          imgTitle: ''
-        });
-        setSelectedFile(null);
-        setPreviewUrl('');
-      } else {
-        throw new Error('Failed to submit form');
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      setSubmitStatus('error');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    setSubmitStatus('success');
+    setFormData({
+      heading: '',
+      subheading: '',
+      photo: '',
+      alt: '',
+      imgTitle: ''
+    });
+    setSelectedFile(null);
+    setPreviewUrl('');
+  } catch (error) {
+    console.error('Error submitting form:', error);
+    setSubmitStatus('error');
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="bg-black/60 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-yellow-400/30">
+    <div className="min-h-screen  py-12 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="">
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
+          <div className="text-center mb-5">
+            <h1 className="text-3xl font-bold text-black mb-2">
               Add Tech Category
             </h1>
-            <p className="text-gray-300">
-              Create a new technology category entry
-            </p>
+         
           </div>
 
           {/* Status Messages */}
@@ -164,10 +157,10 @@ const AddTechCategoryForm = () => {
           )}
 
           {/* Form */}
-          <div className="space-y-6">
+          <div className="space-y-6 w-[80%]">
             {/* Heading */}
             <div>
-              <label htmlFor="heading" className="block text-sm font-semibold text-yellow-400 mb-2">
+              <label htmlFor="heading" className="block text-sm font-semibold text-black mb-2">
                 Heading *
               </label>
               <input
@@ -176,7 +169,7 @@ const AddTechCategoryForm = () => {
                 name="heading"
                 value={formData.heading}
                 onChange={handleInputChange}
-                className={`w-full px-4 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all ${
+                className={`w-full px-4 py-3 bg-white border rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all ${
                   errors.heading ? 'border-red-500' : 'border-gray-600'
                 }`}
                 placeholder="Enter category heading"
@@ -191,7 +184,7 @@ const AddTechCategoryForm = () => {
 
             {/* Subheading */}
             <div>
-              <label htmlFor="subheading" className="block text-sm font-semibold text-yellow-400 mb-2">
+              <label htmlFor="subheading" className="block text-sm font-semibold text-black mb-2">
                 Subheading *
               </label>
               <textarea
@@ -200,7 +193,7 @@ const AddTechCategoryForm = () => {
                 value={formData.subheading}
                 onChange={handleInputChange}
                 rows={3}
-                className={`w-full px-4 py-3 bg-gray-800/50 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all resize-vertical ${
+                className={`w-full px-4 py-3 bg-white border rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-vertical ${
                   errors.subheading ? 'border-red-500' : 'border-gray-600'
                 }`}
                 placeholder="Enter category subheading or description"
@@ -213,26 +206,30 @@ const AddTechCategoryForm = () => {
               )}
             </div>
 
-            {/* Photo Upload */}
+            {/* Photo Upload - FIXED VERSION */}
             <div>
-              <label className="block text-sm font-semibold text-yellow-400 mb-2">
+              <label className="block text-sm font-semibold text-black mb-2">
                 Photo *
               </label>
               
               {!selectedFile ? (
-                <div className={`border-2 border-dashed rounded-lg p-8 text-center transition-all ${
-                  errors.photo ? 'border-red-500' : 'border-gray-600 hover:border-yellow-400'
-                }`}>
+                <label 
+                  htmlFor="photo-upload"
+                  className={`block border-2 border-dashed rounded-lg p-8 text-center transition-all cursor-pointer ${
+                    errors.photo ? 'border-red-500' : 'border-gray-600 hover:border-black'
+                  }`}
+                >
                   <Upload className="mx-auto w-12 h-12 text-gray-400 mb-4" />
-                  <p className="text-gray-300 mb-2">Click to upload photo</p>
+                  <p className="text-gray-900 mb-2">Click to upload photo</p>
                   <p className="text-sm text-gray-500">PNG, JPG, GIF up to 10MB</p>
                   <input
                     type="file"
+                    id="photo-upload"
                     accept="image/*"
                     onChange={handleFileChange}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    className="hidden"
                   />
-                </div>
+                </label>
               ) : (
                 <div className="relative">
                   <img
@@ -243,11 +240,27 @@ const AddTechCategoryForm = () => {
                   <button
                     type="button"
                     onClick={removeFile}
-                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-colors"
+                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-black rounded-full p-1 transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
                   <p className="mt-2 text-sm text-gray-400">{selectedFile.name}</p>
+                  
+                  {/* Option to change file */}
+                  <label 
+                    htmlFor="photo-upload-change"
+                    className="mt-2 inline-flex items-center gap-2 text-sm text-black hover:text-yellow-300 cursor-pointer"
+                  >
+                    <Upload className="w-4 h-4" />
+                    Change Photo
+                    <input
+                      type="file"
+                      id="photo-upload-change"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </label>
                 </div>
               )}
               
@@ -261,7 +274,7 @@ const AddTechCategoryForm = () => {
 
             {/* Alt Text */}
             <div>
-              <label htmlFor="alt" className="block text-sm font-semibold text-yellow-400 mb-2">
+              <label htmlFor="alt" className="block text-sm font-semibold text-black mb-2">
                 Alt Text
               </label>
               <input
@@ -270,14 +283,14 @@ const AddTechCategoryForm = () => {
                 name="alt"
                 value={formData.alt}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-white border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                 placeholder="Describe the image for accessibility"
               />
             </div>
 
             {/* Image Title */}
             <div>
-              <label htmlFor="imgTitle" className="block text-sm font-semibold text-yellow-400 mb-2">
+              <label htmlFor="imgTitle" className="block text-sm font-semibold text-black mb-2">
                 Image Title
               </label>
               <input
@@ -286,7 +299,7 @@ const AddTechCategoryForm = () => {
                 name="imgTitle"
                 value={formData.imgTitle}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 bg-white border border-gray-600 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                 placeholder="Image title attribute"
               />
             </div>
@@ -295,7 +308,7 @@ const AddTechCategoryForm = () => {
             <button
               onClick={handleSubmit}
               disabled={isSubmitting}
-              className="w-full bg-gradient-to-r from-yellow-500 to-yellow-400 text-black font-bold py-4 px-6 rounded-lg hover:from-yellow-400 hover:to-yellow-300 focus:outline-none focus:ring-4 focus:ring-yellow-500/50 transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
+              className="md:w-1/2 bg-gradient-to-r  font-bold py-4 px-6 rounded-lg bg-slate-700 text-white transition-all transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>

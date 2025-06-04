@@ -120,89 +120,95 @@ const HomeHerosection = lazy(() => import('./adminComponent/Pages/HomeHerosectio
 import DynamicPage from "./pages/DynamicPages";
 import HexGridDemo from "./components/hexagon/Grid";
 import TechnologyPage from "./components/technology/Page";
+import AddTechCategoryForm from "./adminComponent/Pages/TechCategory/AddTechCategory";
+import TechCategoryTable from "./adminComponent/Pages/TechCategory/TachCategoryTable";
+import EditTechCategoryForm from "./adminComponent/Pages/TechCategory/EditTechCategory";
+import TechnologyManager from "./adminComponent/Pages/TechCategory/Technology";
+import TechnologySecDataForm from "./adminComponent/Pages/TechCategory/TechnologySecForm";
+import TechnologyDataTable from "./adminComponent/Pages/TechCategory/TechnologySecData";
 const CreatePackage = lazy(() => import('./adminComponent/Pages/CreatePackage'));
 const EditPackageForm = lazy(() => import('./adminComponent/Pages/EditPackage'));
 
- const CreatePackageDescription = lazy(() => import('./adminComponent/Pages/CreatePackageDescription'));
-    const EditPackageDescription = lazy(() => import('./adminComponent/Pages/EditPackageDescription'));
-    const DesignProcessForm = lazy(() => import('./adminComponent/Pages/CreateDesignProcess'));
-    const EditDesignProcess = lazy(() => import('./adminComponent/Pages/EditDesignProcess'));
-    const EditWebSolutionDetails = lazy(() => import('./adminComponent/Pages/WebSolution'));
-    const EditServicePage = lazy(() => import('./adminComponent/Pages/EditEachCategory'));
-    const AboutUs = lazy(() => import('./pages/AboutUs'));
-    const Collabration = lazy(() => import('./pages/Collabration'));
-    const GetInTouch = lazy(() => import('./pages/Contact'));
-    const Faq = lazy(() => import('./pages/Faq'));
-    const NewSubmenuListingForm = lazy(() => import('./adminComponent/Pages/CreateSubMenu'));
-    const EditSubmenuForm = lazy(() => import('./adminComponent/Pages/EditSubMenu'));
-    const PrivacyPolicy = lazy(() => import('./components/CookiePolice'));
-    const PrivacyPolicysss = lazy(() => import('./components/PravicyPolice'));
-    const TermsCondition = lazy(() => import('./components/TermsCondition'));
-    const DynamicMetaTags = lazy(() => import('./components/DynamicMetaTag'));
-    const BlogSubSub = lazy(() => import('./pages/Blogs/SubSubBlog'));
-    const EditSubServicePage = lazy(() => import('./adminComponent/Pages/EditEachSubcategory'));
-    const EditSubSubServicePage = lazy(() => import('./adminComponent/Pages/EditEachsubsubcategory'));
-    const NewSubServiceForm = lazy(() => import('./adminComponent/Pages/CreateSubServiceDetail'));
-    const EditSubServiceDetails = lazy(() => import('./adminComponent/Pages/EditSubServicePage'));
-    const NewSubSubServiceForm = lazy(() => import('./adminComponent/Pages/CreateSubSubServiceDetails'));
-    const EditSubSubServiceDetails = lazy(() => import('./adminComponent/Pages/EditSubSubServicePage'));
-    const NewSubGalleryForm = lazy(() => import('./adminComponent/Pages/CreateSubServiveImage'));
-    const NewSubSubGalleryForm = lazy(() => import('./adminComponent/Pages/CreateSubSubServiceImage'));
-    const DesignSubProcessForm = lazy(() => import('./adminComponent/Pages/CreateSubDesignProcess'));
-    const DesignSubSubProcessForm = lazy(() => import('./adminComponent/Pages/CreateSubSubDesignProcess'));
-    const EditIndustiresPage = lazy(() => import('./adminComponent/Pages/EditEachIndustriesCategory'));
-    const EditIndustiresSubPage = lazy(() => import('./adminComponent/Pages/EditEachIndustriesSubCategory'));
-    const EditIndustiresSubsubPage = lazy(() => import('./adminComponent/Pages/EditEachIndustriesSubsubcategory'));
-    const NewIndustriesForm = lazy(() => import('./adminComponent/Pages/industriescomponent/main/CreateDetails'));
-    const EditIndustriesForm = lazy(() => import('./adminComponent/Pages/industriescomponent/main/EditDetails'));
-    const NewIndustriesSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/sub/CreateDetails'));
-    const EditIndustriesSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/sub/EditDetails'));
-    const Homeanimation = lazy(() => import('./adminComponent/Pages/Homeanimation/Homeanimation'));
-    const EditHomeanimation = lazy(() => import('./adminComponent/Pages/Homeanimation/EditHomeanimation'));
-    const CreateHomeanimation = lazy(() => import('./adminComponent/Pages/Homeanimation/CreateHomeanimation'));
-    const NewIndustriesSubSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/subsub/CreateDetails'));
-    const EditIndustriesSubSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/subsub/EditDetails'));
-    const ContactUs = lazy(() => import('./Pages/ContactUs')); 
-    const ContactInfoData = lazy(() => import('./adminComponent/Pages/contactInfo/ContactInfo'));
-    const CreateContactInfo = lazy(() => import('./adminComponent/Pages/contactInfo/AddContactInfo'));
-    const EditContactInfo = lazy(() => import('./adminComponent/Pages/contactInfo/EditContactinfo'));
-    const ContactInquiry = lazy(() => import('./adminComponent/Pages/contactInfo/Contactinquiries'));
-    const ManageSectionVisibility = lazy(() => import('./adminComponent/Pages/ManageSectionVisibility'));
-    const Newsletter = lazy(() => import('./adminComponent/Pages/Newsletter'));
-    const AddCard = lazy(() => import('./adminComponent/Pages/Cards/AddCards'));
-    const ShowCard = lazy(() => import('./adminComponent/Pages/Cards/showCards'));
-    const UpdateCard = lazy(() => import('./adminComponent/Pages/Cards/UpdateCards'));
-    const PopupInquiry = lazy(() => import('./adminComponent/Pages/PopupInquiry'));
-    const HerosectionInquiry = lazy(() => import('./adminComponent/Pages/HerosectionInquiry'));
-    const Thankyou = lazy(() => import('./components/Thankyou'));
-    const Career = lazy(() => import('./pages/Career'));
-    const Popup = lazy(() => import('./components/Popup'));
-    const Portfolios = lazy(() => import('./pages/Portfolios'));
-    const Logotype = lazy(() => import('./adminComponent/Pages/Logotype'));
-    const CreateLogoType = lazy(() => import('./adminComponent/Pages/CreateLogotype'));
-    const EditLogotype = lazy(() => import('./adminComponent/Pages/EditLogotype'));
-    const CreateIndustryImage = lazy(() => import('./adminComponent/Pages/CreateIndustryImage'));
-    const CreateSubIndustryImage = lazy(() => import('./adminComponent/Pages/CreateSubIndustryImage'));
-    const CreateSubSubIndustryImage = lazy(() => import('./adminComponent/Pages/CreateSubSubIndustryImage'));
-    const EditIndustryImage = lazy(() => import('./adminComponent/Pages/EditIndustryImage'));
-    const MainPackageComponent = lazy(() => import('./adminComponent/Pages/package/NewsTable'));
-    const MainFaqSection = lazy(() => import('./adminComponent/Pages/faq/MainFaqSection'));
-    const JobApplicationForm = lazy(() => import('./components/jobApplication/JobApplicationForm'));
-    const JobApplicationsPage = lazy(() => import('./components/jobApplication/JobApplicationPage'));
-    const JobApplicationsTable = lazy(() => import('./components/jobApplication/JobApplicationTable'));
-    const CompanyCategories = lazy(() => import('./adminComponent/Pages/CompanyCategories'));
-    const EditCompanyInfo = lazy(() => import('./adminComponent/Pages/EditCompanyInfo'));
-    const CompanyGalleryForm = lazy(() => import('./adminComponent/Pages/package/CompanyGalleryForm'));
-    const PremiumTemplate = lazy(() => import('./adminComponent/Pages/package/PremiumTemplate'));
-    const GetInTouchCard = lazy(() => import('./adminComponent/Pages/package/GetInTouch'));
-    const WeAreExpert = lazy(() => import('./adminComponent/Pages/serviceComp/WeAreExpert'));
-    const WhyPartnerUs = lazy(() => import('./adminComponent/Pages/serviceComp/WhyPartnerUs'));
-    const StaticMetaForm = lazy(() => import('./components/MetaInfo/MetaInfoForm'));
-    const MetaList = lazy(() => import('./components/MetaInfo/MetaList'));
-    const MenuListingTable = lazy(() => import('./adminComponent/Pages/Menulisting'));
-    const NavbarDataTable = lazy(() => import('./components/MetaInfo/NavBarData'));
-    const AddNavbarData = lazy(() => import('./components/MetaInfo/AddNavbar'));
-    const EditNavbar = lazy(() => import('./components/MetaInfo/EditNavbarData'));
+const CreatePackageDescription = lazy(() => import('./adminComponent/Pages/CreatePackageDescription'));
+const EditPackageDescription = lazy(() => import('./adminComponent/Pages/EditPackageDescription'));
+const DesignProcessForm = lazy(() => import('./adminComponent/Pages/CreateDesignProcess'));
+const EditDesignProcess = lazy(() => import('./adminComponent/Pages/EditDesignProcess'));
+const EditWebSolutionDetails = lazy(() => import('./adminComponent/Pages/WebSolution'));
+const EditServicePage = lazy(() => import('./adminComponent/Pages/EditEachCategory'));
+const AboutUs = lazy(() => import('./pages/AboutUs'));
+const Collabration = lazy(() => import('./pages/Collabration'));
+const GetInTouch = lazy(() => import('./pages/Contact'));
+const Faq = lazy(() => import('./pages/Faq'));
+const NewSubmenuListingForm = lazy(() => import('./adminComponent/Pages/CreateSubMenu'));
+const EditSubmenuForm = lazy(() => import('./adminComponent/Pages/EditSubMenu'));
+const PrivacyPolicy = lazy(() => import('./components/CookiePolice'));
+const PrivacyPolicysss = lazy(() => import('./components/PravicyPolice'));
+const TermsCondition = lazy(() => import('./components/TermsCondition'));
+const DynamicMetaTags = lazy(() => import('./components/DynamicMetaTag'));
+const BlogSubSub = lazy(() => import('./pages/Blogs/SubSubBlog'));
+const EditSubServicePage = lazy(() => import('./adminComponent/Pages/EditEachSubcategory'));
+const EditSubSubServicePage = lazy(() => import('./adminComponent/Pages/EditEachsubsubcategory'));
+const NewSubServiceForm = lazy(() => import('./adminComponent/Pages/CreateSubServiceDetail'));
+const EditSubServiceDetails = lazy(() => import('./adminComponent/Pages/EditSubServicePage'));
+const NewSubSubServiceForm = lazy(() => import('./adminComponent/Pages/CreateSubSubServiceDetails'));
+const EditSubSubServiceDetails = lazy(() => import('./adminComponent/Pages/EditSubSubServicePage'));
+const NewSubGalleryForm = lazy(() => import('./adminComponent/Pages/CreateSubServiveImage'));
+const NewSubSubGalleryForm = lazy(() => import('./adminComponent/Pages/CreateSubSubServiceImage'));
+const DesignSubProcessForm = lazy(() => import('./adminComponent/Pages/CreateSubDesignProcess'));
+const DesignSubSubProcessForm = lazy(() => import('./adminComponent/Pages/CreateSubSubDesignProcess'));
+const EditIndustiresPage = lazy(() => import('./adminComponent/Pages/EditEachIndustriesCategory'));
+const EditIndustiresSubPage = lazy(() => import('./adminComponent/Pages/EditEachIndustriesSubCategory'));
+const EditIndustiresSubsubPage = lazy(() => import('./adminComponent/Pages/EditEachIndustriesSubsubcategory'));
+const NewIndustriesForm = lazy(() => import('./adminComponent/Pages/industriescomponent/main/CreateDetails'));
+const EditIndustriesForm = lazy(() => import('./adminComponent/Pages/industriescomponent/main/EditDetails'));
+const NewIndustriesSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/sub/CreateDetails'));
+const EditIndustriesSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/sub/EditDetails'));
+const Homeanimation = lazy(() => import('./adminComponent/Pages/Homeanimation/Homeanimation'));
+const EditHomeanimation = lazy(() => import('./adminComponent/Pages/Homeanimation/EditHomeanimation'));
+const CreateHomeanimation = lazy(() => import('./adminComponent/Pages/Homeanimation/CreateHomeanimation'));
+const NewIndustriesSubSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/subsub/CreateDetails'));
+const EditIndustriesSubSubForm = lazy(() => import('./adminComponent/Pages/industriescomponent/subsub/EditDetails'));
+const ContactUs = lazy(() => import('./Pages/ContactUs'));
+const ContactInfoData = lazy(() => import('./adminComponent/Pages/contactInfo/ContactInfo'));
+const CreateContactInfo = lazy(() => import('./adminComponent/Pages/contactInfo/AddContactInfo'));
+const EditContactInfo = lazy(() => import('./adminComponent/Pages/contactInfo/EditContactinfo'));
+const ContactInquiry = lazy(() => import('./adminComponent/Pages/contactInfo/Contactinquiries'));
+const ManageSectionVisibility = lazy(() => import('./adminComponent/Pages/ManageSectionVisibility'));
+const Newsletter = lazy(() => import('./adminComponent/Pages/Newsletter'));
+const AddCard = lazy(() => import('./adminComponent/Pages/Cards/AddCards'));
+const ShowCard = lazy(() => import('./adminComponent/Pages/Cards/showCards'));
+const UpdateCard = lazy(() => import('./adminComponent/Pages/Cards/UpdateCards'));
+const PopupInquiry = lazy(() => import('./adminComponent/Pages/PopupInquiry'));
+const HerosectionInquiry = lazy(() => import('./adminComponent/Pages/HerosectionInquiry'));
+const Thankyou = lazy(() => import('./components/Thankyou'));
+const Career = lazy(() => import('./pages/Career'));
+const Popup = lazy(() => import('./components/Popup'));
+const Portfolios = lazy(() => import('./pages/Portfolios'));
+const Logotype = lazy(() => import('./adminComponent/Pages/Logotype'));
+const CreateLogoType = lazy(() => import('./adminComponent/Pages/CreateLogotype'));
+const EditLogotype = lazy(() => import('./adminComponent/Pages/EditLogotype'));
+const CreateIndustryImage = lazy(() => import('./adminComponent/Pages/CreateIndustryImage'));
+const CreateSubIndustryImage = lazy(() => import('./adminComponent/Pages/CreateSubIndustryImage'));
+const CreateSubSubIndustryImage = lazy(() => import('./adminComponent/Pages/CreateSubSubIndustryImage'));
+const EditIndustryImage = lazy(() => import('./adminComponent/Pages/EditIndustryImage'));
+const MainPackageComponent = lazy(() => import('./adminComponent/Pages/package/NewsTable'));
+const MainFaqSection = lazy(() => import('./adminComponent/Pages/faq/MainFaqSection'));
+const JobApplicationForm = lazy(() => import('./components/jobApplication/JobApplicationForm'));
+const JobApplicationsPage = lazy(() => import('./components/jobApplication/JobApplicationPage'));
+const JobApplicationsTable = lazy(() => import('./components/jobApplication/JobApplicationTable'));
+const CompanyCategories = lazy(() => import('./adminComponent/Pages/CompanyCategories'));
+const EditCompanyInfo = lazy(() => import('./adminComponent/Pages/EditCompanyInfo'));
+const CompanyGalleryForm = lazy(() => import('./adminComponent/Pages/package/CompanyGalleryForm'));
+const PremiumTemplate = lazy(() => import('./adminComponent/Pages/package/PremiumTemplate'));
+const GetInTouchCard = lazy(() => import('./adminComponent/Pages/package/GetInTouch'));
+const WeAreExpert = lazy(() => import('./adminComponent/Pages/serviceComp/WeAreExpert'));
+const WhyPartnerUs = lazy(() => import('./adminComponent/Pages/serviceComp/WhyPartnerUs'));
+const StaticMetaForm = lazy(() => import('./components/MetaInfo/MetaInfoForm'));
+const MetaList = lazy(() => import('./components/MetaInfo/MetaList'));
+const MenuListingTable = lazy(() => import('./adminComponent/Pages/Menulisting'));
+const NavbarDataTable = lazy(() => import('./components/MetaInfo/NavBarData'));
+const AddNavbarData = lazy(() => import('./components/MetaInfo/AddNavbar'));
+const EditNavbar = lazy(() => import('./components/MetaInfo/EditNavbarData'));
 
 
 const ScrollToTop = () => {
@@ -266,7 +272,7 @@ function App() {
           <>
             {/* {!isLoggedIn && <Popup />} */}
             <Routes>
-          <Route path="/hex" element={<HexGridDemo />} />
+              <Route path="/hex" element={<HexGridDemo />} />
               <Route path="/" element={<MainPage />}>
                 <Route path="/" index element={
                   <>
@@ -334,7 +340,7 @@ function App() {
                   <Route path="/add-navbar-data" element={<AddNavbarData />} />
                   <Route path="/edit-navbar-data/:id" element={<EditNavbar />} />
 
-                  
+
                   <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
                   <Route path="/ServiceCategory/editServiceCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditServiceCategory />} />
                   <Route path="/PackageCategory" element={<PackageCategory />} />
@@ -417,6 +423,17 @@ function App() {
                   <Route path="/careerinquiry" element={<Careerinquiry />} />
                   <Route path="/footer" element={<Footer />} />
                   <Route path="/header" element={<Header />} />
+
+                  {/* Technology section */}
+                  <Route path="/add-technology" element={<AddTechCategoryForm />} />
+                  <Route path="/tech-category" element={<TechCategoryTable />} />
+                  <Route path="/edit-tech-category/:id" element={<EditTechCategoryForm />} />
+                  <Route path="/technology" element={<TechnologyManager />} />
+
+                  <Route path="/manage-tech-sec" element={<TechnologySecDataForm />} />
+                  <Route path="/tech-sec-data" element={<TechnologyDataTable />} />
+  <Route path="/technology-form/:id" element={<TechnologySecDataForm />} />
+
                   {/* <Route path="/globalpresence" element={<Globalpresence />} /> */}
                   <Route path="/whatsappSettings" element={<WhatsappSettings />} />
                   <Route path="/googleSettings" element={<GoogleSettings />} />
