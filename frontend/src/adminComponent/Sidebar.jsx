@@ -92,7 +92,6 @@ export default function Sidebar() {
       title: "Technology", icon: <GraduationCap size={20} />, submenu: [
         { title: "Technology Category Table", icon: <MessagesSquare size={20} />, path: "/tech-category" },
         { title: "Technology Category Form", icon: <MailOpen size={20} />, path: "/add-technology" },
-        { title: "Edit Technology Category ", icon: <MailOpen size={20} />, path: "/edit-tech-category" },
         { title: "Technologies", icon: <MailOpen size={20} />, path: "/technology" },
         { title: "Add Technology data", icon: <MailOpen size={20} />, path: "/manage-tech-sec" },
         { title: "Technology Section data", icon: <MailOpen size={20} />, path: "/tech-sec-data" }

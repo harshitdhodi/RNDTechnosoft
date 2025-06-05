@@ -126,6 +126,10 @@ import EditTechCategoryForm from "./adminComponent/Pages/TechCategory/EditTechCa
 import TechnologyManager from "./adminComponent/Pages/TechCategory/Technology";
 import TechnologySecDataForm from "./adminComponent/Pages/TechCategory/TechnologySecForm";
 import TechnologyDataTable from "./adminComponent/Pages/TechCategory/TechnologySecData";
+import MainIndustry from "./components/Industry/MainIndustry";
+import MainHireTelent from "./components/HireTelent/MainHireTelent";
+import CreateCaseStudy from "./adminComponent/caseStudy/CaseStudyForm";
+import CaseStudyList from "./adminComponent/caseStudy/CaseStudyList";
 const CreatePackage = lazy(() => import('./adminComponent/Pages/CreatePackage'));
 const EditPackageForm = lazy(() => import('./adminComponent/Pages/EditPackage'));
 
@@ -289,6 +293,7 @@ function App() {
                 <Route path="/collabration" element={<Collabration />} />
                 <Route path="/contact" element={<GetInTouch />} />
                 <Route path="/technologies" element={<TechnologyPage />} />
+                <Route path="/industry" element={<MainIndustry />} />
                 <Route path="/helpCenter" element={<Faq />} />
                 <Route path="/cookies-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-conditions" element={<TermsCondition />} />
@@ -298,7 +303,7 @@ function App() {
                 <Route path="/job-application-form" element={<JobApplicationForm />} />
                 <Route path="/thankyou" element={<Thankyou />} />
                 <Route path="/portfolios" element={<Portfolios />} />
-
+                <Route path="/hire-telent" element={<MainHireTelent />} />
               </Route>
               {!isLoggedIn ? (
                 <>
@@ -339,6 +344,11 @@ function App() {
                   <Route path="/navbar-data" element={<NavbarDataTable />} />
                   <Route path="/add-navbar-data" element={<AddNavbarData />} />
                   <Route path="/edit-navbar-data/:id" element={<EditNavbar />} />
+
+                  {/* Case Study  */}
+                  <Route path="/add-case-study" element={<CreateCaseStudy />} />
+                  <Route path="/case-study" element={<CaseStudyList />} />
+                  <Route path="/edit-case-study/:id" element={<CreateCaseStudy />} />
 
 
                   <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
@@ -432,7 +442,7 @@ function App() {
 
                   <Route path="/manage-tech-sec" element={<TechnologySecDataForm />} />
                   <Route path="/tech-sec-data" element={<TechnologyDataTable />} />
-  <Route path="/technology-form/:id" element={<TechnologySecDataForm />} />
+                  <Route path="/technology-form/:id" element={<TechnologySecDataForm />} />
 
                   {/* <Route path="/globalpresence" element={<Globalpresence />} /> */}
                   <Route path="/whatsappSettings" element={<WhatsappSettings />} />

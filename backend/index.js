@@ -455,7 +455,7 @@ app.use('/api/all-inquiries', require('./routes/allInquiries'));
 app.use('/api/techCategory', require('./routes/techCategory'));
 app.use('/api/technology', require('./routes/technology'));
 app.use('/api/technologySecData', require('./routes/technologySecData'));
-
+app.use('/api/caseStudy', require('./routes/caseStudy'));
 
 // Swagger Setup 
 const swaggerUi = require('swagger-ui-express');
