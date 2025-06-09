@@ -456,6 +456,7 @@ app.use('/api/techCategory', require('./routes/techCategory'));
 app.use('/api/technology', require('./routes/technology'));
 app.use('/api/technologySecData', require('./routes/technologySecData'));
 app.use('/api/caseStudy', require('./routes/caseStudy'));
+app.use('/api/hire-talent', require('./routes/hire_telent'));
 
 // Swagger Setup 
 const swaggerUi = require('swagger-ui-express');
@@ -511,5 +512,5 @@ async function startServer() {
         process.exit(1);
     }
 }
-
+ 
 startServer(); 

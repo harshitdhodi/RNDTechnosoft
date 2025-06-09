@@ -31,17 +31,26 @@ const CreateCaseStudy = () => {
   const { id } = useParams(); // Get id from URL params
   const navigate = useNavigate(); // For navigation after submit
   const [formData, setFormData] = useState({
+    title: "",
     heading: "",
     subHeading: "",
     altImg: "",
     imgTitle: "",
     details: "",
     industryCategory: "",
+    pageSection: "",
   });
   const [photo, setPhoto] = useState(null);
   const [industries, setIndustries] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  // Page section options
+  const pageSectionOptions = [
+    { value: "applications", label: "Applications" },
+    { value: "software-service", label: "Software Service" },
+    { value: "case-studies", label: "Case Studies" },
+  ];
 
   // Quill configuration with text and background color
   const quillModules = {
@@ -100,12 +109,14 @@ const CreateCaseStudy = () => {
           const res = await axios.get(`/api/caseStudy/${id}`);
           const caseStudy = res.data?.data || {};
           setFormData({
+            title: caseStudy.title || "",
             heading: caseStudy.heading || "",
             subHeading: caseStudy.subHeading || "",
             altImg: caseStudy.altImg || "",
             imgTitle: caseStudy.imgTitle || "",
             details: caseStudy.details || "",
             industryCategory: caseStudy.industryCategory?._id || "",
+            pageSection: caseStudy.pageSection || "",
           });
         } catch (err) {
           console.error("Error fetching case study:", err);
@@ -149,12 +160,14 @@ const CreateCaseStudy = () => {
   // Reset form after successful submission
   const resetForm = () => {
     setFormData({
+      title: "",
       heading: "",
       subHeading: "",
       altImg: "",
       imgTitle: "",
       details: "",
       industryCategory: "",
+      pageSection: "",
     });
     setPhoto(null);
   };
@@ -214,6 +227,45 @@ const CreateCaseStudy = () => {
       {isLoading && id && <div className="text-center">Loading case study...</div>}
       {!isLoading && (
         <form onSubmit={handleSubmit} encType="multipart/form-data" className="space-y-6">
+          {/* Title Field */}
+          <div>
+            <label htmlFor="title" className="block font-medium mb-1">
+              Title
+            </label>
+            <input
+              id="title"
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              className="w-full border rounded px-3 py-2"
+              disabled={isLoading}
+            />
+          </div>
+
+          {/* Page Section Dropdown */}
+          <div>
+            <label htmlFor="pageSection" className="block font-medium mb-1">
+              Page Section
+            </label>
+            <select
+              id="pageSection"
+              name="pageSection"
+              value={formData.pageSection}
+              onChange={handleChange}
+              required
+              className="w-full border rounded px-3 py-2"
+              disabled={isLoading}
+            >
+              <option value="">Select Page Section</option>
+              {pageSectionOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Industry Dropdown */}
           <div>
             <label htmlFor="industryCategory" className="block font-medium mb-1">

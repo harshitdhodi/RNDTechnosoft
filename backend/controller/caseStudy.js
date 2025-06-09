@@ -3,13 +3,15 @@ const CaseStudy = require('../model/caseStudy');
 // Create Case Study
 exports.createCaseStudy = async (req, res) => {
   try {
-    const { heading, subHeading, altImg, imgTitle, details, industryCategory } = req.body;
+    const { heading,title, subHeading,pageSection, altImg, imgTitle, details, industryCategory } = req.body;
 
     const photo = req.file ? req.file.filename : null;
 
     const caseStudy = new CaseStudy({
       heading,
       subHeading,
+      title,
+      pageSection,
       photo,
       altImg,
       imgTitle,
