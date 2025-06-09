@@ -10,6 +10,14 @@ const caseStudySchema = new mongoose.Schema({
     type: String,
     trim: true,
   },
+  title: {
+    type: String,
+    trim: true,
+  },
+  pageSection:{
+    type: String,
+    trim: true,
+  },
   photo: {
     type: String, // URL or file path
     required: true,

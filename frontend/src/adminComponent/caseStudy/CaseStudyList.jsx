@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Delete } from "lucide-react";
 
 const CaseStudyList = () => {
@@ -49,12 +49,14 @@ const CaseStudyList = () => {
 
   return (
     <>
-    <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-semibold mb-6">Case Studies</h1>
-      <div>
-        <button className="">
-Add Case Study
+    <div className="max-w-6xl mx-auto mt-10 px-6 bg-white rounded shadow">
+      <div className="flex justify-between items-center mb-4">
+      <h1 className="text-2xl font-semibold">Case Studies</h1>
+      <Link to="/add-case-study">
+        <button className="bg-gray-700 text-white px-6 py-2 rounded-md">
+        Add Case Study
         </button>
+      </Link>
       </div>
       {error && <div className="text-red-500 mb-4">{error}</div>}
       {isLoading ? (

@@ -119,10 +119,17 @@ export default function Sidebar() {
       ]
     },
     {
+      title: "Hire Talent", icon: <Building2 size={20} />, submenu: [
+        { title: "Add Hire Talent", icon: <LayoutGrid size={20} />, path: "/add-hire-talent" },
+        { title: "Hire Talent", icon: <Wrench size={20} />, path: "/hire-talent-table" },
+         ]
+    },
+    {
       title: "Industries", icon: <Building2 size={20} />, submenu: [
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/IndustriesCategory" },
         { title: "Industries", icon: <Wrench size={20} />, path: "/industries" },
         { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
+        { title: "Case Study", icon: <Wrench size={20} />, path: "/case-study" },
       ]
     },
     {

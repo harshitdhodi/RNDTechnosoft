@@ -130,6 +130,8 @@ import MainIndustry from "./components/Industry/MainIndustry";
 import MainHireTelent from "./components/HireTelent/MainHireTelent";
 import CreateCaseStudy from "./adminComponent/caseStudy/CaseStudyForm";
 import CaseStudyList from "./adminComponent/caseStudy/CaseStudyList";
+import CreateHireTelent from "./adminComponent/Hire_Talent/AddHireTalent";
+import HireTalentTable from "./adminComponent/Hire_Talent/HireTalentTable";
 const CreatePackage = lazy(() => import('./adminComponent/Pages/CreatePackage'));
 const EditPackageForm = lazy(() => import('./adminComponent/Pages/EditPackage'));
 
@@ -350,7 +352,12 @@ function App() {
                   <Route path="/case-study" element={<CaseStudyList />} />
                   <Route path="/edit-case-study/:id" element={<CreateCaseStudy />} />
 
+                    {/* Hire talent */}
+                  <Route path="/add-hire-talent" element={<CreateHireTelent />} />
+                  <Route path="/hire-talent-table" element={<HireTalentTable />} />
+                  <Route path="/edit-hire-table/:id" element={<CreateHireTelent />} />
 
+                 
                   <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
                   <Route path="/ServiceCategory/editServiceCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditServiceCategory />} />
                   <Route path="/PackageCategory" element={<PackageCategory />} />
