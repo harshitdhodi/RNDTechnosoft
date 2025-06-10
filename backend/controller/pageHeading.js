@@ -15,6 +15,27 @@ const getpageHeading = async (req, res) => {
   }
 }
 
+
+const getAllPageHeadings = async (req, res) => {
+  try {
+
+
+    const total = await PageHeadings.countDocuments();
+    const pageHeadings = await PageHeadings.find();
+
+    res.status(200).json({
+      message: "Page headings fetched successfully",
+      data: pageHeadings,
+      
+    });
+  } catch (err) {
+    console.error("Error retrieving all page headings:", err);
+    res.status(500).json({ message: "Error retrieving page headings" });
+  }
+};
+
+
+
 const updatePageHeading = async (req, res) => {
   const pageType = req.query.pageType;
   const { heading, subheading,alt,imgTitle } = req.body;
@@ -78,7 +99,45 @@ const updatePageHeading = async (req, res) => {
   }
 };
 
+const addPageHeading = async (req, res) => {
+  const { pageType, heading, subheading, alt, imgTitle } = req.body;
+  let photo;
+
+  // Handle image upload via multer
+  if (req.file) {
+    photo = req.file.filename;
+  }
+
+  try {
+    // Check if a page heading with the same pageType already exists
+    const existing = await PageHeadings.findOne({ pageType });
+    if (existing) {
+      return res.status(400).json({
+        message: `Page heading for '${pageType}' already exists. Use update endpoint instead.`,
+      });
+    }
+
+    const newPageHeading = new PageHeadings({
+      pageType,
+      heading,
+      subheading,
+      alt,
+      imgTitle,
+      photo: photo || '',
+    });
+
+    await newPageHeading.save();
+
+    res.status(201).json({
+      message: `Page heading created successfully for ${pageType}`,
+      data: newPageHeading,
+    });
+  } catch (err) {
+    console.error("Error creating page heading:", err);
+    res.status(500).json({ message: "Error creating page heading" });
+  }
+};
 
 
 
-module.exports = { getpageHeading, updatePageHeading };
+module.exports = { getpageHeading,addPageHeading, updatePageHeading ,getAllPageHeadings };

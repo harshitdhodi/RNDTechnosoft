@@ -221,10 +221,12 @@ const ContactUs = () => {
 
       <div className='py-16'>
         <div className="w-[90%] mx-auto px-4 xl:px-16 " >
-          <div className="grid lg:grid-cols-2 xl:grid-cols-4 justify-center gap-8">
-            {contactInfos.map((item, index) => (
-              <div key={index} className='rounded-md shadow-md px-2 py-2'>
-                
+       <div className="grid lg:grid-cols-2 xl:grid-cols-3 justify-center gap-8">
+  {contactInfos
+    .filter(item => item.type !== 'Sales Office Address') // Hide Sales Office
+    .map((item, index) => (
+      <div key={index} className='rounded-md shadow-md px-2 py-2'>
+       
                 <div className="flex gap-2 items-center">
                   <img src={`/api/icon/download/${item.photo}`} alt={`${item.title} icon`} className="w-10 h-10 md:w-20 md:h-20" />
                   <div>
@@ -236,7 +238,7 @@ const ContactUs = () => {
                     ) : item.type === 'Phone No' ? (
                       <>
                         <h3 className="font-bold">{item.title}</h3>
-                        <a href={`tel:${item.phone1}`} className='hover:text-blue-500 text-sm'>{item.phone1}</a><br />
+                      
                         {item.phone2 && <a href={`tel:${item.phone2}`} className='hover:text-blue-500 text-sm'>{item.phone2}</a>}
                       </>
                     ) : item.type === 'Email' ? (

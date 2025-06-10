@@ -69,11 +69,11 @@ export default function Homepage() {
       <HexGridDemo expertData={data?.WeAreExpert} />
       <TrustedSection homecard1={data?.homecard1} homecard2={data?.homecard2} />
       <WhatYouGet everyPlan={data?.everyplan} />
-      <StandardPackage packagesData={data?.packages} />
+      {/* <StandardPackage packagesData={data?.packages} /> */}
       <Faq />
       <BookAcall />
       <PremiumTemplatesSection />
-      <GlobalSolution globalData={data?.globalsolution} />
+      {/* <GlobalSolution globalData={data?.globalsolution} /> */}
     </div>
   );
 }

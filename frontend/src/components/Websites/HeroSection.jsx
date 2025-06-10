@@ -475,9 +475,8 @@ const HeroSection = () => {
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
       </div>
-
-      <div className="relative flex flex-col md:flex-row mx-5 justify-center gap-10 2xl:gap-40  lg:gap-0 pt-16 2xl:px-3 xl:px-0 sm:mx-auto sm:my-32 my-5">
-        <div className="md:w-[50%]  w-full space-y-8">
+      <div className="relative flex flex-col md:flex-col lg:flex-row md:justify-center md:items-center md:w-full mx-5 pt-16 sm:pt-0 justify-center gap-10 2xl:gap-40  xl:gap-24 xl:pt-16 2xl:px-3 xl:px-0 sm:mx-auto sm:my-32 my-5">
+        <div className="lg:w-[50%] md:w-full md:px-10  w-full space-y-8">
           <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
             <span className="2xl:text-[16px] text-[14px] font-medium bg-yellow-500 rounded-full text-white 2xl:px-6 px-3 py-1 2xl:py-3 sm:py-2">
               Best
@@ -491,12 +490,12 @@ const HeroSection = () => {
             value={heroSection.heading}
             modules={{ toolbar: false }}
             theme="bubble"
-            className="quill-content text-white"
+            className="quill-content  text-white"
           />
           <QuoteModel />
         </div>
 
-        <div className="xl:w-[25%] md:w-[40%] relative">
+        <div className="xl:w-[25%] md:w-[80%] w-[100%] md:mt-20 lg:mt-0 relative">
           <div className="absolute -top-4 -left-4 z-10">
             <FaStarOfLife className="text-yellow-400 text-4xl animate-[spin_5s_linear_infinite]" />
           </div>
