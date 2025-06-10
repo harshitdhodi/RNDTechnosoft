@@ -149,7 +149,7 @@ function ServiceSlider() {
   const renderGridCard = (service) => (
     <div
       key={service.slug}
-      className="service-card px-4 border  border-gray-300 rounded-lg hover:shadow-lg transition-shadow"
+      className="service-card px-4 border shadow-xl mt-5  border-gray-300 rounded-lg hover:shadow-lg transition-shadow"
     >
       <Link to={`/${service.slug}`} className="block">
         <div className="relative h-48 sm:h-56 overflow-hidden rounded-lg">
@@ -209,7 +209,7 @@ function ServiceSlider() {
         <div className={`grid gap-4 mb-20 ${
           services.length === 1 
             ? 'grid-cols-1 justify-items-center max-w-sm mx-auto' 
-            : services.length === 4 
+            : services.length <= 3 
             ? 'grid-cols-1 sm:grid-cols-2 justify-items-center max-w-2xl mx-auto' 
             : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5'
         }`}>

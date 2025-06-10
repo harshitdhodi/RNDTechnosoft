@@ -452,6 +452,11 @@ app.use('/api/jobApplication', require('./routes/jobApplication'));
 app.use('/api/cache', require('./routes/cache'));
 app.use('/api/staticMeta', require('./routes/staticMeta'));
 app.use('/api/all-inquiries', require('./routes/allInquiries'));
+app.use('/api/techCategory', require('./routes/techCategory'));
+app.use('/api/technology', require('./routes/technology'));
+app.use('/api/technologySecData', require('./routes/technologySecData'));
+app.use('/api/caseStudy', require('./routes/caseStudy'));
+app.use('/api/hire-talent', require('./routes/hire_telent'));
 
 // Swagger Setup 
 const swaggerUi = require('swagger-ui-express');
@@ -498,7 +503,7 @@ async function startServer() {
      });
         console.log('Connected to MongoDB');
         // generateAllSitemaps()
-        const port = process.env.PORT || 3000;
+        const port = process.env.PORT || 3041;
         app.listen(port, () => {
             console.log(`Server is running on port ${port}`);
         });
@@ -507,5 +512,5 @@ async function startServer() {
         process.exit(1);
     }
 }
-
+ 
 startServer(); 

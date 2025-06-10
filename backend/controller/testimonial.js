@@ -282,7 +282,7 @@ const getTestimonials = async (req, res) => {
     const limit = 5; // Number of records per page
 
     // Fetch all testimonials with headingType 'main'
-    const allTestimonials = await Testimonial.find({ headingType: 'main' });
+    const allTestimonials = await Testimonial.find();
 
     // Filter testimonials dynamically based on categoryId
     const filteredTestimonials = allTestimonials.filter(testimonial => {
