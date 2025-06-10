@@ -5,7 +5,7 @@ import { IoStarSharp, IoStarHalfSharp, IoStarOutline } from 'react-icons/io5';
 
 
 
-export default function HeroSection({ serviceGridRef }) {
+export default function HeroSection({ serviceGridRef ,pageType }) {
   const [heading, setHeading] = useState("");
   const [subHeading, setsubHeading] = useState(null);
   const [photo, setPhoto] = useState(null)
@@ -16,7 +16,7 @@ export default function HeroSection({ serviceGridRef }) {
   useEffect(() => {
     const fetchHeadings = async () => {
       try {
-        const response = await axios.get('/api/pageHeading/heading?pageType=aboutcompany', { withCredentials: true });
+        const response = await axios.get(`/api/pageHeading/heading?pageType=${pageType}`, { withCredentials: true });
         const { heading, subheading, photo, alt, imgTitle } = response.data;
         setHeading(heading || '');
         setsubHeading(subheading || '')

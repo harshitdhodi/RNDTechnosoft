@@ -9,7 +9,7 @@ const Package = require('../model/packages');
 const managecolor = require('../model/managecolor');
 const getFormattedCategoriesFromAllSchemas = require('../controller/navbardata');
 const router = express.Router();
-
+             
 // Modified functions to return data instead of sending responses
 
 const getHomeHero = async () => {
@@ -36,8 +36,9 @@ const getOurWork = async () => {
 };
 
 const getServiceCategory = async () => {
-    const categories = await serviceCategory.find().select(
-        "category description photo alt imgtitle slug tag"
+    // Only get categories with status: "active"
+    const categories = await serviceCategory.find({ status: "active" }).select(
+        "category description photo alt imgtitle slug tag status"
     );
     return categories;
 };

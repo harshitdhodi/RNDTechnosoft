@@ -47,11 +47,17 @@ const registerAdmin = async (req, res) => {
 const loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ success: false, message: 'Please enter a valid email address' });
+  }
+
   try {
     const admin = await Admin.findOne({ email });
 
     if (!admin) {
-      return res.status(401).json({ success: false, message: 'Incorrect email ' });
+      return res.status(401).json({ success: false, message: 'Incorrect email' });
     }
 
     const isPasswordMatch = await bcryptjs.compare(password, admin.password);
@@ -66,7 +72,6 @@ const loginAdmin = async (req, res) => {
       sameSite: 'None', // Set SameSite attribute to None
       secure: false // Ensure the cookie is sent over HTTPS
     });
-    
 
     return res.status(200).json({ success: true, admin: admin._id, token: token });
   } catch (error) {

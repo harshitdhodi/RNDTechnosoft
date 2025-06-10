@@ -8,19 +8,19 @@ function ForgetPassword({ onBack }) {
     const [error, setError] = useState(null);
     const navigate=useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        try {
-            const response = await axios.post('/api/password/forgetPassword', { email });
-            alert(response.data.message);
-            navigate("/VerifyOTP")
-        } catch (error) {
-            setError('Failed to send OTP. Please try again.');
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+        const response = await axios.post('/api/password/forgetPassword', { email });
+        alert(response.data.message);
+        navigate("/VerifyOTP")
+    } catch (error) {
+        setError(error.response?.data?.message || 'An error occurred while sending the OTP.');
+    } finally {
+        setIsLoading(false);
+    }
+};
     
 
     return (

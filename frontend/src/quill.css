@@ -29,35 +29,33 @@
   font-family: 'Arial', sans-serif; /* You can specify the font you prefer */
 }
 
-/* Base styles for headings */
-.ql-editor h1 {
-    font-size: 34px;
-    line-height: 40px;
+/* Base styles for headings (Desktop) */
+.ql-editor h1 { font-size: 34px; line-height: 40px; }
+.ql-editor h2 { font-size: 28px; line-height: 34px; }
+.ql-editor h3 { font-size: 24px; line-height: 30px; }
+.ql-editor h4 { font-size: 20px; line-height: 28px; }
+.ql-editor h5 { font-size: 18px; line-height: 26px; }
+.ql-editor h6 { font-size: 16px; line-height: 24px; }
+
+
+/* * Tablet styles */ 
+@media (max-width: 1024px) {
+  .ql-editor h1 { font-size: 28px; line-height: 34px; }
+  .ql-editor h2 { font-size: 20px; line-height: 30px; }
+  .ql-editor h3 { font-size: 20px; line-height: 28px; }
+  .ql-editor h4 { font-size: 15px; line-height: 24px; }
+  .ql-editor h5 { font-size: 16px; line-height: 22px; }
+  .ql-editor h6 { font-size: 14px; line-height: 20px; }
 }
 
-.ql-editor h2 {
-    font-size: 20px;
-    line-height: 30px;
-}
-
-.ql-editor h3 {
-    font-size: 20px;
-    line-height: 30px;
-}
-
-.ql-editor h4 {
-    font-size: 16px;
-    line-height: 26px;
-}
-
-.ql-editor h5 {
-    font-size: 16px;
-    line-height: 26px;
-}
-
-.ql-editor h6 {
-    font-size: 16px;
-    line-height: 26px;
+/* Mobile styles */
+@media (max-width: 576px) {
+  .ql-editor h1 { font-size: 22px; line-height: 28px; }
+  .ql-editor h2 { font-size: 18px; line-height: 24px; }
+  .ql-editor h3 { font-size: 16px; line-height: 22px; }
+  .ql-editor h4 { font-size: 16px; line-height: 22px; }
+  .ql-editor h5 { font-size: 16px; line-height: 22px; }
+  .ql-editor h6 { font-size: 14px; line-height: 18px; }
 }
 
 /* Responsive styles */

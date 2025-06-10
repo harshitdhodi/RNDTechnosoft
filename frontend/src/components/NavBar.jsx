@@ -1,161 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
 import MobileNavbar from "./MobileMenuItems";
-import { FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import NavItem from "./NavItem"; // Assuming NavItem is in a separate file
 
-// NavItem Component to handle different depths of the menu
-const NavItem = ({ item, depth = 0, closeMenu }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [closeTimeout, setCloseTimeout] = useState(null);
-  const location = useLocation();
-  const menuRef = useRef(null);
-
-  // Reset hover state whenever the URL changes
-  useEffect(() => {
-    setIsHovered(false);
-  }, [location.pathname]);
-
-  // Add click outside handler
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsHovered(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleMouseEnter = () => {
-    if (closeTimeout) {
-      clearTimeout(closeTimeout);
-      setCloseTimeout(null);
-    }
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    const timeout = setTimeout(() => {
-      setIsHovered(false);
-    }, 200);
-    setCloseTimeout(timeout);
-  };
-
-  const handleClick = () => {
-    // Always close menu when clicking on any menu item
-    closeMenu();
-    setIsHovered(false);
-    
-    // If this is a link with subItems and at depth 0, don't navigate
-    if (item.subItems && item.subItems.length > 0 && depth === 0) {
-      return;
-    }
-  };
-
-  // Set different font sizes based on depth
-  const fontSize =
-    depth === 0 ? "text-lg" : depth === 1 ? "text-base " : "text-sm";
-
-  // Check if we need to display in two columns
-  const useTwoColumns = item.subItems && item.subItems.length > 15;
-  
-  // If using two columns, split the items into two balanced arrays
-  const firstColumnItems = useTwoColumns
-    ? item.subItems.slice(0, Math.ceil(item.subItems.length / 2))
-    : item.subItems;
-    
-  const secondColumnItems = useTwoColumns
-    ? item.subItems.slice(Math.ceil(item.subItems.length / 2))
-    : [];
-
-  return (
-    <li
-      className={`relative ${depth === 0 ? "group" : ""} list-none`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      ref={menuRef}
-    >
-      <Link
-        to={
-          item.subItems && item.subItems.length > 0 && depth === 0
-            ? "#"
-            : `/${item.slug}`
-        }
-        className={`flex justify-between items-center w-full ${fontSize} px-4 py-1 text-gray-800 
-        ${
-          depth === 0
-            ? "bg-white hover:bg-[#333] hover:text-white"
-            : "bg-white hover:bg-[#333] hover:text-white"
-        }
-        whitespace-nowrap text-ellipsis
-        transition-colors duration-300 ease-in-out`}
-        onClick={handleClick}
-      >
-        {item.name}
-        {item.subItems && item.subItems.length > 0 && (
-          <span className="ml-2">
-            {depth === 0 ? "" : <FaChevronRight size={12} />}
-          </span>
-        )}
-      </Link>
-
-      {item.subItems && item.subItems.length > 0 && (
-        <div
-          className={`absolute ${
-            depth === 0
-              ? "left-0 top-full mt-2"
-              : "left-full top-0 mt-2"
-          } 
-          ${isHovered ? "flex" : "hidden"} bg-white shadow-lg transition-all duration-300 ease-in-out
-          ${depth === 0 ? "" : "-mt-1 ml-1"}`}
-        >
-          {/* First column of items */}
-          <ul className="w-max">
-            {firstColumnItems.map((subItem) => (
-              <NavItem
-                key={subItem.id}
-                item={subItem}
-                depth={depth + 1}
-                closeMenu={closeMenu}
-              />
-            ))}
-          </ul>
-          
-          {/* Second column of items (if needed) */}
-          {useTwoColumns && (
-            <ul className="w-max border-l border-gray-100">
-              {secondColumnItems.map((subItem) => (
-                <NavItem
-                  key={subItem.id}
-                  item={subItem}
-                  depth={depth + 1}
-                  closeMenu={closeMenu}
-                />
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-    </li>
-  );
-};
-
-// Navbar Component to render the navigation bar
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [navData, setNavData] = useState([]);
+  const [technologyMenu, setTechnologyMenu] = useState(null); // State for technology data
   const [isLoading, setIsLoading] = useState(true);
   const [colorlogo, setColorLogo] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Reset mobile menu state on route change
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location.pathname]);
@@ -164,48 +23,83 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  // Fetch logo data
   useEffect(() => {
     const fetchHeaderColorLogo = async () => {
-        try {
-            const response = await axios.get('/api/logo');
-            const headerColorLogo = response.data.find(logo => logo.type === 'headerColor');
-            console.log(headerColorLogo)
-            if (headerColorLogo) {
-                setColorLogo(headerColorLogo);
-            }
-        } catch (err) {
-           console.log(err);
+      try {
+        const response = await axios.get('/api/logo');
+        const headerColorLogo = response.data.find(logo => logo.type === 'headerColor');
+        if (headerColorLogo) {
+          setColorLogo(headerColorLogo);
         }
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     fetchHeaderColorLogo();
-}, []);
+  }, []);
 
+  // Fetch navigation data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchNavData();
         if (Array.isArray(response.data)) {
+          console.log("Navigation data fetched:", response.data);
           setNavData(response.data);
         } else {
           console.error("Navigation data is not an array:", response);
         }
-        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching navigation data:", error);
-        setIsLoading(false);
       }
     };
     fetchData();
   }, []);
 
+  // Fetch technology data
+  useEffect(() => {
+    const fetchTechnologyData = async () => {
+      try {
+        const response = await axios.get('/api/technology');
+        // Assuming the API returns data in the same structure as technologyMenu
+        const technologyData = {
+          id: "technology",
+          name: "Technology",
+          slug: "technology",
+          subItems: response.data.map(item => ({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            technologies: item.technologies || [], // Ensure technologies is an array
+          })),
+        };
+        setTechnologyMenu(technologyData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching technology data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchTechnologyData();
+  }, []);
+
+  // Combine navData and technologyMenu, placing technologyMenu at index 2
+  const combinedNavItems = [...navData];
+  if (technologyMenu && combinedNavItems.length >= 2) {
+    combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
+  } else if (technologyMenu) {
+    combinedNavItems.push(technologyMenu); // Append if fewer than 2 items
+  }
+
   return (
-    <div className="w-full fixed z-30 ">
+    <div className="w-full fixed z-30">
       <nav className="bg-white border-b border-gray-200 xl:mx-12 rounded-b-lg shadow-lg lg:block hidden">
-        <div className="bg-[#333] text-white text-center py-1  justify-center font-semibold text-xl text-md xl:flex hidden">
+        <div className="bg-[#333] text-white text-center py-1 justify-center font-semibold text-xl text-md xl:flex hidden">
           Our website is currently under construction. Please check back later.
         </div>
-        <div className=" mx-20 flex justify-between items-center py-2">
+        <div className="mx-20 flex justify-between items-center py-2">
           <div className="flex items-center space-x-8">
             <NavLink to="/">
               <img
@@ -219,10 +113,14 @@ const Navbar = () => {
             </NavLink>
           </div>
 
-          <div className="hidden lg:flex items-center space-x-2 relative ">
-            {navData.map((link) => (
-              <NavItem key={link.id} item={link} closeMenu={closeMenu} />
-            ))}
+          <div className="hidden lg:flex items-center space-x-2 relative">
+            {isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              combinedNavItems.map((link) => (
+                <NavItem key={link.id} item={link} closeMenu={closeMenu} />
+              ))
+            )}
           </div>
 
           <div className="lg:flex items-center space-x-4">
