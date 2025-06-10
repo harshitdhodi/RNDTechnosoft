@@ -12,6 +12,7 @@ const TechnologySchema = new mongoose.Schema({
   imgTitle: {
     type: String,
     default: ''
+    
   },
   slug:{
     type: String,

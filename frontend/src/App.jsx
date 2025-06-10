@@ -129,7 +129,7 @@ import TechnologyDataTable from "./adminComponent/Pages/TechCategory/TechnologyS
 import MainIndustry from "./components/Industry/MainIndustry";
 import MainHireTelent from "./components/HireTelent/MainHireTelent";
 import CreateCaseStudy from "./adminComponent/caseStudy/CaseStudyForm";
-import CaseStudyList from "./adminComponent/caseStudy/CaseStudyList";
+import IndustrySecDataTable from "./adminComponent/caseStudy/CaseStudyList";
 import CreateHireTelent from "./adminComponent/Hire_Talent/AddHireTalent";
 import HireTalentTable from "./adminComponent/Hire_Talent/HireTalentTable";
 const CreatePackage = lazy(() => import('./adminComponent/Pages/CreatePackage'));
@@ -294,6 +294,8 @@ function App() {
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/collabration" element={<Collabration />} />
                 <Route path="/contact" element={<GetInTouch />} />
+                <Route path="/technology/:slug" element={<TechnologyPage />} />
+
                 <Route path="/technologies" element={<TechnologyPage />} />
                 <Route path="/industry" element={<MainIndustry />} />
                 <Route path="/helpCenter" element={<Faq />} />
@@ -349,8 +351,8 @@ function App() {
 
                   {/* Case Study  */}
                   <Route path="/add-case-study" element={<CreateCaseStudy />} />
-                  <Route path="/case-study" element={<CaseStudyList />} />
-                  <Route path="/edit-case-study/:id" element={<CreateCaseStudy />} />
+                  <Route path="/industry-data" element={<IndustrySecDataTable />} />
+                  <Route path="/edit-industry-data/:id" element={<CreateCaseStudy />} />
 
                     {/* Hire talent */}
                   <Route path="/add-hire-talent" element={<CreateHireTelent />} />

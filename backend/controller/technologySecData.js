@@ -59,7 +59,7 @@ const updateTechnologySecData = async (req, res) => {
     let { type, heading, card,technologyId } = req.body;
 
     console.log('Received body:', req.body);
-    console.log('Received files:', req.files);
+    console.log('Received files:', req.files); 
 
     // Parse card if sent as a string (from form-data)
     if (typeof card === 'string') {
@@ -111,7 +111,7 @@ const updateTechnologySecData = async (req, res) => {
 // Get all TechnologySecData entries
 const getAllTechnologySecData = async (req, res) => {
   try {
-    const data = await TechnologySecData.find();
+    const data = await TechnologySecData.find().populate('technologyId');
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data', error: error.message });
@@ -121,6 +121,7 @@ const getAllTechnologySecData = async (req, res) => {
 // Get a single TechnologySecData entry by ID
 const getTechnologySecDataById = async (req, res) => {
   try {
+    console.log("hello")
     const data = await TechnologySecData.findById(req.params.id);
     if (!data) {
       return res.status(404).json({ message: 'Data not found' });
@@ -146,10 +147,30 @@ const deleteTechnologySecData = async (req, res) => {
   }
 };
 
+const getDataByTechnologySlug = async (req, res) => {
+  try {
+    const { slug } = req.params; // or req.query.slug if passed as query parameter
+    
+    const data = await TechnologySecData.find()
+      .populate({
+        path: 'technologyId',
+        match: { slug: slug }
+      });
+    
+    // Filter out documents where technologyId is null (no match found)
+    const filteredData = data.filter(item => item.technologyId !== null);
+    
+    res.status(200).json(filteredData);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching data', error: error.message });
+  }
+};
+
 module.exports = {
   createTechnologySecData,
   getAllTechnologySecData,
   getTechnologySecDataById,
   updateTechnologySecData,
   deleteTechnologySecData,
+  getDataByTechnologySlug
 };

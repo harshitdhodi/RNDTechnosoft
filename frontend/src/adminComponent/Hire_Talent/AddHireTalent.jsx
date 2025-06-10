@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import ReactQuill from 'react-quill'; // Import ReactQuill
+import 'react-quill/dist/quill.snow.css'; // Import Quill CSS
 
 const HireTalentForm = () => {
-  const { id } = useParams(); // Get ID from URL parameters
-  const isEditMode = !!id; // Determine if in edit mode
+  const { id } = useParams();
+  const isEditMode = !!id;
   const [formData, setFormData] = useState({
     heading: '',
     subHeading: '',
@@ -15,28 +17,50 @@ const HireTalentForm = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
+  // Quill modules configuration for toolbar
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, false] }],
+      ['bold', 'italic', 'underline'],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['link', 'image'],
+      ['clean'],
+    ],
+  };
+
+  // Quill formats to allow
+  const quillFormats = [
+    'header',
+    'bold',
+    'italic',
+    'underline',
+    'list',
+    'bullet',
+    'link',
+    'image',
+  ];
+
   // Fetch data when in edit mode
   useEffect(() => {
     if (isEditMode) {
       const fetchData = async () => {
         try {
           const response = await axios.get(`/api/hire-talent/${id}`);
-          const data = response.data;
+          const data = response.data.data;
           setFormData({
             heading: data.heading || '',
             subHeading: data.subHeading || '',
-            cards: data.card.length > 0 
+            cards: data.card.length > 0
               ? data.card.map(card => ({
-                  cardInfo: card.cardInfo || '',
-                  photo: card.photo || '', // Store the image name/path
+                  cardInfo: card.cardInfo || '', // Expecting HTML content
+                  photo: card.photo || '',
                   altImg: card.altImg || '',
                   imgTitle: card.imgTitle || '',
                 }))
               : [{ cardInfo: '', photo: '', altImg: '', imgTitle: '' }],
             pageSection: data.pageSection || 'TeamService',
           });
-          // Set image previews for existing images
-          setImagePreviews(data.card.map(card => 
+          setImagePreviews(data.card.map(card =>
             card.photo ? `/api/logo/download/${card.photo}` : ''
           ));
         } catch (err) {
@@ -47,12 +71,14 @@ const HireTalentForm = () => {
     }
   }, [id, isEditMode]);
 
-  const handleInputChange = (e, cardIndex, field) => {
+  const handleInputChange = (value, cardIndex, field) => {
     const updatedFormData = { ...formData };
     if (field === 'heading' || field === 'subHeading' || field === 'pageSection') {
-      updatedFormData[field] = e.target.value;
+      updatedFormData[field] = value;
+    } else if (field === 'cardInfo') {
+      updatedFormData.cards[cardIndex][field] = value; // Store HTML from Quill
     } else {
-      updatedFormData.cards[cardIndex][field] = e.target.value;
+      updatedFormData.cards[cardIndex][field] = value;
     }
     setFormData(updatedFormData);
   };
@@ -63,11 +89,11 @@ const HireTalentForm = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const updatedFormData = { ...formData };
-        updatedFormData.cards[cardIndex].photo = file; // Store file for FormData
+        updatedFormData.cards[cardIndex].photo = file;
         setFormData(updatedFormData);
 
         const updatedPreviews = [...imagePreviews];
-        updatedPreviews[cardIndex] = URL.createObjectURL(file); // Use object URL for new images
+        updatedPreviews[cardIndex] = URL.createObjectURL(file);
         setImagePreviews(updatedPreviews);
       };
       reader.readAsDataURL(file);
@@ -103,11 +129,11 @@ const HireTalentForm = () => {
       formDataToSend.append('subHeading', formData.subHeading);
       formDataToSend.append('pageSection', formData.pageSection);
       formData.cards.forEach((card, index) => {
-        formDataToSend.append(`card[${index}][cardInfo]`, card.cardInfo);
+        formDataToSend.append(`card[${index}][cardInfo]`, card.cardInfo); // HTML content
         if (card.photo instanceof File) {
           formDataToSend.append(`card[${index}][photo]`, card.photo);
         } else if (card.photo) {
-          formDataToSend.append(`card[${index}][photo]`, card.photo); // Send existing image name
+          formDataToSend.append(`card[${index}][photo]`, card.photo);
         }
         formDataToSend.append(`card[${index}][altImg]`, card.altImg);
         formDataToSend.append(`card[${index}][imgTitle]`, card.imgTitle);
@@ -145,7 +171,7 @@ const HireTalentForm = () => {
           <input
             type="text"
             value={formData.heading}
-            onChange={(e) => handleInputChange(e, null, 'heading')}
+            onChange={(e) => handleInputChange(e.target.value, null, 'heading')}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             required
           />
@@ -155,7 +181,7 @@ const HireTalentForm = () => {
           <input
             type="text"
             value={formData.subHeading}
-            onChange={(e) => handleInputChange(e, null, 'subHeading')}
+            onChange={(e) => handleInputChange(e.target.value, null, 'subHeading')}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
           />
         </div>
@@ -163,7 +189,7 @@ const HireTalentForm = () => {
           <label className="block text-sm font-medium text-gray-700">Page Section</label>
           <select
             value={formData.pageSection}
-            onChange={(e) => handleInputChange(e, null, 'pageSection')}
+            onChange={(e) => handleInputChange(e.target.value, null, 'pageSection')}
             className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
           >
             <option value="TeamService">Team Service</option>
@@ -187,11 +213,12 @@ const HireTalentForm = () => {
             <div className="space-y-4 mt-4 border-l-4 pl-4 border-gray-200">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Card Info</label>
-                <input
-                  type="text"
+                <ReactQuill
                   value={card.cardInfo}
-                  onChange={(e) => handleInputChange(e, cardIndex, 'cardInfo')}
-                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  onChange={(value) => handleInputChange(value, cardIndex, 'cardInfo')}
+                  modules={quillModules}
+                  formats={quillFormats}
+                  className="mt-1"
                 />
               </div>
               <div>
@@ -201,7 +228,7 @@ const HireTalentForm = () => {
                   accept="image/*"
                   onChange={(e) => handleImageChange(e, cardIndex)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                  required={!isEditMode || !card.photo} // Required if creating or no existing photo
+                  required={!isEditMode || !card.photo}
                 />
                 {imagePreviews[cardIndex] && (
                   <img
@@ -216,7 +243,7 @@ const HireTalentForm = () => {
                 <input
                   type="text"
                   value={card.altImg}
-                  onChange={(e) => handleInputChange(e, cardIndex, 'altImg')}
+                  onChange={(e) => handleInputChange(e.target.value, cardIndex, 'altImg')}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                 />
               </div>
@@ -225,7 +252,7 @@ const HireTalentForm = () => {
                 <input
                   type="text"
                   value={card.imgTitle}
-                  onChange={(e) => handleInputChange(e, cardIndex, 'imgTitle')}
+                  onChange={(e) => handleInputChange(e.target.value, cardIndex, 'imgTitle')}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                 />
               </div>
