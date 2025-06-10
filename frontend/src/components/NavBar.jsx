@@ -1,245 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
 import MobileNavbar from "./MobileMenuItems";
-import { FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import react from "../images/technology/react.png";
-import css from "../images/technology/css.png";
-import flutter from "../images/technology/flutter.png";
-import html from "../images/technology/html.png";
-import js from "../images/technology/js.png";
-import php from "../images/technology/php.png";
-import next from "../images/technology/next.png";
-import larawel from "../images/technology/larawel.png";
-// NavItem Component (unchanged)
-const NavItem = ({ item, depth = 0, closeMenu }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [closeTimeout, setCloseTimeout] = useState(null);
-  const location = useLocation();
-  const menuRef = useRef(null);
+import NavItem from "./NavItem"; // Assuming NavItem is in a separate file
 
-  useEffect(() => {
-    setIsHovered(false);
-  }, [location.pathname]);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setIsHovered(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleMouseEnter = () => {
-    if (closeTimeout) {
-      clearTimeout(closeTimeout);
-      setCloseTimeout(null);
-    }
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    const timeout = setTimeout(() => {
-      setIsHovered(false);
-    }, 200);
-    setCloseTimeout(timeout);
-  };
-
-  const handleClick = () => {
-    closeMenu();
-    setIsHovered(false);
-    if (item.subItems && item.subItems.length > 0 && depth === 0) {
-      return;
-    }
-  };
-
-  const fontSize =
-    depth === 0 ? "text-lg" : depth === 1 ? "text-base " : "text-sm";
-
-  const useTwoColumns = item.subItems && item.subItems.length > 15 && item.id !== "technology";
-  const firstColumnItems = useTwoColumns
-    ? item.subItems.slice(0, Math.ceil(item.subItems.length / 2))
-    : item.subItems;
-  const secondColumnItems = useTwoColumns
-    ? item.subItems.slice(Math.ceil(item.subItems.length / 2))
-    : [];
-
-  const techIcons = {
-    "React JS": react,
-    "Next JS": next,
-    "CSS": css,
-    "HTML":html,
-    "JS": js,
-    "Express JS": "https://via.placeholder.com/24?text=E",
-    "PHP":php,
-    "Laravel": larawel,
-    "Flutter":flutter,
-    "Android": "https://via.placeholder.com/24?text=A",
-    "Java": "https://via.placeholder.com/24?text=J",
-    "Shopify": "https://via.placeholder.com/24?text=S",
-    "WooCommerce": "https://via.placeholder.com/24?text=W",
-    "Magento": "https://via.placeholder.com/24?text=M",
-    "Figma": "https://via.placeholder.com/24?text=FI",
-    "Adobe XD": "https://via.placeholder.com/24?text=XD",
-    "Sketch": "https://via.placeholder.com/24?text=SK",
-  };
-
-  return (
-    <li
-      className={`relative ${depth === 0 ? "group" : ""} list-none`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      ref={menuRef}
-    >
-      <Link
-        to={
-          item.subItems && item.subItems.length > 0 && depth === 0
-            ? "#"
-            : `/${item.slug}`
-        }
-        className={`flex justify-between items-center w-full ${fontSize} px-4 py-1 text-gray-800 
-        ${
-          depth === 0
-            ? "bg-white hover:bg-[#333] hover:text-white"
-            : "bg-white hover:bg-[#333] hover:text-white"
-        }
-        whitespace-nowrap text-ellipsis
-        transition-colors duration-300 ease-in-out`}
-        onClick={handleClick}
-      >
-        {item.name}
-        {item.subItems && item.subItems.length > 0 && (
-          <span className="ml-2">
-            {depth === 0 ? "" : <FaChevronRight size={12} />}
-          </span>
-        )}
-      </Link>
-
-      {item.subItems && item.subItems.length > 0 && (
-      <div
-  className={`absolute border
-    ${item.id === "technology" ? "-left-32" : ""}
-    ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
-    ${isHovered ? "block border-red-500 bg-white" : "hidden bg-white"}
-    shadow-lg transition-all duration-300 rounded-md ease-in-out
-    ${depth === 0 ? "" : "-mt-1 ml-1"}
-  `}
->
-  {item.id === "technology" ? (
-   <div className="grid grid-cols-2 gap-3 p-3  w-[700px]">
-              {item.subItems.map((category) => (
-                <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg px-4 py-2 border border-gray-200">
-                  <div>
-                    <img
-                      src={react}
-                      alt={category.name}
-                      className="w-8 h-8 object-contain mb-2"   
-                    />
-                  </div>
-                <div className="">
-                    <h3 className="text-lg font-semibold text-gray-800 ">{category.name}</h3>
-                  <p className="text-sm text-gray-600 pb-2 leading-relaxed">{category.description}</p>
-                  <div className="grid grid-cols-2 gap-4">
-                    {category.technologies.map((tech) => (
-                      <div key={tech} className="flex items-center space-x-2  transition-colors">
-                        <img
-                          src={techIcons[tech]}
-                          alt={tech}
-                          className="w-5 h-5 object-contain flex-shrink-0"
-                        />
-                        <span className="text-sm text-gray-700 font-medium">{tech}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex">
-              <ul className="w-max">
-                {firstColumnItems.map((subItem) => (
-                  <NavItem
-                    key={subItem.id}
-                    item={subItem}
-                    depth={depth + 1}
-                    closeMenu={closeMenu}
-                  />
-                ))}
-              </ul>
-              {useTwoColumns && (
-                <ul className="w-max border-l border-gray-100">
-                  {secondColumnItems.map((subItem) => (
-                    <NavItem
-                      key={subItem.id}
-                      item={subItem}
-                      depth={depth + 1}
-                      closeMenu={closeMenu}
-                    />
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-    </li>
-  );
-};
-
-// Navbar Component
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [navData, setNavData] = useState([]);
+  const [technologyMenu, setTechnologyMenu] = useState(null); // State for technology data
   const [isLoading, setIsLoading] = useState(true);
   const [colorlogo, setColorLogo] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-
-  const technologyMenu = {
-    id: "technology",
-    name: "Technology",
-    slug: "technology",
-    subItems: [
-      {
-        id: "frontend",
-        name: "Front-end Development",
-        description: "Intuitive user experiences with cutting-edge front-end technologies",
-        technologies: ["React JS", "Next JS", "CSS", "HTML"],
-      },
-      {
-        id: "backend",
-        name: "Back-end Development",
-        description: "Our robust backend technologies are the engine driving your innovative & reliable platform",
-        technologies: ["Node JS", "Express JS", "PHP", "Laravel"],
-      },
-      {
-        id: "mobile",
-        name: "Mobile App Development",
-        description: "Our mobile app development technologies are the key to crafting user-friendly solutions",
-        technologies: ["Flutter", "Android", "Java"],
-      },
-      {
-        id: "ecommerce",
-        name: "Ecommerce",
-        description: "Experience seamless online shopping with our ecommerce technologies",
-        technologies: ["Shopify", "WooCommerce", "Magento"],
-      },
-      {
-        id: "uiux",
-        name: "UI/UX",
-        description: "Our UI/UX technologies are a true testament to how design is seamlessly blended functionality",
-        technologies: ["Figma", "Adobe XD", "Sketch"],
-      },
-    ],
-  };
 
   useEffect(() => {
     setIsMenuOpen(false);
@@ -249,6 +23,7 @@ const Navbar = () => {
     setIsMenuOpen(false);
   };
 
+  // Fetch logo data
   useEffect(() => {
     const fetchHeaderColorLogo = async () => {
       try {
@@ -265,6 +40,7 @@ const Navbar = () => {
     fetchHeaderColorLogo();
   }, []);
 
+  // Fetch navigation data
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -275,22 +51,46 @@ const Navbar = () => {
         } else {
           console.error("Navigation data is not an array:", response);
         }
-        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching navigation data:", error);
-        setIsLoading(false);
       }
     };
     fetchData();
   }, []);
 
+  // Fetch technology data
+  useEffect(() => {
+    const fetchTechnologyData = async () => {
+      try {
+        const response = await axios.get('/api/technology');
+        // Assuming the API returns data in the same structure as technologyMenu
+        const technologyData = {
+          id: "technology",
+          name: "Technology",
+          slug: "technology",
+          subItems: response.data.map(item => ({
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            technologies: item.technologies || [], // Ensure technologies is an array
+          })),
+        };
+        setTechnologyMenu(technologyData);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching technology data:", error);
+        setIsLoading(false);
+      }
+    };
+    fetchTechnologyData();
+  }, []);
+
   // Combine navData and technologyMenu, placing technologyMenu at index 2
   const combinedNavItems = [...navData];
-  if (combinedNavItems.length >= 2) {
+  if (technologyMenu && combinedNavItems.length >= 2) {
     combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
-  } else {
-    // If navData has fewer than 2 items, append technologyMenu
-    combinedNavItems.push(technologyMenu);
+  } else if (technologyMenu) {
+    combinedNavItems.push(technologyMenu); // Append if fewer than 2 items
   }
 
   return (
@@ -314,9 +114,13 @@ const Navbar = () => {
           </div>
 
           <div className="hidden lg:flex items-center space-x-2 relative">
-            {combinedNavItems.map((link) => (
-              <NavItem key={link.id} item={link} closeMenu={closeMenu} />
-            ))}
+            {isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              combinedNavItems.map((link) => (
+                <NavItem key={link.id} item={link} closeMenu={closeMenu} />
+              ))
+            )}
           </div>
 
           <div className="lg:flex items-center space-x-4">
