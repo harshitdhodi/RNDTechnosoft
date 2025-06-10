@@ -195,7 +195,7 @@ const HexGridDemo = ({ expertData }) => {
     };
 
     return (
-        <div className="w-full flex flex-col justify-center space-y-4 items-center py-16 px-4">
+        <div className="w-full flex flex-col justify-center space-y-4 items-center pt-16 pb-10 px-4">
             <div className="text-center mb-8 space-y-4">
                 <h2 className="text-3xl font-semibold">
                     We Are <span className="text-yellow-400">Experts In</span>

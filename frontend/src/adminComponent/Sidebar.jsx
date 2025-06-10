@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLocation, Link, Outlet } from 'react-router-dom';
-import { LayoutDashboard,  //LayoutDashboard
+import {
+  LayoutDashboard,  //LayoutDashboard
   LayoutGrid,  //Categories
-  Map, 
-  Home, 
+  Map,
+  Home,
   Phone,  //Phone
   ShoppingCart,  //ShoppingCart
   Database,  //Database
@@ -17,29 +18,29 @@ import { LayoutDashboard,  //LayoutDashboard
   Wrench,  //Wrench
   Users,  //Users
   Newspaper,  //Newspaper
-   Users2,  //Users2
+  Users2,  //Users2
   Building2,  //Building2
   Globe2,  //Globe2
-  Image, 
-  MessageSquare,  
-  FileText, 
-  MessageCircle, 
-  ChevronDown, 
+  Image,
+  MessageSquare,
+  FileText,
+  MessageCircle,
+  ChevronDown,
   ChevronRight,
-  Tags, 
-  MessagesSquare,  
+  Tags,
+  MessagesSquare,
   Hash,
-  Target, 
-  Newspaper as NewspaperClip, 
-  ArrowDown, 
-  ArrowUp, 
-  BarChart3, 
+  Target,
+  Newspaper as NewspaperClip,
+  ArrowDown,
+  ArrowUp,
+  BarChart3,
   Settings,
-  Package,  
+  Package,
   Headset,
   ChartColumn
- } from 'lucide-react';
- 
+} from 'lucide-react';
+
 import axios from 'axios';
 import Navbar from './Navbar';
 import Breadcrumbs from './Breadcrumbs';
@@ -88,6 +89,16 @@ export default function Sidebar() {
       ]
     },
     {
+      title: "Technology", icon: <GraduationCap size={20} />, submenu: [
+        { title: "Technology Category Table", icon: <MessagesSquare size={20} />, path: "/tech-category" },
+        { title: "Technology Category Form", icon: <MailOpen size={20} />, path: "/add-technology" },
+        { title: "Technologies", icon: <MailOpen size={20} />, path: "/technology" },
+        { title: "Add Technology data", icon: <MailOpen size={20} />, path: "/manage-tech-sec" },
+        { title: "Technology Section data", icon: <MailOpen size={20} />, path: "/tech-sec-data" }
+
+      ]
+    },
+    {
       title: "Career", icon: <GraduationCap size={20} />, submenu: [
         { title: "Career Options", icon: <MailOpen size={20} />, path: "/careeroption" },
         { title: "Career Inquiry", icon: <MessagesSquare size={20} />, path: "/careerinquiry" }
@@ -108,10 +119,17 @@ export default function Sidebar() {
       ]
     },
     {
+      title: "Hire Talent", icon: <Building2 size={20} />, submenu: [
+        { title: "Add Hire Talent", icon: <LayoutGrid size={20} />, path: "/add-hire-talent" },
+        { title: "Hire Talent", icon: <Wrench size={20} />, path: "/hire-talent-table" },
+         ]
+    },
+    {
       title: "Industries", icon: <Building2 size={20} />, submenu: [
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/IndustriesCategory" },
         { title: "Industries", icon: <Wrench size={20} />, path: "/industries" },
         { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
+        { title: "Case Study", icon: <Wrench size={20} />, path: "/case-study" },
       ]
     },
     {
@@ -122,7 +140,7 @@ export default function Sidebar() {
         { title: "companies", icon: <Wrench size={20} />, path: "/company-category" },
         { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
         { title: "Template Card", icon: <Wrench size={20} />, path: "/edit-template-card" },
-        
+
         { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
     },
@@ -168,8 +186,8 @@ export default function Sidebar() {
         // { title: "Meta Tags Settings", icon: <Code size={20} />, path: "/metadetails" },
         { title: "Static Page Meta", icon: <Code size={20} />, path: "/meta-table" },
         { title: "Google Tag Manager", icon: <Globe size={20} />, path: "/googleSettings" },
-         { title: "Menu List", icon: <Code size={20} />, path: "/navbar-data" },
-        
+        { title: "Menu List", icon: <Code size={20} />, path: "/navbar-data" },
+
         { title: "Inquiries", icon: <Phone size={20} />, path: "/Inquiry" },
       ]
     },
