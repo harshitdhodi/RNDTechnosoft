@@ -73,7 +73,7 @@ export default function Homepage() {
       <Faq />
       <BookAcall />
       <PremiumTemplatesSection />
-      <GlobalSolution globalData={data?.globalsolution} />
+      {/* <GlobalSolution globalData={data?.globalsolution} /> */}
     </div>
   );
 }
