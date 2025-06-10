@@ -25,6 +25,7 @@
     "axios": "^1.7.2",
     "cssnano": "^7.0.6",
     "date-fns": "^3.6.0",
+    "dompurify": "^3.2.6",
     "framer-motion": "^11.3.18",
     "gsap": "^3.12.5",
     "hamburger-react": "^2.5.1",

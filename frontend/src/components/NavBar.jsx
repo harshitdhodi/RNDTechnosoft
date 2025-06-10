@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
 import MobileNavbar from "./MobileMenuItems";
@@ -7,10 +7,15 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 // NavItem Component (unchanged)
+import { useState, useEffect, useRef } from 'react';
+
+
 const NavItem = ({ item, depth = 0, closeMenu }) => {
+
   const [isHovered, setIsHovered] = useState(false);
   const [closeTimeout, setCloseTimeout] = useState(null);
   const location = useLocation();
+  const navigate = useNavigate(); // Add useNavigate hook
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -51,6 +56,13 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
     if (item.subItems && item.subItems.length > 0 && depth === 0) {
       return;
     }
+  };
+
+  // Handler for technology image click
+  const handleTechnologyClick = (slug) => {
+    navigate(`/technology/${slug}`); // Navigate to the technology's slug
+    closeMenu();
+    setIsHovered(false);
   };
 
   const fontSize =
@@ -100,7 +112,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
           className={`absolute border
             ${item.id === "technology" ? "-left-32" : ""}
             ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
-            ${isHovered ? "block border-red-500 bg-white" : "hidden bg-white"}
+            ${isHovered ? "block  bg-white" : "hidden bg-white"}
             shadow-lg transition-all duration-300 rounded-md ease-in-out
             ${depth === 0 ? "" : "-mt-1 ml-1"}
           `}
@@ -121,7 +133,11 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
                     <p className="text-sm text-gray-600 pb-2 leading-relaxed">{category.description}</p>
                     <div className="grid grid-cols-2 gap-4">
                       {category.technologies.map((tech) => (
-                        <div key={tech.name} className="flex items-center space-x-2 transition-colors">
+                        <div
+                          key={tech.name}
+                          className="flex items-center space-x-2 transition-colors cursor-pointer hover:bg-gray-100 p-1 rounded"
+                          onClick={() => handleTechnologyClick(tech.slug)} // Add click handler
+                        >
                           <img
                             src={tech.icon || "https://via.placeholder.com/24"}
                             alt={tech.name}
@@ -167,6 +183,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
   );
 };
 
+
 // Navbar Component
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -207,7 +224,7 @@ const Navbar = () => {
       try {
         const response = await fetchNavData();
         if (Array.isArray(response.data)) {
-          console.log("Navigation data fetched:", response.data);
+      
           setNavData(response.data);
         } else {
           console.error("Navigation data is not an array:", response);
@@ -247,6 +264,7 @@ const Navbar = () => {
               .map((tech) => ({
                 name: tech.imgTitle,
                 icon: tech.photo ? `/api/logo/download/${tech.photo}` : "https://via.placeholder.com/24",
+                slug: tech.slug
               })),
           })),
         };
