@@ -5,18 +5,19 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const TechnologyManager = () => {
   const [technologies, setTechnologies] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     photo: null,
     alt: '',
     imgTitle: '',
-    slug: ''
+    slug: '',
+    category: ''
   });
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState(null);
 
-  // Fetch all technologies
   const fetchTechnologies = async () => {
     setLoading(true);
     try {
@@ -29,15 +30,23 @@ const TechnologyManager = () => {
     }
   };
 
-  // Load technologies on component mount
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get('/api/techCategory');
+      console.log(res.data.data)
+      setCategories(res.data.data);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Failed to fetch categories');
+    }
+  };
+
   useEffect(() => {
     fetchTechnologies();
+    fetchCategories();
   }, []);
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // Basic slug validation: lowercase, no spaces, only alphanumeric and hyphens
     if (name === 'slug') {
       const formattedSlug = value
         .toLowerCase()
@@ -49,17 +58,14 @@ const TechnologyManager = () => {
     }
   };
 
-  // Handle file input change with validation
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file type
       const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
       if (!validTypes.includes(file.type)) {
         toast.error('Please upload a JPEG, PNG, or GIF image');
         return;
       }
-      // Validate file size (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         toast.error('Image size must be less than 5MB');
         return;
@@ -72,7 +78,6 @@ const TechnologyManager = () => {
     }
   };
 
-  // Validate form
   const validateForm = () => {
     if (!formData.alt.trim()) {
       toast.error('Alt text is required');
@@ -86,6 +91,10 @@ const TechnologyManager = () => {
       toast.error('Slug is required');
       return false;
     }
+    if (!formData.category.trim()) {
+      toast.error('Category is required');
+      return false;
+    }
     if (!editingId && !formData.photo) {
       toast.error('Photo is required for new technology');
       return false;
@@ -93,7 +102,6 @@ const TechnologyManager = () => {
     return true;
   };
 
-  // Handle form submission (Add/Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -106,6 +114,7 @@ const TechnologyManager = () => {
     data.append('alt', formData.alt);
     data.append('imgTitle', formData.imgTitle);
     data.append('slug', formData.slug);
+    data.append('category', formData.category);
 
     try {
       if (editingId) {
@@ -128,7 +137,6 @@ const TechnologyManager = () => {
     }
   };
 
-  // Handle edit button click
   const handleEdit = async (id) => {
     setLoading(true);
     try {
@@ -138,7 +146,8 @@ const TechnologyManager = () => {
         photo: null,
         alt: tech.alt,
         imgTitle: tech.imgTitle,
-        slug: tech.slug || ''
+        slug: tech.slug || '',
+        category: tech.category?._id || ''
       });
       setEditingId(id);
       setPreviewUrl(tech.photo ? `/api/logo/download/${tech.photo}` : null);
@@ -149,7 +158,6 @@ const TechnologyManager = () => {
     }
   };
 
-  // Handle delete button click
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this technology?')) {
       setLoading(true);
@@ -165,9 +173,8 @@ const TechnologyManager = () => {
     }
   };
 
-  // Reset form
   const resetForm = () => {
-    setFormData({ photo: null, alt: '', imgTitle: '', slug: '' });
+    setFormData({ photo: null, alt: '', imgTitle: '', slug: '', category: '' });
     setEditingId(null);
     setError('');
     setPreviewUrl(null);
@@ -177,11 +184,8 @@ const TechnologyManager = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Technology Manager</h1>
-
-      {/* Toast Container */}
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* Form */}
       <div className="mb-8 bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">{editingId ? 'Edit Technology' : 'Add Technology'}</h2>
         {error && <div className="text-red-500 mb-4">{error}</div>}
@@ -201,11 +205,7 @@ const TechnologyManager = () => {
             {previewUrl && (
               <div className="mt-4">
                 <p className="text-sm text-gray-700">Image Preview:</p>
-                <img
-                  src={previewUrl}
-                  alt="Preview"
-                  className="w-10 h-10 object-contain border rounded mt-2"
-                />
+                <img src={previewUrl} alt="Preview" className="w-10 h-10 object-contain border rounded mt-2" />
               </div>
             )}
           </div>
@@ -246,6 +246,23 @@ const TechnologyManager = () => {
             />
             <p className="text-sm text-gray-500 mt-1">Use lowercase letters, numbers, and hyphens only</p>
           </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              className="w-full p-2 border rounded"
+              disabled={loading}
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat._id}>
+                  {cat.heading}
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="flex space-x-4">
             <button
               type="submit"
@@ -268,7 +285,6 @@ const TechnologyManager = () => {
         </form>
       </div>
 
-      {/* Table */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Technologies List</h2>
         {loading && <div className="text-center">Loading...</div>}
@@ -279,6 +295,7 @@ const TechnologyManager = () => {
               <th className="border p-2">Alt Text</th>
               <th className="border p-2">Image Title</th>
               <th className="border p-2">Slug</th>
+              <th className="border p-2">Category</th>
               <th className="border p-2">Actions</th>
             </tr>
           </thead>
@@ -291,13 +308,14 @@ const TechnologyManager = () => {
                       <img
                         src={`/api/logo/download/${tech.photo}`}
                         alt={tech.alt}
-                        className="w-16 h-16 object-contain"
+                        className="w-6 h-6 object-contain"
                       />
                     )}
                   </td>
                   <td className="border p-2">{tech.alt}</td>
                   <td className="border p-2">{tech.imgTitle}</td>
                   <td className="border p-2">{tech.slug}</td>
+                  <td className="border p-2">{tech.category?.name || 'N/A'}</td>
                   <td className="border p-2">
                     <button
                       onClick={() => handleEdit(tech._id)}
@@ -318,7 +336,7 @@ const TechnologyManager = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="border p-2 text-center">No technologies found</td>
+                <td colSpan="6" className="border p-2 text-center">No technologies found</td>
               </tr>
             )}
           </tbody>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Upload, Save, AlertCircle, CheckCircle2, X } from 'lucide-react';
 import axios from 'axios';
+import {useNavigate } from 'react-router-dom';
 
 const AddTechCategoryForm = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +11,7 @@ const AddTechCategoryForm = () => {
     alt: '',
     imgTitle: ''
   });
-  
+  const navigate = useNavigate()
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,11 +78,7 @@ const AddTechCategoryForm = () => {
     if (!formData.subheading.trim()) {
       newErrors.subheading = 'Subheading is required';
     }
-    
-    if (!formData.photo) {
-      newErrors.photo = 'Photo is required';
-    }
-
+  
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -96,6 +93,7 @@ const AddTechCategoryForm = () => {
 
   setIsSubmitting(true);
   setSubmitStatus(null);
+  navigate("/tech-category")
 
   try {
     const formPayload = new FormData();
