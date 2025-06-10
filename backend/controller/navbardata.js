@@ -104,7 +104,7 @@ const getFormattedCategoriesFromAllSchemas = async () => {
       },
       {
         id: "5",
-        name: "Blog",
+        name: "Blogs",
         slug: "blogs",
         component: "MainBlogs",
       },
