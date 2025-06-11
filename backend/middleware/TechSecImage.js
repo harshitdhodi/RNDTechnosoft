@@ -22,7 +22,7 @@ async function ensureUploadDir() {
 // Define storage for uploaded photos
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../logos')); // adjust this to your preferred directory
+    cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const timestamp = Date.now();
@@ -35,12 +35,11 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
   fileFilter: function (req, file, cb) {
-    console.log(req.file)
     if (!file.mimetype.startsWith('image/')) {
       return cb(new Error('Only image files are allowed!'), false);
     }
     cb(null, true);
-  }
+  },
 });
 
 // Process the image to ensure WebP format
@@ -63,63 +62,76 @@ const processLogoImage = async (filePath) => {
 // Middleware to handle multiple logo file uploads under card[${index}][photo]
 const uploadLogo = async (req, res, next) => {
   try {
-    // Ensure upload directory exists before processing
+    // Ensure upload directory exists
     await ensureUploadDir();
 
-    // Define dynamic fields for card[${index}][photo]
-    const fields = [];
-    // Check both req.body and req.files for potential field names
-    const potentialKeys = [
-      ...(req.body ? Object.keys(req.body) : []),
-      ...(req.files ? Object.keys(req.files) : [])
-    ];
-    potentialKeys.forEach((key) => {
-      if (key.match(/^card\[\d+\]\[photo\]$/)) {
-        fields.push({ name: key, maxCount: 1 });
-      }
-    });
+    // Log incoming data for debugging
+    console.log('Incoming body:', req.body);
+    console.log('Incoming files:', req.files);
 
-    // If no matching fields are found, allow at least card[0][photo]
-    if (fields.length === 0) {
-      fields.push({ name: 'card[0][photo]', maxCount: 1 });
-    }
+    // Define a reasonable number of fields to handle multiple card uploads
+    const maxCards = 10; // Adjust based on your requirements
+    const fields = Array.from({ length: maxCards }, (_, index) => ({
+      name: `card[${index}][photo]`,
+      maxCount: 10, // Allow multiple files per card if needed
+    }));
 
+    console.log('Expected fields:', fields);
+
+    // Use upload.fields to process the file fields
     await upload.fields(fields)(req, res, async (err) => {
       if (err) {
+        console.error('Multer error:', err);
         return res.status(400).json({
-          error: err.message || 'Error uploading files'
+          error: err.message || 'Error uploading files',
         });
       }
 
-      // If no files are uploaded, proceed without photo processing
+      // If no files are uploaded, proceed
       if (!req.files || Object.keys(req.files).length === 0) {
         return next();
       }
 
       try {
-        // Process each uploaded file to ensure WebP format
+        // Process each uploaded file
         for (const field in req.files) {
-          const file = req.files[field][0];
-          const filePath = file.path;
-          console.log('File saved to:', filePath);
-          await processLogoImage(filePath);
-          // Update req.body to store the filename instead of the file object
-          req.body[field] = file.filename;
+          const files = req.files[field];
+          req.body[field] = req.body[field] || [];
+          for (const file of files) {
+            const filePath = file.path;
+            console.log('File saved to:', filePath);
+            await processLogoImage(filePath);
+            req.body[field].push(file.filename);
+          }
         }
+
+        // Reconstruct card array from req.body non-file fields and files
+        const cardArray = [];
+        let index = 0;
+        while (req.body[`card[${index}][cardInfo]`] || req.body[`card[${index}][photo]`]) {
+          cardArray.push({
+            cardInfo: req.body[`card[${index}][cardInfo]`] || '',
+            photo: req.body[`card[${index}][photo]`] || [],
+            altImg: req.body[`card[${index}][altImg]`] || '',
+            imgTitle: req.body[`card[${index}][imgTitle]`] || '',
+          });
+          index++;
+        }
+        req.body.card = cardArray;
 
         next();
       } catch (processError) {
         console.error('Processing error:', processError);
         return res.status(500).json({
           error: 'Error processing the images',
-          details: processError.message
+          details: processError.message,
         });
       }
     });
   } catch (err) {
     console.error('Server error:', err);
     return res.status(500).json({
-      error: 'Server error during upload'
+      error: 'Server error during upload',
     });
   }
 };

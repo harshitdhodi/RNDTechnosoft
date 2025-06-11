@@ -5,6 +5,7 @@ const HireTalentController = require('../controller/hireTelent');
 
 router.post('/', TechSecImage, HireTalentController.createHireTalent);
 router.get('/', HireTalentController.getAllHireTalents);
+router.get('/getByPageSection',HireTalentController.getHireTalentsByPageSection)
 router.get('/:id', HireTalentController.getHireTalentById);
 router.put('/:id', TechSecImage, HireTalentController.updateHireTalent);
 router.delete('/:id', HireTalentController.deleteHireTalent);

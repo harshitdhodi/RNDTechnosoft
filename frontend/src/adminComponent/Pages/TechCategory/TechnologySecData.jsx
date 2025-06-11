@@ -292,66 +292,6 @@ const navigate = useNavigate();
           </table>
         </div>
       )}
-
-      {/* Card Details Preview Section */}
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4 text-gray-800">Recent Entries Preview</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {data.slice(0, 6).map((item, index) => (
-            <div key={item._id || index} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start mb-2">
-                <h4 className="font-medium text-gray-900 truncate">
-                  {truncateText(item.heading, 30)}
-                </h4>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  {item.type}
-                </span>
-              </div>
-              <div className="text-sm text-gray-600 mb-3">
-                {item.card && item.card.length > 0 && (
-                  <div>
-                    <p className="font-medium">Cards ({item.card.length}):</p>
-                    <ul className="mt-1 space-y-1">
-                      {item.card.slice(0, 2).map((card, cardIndex) => (
-                        <li key={cardIndex} className="text-xs text-gray-500">
-                          • {truncateText(card.heading, 25)}
-                        </li>
-                      ))}
-                      {item.card.length > 2 && (
-                        <li className="text-xs text-gray-400 italic">
-                          +{item.card.length - 2} more cards...
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t">
-                <span className="text-xs text-gray-400">
-                  {formatDate(item.createdAt)}
-                </span>
-                <div className="flex space-x-1">
-                  <button
-                    onClick={() => handleEdit(item._id)}
-                    className="text-blue-600 hover:text-blue-800 p-1"
-                    title="Edit"
-                  >
-                    <Edit size={14} />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item._id)}
-                    className="text-red-600 hover:text-red-800 p-1"
-                    title="Delete"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
     
     </div>
   );

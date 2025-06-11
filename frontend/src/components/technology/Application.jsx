@@ -1,88 +1,130 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import DOMPurify from 'dompurify'; // Optional for sanitizing HTML
 
 const ServicesLanding = () => {
-  const services = [
-    {
-      title: "Custom ReactJS Web Application Development",
-      description: "Hire our experienced and certified ReactJS experts to develop custom and feature-rich web and mobile applications for your businesses.",
-      icon: "💻"
-    },
-    {
-      title: "Enterprise Web Application Development",
-      description: "At Rnd, we use agile methodology to develop fast, secure, and enterprise-level web applications with ReactJS framework.",
-      icon: "🏢"
-    },
-    {
-      title: "ReactJS Plugin And API Development",
-      description: "We ensure seamless API integration that allows the exploration of third-party solutions. And a powerful plugin to improve overall performance as a web app.",
-      icon: "🔌"
-    },
-    {
-    
-      title: "UI/UX Development",
-      description: "Our react js development service ensures your business gets unique and innovative applications with eye-catching and dynamic UI/UX design to exceed our client's expectations.",
-      icon: "🎨"
-    },
-    {
-      title: "ReactJS Front-end Development",
-      description: "Our qualified front-end developers have resolved various challenges like multiple frameworks, SPA, and many more using their expertise in react js.",
-      icon: "⚛️"
-    },
-    {
-      title: "App Development",
-      description: "Ours ReactJS web and mobile app development company in India creates business-oriented & feature-rich mobile apps that function smoothly on android and IOs platforms.",
-      icon: "📱"
+  const { slug } = useParams();
+  const [servicesData, setServicesData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchServicesData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`/api/technologySecData/get/${slug}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch services data');
+        }
+        
+        const data = await response.json();
+        setServicesData(data);
+        setError(null);
+      } catch (err) {
+        setError(err.message);
+        console.error('Error fetching services data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (slug) {
+      fetchServicesData();
     }
-  ];
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading services data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || servicesData.length === 0) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center text-red-600">
+          <p>{error || "No services data found for this section."}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header Section */}
-      <div className="container mx-auto px-4 py-12 md:py-20">
-        <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-3xl md:text-4xl  font-bold text-gray-800 mb-4 leading-tight">
-            Build Fast, Scalable Apps with{' '}
-            <span className="text-[#f3ca0d]">
-              React JS
-            </span>
-          </h1>
-          <p className="text-gray-600 text-lg md:text-xl leading-relaxed max-w-xl mx-auto">
-            Empower your digital products with fast, scalable, and high-performing React JS solutions tailored to meet your business goals.
-          </p>
-        </div>
-      </div>
-
       {/* Services Grid */}
-      <div className="max-w-8xl mx-auto px-32 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/20"
-            >
-              {/* Icon */}
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                {service.icon}
-              </div>
-              
-              {/* Title */}
-              <h3 className="text-xl font-bold text-gray-800 mb-4 leading-tight group-hover:text-yellow-500 transition-colors duration-300">
-                {service.title}
-              </h3>
-              
-              {/* Description */}
-              <p className="text-gray-600 leading-relaxed text-sm lg:text-base">
-                {service.description}
-              </p>
-              
-              {/* Hover effect overlay */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+      {servicesData.map((section, sectionIndex) => (
+        <div key={sectionIndex} className="max-w-8xl pt-10 mx-auto px-32 pb-20">
+          {section.heading && (
+            <div className="text-center mb-12">
+              <ReactQuill
+                value={DOMPurify.sanitize(section.heading)} // Sanitize HTML
+                readOnly={true}
+                theme={null} // Disable Quill's editor UI
+                className="quill-heading"
+              />
             </div>
-          ))}
+          )}
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {(section.card || []).map((service, index) => (
+              <div
+                key={index}
+                className="group bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-white/20"
+              >
+                {/* Icon/Image */}
+                <div className="mb-4 group-hover:scale-110 transition-transform duration-300">
+                  {service.photo ? (
+                    <img 
+                      src={`/api/logo/download/${service.photo}`}
+                      alt={service.altName || service.heading}
+                      title={service.imgTitle || service.heading}
+                      className="w-16 h-16 object-contain"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'block';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className="text-4xl flex items-center justify-center w-16 h-16 text-gray-400"
+                    style={{ display: service.photo ? 'none' : 'flex' }}
+                  >
+                    {service.type || '🔧'}
+                  </div>
+                </div>
+                
+                {/* Title */}
+                <h3>
+                  {service.heading}
+                </h3>
+                {/* <ReactQuill
+                  value={DOMPurify.sanitize(service.heading)} // Sanitize HTML
+                  readOnly={true}
+                  theme={null}
+                  className="quill-heading text-xl font-bold text-gray-800 mb-4 leading-tight group-hover:text-yellow-500 transition-colors duration-300"
+                /> */}
+                
+                {/* Description */}
+              <h4 className="text-gray-600 leading-relaxed text-sm lg:text-base" 
+                  dangerouslySetInnerHTML={{ __html: service.subHeading }}>
+              
+                </h4>
+                
+                {/* Hover effect overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-
-   
+      ))}
     </div>
   );
 };
