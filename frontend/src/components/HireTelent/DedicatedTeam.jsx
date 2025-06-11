@@ -19,12 +19,12 @@ const DedicatedTeam = () => {
         const response = await axios.get('/api/hire-talent/getByPageSection?pageSection=WhyChoose');
         const data = response.data.data;
 
-        // Assuming the API returns an array, take the first record (or adjust based on your backend logic)
+        // Assuming the API returns an array, take the first record
         if (data.length > 0) {
           setHireTalentData({
             heading: data[0].heading || '',
             subHeading: data[0].subHeading || '',
-            cards: data[0].cards || [], // Use 'cards' to match backend schema
+            cards: data[0].card || [], // Use 'card' to match API response
           });
         }
         setLoading(false);
@@ -63,7 +63,7 @@ const DedicatedTeam = () => {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-8xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-8xl xl:px-12 xl:mx-9 mx-auto">
           {loading ? (
             <p>Loading cards...</p>
           ) : error ? (
@@ -73,7 +73,7 @@ const DedicatedTeam = () => {
           ) : (
             hireTalentData.cards.map((card, index) => (
               <div
-                key={index}
+                key={card._id || index} // Use _id for unique key, fallback to index
                 className="bg-white bg-opacity-90 backdrop-blur-md p-6 rounded-lg shadow-md border-t-4 border-yellow-400 text-black text-center"
               >
                 <div className="flex flex-col justify-start items-start space-y-3">

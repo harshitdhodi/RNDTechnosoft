@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import ReactQuill from 'react-quill'; // Import ReactQuill
 import 'react-quill/dist/quill.snow.css'; // Import Quill CSS
@@ -16,7 +16,7 @@ const HireTalentForm = () => {
   const [imagePreviews, setImagePreviews] = useState([]);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
-
+const navigate = useNavigate()
   // Quill modules configuration for toolbar
   const quillModules = {
     toolbar: [
@@ -154,6 +154,7 @@ const HireTalentForm = () => {
           pageSection: 'TeamService',
         });
         setImagePreviews([]);
+        navigate('/hire-talent-table')
       }
     } catch (err) {
       setError(`Error ${isEditMode ? 'updating' : 'submitting'} data: ${err.message}`);
@@ -228,7 +229,7 @@ const HireTalentForm = () => {
                   accept="image/*"
                   onChange={(e) => handleImageChange(e, cardIndex)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                  required={!isEditMode || !card.photo}
+                  // required={!isEditMode || !card.photo}
                 />
                 {imagePreviews[cardIndex] && (
                   <img

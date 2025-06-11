@@ -8,6 +8,7 @@ import Portfolios from './Projects'
 import About from './AboutUs'
 import Industries from './SocialMedia'
 import GetInTouch from './Contact';
+import MainIndustry from '../components/Industry/MainIndustry';
 export const WebsiteMaintenance = () => <div>Website Maintenance Page sub category</div>;
 export const WordPressMaintenance = () => <div>WordPress Maintenance Page sub sub category</div>;
 export const MobileAppDevelopment = () => <div> App Development Page  main category </div>;
@@ -28,6 +29,6 @@ export const ProjectSection = () => <Portfolios/>;
 export const Aboutus = () => <About/>
 
 
-export const MainIndustries = () => <Industries/>;
+export const MainIndustries = () => <MainIndustry/>;
 export const SubIndustries = () => <Industries/>;
 export const SubSubIndustries = () => <Industries/>;
