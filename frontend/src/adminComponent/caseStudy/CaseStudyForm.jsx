@@ -52,6 +52,7 @@ const CreateIndustrySecData = () => {
   const [success, setSuccess] = useState(null);
 
   const pageSectionOptions = [
+    {value:"info", label:"Information"},
     { value: "applications", label: "Applications" },
     { value: "software-service", label: "Software Service" },
     { value: "case-studies", label: "Case Studies" },
@@ -363,7 +364,7 @@ const CreateIndustrySecData = () => {
                     onChange={(e) => handleImageChange(e, cardIndex)}
                     className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                     disabled={isLoading}
-                    required={!isEditMode && cardIndex === 0 && !card.photo}
+                    // required={!isEditMode && cardIndex === 0 && !card.photo}
                   />
                   {imagePreviews[cardIndex] && (
                     <img

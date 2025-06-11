@@ -298,6 +298,7 @@ function App() {
 
                 <Route path="/technologies" element={<TechnologyPage />} />
                 <Route path="/industry" element={<MainIndustry />} />
+                <Route path="/industries/:slug" element={<MainIndustry />} />
                 <Route path="/helpCenter" element={<Faq />} />
                 <Route path="/cookies-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-conditions" element={<TermsCondition />} />
