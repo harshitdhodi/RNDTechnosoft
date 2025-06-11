@@ -12,7 +12,7 @@ const TechnologyManager = () => {
     imgTitle: '',
     slug: '',
     category: ''
-  });
+  }); 
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
