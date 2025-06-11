@@ -71,7 +71,7 @@ const FAQ = () => {
   }
 
   return (
-<div className="w-full my-16 max-w-[83rem] 2xl:px-0 xl:px-[4.5rem] lg:px-9 md:px-5 px-5 mx-auto">
+<div className="w-full mb-16 max-w-[83rem] 2xl:px-0 xl:px-[4.5rem] lg:px-9 md:px-5 px-5 mx-auto">
   <h2 className="text-3xl sm:text-4xl lg:text-5xl text-center font-serif">
     {heading}
   </h2>

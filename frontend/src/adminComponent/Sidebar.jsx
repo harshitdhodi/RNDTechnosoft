@@ -129,7 +129,7 @@ export default function Sidebar() {
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/IndustriesCategory" },
         { title: "Industries", icon: <Wrench size={20} />, path: "/industries" },
         { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
-        { title: "Case Study", icon: <Wrench size={20} />, path: "/case-study" },
+        { title: "Industry Data", icon: <Wrench size={20} />, path: "/industry-data" },
       ]
     },
     {
