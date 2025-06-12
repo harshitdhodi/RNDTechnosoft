@@ -12,6 +12,7 @@ const CreateBannerForm = () => {
   const [alt, setAlt] = useState("");
   const [imgTitle, setImgTitle] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const notifySuccess = () => toast.success("Banner created successfully!");
@@ -19,6 +20,12 @@ const CreateBannerForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Prevent multiple submissions
+    if (isSubmitted || loading) {
+      return;
+    }
+
     if (!pageType || !heading) {
       notifyError("Page Type and Heading are required!");
       return;
@@ -35,6 +42,8 @@ const CreateBannerForm = () => {
     formData.append("imgTitle", imgTitle);
 
     setLoading(true);
+    setIsSubmitted(true);
+    
     try {
       await axios.post("/api/pageHeading/createHeading", formData, {
         withCredentials: true,
@@ -45,6 +54,8 @@ const CreateBannerForm = () => {
     } catch (error) {
       console.error(error);
       notifyError("Failed to create banner. Please try again.");
+      // Reset submission state on error to allow retry
+      setIsSubmitted(false);
     } finally {
       setLoading(false);
     }
@@ -97,7 +108,7 @@ const CreateBannerForm = () => {
               value={subheading}
               onChange={(e) => setSubheading(e.target.value)}
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-              placeholder="Enter sub 탈heading"
+              placeholder="Enter sub heading"
             />
           </div>
           <div className="mb-6">
@@ -122,7 +133,7 @@ const CreateBannerForm = () => {
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
               placeholder="Enter alt text for image"
             />
-          </div>
+  .</div>
           <div className="mb-6">
             <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
               Image Title
@@ -139,12 +150,12 @@ const CreateBannerForm = () => {
         <div className="flex gap-4">
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || isSubmitted}
             className={`px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
+              (loading || isSubmitted) ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {loading ? "Creating..." : "Create Banner"}
+            {loading ? "Creating..." : isSubmitted ? "Banner Created" : "Create Banner"}
           </button>
           <button
             type="button"

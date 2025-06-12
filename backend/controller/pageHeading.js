@@ -15,6 +15,23 @@ const getpageHeading = async (req, res) => {
   }
 }
 
+const deletePageHeading = async (req, res) => {
+  const { id } = req.query;
+
+  try {
+    const deletedPage = await PageHeadings.findByIdAndDelete(id);
+
+    if (!deletedPage) {
+      return res.status(404).json({ message: 'Page heading not found' });
+    }
+
+    res.status(200).json({ message: 'Page heading deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error deleting page heading' });
+  }
+};
+
 
 const getAllPageHeadings = async (req, res) => {
   try {
@@ -140,4 +157,4 @@ const addPageHeading = async (req, res) => {
 
 
 
-module.exports = { getpageHeading,addPageHeading, updatePageHeading ,getAllPageHeadings };
+module.exports = { getpageHeading,addPageHeading,deletePageHeading, updatePageHeading ,getAllPageHeadings };

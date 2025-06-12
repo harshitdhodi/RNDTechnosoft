@@ -40,7 +40,7 @@ const TrustedSection = ({ homecard1, homecard2 }) => {
                   dangerouslySetInnerHTML={{ __html: firstCard.heading }}
                 />
                 <p
-                  className="text-base sm:text-lg w-full sm:max-w-md md:max-w-[28rem]"
+                  className="text-base sm:text-lg w-full md:w-[60%]  lg:max-w-sm max-w-3xl"
                   dangerouslySetInnerHTML={{ __html: firstCard.description }}
                 />
                 <Link
@@ -72,7 +72,7 @@ const TrustedSection = ({ homecard1, homecard2 }) => {
                   dangerouslySetInnerHTML={{ __html: secondCard.heading }}
                 />
                 <p
-                  className="text-base sm:text-lg w-full sm:max-w-md lg:max-w-[16rem]"
+                  className="text-base sm:text-lg w-full md:w-[60%] lg:max-w-sm max-w-xl"
                   dangerouslySetInnerHTML={{ __html: secondCard.description }}
                 />
                 <Link

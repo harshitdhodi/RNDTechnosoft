@@ -28,7 +28,7 @@ export default function Card({
   const shortDescription = stripHtml(description);
   const truncatedDescription =
     shortDescription.length > 420
-      ? `${shortDescription.substring(0, 220)}...`
+      ? `${shortDescription.substring(0, 420)}...`
       : shortDescription;
 
   // Calculate grid column span based on colSpan prop
@@ -37,7 +37,7 @@ export default function Card({
   // Adjust position based on the index value
 const imagePositionStyle = () => {
   if (index === 0) {
-    return { position: "relative", top: "60px", left: "62px" }; // Example for index 0
+    return { position: "relative", top: "50px", left: "49px" }; // Example for index 0
   } else if (index === 8) {
     return { position: "relative", bottom: "24px", left: "82px", }; // Example for index 8
   } else if (index === 10) {
@@ -87,7 +87,7 @@ const imagePositionStyle = () => {
           </div>
 
           <h3 className="text-xl font-bold text-white mb-2 font-[Georgia]">{title}</h3>
-          <p className="text-white/80 text-sm flex-grow ">{truncatedDescription}</p>
+          <p className="text-white/80 text-sm flex-grow ">{shortDescription}</p>
         </div>
 
         {/* Image Section - When in row layout (rowSpan <= 1), show image on right */}
@@ -108,7 +108,7 @@ const imagePositionStyle = () => {
 
         {/* Image Section - When in column layout (rowSpan > 1), show image at bottom */}
         {imageUrl && rowSpan > 1 && (
-          <div className="w-full h-[46vh] top-6 relative">
+          <div className="w-full h-[30vh] top-6 relative">
             <img
               src={imageUrl || "/api/placeholder/120/80"}
               alt={title}
