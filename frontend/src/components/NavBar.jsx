@@ -1,4 +1,3 @@
-
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
 import MobileNavbar from "./MobileMenuItems";
@@ -9,12 +8,11 @@ import axios from "axios";
 // NavItem Component (unchanged)
 import { useState, useEffect, useRef } from 'react';
 
-
 const NavItem = ({ item, depth = 0, closeMenu }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [closeTimeout, setCloseTimeout] = useState(null);
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Add useNavigate hook
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -57,16 +55,17 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
     }
   };
 
+  // Handler for technology image click
   const handleTechnologyClick = (slug) => {
-    navigate(`/technology/${slug}`);
+    navigate(`/technology/${slug}`); // Navigate to the technology's slug
     closeMenu();
     setIsHovered(false);
   };
 
   const fontSize =
-    depth === 0 ? "text-lg" : depth === 1 ? "text-base" : "text-sm";
+    depth === 0 ? "text-lg" : depth === 1 ? "text-base " : "text-sm";
 
-  const useTwoColumns = item.subItems && item.subItems.length > 15 && item.id !== "technology";
+  const useTwoColumns = item.subItems && item.subItems.length > 15 /* && item.id !== "technology" */;
   const firstColumnItems = useTwoColumns
     ? item.subItems.slice(0, Math.ceil(item.subItems.length / 2))
     : item.subItems;
@@ -88,12 +87,13 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
             : `/${item.slug}`
         }
         className={`flex justify-between items-center w-full ${fontSize} px-4 py-1 text-gray-800 
-          ${depth === 0
-            ? "bg-white hover:bg-[#333] hover:text-white focus:border-2 focus:border-white focus:bg-[#ffff] focus:text-black"
-            : "bg-white hover:bg-[#333] hover:text-white focus:border-2 focus:border-white focus:bg-[#ffff] focus:text-white"
-          }
-          whitespace-nowrap text-ellipsis
-          transition-colors duration-300 ease-in-out rounded-sm`}
+        ${
+          depth === 0
+            ? "bg-white hover:bg-[#333] hover:text-white"
+            : "bg-white hover:bg-[#333] hover:text-white"
+        }
+        whitespace-nowrap text-ellipsis
+        transition-colors duration-300 ease-in-out`}
         onClick={handleClick}
       >
         {item.name}
@@ -106,53 +106,27 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
 
       {item.subItems && item.subItems.length > 0 && (
         <div
-          className={`absolute border border-gray-200
-            ${item.id === "technology" ? "-left-32" : ""}
+          className={`absolute border
             ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
-            ${isHovered ? "block bg-white" : "hidden bg-white"}
+            ${isHovered ? "block  bg-white" : "hidden bg-white"}
             shadow-lg transition-all duration-300 rounded-md ease-in-out
             ${depth === 0 ? "" : "-mt-1 ml-1"}
           `}
         >
-          {item.id === "technology" ? (
-            <div className="grid grid-cols-2 gap-3 p-3 w-[700px]">
-              {item.subItems.map((category) => (
-                <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg pl-5 py-3 border border-gray-200">
-                  <div className="w-12 h-12 flex items-center justify-center">
-                    <img
-                      src={category.icon || "https://via.placeholder.com/24"}
-                      alt={category.name}
-                      className={`${category.size === 'large' ? 'w-10 h-10' : 'w-6 h-6'} object-contain mb-2`}
-                    />
-                  </div>
-
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800">{category.name}</h3>
-                    <p className="text-sm text-gray-600 pb-2 leading-relaxed">{category.description}</p>
-                    <div className="grid grid-cols-2 gap-4">
-                      {category.technologies.map((tech) => (
-                        <div
-                          key={tech.name}
-                          className="flex items-center space-x-2 transition-colors cursor-pointer hover:bg-gray-100 p-1 rounded"
-                          onClick={() => handleTechnologyClick(tech.slug)}
-                        >
-                          <img
-                            src={tech.icon || "https://via.placeholder.com/24"}
-                            alt={tech.name}
-                            className="w-5 h-5 object-contain flex-shrink-0"
-                          />
-                          <span className="text-sm text-gray-700 font-medium">{tech.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+          <div className="flex">
+            <ul className="w-max">
+              {firstColumnItems.map((subItem) => (
+                <NavItem
+                  key={subItem.id}
+                  item={subItem}
+                  depth={depth + 1}
+                  closeMenu={closeMenu}
+                />
               ))}
-            </div>
-          ) : (
-            <div className="flex">
-              <ul className="w-max">
-                {firstColumnItems.map((subItem) => (
+            </ul>
+            {useTwoColumns && (
+              <ul className="w-max border-l border-gray-100">
+                {secondColumnItems.map((subItem) => (
                   <NavItem
                     key={subItem.id}
                     item={subItem}
@@ -161,33 +135,20 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
                   />
                 ))}
               </ul>
-              {useTwoColumns && (
-                <ul className="w-max border-l border-gray-200">
-                  {secondColumnItems.map((subItem) => (
-                    <NavItem
-                      key={subItem.id}
-                      item={subItem}
-                      depth={depth + 1}
-                      closeMenu={closeMenu}
-                    />
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
+            )}
+          </div>
         </div>
       )}
     </li>
   );
 };
 
-
 // Navbar Component
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [navData, setNavData] = useState([]);
-  const [technologyMenu, setTechnologyMenu] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [technologyMenu, setTechnologyMenu] = useState(null);
+  // const [isLoading, setIsLoading] = useState(true);
   const [colorlogo, setColorLogo] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -222,7 +183,6 @@ const Navbar = () => {
       try {
         const response = await fetchNavData();
         if (Array.isArray(response.data)) {
-
           setNavData(response.data);
         } else {
           console.error("Navigation data is not an array:", response);
@@ -234,6 +194,7 @@ const Navbar = () => {
     fetchData();
   }, []);
 
+  /*
   // Fetch technology menu data
   useEffect(() => {
     const fetchTechnologyData = async () => {
@@ -276,9 +237,11 @@ const Navbar = () => {
     };
     fetchTechnologyData();
   }, []);
+  */
 
   // Combine navData and technologyMenu, placing technologyMenu at index 2
   const combinedNavItems = [...navData];
+  /*
   if (technologyMenu) {
     if (combinedNavItems.length >= 2) {
       combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
@@ -286,6 +249,7 @@ const Navbar = () => {
       combinedNavItems.push(technologyMenu);
     }
   }
+  */
 
   return (
     <div className="w-full fixed z-30">
@@ -295,7 +259,7 @@ const Navbar = () => {
         </div>
         <div className="mx-20 flex justify-between items-center py-2">
           <div className="flex items-center space-x-8">
-            <Link to="/" className="outline-none">
+            <NavLink to="/">
               <img
                 src={colorlogo.photo ? `/api/logo/download/${colorlogo.photo}` : ''}
                 alt={colorlogo.alt || 'Logo'}
@@ -304,17 +268,13 @@ const Navbar = () => {
                 loading="lazy"
                 fetchPriority="high"
               />
-            </Link>
+            </NavLink>
           </div>
 
           <div className="hidden lg:flex items-center space-x-2 relative">
-            {isLoading ? (
-              <span>Loading...</span>
-            ) : (
-              combinedNavItems.map((link) => (
-                <NavItem key={link.id} item={link} closeMenu={closeMenu} />
-              ))
-            )}
+            {combinedNavItems.map((link) => (
+              <NavItem key={link.id} item={link} closeMenu={closeMenu} />
+            ))}
           </div>
 
           <div className="lg:flex items-center space-x-4">
