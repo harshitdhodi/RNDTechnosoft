@@ -37,33 +37,35 @@ const BannersTable = () => {
   const pageSize = 12;
   const navigate = useNavigate();
 
+  // Toast notification for successful updates
   const notify = () => {
     toast.success("Updated Successfully!");
   };
 
+  // Table columns configuration
   const columns = useMemo(
     () => [
       {
-        Header: "pageType",
+        Header: "Page Type",
         accessor: "pageType",
         Cell: ({ row }) => (
           <span
             className="hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/banner/editBanner/${row.original._id}`)}
           >
-            {row.original.pageType}
+            {row.original.pageType || "N/A"}
           </span>
         ),
       },
       {
-        Header: "heading",
+        Header: "Heading",
         accessor: "heading",
         Cell: ({ row }) => (
           <span
             className="hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/banner/editBanner/${row.original._id}`)}
           >
-            {row.original.heading}
+            {row.original.heading || "N/A"}
           </span>
         ),
       },
@@ -73,22 +75,36 @@ const BannersTable = () => {
         Cell: ({ value }) => {
           const firstImage = Array.isArray(value) && value.length > 0 ? value[0] : value;
           return firstImage ? (
-            <img src={`/api/logo/download/${firstImage}`} alt="Banner" className="w-20 h-20 object-cover" />
-          ) : null;
+            <img
+              src={`/api/logo/download/${firstImage}`}
+              alt="Banner"
+              className="w-20 h-20 object-cover rounded"
+            />
+          ) : (
+            <span>No Image</span>
+          );
         },
         disableSortBy: true,
       },
       {
         Header: "Status",
         accessor: "status",
-        Cell: ({ value }) => (value === "active" ? <Check className="text-green-500" /> : <X className="text-red-500" />),
+        Cell: ({ value }) =>
+          value === "active" ? (
+            <Check className="text-green-500" />
+          ) : (
+            <X className="text-red-500" />
+          ),
         disableSortBy: true,
       },
       {
         Header: "Options",
         Cell: ({ row }) => (
           <div className="flex gap-4">
-            <button className="text-gray-700 hover:text-gray-900 transition" onClick={() => handleView(row.original)}>
+            <button
+              className="text-gray-700 hover:text-gray-900 transition"
+              onClick={() => handleView(row.original)}
+            >
               <Eye />
             </button>
             <button className="text-blue-500 hover:text-blue-700 transition">
@@ -109,6 +125,8 @@ const BannersTable = () => {
     ],
     []
   );
+
+  // Filter banners based on search term and selected section
   const filteredBanners = useMemo(() => {
     let filteredData = banners;
     if (selectedSection) {
@@ -121,10 +139,11 @@ const BannersTable = () => {
         banner.title?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    // Update pageCount based on filtered data
     setPageCount(Math.ceil(filteredData.length / pageSize));
     return filteredData.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
   }, [banners, searchTerm, selectedSection, pageIndex, pageSize]);
+
+  // Initialize table with sorting
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
@@ -133,55 +152,70 @@ const BannersTable = () => {
     useSortBy
   );
 
+  // Fetch banners from API
   const fetchData = async (pageIndex) => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/pageHeading/getAllPageHeadings?page=${pageIndex + 1}&limit=${pageSize}`, {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `/api/pageHeading/getAllPageHeadings?page=${pageIndex + 1}&limit=${pageSize}`,
+        { withCredentials: true }
+      );
       const bannersWithIds = response.data.data.map((banner, index) => ({
         ...banner,
         id: pageIndex * pageSize + index + 1,
       }));
       setBanners(bannersWithIds);
-      setPageCount(response.data.totalPages); // Use totalPages from API
+      setPageCount(response.data.totalPages);
     } catch (error) {
       console.error("Error fetching banners:", error);
+      toast.error("Failed to fetch banners");
     } finally {
       setLoading(false);
     }
   };
 
+  // Delete a banner
   const deleteBanner = async (id, section) => {
     try {
-      await axios.delete(`/api/banner/deleteBanner?id=${id}&section=${section}`, { withCredentials: true });
+      await axios.delete(`/api/pageHeading/delete?id=${id}`, {
+        withCredentials: true,
+      });
+      toast.success("Banner deleted successfully");
       fetchData(pageIndex);
     } catch (error) {
       console.error("Error deleting banner:", error);
+      toast.error("Failed to delete banner");
     }
   };
 
+  // Open modal with banner details
   const handleView = (banner) => {
     setSelectedBanner(banner);
     setIsModalOpen(true);
   };
 
+  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedBanner(null);
   };
 
+  // Fetch page headings
   const fetchHeadings = async () => {
     try {
-      const response = await axios.get("/api/pageHeading/heading?pageType=banner", { withCredentials: true });
+      const response = await axios.get("/api/pageHeading/heading?pageType=banner", {
+        withCredentials: true,
+      });
       const { heading, subheading } = response.data;
       setHeading(heading || "");
       setSubheading(subheading || "");
     } catch (error) {
       console.error("Error fetching headings:", error);
+      toast.error("Failed to fetch headings");
     }
   };
 
+  // Save page headings
   const saveHeadings = async () => {
     try {
       await axios.put(
@@ -196,21 +230,23 @@ const BannersTable = () => {
       notify();
     } catch (error) {
       console.error("Error saving headings:", error);
+      toast.error("Failed to save headings");
     }
   };
 
-
-
+  // Fetch data on page index change
   useEffect(() => {
     fetchData(pageIndex);
   }, [pageIndex]);
 
+  // Fetch headings on component mount
   useEffect(() => {
     fetchHeadings();
   }, []);
 
+  // Reset page index on filter change
   useEffect(() => {
-    setPageIndex(0); // Reset to first page when filters change
+    setPageIndex(0);
   }, [searchTerm, selectedSection]);
 
   const handleHeadingChange = (e) => setHeading(e.target.value);
@@ -222,10 +258,13 @@ const BannersTable = () => {
   return (
     <div className="p-4 overflow-x-auto">
       <ToastContainer />
+      {/* Heading and Subheading Inputs */}
       <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded">
         <div className="grid md:grid-cols-2 md:gap-2 grid-cols-1">
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Heading</label>
+            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
+              Heading
+            </label>
             <input
               type="text"
               value={heading}
@@ -234,7 +273,9 @@ const BannersTable = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Sub heading</label>
+            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
+              Subheading
+            </label>
             <input
               type="text"
               value={subheading}
@@ -250,6 +291,8 @@ const BannersTable = () => {
           Save
         </button>
       </div>
+
+      {/* Table Header and Create Button */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">Banners</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
@@ -258,6 +301,8 @@ const BannersTable = () => {
           </Link>
         </button>
       </div>
+
+      {/* Search and Filter */}
       <div className="mb-4">
         <input
           type="text"
@@ -281,11 +326,13 @@ const BannersTable = () => {
           <option value="TermConditions">Terms & Conditions</option>
           <option value="CookiePolicy">Cookie Policy</option>
           <option value="Contact">Contact</option>
-          <option value="Collaborationinquiries">Collaboration inquiries</option>
+          <option value="Collaborationinquiries">Collaboration Inquiries</option>
         </select>
       </div>
+
+      {/* Table or Loading/No Data */}
       {loadings ? (
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center h-64">
           <UseAnimations animation={loading} size={56} />
         </div>
       ) : (
@@ -349,32 +396,34 @@ const BannersTable = () => {
           )}
         </>
       )}
-      <div className="mt-4 flex justify-center">
+
+      {/* Pagination */}
+      <div className="mt-4 flex justify-center items-center gap-2">
         <button
           onClick={() => setPageIndex(0)}
           disabled={!canPreviousPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {"<<"}
         </button>
         <button
           onClick={() => setPageIndex(pageIndex - 1)}
           disabled={!canPreviousPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {"<"}
         </button>
         <button
           onClick={() => setPageIndex(pageIndex + 1)}
           disabled={!canNextPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {">"}
         </button>
         <button
           onClick={() => setPageIndex(pageCount - 1)}
           disabled={!canNextPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {">>"}
         </button>
@@ -382,39 +431,65 @@ const BannersTable = () => {
           Page <strong>{pageIndex + 1} of {pageCount}</strong>
         </span>
       </div>
+
+      {/* Modal for Banner Details */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Banner Details"
         className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
       >
-        <div className="bg-white p-8 rounded shadow-lg min-w-54 m-4 relative">
+        <div className="bg-white p-8 rounded shadow-lg min-w-[400px] m-4 relative max-h-[80vh] overflow-y-auto">
           <button
             onClick={closeModal}
             className="absolute top-5 right-5 text-gray-500 hover:text-gray-700"
           >
             <X size={20} />
           </button>
-          <h2 className="text-xl font-bold font-serif mb-4">Banner</h2>
+          <h2 className="text-xl font-bold font-serif mb-4">Banner Details</h2>
           {selectedBanner && (
-            <div className="">
-              <div className="flex mt-2">
-                <p className="mr-2 font-semibold font-serif">Priority:</p>
-                <p>{selectedBanner.pageType}</p>
+            <div className="space-y-4">
+              <div className="flex">
+                <p className="mr-2 font-semibold font-serif">Page Type:</p>
+                <p>{selectedBanner.pageType || "N/A"}</p>
               </div>
-              <div className="flex mt-2">
+              <div className="flex">
                 <p className="mr-2 font-semibold font-serif">Section:</p>
-                <p>{selectedBanner.section}</p>
+                <p>{selectedBanner.section || "N/A"}</p>
               </div>
-              <div className="flex mt-2">
+              <div className="flex">
                 <p className="mr-2 font-semibold font-serif">Title:</p>
-                <p>{selectedBanner.title}</p>
+                <p>{selectedBanner.title || "N/A"}</p>
               </div>
-              <div className="mt-2">
+              <div className="flex">
+                <p className="mr-2 font-semibold font-serif">Heading:</p>
+                <p>{selectedBanner.heading || "N/A"}</p>
+              </div>
+              <div className="flex">
+                <p className="mr-2 font-semibold font-serif">Status:</p>
+                <p>{selectedBanner.status === "active" ? "Active" : "Inactive"}</p>
+              </div>
+              <div className="flex flex-col">
+                <p className="mr-2 font-semibold font-serif">Photo:</p>
+                {selectedBanner.photo ? (
+                  <img
+                    src={`/api/logo/download/${
+                      Array.isArray(selectedBanner.photo) && selectedBanner.photo.length > 0
+                        ? selectedBanner.photo[0]
+                        : selectedBanner.photo
+                    }`}
+                    alt="Banner"
+                    className="w-32 h-32 object-cover rounded mt-2"
+                  />
+                ) : (
+                  <p>No Image</p>
+                )}
+              </div>
+              <div className="flex flex-col">
                 <p className="mr-2 font-semibold font-serif">Description:</p>
                 <ReactQuill
                   readOnly={true}
-                  value={selectedBanner.details}
+                  value={selectedBanner.details || ""}
                   modules={{ toolbar: false }}
                   theme="bubble"
                   className="quill"

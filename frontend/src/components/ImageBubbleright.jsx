@@ -111,7 +111,7 @@ const ImageBubbleRight = ({ homeHero }) => {
         return (
           <div
             key={index}
-            className="absolute rounded-full text-white flex items-center justify-center text-[12px] font-poppins uppercase"
+            className="absolute rounded-full text-white flex items-center justify-center text-[12px] font-poppins "
             style={{
               top: position.top,
               right: position.right,

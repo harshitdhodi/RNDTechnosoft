@@ -16,6 +16,7 @@ import { useDispatch } from 'react-redux';
 // import ServicesPage from '../components/Websites/ServicePage';
 import GridLayout from '../components/Websites/GridLayout';
 import HexGridDemo from '../components/hexagon/Grid';
+import TechnologyList from '../components/HireTelent/TechnologyList';
 
 export default function Homepage() {
   const serviceGridRef = useRef(null);
@@ -66,7 +67,10 @@ export default function Homepage() {
         {/* <ServiceGrid serviceData={data?.services?.categories} /> */}
         <GridLayout serviceData={data?.services?.categories}/>
       </div>
-      <HexGridDemo expertData={data?.WeAreExpert} />
+      {/* <HexGridDemo expertData={data?.WeAreExpert} /> */}
+      {/* <div className='mt-10'>
+        <TechnologyList/>
+      </div> */}
       <TrustedSection homecard1={data?.homecard1} homecard2={data?.homecard2} />
       <WhatYouGet everyPlan={data?.everyplan} />
       {/* <StandardPackage packagesData={data?.packages} /> */}
