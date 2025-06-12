@@ -3,12 +3,13 @@ const router = express.Router();
 const { requireAuth } = require('../middleware/authmiddleware');
 const { uploadLogo } = require("../middleware/logoUpload")
 
-const { getpageHeading, updatePageHeading,addPageHeading ,getAllPageHeadings } = require('../controller/pageHeading')
+const { getpageHeading,deletePageHeading, updatePageHeading,addPageHeading ,getAllPageHeadings } = require('../controller/pageHeading')
 
 router.post('/createHeading', requireAuth, uploadLogo, addPageHeading);
 router.get('/heading', getpageHeading,);
 router.put('/updateHeading', requireAuth, uploadLogo, updatePageHeading);
 router.get('/getAllPageHeadings', requireAuth, getAllPageHeadings);
+router.delete('/delete', deletePageHeading,);
 /**
  * @swagger
  * tags:

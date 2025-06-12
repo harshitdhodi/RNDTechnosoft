@@ -32,7 +32,7 @@ const WebSolution = () => {
 
   
   return (
-    <section className="relative lg:max-w-[93rem] mx-5 xl:mx-28 md:mx-auto bg-white overflow-hidden">
+    <section className="relative lg:max-w-8xl mx-5 xl:mx-28 md:mx-auto bg-white overflow-hidden">
       {/* Shape Divider */}
 
       <div className="sm:mt-16 mt-5  flex flex-col items-start justify-center md:mx-20 lg:mx-4">

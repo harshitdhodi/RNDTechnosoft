@@ -476,7 +476,7 @@ app.use(express.static(path.join(__dirname, 'dist'), {
         }
     },
 }));
-
+ 
 // Catch-All Route for SPA (Last)
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
