@@ -27,13 +27,13 @@ export default function AboutUs() {
 
   return (
     <div>
-        <HeroSection/>
+        <HeroSection pageType={"aboutcompany"}/>
         <WebSolution/>
         <OurValues/>
         <ExpertiseComponent/>
         <BookAcall/>
        {/* <HexGridDemo expertData={data?.WeAreExpert} /> */}
-        <GlobalSolution globalData={data?.globalsolution}/>
+        {/* <GlobalSolution globalData={data?.globalsolution}/> */}
         
     </div>
   )

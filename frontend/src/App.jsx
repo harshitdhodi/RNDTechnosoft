@@ -308,7 +308,7 @@ function App() {
                 <Route path="/job-application-form" element={<JobApplicationForm />} />
                 <Route path="/thankyou" element={<Thankyou />} />
                 <Route path="/portfolios" element={<Portfolios />} />
-                <Route path="/hire-telent" element={<MainHireTelent />} />
+                <Route path="/hire-talent" element={<MainHireTelent />} />
               </Route>
               {!isLoggedIn ? (
                 <>

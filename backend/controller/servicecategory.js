@@ -1076,7 +1076,7 @@ const fetchCategoryUrlmetaById = async (req, res) => {
 const getCategory = async (req, res) => {
   try {
     const categories = await ServiceCategory.find().select(
-      "category description photo alt imgtitle slug tag"
+      "category description photo alt imgtitle slug tag status"
     );
 
     // Set cache-control headers to prevent caching

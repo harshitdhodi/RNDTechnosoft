@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Card from "./Card";
 
 export default function GridLayout({ serviceData }) {
+  console.log(serviceData)
   const [isMounted, setIsMounted] = useState(false);
   const [cardConfigs, setCardConfigs] = useState([]);
 
