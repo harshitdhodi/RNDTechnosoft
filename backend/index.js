@@ -422,7 +422,7 @@ app.use('/api/herosection', require('./routes/heroSection'));
 app.use('/api/serviceDetails', require('./routes/serviceDetails'));
 app.use('/api/homehero', require('./routes/HomeHero'));
 app.use('/api/homepage', require('./routes/homepage'));
-app.use('/api/video', require('./routes/video'));
+app.use('/api/video', require('./routes/video')); 
 app.use('/api/serviceImages', require('./routes/serviceImage'));
 app.use('/api/industryImages', require('./routes/industryimage'));
 app.use('/api/packages', require('./routes/plan'));
