@@ -421,9 +421,9 @@ const CareerPage = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Banner />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-4">
-        <div className="mb-12 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex flex-wrap w-full  justify-start space-x-2">
+      <div className="max-w-8xl xl:mx-12 xl:px-20 mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-4">
+        <div className="mb-12 flex flex-col md:flex-row justify-between  items-start">
+          <div className="flex flex-wrap w-1/2 justify-start gap-2">
             {departments.map((dept) => (
               <button
                 key={dept}
@@ -439,7 +439,7 @@ const CareerPage = () => {
               </button>
             ))}
           </div>
-          <div className="w-full md:w-1/2 mb-4 md:mb-0">
+          <div className="w-full md:w-1/3 mb-4 md:mb-0">
             <div className="relative flex items-center">
               <input
                 type="text"
@@ -459,7 +459,7 @@ const CareerPage = () => {
 </p>
 
         {filteredJobs.length > 0 ? (
-          <div className="grid gap-8 md:grid-cols-2 my-16">
+          <div className="grid gap-8 md:grid-cols-3 my-16">
             {filteredJobs.map((job) => (
               <JobCard key={job.id} job={job} onApply={() => openModal(job)} />
             ))}

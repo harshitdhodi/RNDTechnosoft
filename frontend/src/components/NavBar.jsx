@@ -106,8 +106,8 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
 
       {item.subItems && item.subItems.length > 0 && (
         <div
-          className={`absolute border border-gray-200
-            ${item.id === "technology" ? "-left-32" : ""}
+          className={`absolute border  border-gray-200
+            ${item.id === "technology" ? "-left-52" : ""}
             ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
             ${isHovered ? "block bg-white" : "hidden bg-white"}
             shadow-lg transition-all duration-300 rounded-md ease-in-out

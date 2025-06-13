@@ -34,6 +34,8 @@ const BannersTable = () => {
   const [selectedSection, setSelectedSection] = useState("");
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [bannerToDelete, setBannerToDelete] = useState(null);
   const pageSize = 12;
   const navigate = useNavigate();
 
@@ -114,7 +116,7 @@ const BannersTable = () => {
             </button>
             <button
               className="text-red-500 hover:text-red-700 transition"
-              onClick={() => deleteBanner(row.original._id, row.original.section)}
+              onClick={() => handleDeleteClick(row.original._id, row.original.section)}
             >
               <Trash2 />
             </button>
@@ -188,6 +190,27 @@ const BannersTable = () => {
     }
   };
 
+  // Handle delete button click
+  const handleDeleteClick = (id, section) => {
+    setBannerToDelete({ id, section });
+    setIsConfirmModalOpen(true);
+  };
+
+  // Confirm deletion
+  const confirmDelete = () => {
+    if (bannerToDelete) {
+      deleteBanner(bannerToDelete.id, bannerToDelete.section);
+      setIsConfirmModalOpen(false);
+      setBannerToDelete(null);
+    }
+  };
+
+  // Cancel deletion
+  const cancelDelete = () => {
+    setIsConfirmModalOpen(false);
+    setBannerToDelete(null);
+  };
+
   // Open modal with banner details
   const handleView = (banner) => {
     setSelectedBanner(banner);
@@ -254,6 +277,64 @@ const BannersTable = () => {
 
   const canPreviousPage = pageIndex > 0;
   const canNextPage = pageIndex + 1 < pageCount;
+
+
+  // Modal styles
+  const customModalStyles = {
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 1000,
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    content: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "white",
+      padding: "2rem",
+      borderRadius: "0.5rem",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      maxWidth: "600px",
+      width: "90%",
+      maxHeight: "80vh",
+      overflowY: "auto",
+      zIndex: 1001,
+    },
+  };
+
+  // Confirmation modal styles
+  const confirmModalStyles = {
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 1000,
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    content: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "white",
+   
+      borderRadius: "0.5rem",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      maxWidth: "400px",
+      width: "90%",
+      zIndex: 1001,
+        height: '200px', // or any preferred height
+    maxHeight: '300px',
+  
+    },
+  };
 
   return (
     <div className="p-4 overflow-x-auto">
@@ -436,13 +517,13 @@ const BannersTable = () => {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
+        style={customModalStyles}
         contentLabel="Banner Details"
-        className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
       >
-        <div className="bg-white p-8 rounded shadow-lg min-w-[400px] m-4 relative max-h-[80vh] overflow-y-auto">
+        <div className="relative">
           <button
             onClick={closeModal}
-            className="absolute top-5 right-5 text-gray-500 hover:text-gray-700"
+            className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
           >
             <X size={20} />
           </button>
@@ -473,11 +554,10 @@ const BannersTable = () => {
                 <p className="mr-2 font-semibold font-serif">Photo:</p>
                 {selectedBanner.photo ? (
                   <img
-                    src={`/api/logo/download/${
-                      Array.isArray(selectedBanner.photo) && selectedBanner.photo.length > 0
+                    src={`/api/logo/download/${Array.isArray(selectedBanner.photo) && selectedBanner.photo.length > 0
                         ? selectedBanner.photo[0]
                         : selectedBanner.photo
-                    }`}
+                      }`}
                     alt="Banner"
                     className="w-32 h-32 object-cover rounded mt-2"
                   />
@@ -499,6 +579,35 @@ const BannersTable = () => {
           )}
         </div>
       </Modal>
+
+      {/* Confirmation Modal for Deletion */}
+      <Modal
+  isOpen={isConfirmModalOpen}
+  onRequestClose={cancelDelete}
+  style={confirmModalStyles}
+  contentLabel="Confirm Delete"
+>
+  <div className="relative max-h-[250px] p-4 overflow-auto">
+    <h2 className="text-lg font-bold font-serif mb-2">Confirm Deletion</h2>
+    <p className="mb-3 text-sm">Are you sure you want to delete this banner? This action cannot be undone.</p>
+    <div className="flex justify-end gap-2">
+      <button
+        onClick={cancelDelete}
+        className="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-300 text-sm"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={confirmDelete}
+        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 text-sm"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+</Modal>
+
+
     </div>
   );
 };

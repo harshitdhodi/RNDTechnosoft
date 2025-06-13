@@ -370,6 +370,7 @@ const HeroSection = () => {
   const [utmParams, setUtmParams] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // New state for error handling
 
   const location = useLocation();
 
@@ -409,6 +410,7 @@ const HeroSection = () => {
         setTimeout(() => setIsLoading(false), 1000);
       } catch (error) {
         console.error("Error fetching hero section:", error);
+        setError("Failed to load hero section data. Please try again later.");
         setIsLoading(false);
       }
     };
@@ -469,28 +471,41 @@ const HeroSection = () => {
 
   if (isLoading) return <SkeletonLoader />;
 
+  if (error || !heroSection || Object.keys(heroSection).length === 0) {
+    return (
+      <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-black min-h-[80vh] flex items-center justify-center text-white">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            {error || "No hero section data available"}
+          </h2>
+          <p>Please check back later or contact support.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative bg-gradient-to-br  from-gray-900 via-gray-800 to-black md:min-h-[80vh] py-4 flex items-center justify-between text-white overflow-hidden">
+    <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-black md:min-h-[80vh] py-4 flex items-center justify-between text-white overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-blob animation-delay-2000"></div>
       </div>
-      <div className="relative flex flex-col md:flex-col lg:flex-row md:justify-center md:items-center md:w-full mx-5 pt-16 sm:pt-0 justify-center gap-10 2xl:gap-40  xl:gap-24 xl:pt-16 2xl:px-3 xl:px-0 sm:mx-auto sm:my-32 my-5">
-        <div className="lg:w-[50%] md:w-full md:px-10  w-full space-y-8">
+      <div className="relative flex flex-col md:flex-col lg:flex-row md:justify-center md:items-center md:w-full mx-5 pt-16 sm:pt-0 justify-center gap-10 2xl:gap-40 xl:gap-24 xl:pt-16 2xl:px-3 xl:px-0 sm:mx-auto sm:my-32 my-5">
+        <div className="lg:w-[50%] md:w-full md:px-10 w-full space-y-8">
           <div className="inline-flex items-center w-auto rounded-full bg-white px-3 gap-2 py-2 pr-4">
             <span className="2xl:text-[16px] text-[14px] font-medium bg-yellow-500 rounded-full text-white 2xl:px-6 px-3 py-1 2xl:py-3 sm:py-2">
               Best
             </span>
             <span className="ml-2 max-w-[80%] 2xl:text-[16px] text-[14px] pr-4 text-gray-700">
-              {heroSection.title}
+              {heroSection.title || "Default Title"}
             </span>
           </div>
           <ReactQuill
             readOnly={true}
-            value={heroSection.heading}
+            value={heroSection.heading || "<p>No heading available</p>"}
             modules={{ toolbar: false }}
             theme="bubble"
-            className="quill-content  text-white"
+            className="quill-content text-white"
           />
           <QuoteModel />
         </div>
