@@ -102,8 +102,8 @@ const ServicesLanding = () => {
                 </div>
                 
                 {/* Title */}
-                <h3>
-                  {service.heading}
+                <h3   dangerouslySetInnerHTML={{ __html: service.heading }}>
+               
                 </h3>
                 {/* <ReactQuill
                   value={DOMPurify.sanitize(service.heading)} // Sanitize HTML
