@@ -1,21 +1,42 @@
 const mongoose = require('mongoose');
 
-const TechnologySecDataSchema = new mongoose.Schema({
-  type: { type: String,  },
-  heading: { type: String,  },
- technologyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Technology', required: true },
-  card: [{
-     photo: { type: String,  },
-  heading: { type: String,  },
-  subHeading: { type: String,  },
-  altName: { type: String,  },
-  imgTitle: { type: String,  }
-  }],
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now },
-  __v: { type: Number, default: 0 }
+const cardSchema = new mongoose.Schema({
+  photo: {
+    type: String,
+    default: '',
+  },
+  heading: {
+    type: String,
+    required: true,
+  },
+  subHeading: {
+    type: String,
+    // required: true,
+  },
+  altName: {
+    type: String,
+    default: '',
+  },
+  imgTitle: {
+    type: String,
+    default: '',
+  },
 });
 
-const TechnologySecData = mongoose.model('TechnologySecData', TechnologySecDataSchema);
+const technologySecDataSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    required: true,
+  },
+  heading: {
+    type: String,
+    required: true,
+  },
+  technologyId: {
+    type: String,
+    required: true,
+  },
+  card: [cardSchema],
+}, { timestamps: true });
 
-module.exports = TechnologySecData;
+module.exports = mongoose.model('TechnologySecData', technologySecDataSchema);

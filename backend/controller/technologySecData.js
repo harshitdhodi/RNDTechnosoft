@@ -2,69 +2,64 @@ const TechnologySecData = require('../model/technologySecData'); // Adjust path 
 
 const createTechnologySecData = async (req, res) => {
   try {
-    const { type, heading,technologyId } = req.body;
-    let { card } = req.body;
+    const { type, heading, technologyId } = req.body;
+
+    const updatedCard = [];
+    const maxCards = 10;
 
     console.log('Received body:', req.body);
-    console.log('Received files:', req.files);
 
-    // Parse card if it's a string
-    if (typeof card === 'string') {
-      card = JSON.parse(card);
+    for (let i = 0; i < maxCards; i++) {
+      const heading = req.body[`card[${i}][heading]`] || req.body[`card[${i}]heading`];
+      const subHeading = req.body[`card[${i}][subHeading]`] || req.body[`card[${i}]subHeading`] || ''; // Fallback to empty string
+      const altName = req.body[`card[${i}][altName]`] || '';
+      const imgTitle = req.body[`card[${i}][imgTitle]`] || '';
+      const photoFile = req.body[`card[${i}][photo]`] ? req.body[`card[${i}][photo]`][0] : ''; // Handle photo as array
+
+      if (heading) { // Only require heading, since subHeading is not provided
+        updatedCard.push({
+          heading,
+          subHeading,
+          altName,
+          imgTitle,
+          photo: photoFile || ''
+        });
+      }
     }
 
-    // Validate input
-    if (!type || !heading || !Array.isArray(card)) {
-      return res.status(400).json({ error: 'Type, heading, and card array are required' });
+    if (!type || !heading || !technologyId) {
+      return res.status(400).json({ error: "Missing required fields" });
     }
-
-    // Map file uploads to corresponding card items
-    const updatedCard = card.map((cardItem, index) => {
-      const fileField = `card[${index}][photo]`;
-      const file = req.files && req.files[fileField] && req.files[fileField][0];
-      const photo = file ? file.filename : cardItem.photo || '';
-
-      return {
-        photo,
-        heading: cardItem.heading,
-        subHeading: cardItem.subHeading,
-        altName: cardItem.altName,
-        imgTitle: cardItem.imgTitle,
-        
-      };
-    });
 
     const newTechSecData = new TechnologySecData({
       type,
       heading,
-        technologyId,
-      card: updatedCard,
+      technologyId,
+      card: updatedCard
     });
 
     await newTechSecData.save();
 
-    res.status(201).json({ message: 'Technology section data created', data: newTechSecData });
+    res.status(201).json({ message: "Technology section data created", data: newTechSecData });
   } catch (error) {
-    console.error('Error in createTechnologySecData:', error);
+    console.error("Error in createTechnologySecData:", error);
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 // Update a TechnologySecData entry by ID
 const updateTechnologySecData = async (req, res) => {
   try {
     const { id } = req.params;
-    let { type, heading, card,technologyId } = req.body;
+    let { type, heading, technologyId } = req.body;
 
     console.log('Received body:', req.body);
-    console.log('Received files:', req.files); 
+    console.log('Received files:', req.files);
 
-    // Parse card if sent as a string (from form-data)
-    if (typeof card === 'string') {
-      card = JSON.parse(card);
-    }
+    // Log specific card fields to debug
+    console.log('card[0][heading]:', req.body['card[0][heading]']);
+    console.log('card[1][heading]:', req.body['card[1][heading]']);
 
     // Find the existing document
     const techSecData = await TechnologySecData.findById(id);
@@ -76,24 +71,50 @@ const updateTechnologySecData = async (req, res) => {
     if (type) techSecData.type = type;
     if (heading) techSecData.heading = heading;
     if (technologyId) techSecData.technologyId = technologyId;
-    // Handle card updates
-    if (card && Array.isArray(card)) {
-      const files = req.files || {};
 
-      const updatedCard = card.map((cardItem, index) => {
+    // Handle card updates
+    const files = req.files || {};
+    const cardCount = Object.keys(req.body).filter(key => key.match(/card\[\d+\]\[heading\]/)).length;
+
+    if (cardCount > 0) {
+      const updatedCard = Array.from({ length: cardCount }, (_, index) => {
         const fileField = `card[${index}][photo]`;
         const file = files[fileField]?.[0];
-        const photo = file ? file.filename : cardItem.photo || '';
+
+        // Extract fields from req.body in the same format as photo
+        const cardHeading = Array.isArray(req.body[`card[${index}][heading]`])
+          ? req.body[`card[${index}][heading]`][0] || techSecData.card[index]?.heading || ''
+          : req.body[`card[${index}][heading]`] || techSecData.card[index]?.heading || '';
+        const cardSubHeading = Array.isArray(req.body[`card[${index}][subHeading]`])
+          ? req.body[`card[${index}][subHeading]`][0] || techSecData.card[index]?.subHeading || ''
+          : req.body[`card[${index}][subHeading]`] || techSecData.card[index]?.subHeading || '';
+        const cardAltName = Array.isArray(req.body[`card[${index}][altName]`])
+          ? req.body[`card[${index}][altName]`][0] || techSecData.card[index]?.altName || ''
+          : req.body[`card[${index}][altName]`] || techSecData.card[index]?.altName || '';
+        const cardImgTitle = Array.isArray(req.body[`card[${index}][imgTitle]`])
+          ? req.body[`card[${index}][imgTitle]`][0] || techSecData.card[index]?.imgTitle || ''
+          : req.body[`card[${index}][imgTitle]`] || techSecData.card[index]?.imgTitle || '';
+
+        // Extract photo: prefer uploaded file, else existing photo
+        const photo = file ? file.filename : techSecData.card[index]?.photo || '';
+
+        // Optional validation: uncomment if fields are required
+        /*
+        if (!cardHeading || !cardSubHeading || !cardAltName || !cardImgTitle) {
+          throw new Error(`Missing required fields in card[${index}]`);
+        }
+        */
 
         return {
           photo,
-          heading: cardItem.heading,
-          subHeading: cardItem.subHeading,
-          altName: cardItem.altName,
-          imgTitle: cardItem.imgTitle,
-    
+          heading: cardHeading,
+          subHeading: cardSubHeading,
+          altName: cardAltName,
+          imgTitle: cardImgTitle,
         };
       });
+
+      console.log('Updated card array:', updatedCard);
       techSecData.card = updatedCard;
     }
 

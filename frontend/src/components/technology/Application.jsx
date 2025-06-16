@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import DOMPurify from 'dompurify'; // Optional for sanitizing HTML
-
+import img1 from '../../images/HowRnd/agile.png'; // Example image, adjust as needed
 const ServicesLanding = () => {
   const { slug } = useParams();
   const [servicesData, setServicesData] = useState([]);
@@ -97,13 +97,13 @@ const ServicesLanding = () => {
                     className="text-4xl flex items-center justify-center w-16 h-16 text-gray-400"
                     style={{ display: service.photo ? 'none' : 'flex' }}
                   >
-                    {service.type || '🔧'}
+                   <img src={img1} alt="" className='object-contain'/>
                   </div>
                 </div>
                 
                 {/* Title */}
-                <h3>
-                  {service.heading}
+                <h3   dangerouslySetInnerHTML={{ __html: service.heading }}>
+               
                 </h3>
                 {/* <ReactQuill
                   value={DOMPurify.sanitize(service.heading)} // Sanitize HTML
