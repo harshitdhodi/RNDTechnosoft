@@ -37,33 +37,18 @@ const createTechnology = async (req, res) => {
 // READ - Get all technologies
 const getAllTechnologies = async (req, res) => {
   try {
-    const page = Math.max(parseInt(req.query.page) || 1, 1);
-    const limit = Math.max(parseInt(req.query.limit) || 10, 1);
-    const skip = (page - 1) * limit;
+   
 
     const technologies = await Technology.find()
       .populate({
         path: 'category',
         select: 'heading' // optionally populate only the name or required fields
       })
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
-
-    const total = await Technology.countDocuments();
-    const totalPages = Math.ceil(total / limit);
-
+   
     res.status(200).json({
       message: 'Technologies retrieved successfully',
       data: technologies,
-      pagination: {
-        currentPage: page,
-        totalPages,
-        totalItems: total,
-        itemsPerPage: limit,
-        hasNextPage: page < totalPages,
-        hasPrevPage: page > 1
-      }
+     
     });
   } catch (error) {
     res.status(500).json({ 
