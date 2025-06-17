@@ -91,7 +91,7 @@ const WhyChooseSection = () => {
                     </button>
                 </div>
             </div>
-        </div>
+        </div> 
     );
 };
 
