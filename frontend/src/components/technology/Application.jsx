@@ -14,13 +14,14 @@ const ServicesLanding = () => {
     const fetchServicesData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/technologySecData/get/${slug}`);
-        
+        const response = await fetch(`/api/technologySecData/get/${slug}?type=Technology Application`);
+      
         if (!response.ok) {
           throw new Error('Failed to fetch services data');
         }
         
         const data = await response.json();
+          console.log('Fetching services data for slug:', data);
         setServicesData(data);
         setError(null);
       } catch (err) {
@@ -63,12 +64,12 @@ const ServicesLanding = () => {
       {servicesData.map((section, sectionIndex) => (
         <div key={sectionIndex} className="max-w-8xl pt-10 mx-auto px-32 pb-20">
           {section.heading && (
-            <div className="text-center mb-12">
+            <div className="text-center max-w-3xl mx-auto  mb-12">
               <ReactQuill
                 value={DOMPurify.sanitize(section.heading)} // Sanitize HTML
                 readOnly={true}
                 theme={null} // Disable Quill's editor UI
-                className="quill-heading"
+                className="quill-heading "
               />
             </div>
           )}
@@ -86,7 +87,7 @@ const ServicesLanding = () => {
                       src={`/api/logo/download/${service.photo}`}
                       alt={service.altName || service.heading}
                       title={service.imgTitle || service.heading}
-                      className="w-16 h-16 object-contain"
+                      className="w-12 h-12 object-contain"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         e.target.nextElementSibling.style.display = 'block';
@@ -102,9 +103,9 @@ const ServicesLanding = () => {
                 </div>
                 
                 {/* Title */}
-                <h3   dangerouslySetInnerHTML={{ __html: service.heading }}>
+                <div className='text-lg pb-3'   dangerouslySetInnerHTML={{ __html: service.heading }}>
                
-                </h3>
+                </div>
                 {/* <ReactQuill
                   value={DOMPurify.sanitize(service.heading)} // Sanitize HTML
                   readOnly={true}

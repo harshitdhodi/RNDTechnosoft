@@ -206,16 +206,16 @@ const TechnologySecDataForm = () => {
         heading: response.data.data?.heading || response.data.heading || prev.heading,
         card: response.data.data?.card && Array.isArray(response.data.data.card)
           ? response.data.data.card.map((card, i) => ({
+            ...prev.card[i],
+            ...card,
+            key: prev.card[i]?.key || uuidv4(),
+          }))
+          : response.data.card && Array.isArray(response.data.card)
+            ? response.data.card.map((card, i) => ({
               ...prev.card[i],
               ...card,
               key: prev.card[i]?.key || uuidv4(),
             }))
-          : response.data.card && Array.isArray(response.data.card)
-            ? response.data.card.map((card, i) => ({
-                ...prev.card[i],
-                ...card,
-                key: prev.card[i]?.key || uuidv4(),
-              }))
             : prev.card,
       }));
       setPreviews(
@@ -226,7 +226,7 @@ const TechnologySecDataForm = () => {
             : []
       );
       setFiles([]);
-      navigate('/');
+      navigate('/tech-sec-data');
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to save data');
       console.error('API Error:', err.response?.data || err);
@@ -292,12 +292,16 @@ const TechnologySecDataForm = () => {
                 [{ indent: '-1' }, { indent: '+1' }],
                 ['link', 'image', 'video'],
                 [{ direction: 'rtl' }],
-                [{ color: [] }, { background: [] }],
+                [
+                  { color: ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff','#f3ca0d'] }, // custom colors
+                  { background: ['#ffffff', '#f4cccc', '#fce5cd', '#fff2cc', '#d9ead3', '#cfe2f3', '#d9d2e9'] } // custom backgrounds
+                ],
                 [{ align: [] }],
                 ['clean'],
               ],
             }}
           />
+
         </div>
         <div className="border-t pt-4">
           <h3 className="text-lg font-semibold mb-2">Cards</h3>
