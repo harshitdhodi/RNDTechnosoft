@@ -1,5 +1,5 @@
 const TechnologySecData = require('../model/technologySecData'); // Adjust path to your model file
-
+const Technology = require('../model/technology'); // Adjust path to your model file
 const createTechnologySecData = async (req, res) => {
   try {
     const { type, heading, technologyId } = req.body;
@@ -52,14 +52,10 @@ const createTechnologySecData = async (req, res) => {
 const updateTechnologySecData = async (req, res) => {
   try {
     const { id } = req.params;
-    let { type, heading, technologyId } = req.body;
+    const { type, heading, technologyId } = req.body;
 
     console.log('Received body:', req.body);
     console.log('Received files:', req.files);
-
-    // Log specific card fields to debug
-    console.log('card[0][heading]:', req.body['card[0][heading]']);
-    console.log('card[1][heading]:', req.body['card[1][heading]']);
 
     // Find the existing document
     const techSecData = await TechnologySecData.findById(id);
@@ -67,59 +63,52 @@ const updateTechnologySecData = async (req, res) => {
       return res.status(404).json({ error: 'Technology section data not found' });
     }
 
-    // Update type and heading if provided
+    // Update top-level fields if provided
     if (type) techSecData.type = type;
     if (heading) techSecData.heading = heading;
     if (technologyId) techSecData.technologyId = technologyId;
 
     // Handle card updates
-    const files = req.files || {};
-    const cardCount = Object.keys(req.body).filter(key => key.match(/card\[\d+\]\[heading\]/)).length;
+    const updatedCard = [];
+    const maxCards = 10; // Consistent with create controller
 
-    if (cardCount > 0) {
-      const updatedCard = Array.from({ length: cardCount }, (_, index) => {
-        const fileField = `card[${index}][photo]`;
-        const file = files[fileField]?.[0];
+    for (let i = 0; i < maxCards; i++) {
+      const headingKey = `card[${i}][heading]`; // Standard format
+      const altHeadingKey = `card[${i}]heading`; // Alternative format from create controller
+      const subHeadingKey = `card[${i}][subHeading]`;
+      const altSubHeadingKey = `card[${i}]subHeading`;
+      const altNameKey = `card[${i}][altName]`;
+      const imgTitleKey = `card[${i}][imgTitle]`;
+      const photoKey = `card[${i}][photo]`;
 
-        // Extract fields from req.body in the same format as photo
-        const cardHeading = Array.isArray(req.body[`card[${index}][heading]`])
-          ? req.body[`card[${index}][heading]`][0] || techSecData.card[index]?.heading || ''
-          : req.body[`card[${index}][heading]`] || techSecData.card[index]?.heading || '';
-        const cardSubHeading = Array.isArray(req.body[`card[${index}][subHeading]`])
-          ? req.body[`card[${index}][subHeading]`][0] || techSecData.card[index]?.subHeading || ''
-          : req.body[`card[${index}][subHeading]`] || techSecData.card[index]?.subHeading || '';
-        const cardAltName = Array.isArray(req.body[`card[${index}][altName]`])
-          ? req.body[`card[${index}][altName]`][0] || techSecData.card[index]?.altName || ''
-          : req.body[`card[${index}][altName]`] || techSecData.card[index]?.altName || '';
-        const cardImgTitle = Array.isArray(req.body[`card[${index}][imgTitle]`])
-          ? req.body[`card[${index}][imgTitle]`][0] || techSecData.card[index]?.imgTitle || ''
-          : req.body[`card[${index}][imgTitle]`] || techSecData.card[index]?.imgTitle || '';
+      // Extract heading, supporting both formats
+      const cardHeading = req.body[headingKey] || req.body[altHeadingKey] || techSecData.card[i]?.heading || '';
+      const cardSubHeading = req.body[subHeadingKey] || req.body[altSubHeadingKey] || techSecData.card[i]?.subHeading || '';
+      const cardAltName = req.body[altNameKey] || techSecData.card[i]?.altName || '';
+      const cardImgTitle = req.body[imgTitleKey] || techSecData.card[i]?.imgTitle || '';
+      const photo = req.files && req.files[photoKey] ? req.files[photoKey][0].filename : techSecData.card[i]?.photo || '';
 
-        // Extract photo: prefer uploaded file, else existing photo
-        const photo = file ? file.filename : techSecData.card[index]?.photo || '';
-
-        // Optional validation: uncomment if fields are required
-        /*
-        if (!cardHeading || !cardSubHeading || !cardAltName || !cardImgTitle) {
-          throw new Error(`Missing required fields in card[${index}]`);
-        }
-        */
-
-        return {
-          photo,
+      // Only include cards with a heading (consistent with create logic)
+      if (cardHeading) {
+        updatedCard.push({
           heading: cardHeading,
           subHeading: cardSubHeading,
           altName: cardAltName,
           imgTitle: cardImgTitle,
-        };
-      });
+          photo
+        });
+      }
+    }
 
-      console.log('Updated card array:', updatedCard);
+    // Update card array only if there are valid updates
+    if (updatedCard.length > 0) {
       techSecData.card = updatedCard;
     }
 
+    // Set updatedAt timestamp
     techSecData.updatedAt = Date.now();
 
+    // Save the updated document
     await techSecData.save();
 
     res.status(200).json({ message: 'Technology section data updated', data: techSecData });
@@ -170,18 +159,40 @@ const deleteTechnologySecData = async (req, res) => {
 
 const getDataByTechnologySlug = async (req, res) => {
   try {
-    const { slug } = req.params; // or req.query.slug if passed as query parameter
-    
-    const data = await TechnologySecData.find()
-      .populate({
-        path: 'technologyId',
-        match: { slug: slug }
-      });
-    
-    // Filter out documents where technologyId is null (no match found)
-    const filteredData = data.filter(item => item.technologyId !== null);
-    
-    res.status(200).json(filteredData);
+    const { slug } = req.params; // Extract slug from request parameters
+    const { type } = req.query; // Extract type from query parameters (e.g., ?type=developer)
+    console.log("slug", slug);
+    console.log("type", type);
+
+    // Validate type if required
+    if (!type) {
+      return res.status(400).json({ message: 'Type parameter is required' });
+    }
+
+    // Step 1: Find the Technology document with the matching slug
+    const technology = await Technology.findOne({ slug });
+    console.log("technology", technology);
+
+    if (!technology) {
+      return res.status(404).json({ message: 'Technology not found' });
+    }
+
+    console.log("technology._id", technology._id.toString());
+
+    // Step 2: Find TechnologySecData documents where technologyId (string) and type match
+    const data = await TechnologySecData.find({
+      technologyId: technology._id.toString(),
+      type: type // Match the type field
+    });
+
+    // Step 3: Manually populate technologyId with the Technology document
+    const populatedData = data.map(item => ({
+      ...item.toObject(), // Convert Mongoose document to plain object
+      technologyId: technology // Replace technologyId string with full Technology document
+    }));
+
+    console.log("populatedData", populatedData); // Log for debugging
+    res.status(200).json(populatedData);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data', error: error.message });
   }
