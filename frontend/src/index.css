@@ -14,3 +14,56 @@
 }
 
 
+
+.services-landing .quill-heading .ql-editor,
+.services-landing .quill-description .ql-editor {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.services-landing .quill-heading .ql-editor h2 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600; /* font-semibold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 0.75rem; /* mb-3 */
+  line-height: 1.2;
+}
+
+.services-landing .quill-heading .ql-editor h2 {
+  font-size: 1.875rem; /* text-3xl for section heading */
+  font-weight: 400;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.services-landing .quill-heading .ql-editor h5 {
+  font-size: 1rem; /* text-3xl for section heading */
+  /* font-weight: 600; */
+  /* color: #1f2937; */
+  padding-top: 5px;
+  margin-bottom: 0.5rem;
+}
+.services-landing .quill-description .ql-editor p {
+  font-size: 1rem; /* text-base */
+  color: #4b5563; /* text-gray-600 */
+  line-height: 1.75; /* leading-relaxed */
+}
+
+.services-landing .ql-container,
+.services-landing .ql-editor {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .services-landing .quill-heading .ql-editor h2,
+  .services-landing .quill-heading .ql-editor h1,
+  .services-landing .quill-heading .ql-editor h5 {
+    font-size: 1.5rem; /* text-2xl on mobile */
+  }
+  .services-landing .quill-description .ql-editor p {
+    font-size: 0.875rem; /* text-sm on mobile */
+  }
+}
