@@ -1,26 +1,37 @@
+import { useState, useEffect } from "react";
+import ReactQuill from "react-quill";
+import { useParams } from "react-router-dom";
+
 const HireDevelopersSection = () => {
-  const benefits = [
-    {
-      title: "React JS Expertise That Delivers Impact:",
-      description:
-        "We create responsive, reactive components and modern interfaces for web and mobile apps using React JS.",
-    },
-    {
-      title: "Proven Solutions Across Domains:",
-      description:
-        "Our developers have successfully built React JS applications across sectors like retail, healthcare, SaaS, and enterprise tech.",
-    },
-    {
-      title: "Agile, Transparent Execution:",
-      description:
-        "We ensure fast, flexible project delivery through agile methods and clear communication at every stage.",
-    },
-    {
-      title: "Built for Speed & Scalability:",
-      description:
-        "Our React JS solutions are optimized for high performance, maintainability, and seamless scalability.",
-    },
-  ]
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { slug } = useParams()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/technologySecData/get/${slug}?type=hire developer`);
+
+        const result = await response.json();
+        console.log("Fetched data for slug:", result);
+        setData(result[0]); // Assuming the API returns an array with one object
+        setLoading(false);
+      } catch (err) {
+        setError("Failed to fetch data");
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [slug]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  // Map API card data to the benefits structure
+  const benefits = data?.card?.map((item) => ({
+    title: item.heading, // Raw HTML string for dangerouslySetInnerHTML
+    description: item.subHeading, // Raw HTML string for dangerouslySetInnerHTML
+  })) || [];
 
   return (
     <div className="bg-white py-16 px-4">
@@ -28,15 +39,15 @@ const HireDevelopersSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Hire Dedicated <span className="text-yellow-500">React JS Developers</span>
-            </h2>
+            <ReactQuill
+              value={data?.heading || "Hire Dedicated <span class='text-yellow-500'>React JS Developers</span>"}
+              readOnly={true}
+              theme="bubble" // or "snow" for toolbar, "bubble" for display only
+              modules={{ toolbar: false }}
+              className="text-4xl md:text-xl  mb-6"
+            />
 
-            <p className="text-gray-600 mb-8 leading-relaxed">
-              At RND Technosoft, we build high-performing, scalable React JS applications tailored to your growth
-              goals. From interactive UIs to enterprise-grade solutions, our React JS services bring speed, flexibility,
-              and reliability to every project.
-            </p>
+
 
             <button className="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-3 rounded-lg font-medium transition-colors">
               Hire React JS Developer
@@ -52,8 +63,14 @@ const HireDevelopersSection = () => {
 
                 {/* Content */}
                 <div>
-                  <h3 className="font-semibold text-gray-800 mb-1">{benefit.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{benefit.description}</p>
+                  <h3
+                    className=" text-gray-800 mb-1"
+                    dangerouslySetInnerHTML={{ __html: benefit.title }}
+                  />
+                  <p
+                    className="text-gray-600 text-sm leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: benefit.description }}
+                  />
                 </div>
               </div>
             ))}
@@ -61,7 +78,7 @@ const HireDevelopersSection = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default HireDevelopersSection
+export default HireDevelopersSection;
