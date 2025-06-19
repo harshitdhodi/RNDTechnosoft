@@ -41,10 +41,10 @@ export default function TechBanner({ serviceGridRef ,pageType }) {
 
   return (
     <div className="relative ">
-      <img src={`/api/logo/download/${photo}`} alt={alt} title={imgTitle} className="w-full h-[55vh] object-cover" />
-      <div className="absolute  inset-0 bg-black bg-opacity-30 flex items-start 2xl:pl-32 justify-center flex-col gap-8 pt-16 md:pt-32">
-        <h1 className="text-white text-4xl md:text-5xl font-serif capitalize">{heading}</h1>
-        <p className="text-xl w-1/2  md:text-2xl text-white text-left">{subHeading}</p>
+      <img src={`/api/logo/download/${photo}`} alt={alt} title={imgTitle} className="w-full h-[55vh] object-fill" />
+      <div className="absolute  inset-0 bg-black bg-opacity-30 flex items-start 2xl:pl-32 justify-center flex-col gap-4 pt-16 md:pt-32">
+        <h1 className="text-white xl:max-w-4xl text-4xl md:text-4xl font-serif capitalize">{heading}</h1>
+        <p className="text-xl w-[60%]  xl:mb-7 md:text-lg text-white text-left">{subHeading}</p>
       </div>
     </div>
   );
