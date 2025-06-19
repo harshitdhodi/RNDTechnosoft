@@ -80,7 +80,6 @@ const WhyChooseSection = () => {
             </div>
         );
     }
-
     return (
         <div className="bg-gray-50 py-16 px-4">
             <div className="max-w-8xl 2xl:px-28 mx-auto services-landing">
