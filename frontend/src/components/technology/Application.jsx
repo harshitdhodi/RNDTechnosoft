@@ -91,10 +91,10 @@ const ServicesLanding = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-12 services-landing">
       {servicesData.map((section, sectionIndex) => (
-        <section key={sectionIndex} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <section key={sectionIndex} className="max-w-8xl xl:mx-24  mx-auto px-4 sm:px-6 lg:px-8 pb-16">
           {/* Section Heading */}
           {section.heading && (
-            <div className="text-center max-w-5xl mx-auto mb-12">
+            <div className="text-center max-w-6xl 2xl:w-[80%] mx-auto mb-12">
               <ReactQuill
                 value={DOMPurify.sanitize(section.heading, {
                   FORBID_ATTR: ['style', 'class'],
@@ -116,7 +116,7 @@ const ServicesLanding = () => {
                 aria-label={`Service: ${service.heading || 'Service Card'}`}
               >
                 {/* Icon/Image */}
-                <div className="mb-4 flex justify-center group-hover:scale-105 transition-transform duration-300">
+                <div className="mb-4 flex justify-start group-hover:scale-105 transition-transform duration-300">
                   {service.photo ? (
                     <img
                       src={`/api/logo/download/${service.photo}`}
@@ -131,7 +131,7 @@ const ServicesLanding = () => {
                     />
                   ) : null}
                   <div
-                    className="flex items-center justify-center w-12 h-12 text-gray-400"
+                    className="flex items-center justify-start w-12 h-12 text-gray-400"
                     style={{ display: service.photo ? 'none' : 'flex' }}
                   >
                     <img src={img1} alt="Fallback icon" className="object-contain w-12 h-12" loading="lazy" />
@@ -142,7 +142,7 @@ const ServicesLanding = () => {
                 <ReactQuill
                   value={normalizeHeading(service.heading)} // Normalize to <h2>
                   {...quillConfig}
-                  className="quill-heading text-xl font-semibold text-gray-800 mb-3 group-hover:text-blue-600 transition-colors duration-300 border-none"
+                  className="quill-heading2 text-lg font-semibold text-gray-800 mb-1 group-hover:text-blue-600 transition-colors duration-300 border-none"
                 />
 
                 {/* Service Description */}
@@ -161,7 +161,7 @@ const ServicesLanding = () => {
             ))}
           </div>
         </section>
-      ))}
+    ))}
     </div>
   );
 };

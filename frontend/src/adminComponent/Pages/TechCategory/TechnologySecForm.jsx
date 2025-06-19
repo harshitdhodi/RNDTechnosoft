@@ -51,6 +51,8 @@ const TechnologySecDataForm = () => {
           setLoading(true);
           const response = await axios.get(`/api/technologySecData/${id}`);
           const data = response.data.data || response.data;
+          console.log('Fetched data for update:', data);
+          
           setFormData({
             technologyId: data.technologyId || '',
             type: data.type || '',
@@ -76,7 +78,9 @@ const TechnologySecDataForm = () => {
   useEffect(() => {
     return () => {
       previews.forEach(preview => {
-        if (preview) URL.revokeObjectURL(preview);
+        if (preview && preview.startsWith('blob:')) {
+          URL.revokeObjectURL(preview);
+        }
       });
     };
   }, [previews]);
@@ -235,6 +239,22 @@ const TechnologySecDataForm = () => {
     }
   };
 
+  // Helper function to get image source
+  const getImageSrc = (card, index) => {
+    // If there's a preview (new file selected), use it
+    if (previews[index] && previews[index].startsWith('blob:')) {
+      return previews[index];
+    }
+    // If there's a card photo from server, use the correct API endpoint
+    if (card.photo) {
+      if (card.photo.startsWith('http')) {
+        return card.photo;
+      }
+      return `/api/logo/download/${card.photo}?t=${Date.now()}`;
+    }
+    return null;
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-6">
@@ -301,7 +321,6 @@ const TechnologySecDataForm = () => {
               ],
             }}
           />
-
         </div>
         <div className="border-t pt-4">
           <h3 className="text-lg font-semibold mb-2">Cards</h3>
@@ -324,24 +343,22 @@ const TechnologySecDataForm = () => {
                   onChange={(e) => handleFileChange(e, index)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
                 />
-                {(previews[index] || card.photo) && (
+                {getImageSrc(card, index) && (
                   <div className="mt-2">
                     <img
-                      src={
-                        previews[index] ||
-                        (card.photo.startsWith('http')
-                          ? card.photo
-                          : `/api/logo/download/${card.photo}?t=${Date.now()}`)
-                      }
+                      src={getImageSrc(card, index)}
                       alt={card.altName || `Card ${index + 1} preview`}
                       className="max-w-xs h-auto rounded-md"
-                      onError={(e) => console.error('Image load error:', e.target.src)}
+                      onError={(e) => {
+                        console.error('Image load error:', e.target.src);
+                        e.target.style.display = 'none';
+                      }}
                     />
                   </div>
                 )}
                 {card.photo && !previews[index] && (
                   <p className="text-sm text-gray-500 mt-1">
-                    Current photo: <a href={card.photo} target="_blank" rel="noopener noreferrer">View</a>
+                    Current photo: {card.photo}
                   </p>
                 )}
               </div>
