@@ -360,7 +360,7 @@ const transformIncomingData = (data) => {
     googleLink: data.googleLink || "",
     behanceLink: data.behanceLink || "",
     aboutLinks: [
-      { name: "About Us", path: "/aboutus" },
+      { name: "About Us", path: "/about-us" },
       { name: "Career", path: "/career" },
       { name: "Collaboration", path: "/collabration" },
       { name: "Contact us", path: "/contact" },

@@ -89,9 +89,9 @@ const ServicesLanding = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 services-landing">
+    <div className="min-h-screen bg-gray-50 pt-12 services-landing">
       {servicesData.map((section, sectionIndex) => (
-        <section key={sectionIndex} className="max-w-8xl xl:mx-24  mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <section key={sectionIndex} className="max-w-8xl xl:mx-24  mx-auto px-4 sm:px-6 lg:px-8 pb-1">
           {/* Section Heading */}
           {section.heading && (
             <div className="text-center max-w-6xl 2xl:w-[80%] mx-auto mb-12">
