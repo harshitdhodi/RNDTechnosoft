@@ -6,14 +6,6 @@ import 'react-quill/dist/quill.snow.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const sections = [
-  { value: "PrivacyPolicy", label: "Privacy Policy" },
-  { value: "TermConditions", label: "Terms & Conditions" },
-  { value: "CookiePolicy", label: "Cookie Policy" },
-  { value: "Contact", label: "Contact" },
-  { value: "Collaborationinquiries", label: "Collaboration inquiries" },
-];
-
 const modules = {
   toolbar: [
     [{ 'font': [] }],
@@ -33,356 +25,326 @@ const modules = {
   }
 };
 
-
-const EditBanner = () => {
-  const { id: bannerId } = useParams();
+const EditPageHeading = () => {
+  const { id: pageHeadingId } = useParams();
   const navigate = useNavigate();
-  const [section, setSection] = useState("");
-  const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
-  const [photo, setPhoto] = useState([]);
-  const [status, setStatus] = useState("active");
-  const [initialPhotos, setInitialPhotos] = useState([]);
-  const [photoAlts, setPhotoAlts] = useState([]);
-  const [imgtitle,setImgtitle]=useState([]);
-  const [initialphotoAlts, setInitialPhotoAlts] = useState([])
-  const [initialImgtitle, setInitialImgtitle] = useState([])
-  const [priority, setPriority] = useState(); // State to store selected priority
-  const [priorityOptions, setPriorityOptions] = useState([]);
+  const [pageType, setPageType] = useState("");
+  const [heading, setHeading] = useState("");
+  const [subheading, setSubheading] = useState("");
+  const [alt, setAlt] = useState("");
+  const [imgTitle, setImgTitle] = useState("");
+  const [photo, setPhoto] = useState(null); // For new photo upload
+  const [currentPhoto, setCurrentPhoto] = useState(""); // For existing photo
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
-  const fetchPriorityOptions = async (section) => {
-    try {
-      const response = await axios.get(`/api/banner/getCountBySection?section=${section}`, { withCredentials: true });
-      const count = response.data;
-      if (count > 0) {
-        const options = Array.from({ length: count}, (_, i) => i + 1);
-        setPriorityOptions(options);
-      } else {
-        setPriorityOptions([1]);
-      }
-    } catch (error) {
-      console.error(error);
-      setPriorityOptions([1]);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setPhoto(selectedFile);
     }
   };
 
-  useEffect(() => {
-    fetchPriorityOptions(section);
-  }, [section]);
+  const handleDeleteCurrentPhoto = async () => {
+    if (!currentPhoto) return;
+    
+    if (!window.confirm('Are you sure you want to delete this photo?')) {
+      return;
+    }
+    
+    try {
+      await axios.delete(`/api/pageHeading/${pageHeadingId}/photo`, { 
+        withCredentials: true 
+      });
+      setCurrentPhoto("");
+      toast.success('Photo deleted successfully');
+    } catch (error) {
+      console.error('Error deleting photo:', error);
+      toast.error('Failed to delete photo');
+    }
+  };
+
+  const handleRemoveNewPhoto = () => {
+    setPhoto(null);
+  };
 
   useEffect(() => {
-    const fetchBannerData = async () => {
+    const fetchPageHeadingData = async () => {
       try {
-        const response = await axios.get(`/api/banner/getBannerById?id=${bannerId}`, { withCredentials: true });
-        const bannerData = response.data.data;
-        setSection(bannerData.section);
-        setTitle(bannerData.title);
-        setDetails(bannerData.details);
-        setInitialPhotos(bannerData.photo);
-        setInitialPhotoAlts(bannerData.alt);
-        setInitialImgtitle(bannerData.imgtitle);
-
-        setStatus(bannerData.status);
-        setPriority(bannerData.priority);
+        setLoading(true);
+        const response = await axios.get(`/api/pageHeading/${pageHeadingId}`, { 
+          withCredentials: true 
+        });
+        
+        console.log('Page heading data:', response.data);
+        
+        const data = response.data.data || response.data;
+        
+        setPageType(data.pageType || "");
+        setHeading(data.heading || "");
+        setSubheading(data.subheading || "");
+        setAlt(data.alt || "");
+        setImgTitle(data.imgTitle || "");
+        setCurrentPhoto(data.photo || "");
+        
       } catch (error) {
-        console.error('Error fetching banner:', error);
-        // Handle error (e.g., redirect to an error page or show a message)
+        console.error('Error fetching page heading:', error);
+        toast.error('Failed to load page heading data');
+      } finally {
+        setLoading(false);
       }
     };
-  
-    fetchBannerData();
-  }, [bannerId]);
+
+    if (pageHeadingId) {
+      fetchPageHeadingData();
+    }
+  }, [pageHeadingId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!pageType || !heading) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
     try {
+      setSubmitting(true);
+      
       const formData = new FormData();
-      formData.append('section', section);
-      formData.append('title', title);
-      formData.append('details', details);
-      formData.append('status', status);
-      formData.append('priority', priority);
-  
-      // Combine initial and new photo alts into a single array
-      const combinedAlts = [...initialphotoAlts, ...photoAlts];
-            // Combine initial and new photo alts into a single array
-            const combinedImgtitle = [...initialImgtitle, ...imgtitle];
-  
-      // Append photos and their respective alts to FormData
-      photo.forEach((p) => {
-        formData.append('photo', p);
-      });
-  
-      combinedAlts.forEach((a) => {
-        formData.append('alt', a);
+      formData.append('pageType', pageType);
+      formData.append('heading', heading);
+      formData.append('subheading', subheading);
+      formData.append('alt', alt);
+      formData.append('imgTitle', imgTitle);
+      
+      if (photo) {
+        formData.append('photo', photo);
+      }
+
+      console.log('Updating page heading with data:', {
+        pageType,
+        heading,
+        subheading,
+        alt,
+        imgTitle,
+        hasNewPhoto: !!photo
       });
 
+      const response = await axios.put(
+        `/api/pageHeading/${pageHeadingId}`, 
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true
+        }
+      );
+
+      console.log('Update response:', response.data);
+      toast.success('Page heading updated successfully!');
       
-      combinedImgtitle.forEach((i) => {
-        formData.append('imgtitle', i);
-      });
-  
-      // Construct the endpoint URL with section as a query parameter
-      const endpoint = `/api/banner/updateBanner?id=${bannerId}`;
-  
-      // Make the PUT request
-      const response = await axios.put(endpoint, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        withCredentials: true
-      });
-  
-      // Navigate to the banner listing page on successful update
-      navigate('/banner');
+      setTimeout(() => {
+        navigate('/banner');
+      }, 1500);
+
     } catch (error) {
-      if (error.response && error.response.status === 400) {
+      console.error('Error updating page heading:', error);
+      
+      if (error.response && error.response.data && error.response.data.message) {
         toast.error(error.response.data.message);
       } else {
-        console.error('Error updating banner:', error);
+        toast.error('Failed to update page heading. Please try again.');
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
-
-  const handleFileChange = (e) => {
-    const newPhotos = Array.from(e.target.files);
-    setPhoto([...photo, ...newPhotos]);
-  };
-
-
-  const handleInitialAltTextChange = (e, index) => {
-    const newPhotoAlts = [...initialphotoAlts];
-    newPhotoAlts[index] = e.target.value;
-
-    setInitialPhotoAlts(newPhotoAlts);
-  };
-
-  const handleNewAltTextChange = (e, index) => {
-    const newPhotoAlts = [...photoAlts];
-    newPhotoAlts[index] = e.target.value;
-
-    setPhotoAlts(newPhotoAlts);
-  };
-  const handleInitialImgtitleChange = (e, index) => {
-    const newImgtitles = [...initialImgtitle];
-    newImgtitles[index] = e.target.value;
-
-    setInitialImgtitle(newImgtitles);
-  };
-
-  const handleNewImgtitleChange = (e, index) => {
-    const newImgtitles = [...imgtitle];
-    newImgtitles[index] = e.target.value;
-
-    setImgtitle(newImgtitles);
-  };
-
-  const handleDeleteInitialPhoto = (e, photoFilename, index) => {
-    e.preventDefault();
-    axios.delete(`/api/banner/${bannerId}/image/${photoFilename}/${index}`, { withCredentials: true })
-      .then(response => {
-        const updatedPhotos = initialPhotos.filter(photo => photo !== photoFilename);
-        setInitialPhotos(updatedPhotos);
-        const updatedPhotoAlts = [...initialphotoAlts];
-        updatedPhotoAlts.splice(index, 1);
-        const updatedImgtitle = [...initialImgtitle];
-        updatedImgtitle.splice(index, 1);
-        setInitialPhotoAlts(updatedPhotoAlts);
-        setInitialImgtitle(updatedImgtitle);
-
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  const handleDeleteNewPhoto = (e, index) => {
-    e.preventDefault();
-    const updatedPhotos = [...photo];
-    updatedPhotos.splice(index, 1);
-    setPhoto(updatedPhotos);
-    const updatedPhotoAlts = [...initialphotoAlts];
-    updatedPhotoAlts.splice(index, 1);
-    setInitialPhotoAlts(updatedPhotoAlts);
-    const updatedImgtitle = [...initialImgtitle];
-    updatedImgtitle.splice(index, 1);
-    setInitialImgtitle(updatedImgtitle);
-  };
+  if (loading) {
+    return (
+      <div className="p-4">
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg">Loading...</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
+    <div className="p-4 max-w-4xl mx-auto">
       <ToastContainer />
-      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Banner</h1>
-      <div className="mb-4">
-        <label htmlFor="section" className="block font-semibold mb-2">
-          Section
-        </label>
-        <select
-          id="section"
-          value={section}
-          onChange={(e) => setSection(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        >
-          {sections.map((sectionOption, index) => (
-            <option key={index} value={sectionOption.value}>{sectionOption.label}</option>
-          ))}
-        </select>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="title" className="block font-semibold mb-2">
-          Title
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        />
-      </div>
-      <div className="mb-8">
-        <label htmlFor="details" className="block font-semibold mb-2">
-          Description
-        </label>
-        <ReactQuill
-          value={details}
-          onChange={setDetails}
-          modules={modules} // Include modules for image handling
-          className="quill"
-        />
-      </div>
-
-      <div className="mb-4">
-        <label className="block font-semibold mb-2">Current Photos</label>
-        <div className="flex flex-warp gap-4">
-          {initialPhotos.map((photo, index) => (
-            <div key={index} className="w-56 relative">
-             <div className="relative">
-             <img
-                src={`/api/image/download/${photo}`}
-                alt={`Photo ${index + 1}`}
-                className="w-56 h-32 object-cover"
-              />
-              <label htmlFor={`alt-${index}`} className="block mt-2">
-                Alternative Text :
-                <input
-                  type="text"
-                  id={`alt-${index}`}
-                  value={initialphotoAlts[index]}
-                  onChange={(e) => handleInitialAltTextChange(e, index)}
-                  className="w-full p-2 border rounded focus:outline-none"
-                />
-              </label>
-              <label htmlFor={`imgtitle-${index}`} className="block mt-2">
-                Title Text :
-                <input
-                  type="text"
-                  id={`imgtitle-${index}`}
-                  value={initialImgtitle[index]}
-                  onChange={(e) => handleInitialImgtitleChange(e, index)}
-                  className="w-full p-2 border rounded focus:outline-none"
-                />
-              </label>
-              <button
-                onClick={(e) => handleDeleteInitialPhoto(e, photo, index)}
-                className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex justify-center items-center"
-              >
-                <span className="text-xs">X</span>
-              </button>
-             </div>
-            </div>
-          ))}
+      
+      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center mb-6">
+        Edit Page Heading
+      </h1>
+      
+      <form onSubmit={handleSubmit} className="space-y-6">
+        
+        {/* Page Type */}
+        <div className="mb-4">
+          <label htmlFor="pageType" className="block font-semibold mb-2 text-gray-700">
+            Page Type <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="pageType"
+            value={pageType}
+            onChange={(e) => setPageType(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter page type"
+            required
+          />
         </div>
-      </div>
-      <div className="mb-4">
-        <label className="block font-semibold mb-2">Add New Photos</label>
-        <input
-          type="file"
-          onChange={handleFileChange}
-          multiple
-          accept="image/*"
-          className="p-2 border rounded"
-        />
-        <div className="flex flex-wrap gap-4 mt-4">
-          {photo.map((file, index) => (
-            <div key={index} className="relative w-56">
+
+        {/* Heading */}
+        <div className="mb-4">
+          <label htmlFor="heading" className="block font-semibold mb-2 text-gray-700">
+            Heading <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="heading"
+            value={heading}
+            onChange={(e) => setHeading(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter the main heading"
+            required
+          />
+        </div>
+
+        {/* Subheading */}
+        <div className="mb-6">
+          <label htmlFor="subheading" className="block font-semibold mb-2 text-gray-700">
+            Subheading
+          </label>
+          <ReactQuill
+            value={subheading}
+            onChange={setSubheading}
+            modules={modules}
+            className="bg-white rounded-lg"
+            placeholder="Enter the subheading or description"
+          />
+        </div>
+
+        {/* Alt Text */}
+        <div className="mb-4">
+          <label htmlFor="alt" className="block font-semibold mb-2 text-gray-700">
+            Alt Text
+          </label>
+          <input
+            type="text"
+            id="alt"
+            value={alt}
+            onChange={(e) => setAlt(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter alt text for accessibility"
+          />
+        </div>
+
+        {/* Image Title */}
+        <div className="mb-6">
+          <label htmlFor="imgTitle" className="block font-semibold mb-2 text-gray-700">
+            Image Title
+          </label>
+          <input
+            type="text"
+            id="imgTitle"
+            value={imgTitle}
+            onChange={(e) => setImgTitle(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter image title"
+          />
+        </div>
+
+        {/* Current Photo */}
+        {currentPhoto && (
+          <div className="mb-6">
+            <label className="block font-semibold mb-2 text-gray-700">
+              Current Photo
+            </label>
+            <div className="relative inline-block">
               <img
-                src={URL.createObjectURL(file)}
-                alt={`New Photo ${index + 1}`}
-                className="w-56 h-32 object-cover"
+                src={`/api/logo/download/${currentPhoto}`}
+                alt={alt || "Current photo"}
+                className="w-64 h-48 object-cover rounded-lg border border-gray-300"
               />
-
-              <label htmlFor={`alt-new-${index}`} className="block mt-2">
-                Alternative Text :
-                <input
-                  type="text"
-                  id={`alt-new-${index}`}
-                  value={photoAlts[index] || ""}
-                  onChange={(e) => handleNewAltTextChange(e, index)}
-                  className="w-full  p-2 border rounded focus:outline-none"
-                />
-              </label>
-              <label htmlFor={`imgtitle-new-${index}`} className="block mt-2">
-                Tilte Text :
-                <input
-                  type="text"
-                  id={`imgtitle-new-${index}`}
-                  value={imgtitle[index] || ""}
-                  onChange={(e) => handleNewImgtitleChange(e, index)}
-                  className="w-full  p-2 border rounded focus:outline-none"
-                />
-              </label>
               <button
-                onClick={(e) => handleDeleteNewPhoto(e, index)}
-                className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex
-                justify-center items-center"
+                type="button"
+                onClick={handleDeleteCurrentPhoto}
+                className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 w-8 h-8 flex justify-center items-center transition-colors"
+                title="Delete current photo"
               >
-                <span className="text-xs">X</span>
+                <span className="text-sm">×</span>
               </button>
             </div>
-          ))}
+          </div>
+        )}
+
+        {/* Upload New Photo */}
+        <div className="mb-6">
+          <label htmlFor="photo" className="block font-semibold mb-2 text-gray-700">
+            {currentPhoto ? 'Replace Photo' : 'Upload Photo'}
+          </label>
+          <input
+            type="file"
+            id="photo"
+            onChange={handleFileChange}
+            accept="image/*"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          
+          {/* Preview new photo */}
+          {photo && (
+            <div className="mt-4">
+              <label className="block font-semibold mb-2 text-gray-700">
+                New Photo Preview
+              </label>
+              <div className="relative inline-block">
+                <img
+                  src={URL.createObjectURL(photo)}
+                  alt="New photo preview"
+                  className="w-64 h-48 object-cover rounded-lg border border-gray-300"
+                />
+                <button
+                  type="button"
+                  onClick={handleRemoveNewPhoto}
+                  className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 w-8 h-8 flex justify-center items-center transition-colors"
+                  title="Remove new photo"
+                >
+                  <span className="text-sm">×</span>
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="priority" className="block font-semibold mb-2">
-          Priority
-        </label>
-        <select
-          id="priority"
-          value={priority}
-          onChange={(e) => setPriority(Number(e.target.value))}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        >
-          {priorityOptions.map(option => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="status" className="block font-semibold mb-2">
-          Status
-        </label>
-        <select
-          id="status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
-      </div>
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-        Update Banner
-      </button>
-    </form>
+
+        {/* Submit Button */}
+        <div className="flex gap-4">
+          <button
+            type="submit"
+            disabled={submitting}
+            className={`py-3 px-6 rounded-lg font-semibold text-white transition-colors ${
+              submitting
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-blue-500 hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+            }`}
+          >
+            {submitting ? 'Updating...' : 'Update Page Heading'}
+          </button>
+          
+          <button
+            type="button"
+            onClick={() => navigate('/banner')}
+            className="py-3 px-6 rounded-lg font-semibold text-gray-700 bg-gray-200 hover:bg-gray-300 transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
-export default EditBanner;
+export default EditPageHeading;
