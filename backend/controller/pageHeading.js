@@ -155,6 +155,59 @@ const addPageHeading = async (req, res) => {
   }
 };
 
+const getPageHeadingById = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const pageHeading = await PageHeadings.findById(id);
 
-module.exports = { getpageHeading,addPageHeading,deletePageHeading, updatePageHeading ,getAllPageHeadings };
+    if (!pageHeading) {
+      return res.status(404).json({ message: "Page heading not found" });
+    }
+
+    res.status(200).json({
+      message: "Page heading fetched successfully",
+      data: pageHeading,
+    });
+  } catch (err) {
+    console.error("Error retrieving page heading by ID:", err);
+    res.status(500).json({ message: "Error retrieving page heading" });
+  }
+};
+
+const updatePageHeadingById = async (req, res) => {
+  const { id } = req.params;
+  const { heading, subheading, alt, imgTitle } = req.body;
+  let photo;
+
+  // Check if a new image was uploaded
+  if (req.file) {
+    photo = req.file.filename; // Multer saves uploaded file to req.file
+  }
+
+  try {
+    const pageHeading = await PageHeadings.findById(id);
+
+    if (!pageHeading) {
+      return res.status(404).json({ message: "Page heading not found" });
+    }
+
+    // Update fields only if they are provided
+    if (heading) pageHeading.heading = heading;
+    if (subheading) pageHeading.subheading = subheading;
+    if (alt) pageHeading.alt = alt;
+    if (imgTitle) pageHeading.imgTitle = imgTitle;
+    if (photo) pageHeading.photo = photo;
+
+    await pageHeading.save();
+
+    res.status(200).json({
+      message: `Page heading updated successfully for ID: ${id}`,
+      data: pageHeading,
+    });
+  } catch (err) {
+    console.error("Error updating page heading by ID:", err);
+    res.status(500).json({ message: "Error updating page heading" });
+  }
+};
+module.exports = { getpageHeading,addPageHeading,updatePageHeadingById,deletePageHeading, updatePageHeading ,getPageHeadingById ,getAllPageHeadings };
