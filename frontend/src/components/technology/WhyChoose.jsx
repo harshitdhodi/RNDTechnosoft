@@ -81,7 +81,7 @@ const WhyChooseSection = () => {
         );
     }
     return (
-        <div className="bg-gray-50 py-16 px-4">
+        <div className="bg-gray-50  px-4">
             <div className="max-w-8xl 2xl:px-28 mx-auto services-landing">
                 {/* Header Section */}
                 <div className="max-w-6xl 2xl:w-[80%] mx-auto">
@@ -155,7 +155,7 @@ const WhyChooseSection = () => {
 
                 {/* CTA Button */}
                 <div className="text-center">
-                    <button className="bg-[#f3ca0d] hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium text-lg transition-colors">
+                    <button className="bg-[#f3ca0d] text-white px-4 py-2 rounded-lg font-medium text-lg transition-colors">
                         Hire {data.technologyId.imgTitle} Developer
                     </button>
                 </div>

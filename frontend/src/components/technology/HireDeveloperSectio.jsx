@@ -104,7 +104,7 @@ const HireDevelopersSection = () => {
               {...quillConfig}
               className="quill-heading text-4xl md:text-xl mb-6 border-none"
             />
-            <button className="bg-[#f3ca0d] hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors">
+            <button className="bg-[#f3ca0d]  text-white px-8 py-3 rounded-lg font-medium transition-colors">
               Hire {data?.technologyId?.imgTitle || 'React JS'} Developer
             </button>
           </div>

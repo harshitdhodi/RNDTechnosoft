@@ -63,10 +63,16 @@
 }
 
 .services-landing3  .ql-editor h3 {
-  font-size: 20px; /* text-base */
+  font-size: 16px; /* text-base */
   color: #111111; /* text-gray-600 */
   line-height: 1.2; /* leading-relaxed */
-}  
+}
+
+.services-landing3  .ql-editor h2 {
+  font-size:35px; /* text-base */
+  color: #111111; /* text-gray-600 */
+  line-height: 1.2; /* leading-relaxed */
+}
 
 .services-landing3  .ql-editor h6 {
   font-size: 18px; /* text-base */
