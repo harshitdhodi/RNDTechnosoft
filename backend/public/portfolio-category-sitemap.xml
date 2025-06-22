@@ -19,7 +19,7 @@
     <priority>0.95</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/graphic-designing-potfolios</loc>
+    <loc>https://www.rndtechnosoft.com/custom-software</loc>
     <lastmod>2024-10-09T06:51:31.136Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.98</priority>
@@ -47,5 +47,11 @@
     <lastmod>2024-11-09T03:31:57.951Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/mobile-app</loc>
+    <lastmod>2025-06-12T07:29:36.543Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.02</priority>
   </url>
 </urlset>
