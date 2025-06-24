@@ -106,16 +106,16 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
 
       {item.subItems && item.subItems.length > 0 && (
         <div
-          className={`absolute border  border-gray-200
+          className={`absolute border   border-gray-200
             ${item.id === "technology" ? "-left-52" : ""}
             ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
-            ${isHovered ? "block bg-white" : "hidden bg-white"}
+            ${isHovered ? "block bg-white " : "hidden bg-white"}
             shadow-lg transition-all duration-300 rounded-md ease-in-out
             ${depth === 0 ? "" : "-mt-1 ml-1"}
           `}
         >
           {item.id === "technology" ? (
-            <div className="grid grid-cols-2 gap-3 p-3 w-[700px]">
+            <div className="grid grid-cols-2 gap-3  p-3 w-[700px]">
               {item.subItems.map((category) => (
                 <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg pl-5 py-3 border border-gray-200">
                   <div className="w-12 h-12 flex items-center justify-center">
