@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.rndtechnosoft.com/graphic-designing-packages</loc>
-    <lastmod>2024-10-23T02:48:35.780Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.rndtechnosoft.com/graphic-designing-</loc>
-    <lastmod>2024-10-23T02:48:35.780Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://www.rndtechnosoft.com/brand-development-packages</loc>
     <lastmod>2024-10-23T02:55:09.092Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -21,6 +9,30 @@
   <url>
     <loc>https://www.rndtechnosoft.com/brand-development</loc>
     <lastmod>2024-10-23T02:55:09.092Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/ppc-packages</loc>
+    <lastmod>2024-10-23T04:48:22.719Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/ppc-packages</loc>
+    <lastmod>2024-10-23T04:48:22.719Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/seo-packages</loc>
+    <lastmod>2024-10-23T03:55:01.705Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/seo-packages</loc>
+    <lastmod>2024-10-23T03:55:01.705Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -37,14 +49,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/seo-packages</loc>
-    <lastmod>2024-10-23T03:55:01.705Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/mobile-app-development-packages</loc>
+    <lastmod>2024-11-09T05:12:39.248Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/seo-packages</loc>
-    <lastmod>2024-10-23T03:55:01.705Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/mobile-app-development</loc>
+    <lastmod>2024-11-09T05:12:39.248Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -57,18 +69,6 @@
   <url>
     <loc>https://www.rndtechnosoft.com/smm-packages</loc>
     <lastmod>2024-10-23T04:01:23.234Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://www.rndtechnosoft.com/ppc-packages</loc>
-    <lastmod>2024-10-23T04:48:22.719Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.rndtechnosoft.com/ppc-packages</loc>
-    <lastmod>2024-10-23T04:48:22.719Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -85,14 +85,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/uiux-packages</loc>
-    <lastmod>2024-10-23T04:55:33.505Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/graphic-designing-packages</loc>
+    <lastmod>2024-10-23T02:48:35.780Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/ui/ux</loc>
-    <lastmod>2024-10-23T04:55:33.505Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/graphic-designing-</loc>
+    <lastmod>2024-10-23T02:48:35.780Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -109,14 +109,14 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/mobile-app-development-packages</loc>
-    <lastmod>2024-11-09T05:12:39.248Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/uiux-packages</loc>
+    <lastmod>2024-10-23T04:55:33.505Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/mobile-app-development</loc>
-    <lastmod>2024-11-09T05:12:39.248Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/ui/ux</loc>
+    <lastmod>2024-10-23T04:55:33.505Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
