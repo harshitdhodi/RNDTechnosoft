@@ -167,7 +167,7 @@ export default function HowRndHelp() {
             {services.map((service, index) => (
             <div
               key={service._id}
-              className="fade-in border border-lg border-black rounded-xl p-6  flex flex-col md:flex-row items-center space-x-0 md:space-x-6 bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105 relative
+              className="fade-in border border-lg rounded-xl p-6  flex flex-col md:flex-row items-center space-x-0 md:space-x-6 bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105 relative
                          max-w-full sm:max-w-xl mb-10 md:max-w-2xl
                          lg:max-w-4xl 
                          xl:max-w-5xl xl:ml-20 
