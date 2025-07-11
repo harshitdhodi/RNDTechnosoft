@@ -68,17 +68,22 @@ export default function Website() {
       {/* <LatestProduct /> */}
       <CraftRight />
       <CraftLeft />
-      <ServiceSlider />
-      <Tagline />
-      <HexGridDemo expertData={data?.WeAreExpert} />
+      {/* <ServiceSlider /> */}
+      <div className="mt-10">
+        <Tagline />
+      </div>
+      {/* <HexGridDemo expertData={data?.WeAreExpert} /> */}
       {/* <Logotypes /> */}
       <Companies />
-      <WhyPartnerWithUs />
       <De />
-      <Review />
+      <WhyPartnerWithUs />
+     
       {/* <PricingSection /> */}
       {/* <DesignProcess /> */}
-      <FAQ />
+    <div className="mt-12">
+        <FAQ />
+    </div>
+       <Review />
       <LatestBlog />
     </div>
   );

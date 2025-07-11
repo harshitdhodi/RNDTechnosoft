@@ -18,6 +18,7 @@ function ServiceSlider() {
       try {
         const response = await fetch(`/api/services/getServicesBySlug?slug=${slug}`);
         const data = await response.json();
+        console.log('Fetched services:', data);
         if (Array.isArray(data)) {
           setServices(data);
         } else {

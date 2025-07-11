@@ -92,7 +92,7 @@ const getFormattedCategoriesFromAllSchemas = async () => {
       //   id: "3",
       //   name: "Hire Talent",
       //   slug: "hire-talent",
-      //   component: "hiretalent",
+    //   component: "hiretalent",
        
       // },                            
       {
