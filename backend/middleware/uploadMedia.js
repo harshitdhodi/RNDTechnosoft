@@ -9,7 +9,7 @@ const tempDir = path.join(__dirname, '../temp');
 
 [videoDir, photoDir, tempDir].forEach(dir => {
     if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+        fs.mkdirSync(dir, { recursive: true }); 
     }
 });
 
@@ -70,23 +70,64 @@ const upload = multer({
     }
 });
 
-const retryUnlink = (filePath, retries = 5, delay = 100) => {
+// Improved retry unlink function with better error handling
+const retryUnlink = (filePath, retries = 10, delay = 200) => {
     return new Promise((resolve, reject) => {
-        const attempt = () => {
+        const attempt = (remainingRetries) => {
             fs.unlink(filePath, (err) => {
-                if (err && err.code === 'EBUSY' && retries > 0) {
-                    setTimeout(() => {
-                        attempt(--retries);
-                    }, delay);
-                } else if (err) {
-                    reject(err);
+                if (err) {
+                    // Handle different error codes that might benefit from retry
+                    if ((err.code === 'EBUSY' || err.code === 'EPERM' || err.code === 'ENOTEMPTY') && remainingRetries > 0) {
+                        console.log(`Retrying file deletion for ${filePath}, attempts left: ${remainingRetries}`);
+                        setTimeout(() => {
+                            attempt(remainingRetries - 1);
+                        }, delay * (11 - remainingRetries)); // Exponential backoff
+                    } else if (err.code === 'ENOENT') {
+                        // File doesn't exist, consider it successful
+                        console.log(`File ${filePath} doesn't exist, considering deletion successful`);
+                        resolve();
+                    } else {
+                        console.error(`Failed to delete file ${filePath} after retries:`, err);
+                        // Don't reject, just log the error and continue
+                        resolve();
+                    }
                 } else {
                     resolve();
                 }
             });
         };
-        attempt();
+        attempt(retries);
     });
+};
+
+// Alternative cleanup function that's more forgiving
+const safeCleanup = async (filePath) => {
+    try {
+        // Add a small delay before attempting deletion
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Check if file exists before attempting deletion
+        if (fs.existsSync(filePath)) {
+            await retryUnlink(filePath);
+        }
+    } catch (error) {
+        console.warn(`Warning: Could not clean up temporary file ${filePath}:`, error.message);
+        // Don't throw error, just log warning
+    }
+};
+
+// Schedule cleanup for later if immediate cleanup fails
+const scheduleCleanup = (filePath) => {
+    setTimeout(async () => {
+        try {
+            if (fs.existsSync(filePath)) {
+                await fs.promises.unlink(filePath);
+                console.log(`Delayed cleanup successful for ${filePath}`);
+            }
+        } catch (error) {
+            console.warn(`Delayed cleanup failed for ${filePath}:`, error.message);
+        }
+    }, 5000); // Try again after 5 seconds
 };
 
 const uploadMedia = (req, res, next) => {
@@ -103,6 +144,7 @@ const uploadMedia = (req, res, next) => {
             const processPromises = photos.map(async (photo) => {
                 const tempPath = path.join(tempDir, photo.filename);
                 const finalPath = path.join(photoDir, photo.filename);
+                let sharpInstance = null;
 
                 try {
                     if (!fs.existsSync(tempPath)) {
@@ -115,29 +157,60 @@ const uploadMedia = (req, res, next) => {
                     if (isWebM) {
                         // For WebM files, just move them to the final location
                         fs.copyFileSync(tempPath, finalPath);
-                        await retryUnlink(tempPath);
+                        await safeCleanup(tempPath);
                     } else {
                         // For image files, process with Sharp
-                        const processedImage = sharp(tempPath)
+                        sharpInstance = sharp(tempPath);
+                        
+                        const processedImage = sharpInstance
                             .resize({ width: 1024, withoutEnlargement: true })
                             .webp({ quality: 100 });
 
                         const buffer = await processedImage.toBuffer();
+                        
+                        // Create a new Sharp instance for the final output
                         if (buffer.length > 100 * 1024) {
                             await sharp(buffer)
                                 .webp({ quality: 80 })
                                 .toFile(finalPath);
                         } else {
-                            await processedImage.toFile(finalPath);
+                            await sharp(buffer)
+                                .toFile(finalPath);
                         }
 
-                        await retryUnlink(tempPath);
+                        // Ensure Sharp instance is properly cleaned up
+                        if (sharpInstance) {
+                            sharpInstance.destroy();
+                        }
+
+                        // Force garbage collection if available
+                        if (global.gc) {
+                            global.gc();
+                        }
+
+                        // Clean up temp file with improved error handling
+                        await safeCleanup(tempPath);
                     }
 
                 } catch (err) {
-                    if (fs.existsSync(tempPath)) {
-                        await retryUnlink(tempPath);
+                    // Ensure Sharp instance is cleaned up on error
+                    if (sharpInstance) {
+                        try {
+                            sharpInstance.destroy();
+                        } catch (destroyErr) {
+                            console.warn('Error destroying Sharp instance:', destroyErr);
+                        }
                     }
+
+                    // Attempt cleanup and schedule retry if needed
+                    if (fs.existsSync(tempPath)) {
+                        await safeCleanup(tempPath);
+                        // If file still exists, schedule for later cleanup
+                        if (fs.existsSync(tempPath)) {
+                            scheduleCleanup(tempPath);
+                        }
+                    }
+                    
                     console.error(`Error processing photo ${photo.filename}:`, err);
                     throw new Error(`Error processing photo ${photo.filename}: ${err.message}`);
                 }
@@ -145,9 +218,20 @@ const uploadMedia = (req, res, next) => {
 
             try {
                 await Promise.all(processPromises);
+                
+                // Additional cleanup attempt after all processing is complete
+                setTimeout(async () => {
+                    const tempFiles = photos.map(photo => path.join(tempDir, photo.filename));
+                    for (const tempFile of tempFiles) {
+                        if (fs.existsSync(tempFile)) {
+                            await safeCleanup(tempFile);
+                        }
+                    }
+                }, 1000);
+                
                 next();
             } catch (err) {
-                console.error('Error processing images:', err);
+                console.log('Error processing images:', err);
                 res.status(500).send({ error: `Error processing images: ${err.message}` });
             }
         } else {
