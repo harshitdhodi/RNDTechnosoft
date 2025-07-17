@@ -35,7 +35,7 @@ export default function Website() {
 
   // Extract slug from the URL
   const slug = location.pathname.split("/").filter(Boolean).pop();
-  const comingSoonSlugs = ["ai-ml", "product-engineering"];
+  const comingSoonSlugs = ["product-engineering"];
 
   // Check if the current slug is in the comingSoonSlugs array
   if (comingSoonSlugs.includes(slug)) {
