@@ -129,7 +129,9 @@ import TechnologyDataTable from "./adminComponent/Pages/TechCategory/TechnologyS
 import MainIndustry from "./components/Industry/MainIndustry";
 import MainHireTelent from "./components/HireTelent/MainHireTelent";
 import CreateCaseStudy from "./adminComponent/caseStudy/CaseStudyForm";
-import CaseStudyList from "./adminComponent/caseStudy/CaseStudyList";
+import IndustrySecDataTable from "./adminComponent/caseStudy/CaseStudyList";
+import CreateHireTelent from "./adminComponent/Hire_Talent/AddHireTalent";
+import HireTalentTable from "./adminComponent/Hire_Talent/HireTalentTable";
 const CreatePackage = lazy(() => import('./adminComponent/Pages/CreatePackage'));
 const EditPackageForm = lazy(() => import('./adminComponent/Pages/EditPackage'));
 
@@ -292,8 +294,11 @@ function App() {
                 <Route path="/about-us" element={<AboutUs />} />
                 <Route path="/collabration" element={<Collabration />} />
                 <Route path="/contact" element={<GetInTouch />} />
+                <Route path="/technology/:slug" element={<TechnologyPage />} />
+
                 <Route path="/technologies" element={<TechnologyPage />} />
                 <Route path="/industry" element={<MainIndustry />} />
+                <Route path="/industries/:slug" element={<MainIndustry />} />
                 <Route path="/helpCenter" element={<Faq />} />
                 <Route path="/cookies-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms-conditions" element={<TermsCondition />} />
@@ -303,7 +308,7 @@ function App() {
                 <Route path="/job-application-form" element={<JobApplicationForm />} />
                 <Route path="/thankyou" element={<Thankyou />} />
                 <Route path="/portfolios" element={<Portfolios />} />
-                <Route path="/hire-telent" element={<MainHireTelent />} />
+                <Route path="/hire-talent" element={<MainHireTelent />} />
               </Route>
               {!isLoggedIn ? (
                 <>
@@ -347,10 +352,15 @@ function App() {
 
                   {/* Case Study  */}
                   <Route path="/add-case-study" element={<CreateCaseStudy />} />
-                  <Route path="/case-study" element={<CaseStudyList />} />
-                  <Route path="/edit-case-study/:id" element={<CreateCaseStudy />} />
+                  <Route path="/industry-data" element={<IndustrySecDataTable />} />
+                  <Route path="/edit-industry-data/:id" element={<CreateCaseStudy />} />
 
+                    {/* Hire talent */}
+                  <Route path="/add-hire-talent" element={<CreateHireTelent />} />
+                  <Route path="/hire-talent-table" element={<HireTalentTable />} />
+                  <Route path="/edit-hire-table/:id" element={<CreateHireTelent />} />
 
+                 
                   <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
                   <Route path="/ServiceCategory/editServiceCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditServiceCategory />} />
                   <Route path="/PackageCategory" element={<PackageCategory />} />

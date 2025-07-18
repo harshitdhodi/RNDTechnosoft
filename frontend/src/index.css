@@ -14,3 +14,168 @@
 }
 
 
+
+.services-landing .quill-heading .ql-editor,
+.services-landing .quill-description .ql-editor {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  
+}
+
+.services-landing .quill-heading .ql-editor h2 {
+  font-size: 2.25rem; /* text-xl */
+  font-weight: 400; /* font-semibold */
+  color: #1f2937; /* text-gray-800 */
+  margin-bottom: 0.75rem; /* mb-3 */
+  line-height: 1.2;
+  text-align: center; /* text-center */
+}
+
+
+
+.services-landing .quill-heading2 .ql-editor h2 {
+  font-size: 20px; /* text-3xl for section heading */
+  font-weight: 600;
+  color: #1f2937;
+  /* margin-bottom: 0.5rem; */
+}
+
+.services-landing .quill-heading .ql-editor h5  {
+  font-size: 1rem; /* text-3xl for section heading */
+  /* font-weight: 600; */
+  /* color: #1f2937; */
+  /* line-height: 0.8;
+  padding-top: 5px;
+  margin-bottom: 0.5rem; */
+   text-align: center; 
+}
+.services-landing  .ql-editor h6 {
+  font-size: 16px; /* text-base */
+  color: #111111; /* text-gray-600 */
+  line-height: 1.3; /* leading-relaxed */
+  padding-top: 12px;
+  text-align: center; 
+}
+.services-landing .quill-description .ql-editor p {
+  font-size: 14px; /* text-base */
+  color: #4b5563; /* text-gray-600 */
+  line-height: 1.75; /* leading-relaxed */
+}
+
+.services-landing3 .quill-description .ql-editor p {
+  font-size: 16px; /* text-base */
+  color: #4b5563; /* text-gray-600 */
+  line-height: 1.75; /* leading-relaxed */
+}
+
+.services-landing3  .ql-editor h3 {
+  font-size: 16px; /* text-base */
+  color: #111111; /* text-gray-600 */
+  line-height: 1.2; /* leading-relaxed */
+}
+
+.services-landing3  .ql-editor h2 {
+  font-size:35px; /* text-base */
+  color: #111111; /* text-gray-600 */
+  line-height: 1.2; /* leading-relaxed */
+}
+
+.services-landing3  .ql-editor h6 {
+  font-size: 18px; /* text-base */
+  color: #111111; /* text-gray-600 */
+  line-height: 1.3; /* leading-relaxed */
+  padding-top: 12px;
+}
+
+.services-landing .ql-container,
+.services-landing .ql-editor {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Responsive adjustments */
+/* Base Styles already defined - keeping as-is */
+
+/* Responsive adjustments for all devices */
+
+/* Small devices (min-width: 640px) */
+@media (min-width: 640px) {
+  .services-landing .quill-heading .ql-editor h2 {
+    font-size: 1.875rem; /* 30px */
+  }
+  .services-landing .quill-heading .ql-editor h5 {
+    font-size: 1.125rem;
+  }
+  .services-landing .ql-editor h6,
+  .services-landing3 .ql-editor h6 {
+    font-size: 1rem;
+  }
+  .services-landing .quill-description .ql-editor p,
+  .services-landing3 .quill-description .ql-editor p {
+    font-size: 0.95rem;
+  }
+}
+
+/* Medium devices (min-width: 768px) */
+@media (min-width: 768px) {
+  .services-landing .quill-heading .ql-editor h2 {
+    font-size: 2rem;
+  }
+  .services-landing .quill-heading .ql-editor h5 {
+    font-size: 16px;
+  }
+  .services-landing .ql-editor h6,
+  .services-landing3 .ql-editor h6 {
+    font-size: 1.125rem;
+  }
+  .services-landing .quill-description .ql-editor p,
+  .services-landing3 .quill-description .ql-editor p {
+    font-size: 1rem;
+  }
+}
+
+/* Large devices (min-width: 1024px) */
+@media (min-width: 1024px) {
+  .services-landing3 .ql-editor h2 {
+    font-size: 2.5rem;
+  }
+  .services-landing3 .ql-editor h3 {
+    font-size: 1.25rem;
+  }
+  .services-landing .quill-description .ql-editor p,
+  .services-landing3 .quill-description .ql-editor p {
+    font-size: 1.125rem;
+  }
+}
+
+/* Extra Large devices (min-width: 1280px) */
+@media (min-width: 1280px) {
+  .services-landing .quill-heading .ql-editor h2 {
+    font-size: 2.5rem;
+  }
+  .services-landing3 .ql-editor h6 {
+    font-size: 1.25rem;
+  }
+  .services-landing .quill-description .ql-editor p {
+    font-size: 1.25rem;
+  }
+}
+
+/* 2XL devices (min-width: 1536px) */
+@media (min-width: 1536px) {
+  .services-landing .quill-heading .ql-editor h2,
+  .services-landing3 .ql-editor h2 {
+    font-size: 2.75rem;
+  }
+  .services-landing .quill-heading .ql-editor h5 {
+    font-size: 1.5rem;
+  }
+  .services-landing3 .ql-editor h3 {
+    font-size: 1.5rem;
+  }
+  .services-landing .quill-description .ql-editor p,
+  .services-landing3 .quill-description .ql-editor p {
+    font-size: 1.375rem;
+  }
+}

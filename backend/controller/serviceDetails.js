@@ -630,8 +630,7 @@ const updateSubServiceDetail = async (req, res) => {
     console.error("Error updating service detail:", error);
     res.status(500).json({ message: 'Server error', error });
   }
-};
-
+}; 
 
 
 // Update service detail by ID and ensure sub-subcategoryId is considered

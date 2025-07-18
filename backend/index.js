@@ -7,7 +7,7 @@ const { generateAllSitemaps } = require('./routes/mySitemap');
 const { exportAndBackupAllCollectionsmonthly } = require('./controller/Backup');
 const fs = require('fs').promises;
 const compression = require('compression');
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser'); 
 require('dotenv').config();
 const generateMetaTags = require('./middleware/metaTagInfo');
 const app = express();
@@ -422,7 +422,7 @@ app.use('/api/herosection', require('./routes/heroSection'));
 app.use('/api/serviceDetails', require('./routes/serviceDetails'));
 app.use('/api/homehero', require('./routes/HomeHero'));
 app.use('/api/homepage', require('./routes/homepage'));
-app.use('/api/video', require('./routes/video'));
+app.use('/api/video', require('./routes/video')); 
 app.use('/api/serviceImages', require('./routes/serviceImage'));
 app.use('/api/industryImages', require('./routes/industryimage'));
 app.use('/api/packages', require('./routes/plan'));
@@ -456,6 +456,7 @@ app.use('/api/techCategory', require('./routes/techCategory'));
 app.use('/api/technology', require('./routes/technology'));
 app.use('/api/technologySecData', require('./routes/technologySecData'));
 app.use('/api/caseStudy', require('./routes/caseStudy'));
+app.use('/api/hire-talent', require('./routes/hire_telent'));
 
 // Swagger Setup 
 const swaggerUi = require('swagger-ui-express');
@@ -475,7 +476,7 @@ app.use(express.static(path.join(__dirname, 'dist'), {
         }
     },
 }));
-
+ 
 // Catch-All Route for SPA (Last)
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
@@ -511,5 +512,5 @@ async function startServer() {
         process.exit(1);
     }
 }
-
+ 
 startServer(); 

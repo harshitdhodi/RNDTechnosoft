@@ -131,20 +131,29 @@ const navigate = useNavigate();
     fetchFooterData();
   }, []);
 
-  useEffect(() => {
-    const fetchCategory = async () => {
-      try {
-        const response = await axios.get(`/api/services/getCategory`, {
-          withCredentials: true,
-        });
-        setServices(response.data.map(item => ({ name: item.category, slug: item.slug })));
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+useEffect(() => {
+  const fetchCategory = async () => {
+    try {
+      const response = await axios.get(`/api/services/getCategory`, {
+        withCredentials: true,
+      });
+console.log(response.data)
+      const activeCategories = response.data
+        .filter(item => item.status === 'active') // or item.isActive === true
+        .map(item => ({
+          name: item.category,
+          slug: item.slug,
+        }));
 
-    fetchCategory();
-  }, []);
+      setServices(activeCategories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  fetchCategory();
+}, []);
+
 
   useEffect(() => {
     const fetchLogos = async () => {
@@ -351,7 +360,7 @@ const transformIncomingData = (data) => {
     googleLink: data.googleLink || "",
     behanceLink: data.behanceLink || "",
     aboutLinks: [
-      { name: "About Us", path: "/aboutus" },
+      { name: "About Us", path: "/about-us" },
       { name: "Career", path: "/career" },
       { name: "Collaboration", path: "/collabration" },
       { name: "Contact us", path: "/contact" },

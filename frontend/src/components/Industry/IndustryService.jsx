@@ -1,85 +1,109 @@
-import React from "react";
-
-const services = [
-  {
-    title: "Mobile App Development",
-    description:
-      "With expertise in cross-platform FinTech mobile applications, we create innovative solutions—from digital wallets to neo-banks—designed for both Android and iOS, ensuring seamless, intuitive user experiences.",
-    image: "/images/mobile-app.png",
-    dark: false,
-  },
-  {
-    title: "Cloud-Based Application Development",
-    description:
-      "We specialize in building secure, scalable cloud-based FinTech applications that enable financial institutions to stay connected with clients, stakeholders, and teams, offering access from any device, at any time.",
-    image: "/images/cloud-app.png",
-    dark: true,
-  },
-  {
-    title: "Software Modernization & Migration",
-    description:
-      "We transform outdated financial systems by re-engineering them with cloud-native architectures, microservices, and APIs, enhancing functionality, scalability, and integration.",
-    image: "/images/modernization.png",
-    dark: false,
-  },
-  {
-    title: "Data Analytics Solutions",
-    description:
-      "Our team develops advanced analytics solutions using technologies like Power BI, Apache Superset, R, SAS, and TensorFlow, delivering actionable insights to empower smarter financial decision-making.",
-    image: "/images/analytics.png",
-    dark: true,
-  },
-  {
-    title: "Software Integration",
-    description:
-      "We seamlessly integrate custom software solutions with your existing systems, both internal and external, through APIs and EDIs, streamlining cloud-based operations and ensuring smooth data flow across platforms.",
-    image: "/images/integration.png",
-    dark: false,
-  },
-  {
-    title: "Digital Process Automation",
-    description:
-      "As experts in digital process automation, we design and implement intelligent bots using platforms like Microsoft Power Platform, UiPath, and Robocorp to optimize and automate business processes, driving operational efficiency.",
-    image: "/images/automation.png",
-    dark: true,
-  },
-];
+import React, { useState, useEffect } from "react";
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import DOMPurify from 'dompurify';
 
 export default function FinTechServices() {
-  return (
-    <div className="max-w-8xl mx-auto xl:mx-32 py-12">
-      <div className="text-center  mb-12">
-        <h1 className="text-3xl max-w-xl mx-auto font-bold mb-5">
-          End-to-End Full-Stack FinTech Software Development Services
-        </h1>
-        <p className="max-w-3xl mx-auto text-sm text-gray-600"    style={{ lineHeight: 1.7 }}>
-          Whether you're seeking to automate traditional banking systems, modernize legacy software, integrate fraud
-          detection systems, or develop cutting-edge automated trading platforms, we have the expertise to meet all your
-          FinTech software and technology requirements.
-        </p>
-      </div>
+  const { slug } = useParams();
+  const [servicesData, setServicesData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-      <div className="grid grid-cols-1 md:grid-cols-3">
-        {services.map((service, index) => (
-        <div
-  key={index}
-  className={`${service.dark ? "bg-gray-900 text-white" : "bg-white"}`}
-  style={{
-    border: "1px solid",
-    borderColor: service.dark ? "#374151" : "#e5e7eb", // gray-700 or gray-200
-    }}
->
-            <div className="p-6 pb-20">
-              
-              <h2 className="text-xl w-[55%] font-semibold mb-2">{service.title}</h2>
-              <p className={`text-md  ${service.dark ? "opacity-80" : "text-gray-600"}`}
-                style={{ lineHeight: 1.7 }}>
-                {service.description}
-              </p>
-            </div>
-          </div>
-        ))}
+  useEffect(() => {
+    const fetchServicesData = async () => {
+      if (!slug) return;
+
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const response = await axios.get(`/api/caseStudy/category/${slug}`);
+        console.log('Services data:', response.data);
+
+        // Handle different response structures
+        const data = response.data.data || response.data;
+
+        // Filter for software-service type data
+        let softwareServiceData = null;
+        if (Array.isArray(data)) {
+          softwareServiceData = data.find(item => item.type === 'software-service');
+        } else {
+          softwareServiceData = data.type === 'software-service' ? data : null;
+        }
+
+        setServicesData(softwareServiceData);
+      } catch (err) {
+        console.error('Error fetching services data:', err);
+        setError('Failed to load services information');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchServicesData();
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-lg text-gray-600">Loading...</div>
       </div>
+    );
+  }
+
+  if (error || !servicesData) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-lg text-red-600">
+          {error || 'No services data available'}
+        </div>
+      </div>
+    );
+  }
+
+  // Extract services from the card array
+  const services = servicesData.card || [];
+  const heading = servicesData.heading || '';
+  const subHeading = servicesData.subHeading || '';
+
+  return (
+    <div className="max-w-8xl mx-auto px-4 xl:mx-20 xl:px-12 py-12">
+      {heading && (
+        <h1 className="text-3xl font-bold text-center mb-4">{heading}</h1>
+      )}
+      {subHeading && (
+        <h2 className="text-xl text-gray-600 text-center mb-8">{subHeading}</h2>
+      )}
+
+      {services.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 shadow-xl  lg:grid-cols-3 ">
+          {services.map((service, index) => (
+            <div
+              key={index}
+              className={`px-6 py-10 border ${
+                index % 2 === 1
+                  ? 'bg-black text-white'
+                  : 'bg-white text-gray-900'
+              }`}
+            >
+              <h3 className="text-xl font-semibold mb-2">
+                {service.title || service.heading || service.name}
+              </h3>
+              {service.details && (
+                <p
+                  className={`text-md ${
+                    index % 2 === 1 ? 'opacity-90' : 'text-gray-600'
+                  }`}
+                  style={{ lineHeight: 1.7 }}
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(service.details),
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

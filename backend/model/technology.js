@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const TechCategory = require('./TechCategory');
 
 const TechnologySchema = new mongoose.Schema({
   photo: {
@@ -11,7 +12,17 @@ const TechnologySchema = new mongoose.Schema({
   imgTitle: {
     type: String,
     default: ''
-  }
+    
+  },
+  slug:{
+    type: String,
+    default: ''
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: TechCategory,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model('Technology', TechnologySchema);

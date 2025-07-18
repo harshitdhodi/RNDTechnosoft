@@ -26,7 +26,8 @@ Modal.setAppElement("#root"); // Set the root element for accessibility
 const BannersTable = () => {
   const [heading, setHeading] = useState("");
   const [subheading, setSubheading] = useState("");
-  const [banners, setBanners] = useState([]);
+  const [allBanners, setAllBanners] = useState([]); // Store all banners for search
+  const [banners, setBanners] = useState([]); // Current page banners
   const [loadings, setLoading] = useState(true);
   const [pageIndex, setPageIndex] = useState(0);
   const [pageCount, setPageCount] = useState(0);
@@ -34,36 +35,40 @@ const BannersTable = () => {
   const [selectedSection, setSelectedSection] = useState("");
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [bannerToDelete, setBannerToDelete] = useState(null);
   const pageSize = 12;
   const navigate = useNavigate();
 
+  // Toast notification for successful updates
   const notify = () => {
     toast.success("Updated Successfully!");
   };
 
+  // Table columns configuration
   const columns = useMemo(
     () => [
       {
-        Header: "pageType",
+        Header: "Page Type",
         accessor: "pageType",
         Cell: ({ row }) => (
           <span
             className="hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/banner/editBanner/${row.original._id}`)}
           >
-            {row.original.pageType}
+            {row.original.pageType || "N/A"}
           </span>
         ),
       },
       {
-        Header: "heading",
+        Header: "Heading",
         accessor: "heading",
         Cell: ({ row }) => (
           <span
             className="hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/banner/editBanner/${row.original._id}`)}
           >
-            {row.original.heading}
+            {row.original.heading || "N/A"}
           </span>
         ),
       },
@@ -73,22 +78,36 @@ const BannersTable = () => {
         Cell: ({ value }) => {
           const firstImage = Array.isArray(value) && value.length > 0 ? value[0] : value;
           return firstImage ? (
-            <img src={`/api/logo/download/${firstImage}`} alt="Banner" className="w-20 h-20 object-cover" />
-          ) : null;
+            <img
+              src={`/api/logo/download/${firstImage}`}
+              alt="Banner"
+              className="w-20 h-20 object-cover rounded"
+            />
+          ) : (
+            <span>No Image</span>
+          );
         },
         disableSortBy: true,
       },
       {
         Header: "Status",
         accessor: "status",
-        Cell: ({ value }) => (value === "active" ? <Check className="text-green-500" /> : <X className="text-red-500" />),
+        Cell: ({ value }) =>
+          value === "active" ? (
+            <Check className="text-green-500" />
+          ) : (
+            <X className="text-red-500" />
+          ),
         disableSortBy: true,
       },
       {
         Header: "Options",
         Cell: ({ row }) => (
           <div className="flex gap-4">
-            <button className="text-gray-700 hover:text-gray-900 transition" onClick={() => handleView(row.original)}>
+            <button
+              className="text-gray-700 hover:text-gray-900 transition"
+              onClick={() => handleView(row.original)}
+            >
               <Eye />
             </button>
             <button className="text-blue-500 hover:text-blue-700 transition">
@@ -98,7 +117,7 @@ const BannersTable = () => {
             </button>
             <button
               className="text-red-500 hover:text-red-700 transition"
-              onClick={() => deleteBanner(row.original._id, row.original.section)}
+              onClick={() => handleDeleteClick(row.original._id, row.original.section)}
             >
               <Trash2 />
             </button>
@@ -109,22 +128,34 @@ const BannersTable = () => {
     ],
     []
   );
+
+  // Filter banners based on search term and selected section
   const filteredBanners = useMemo(() => {
-    let filteredData = banners;
+    let filteredData = allBanners; // Use allBanners instead of banners for full search
+    
     if (selectedSection) {
       filteredData = filteredData.filter((banner) =>
         banner.section?.toLowerCase().includes(selectedSection.toLowerCase())
       );
     }
+    
     if (searchTerm) {
       filteredData = filteredData.filter((banner) =>
-        banner.title?.toLowerCase().includes(searchTerm.toLowerCase())
+        banner.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        banner.heading?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        banner.pageType?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
-    // Update pageCount based on filtered data
-    setPageCount(Math.ceil(filteredData.length / pageSize));
+    
+    // Update page count based on filtered data
+    const totalFilteredPages = Math.ceil(filteredData.length / pageSize);
+    setPageCount(totalFilteredPages);
+    
+    // Return paginated filtered data
     return filteredData.slice(pageIndex * pageSize, (pageIndex + 1) * pageSize);
-  }, [banners, searchTerm, selectedSection, pageIndex, pageSize]);
+  }, [allBanners, searchTerm, selectedSection, pageIndex, pageSize]);
+
+  // Initialize table with sorting
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable(
     {
       columns,
@@ -133,55 +164,97 @@ const BannersTable = () => {
     useSortBy
   );
 
-  const fetchData = async (pageIndex) => {
+  // Fetch all banners from API
+  const fetchAllData = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`/api/pageHeading/getAllPageHeadings?page=${pageIndex + 1}&limit=${pageSize}`, {
-        withCredentials: true,
-      });
+      // Fetch all banners without pagination
+      const response = await axios.get(
+        `/api/pageHeading/getAllPageHeadings?page=1&limit=1000`, // Large limit to get all data
+        { withCredentials: true }
+      );
+      
       const bannersWithIds = response.data.data.map((banner, index) => ({
         ...banner,
-        id: pageIndex * pageSize + index + 1,
+        id: index + 1,
       }));
-      setBanners(bannersWithIds);
-      setPageCount(response.data.totalPages); // Use totalPages from API
+      
+      setAllBanners(bannersWithIds);
+      
+      // Set initial page count based on all data
+      setPageCount(Math.ceil(bannersWithIds.length / pageSize));
     } catch (error) {
       console.error("Error fetching banners:", error);
+      toast.error("Failed to fetch banners");
     } finally {
       setLoading(false);
     }
   };
 
+  // Delete a banner
   const deleteBanner = async (id, section) => {
     try {
-      await axios.delete(`/api/banner/deleteBanner?id=${id}&section=${section}`, { withCredentials: true });
-      fetchData(pageIndex);
+      await axios.delete(`/api/pageHeading/delete?id=${id}`, {
+        withCredentials: true,
+      });
+      toast.success("Banner deleted successfully");
+      // Refresh all data after deletion
+      fetchAllData();
     } catch (error) {
       console.error("Error deleting banner:", error);
+      toast.error("Failed to delete banner");
     }
   };
 
+  // Handle delete button click
+  const handleDeleteClick = (id, section) => {
+    setBannerToDelete({ id, section });
+    setIsConfirmModalOpen(true);
+  };
+
+  // Confirm deletion
+  const confirmDelete = () => {
+    if (bannerToDelete) {
+      deleteBanner(bannerToDelete.id, bannerToDelete.section);
+      setIsConfirmModalOpen(false);
+      setBannerToDelete(null);
+    }
+  };
+
+  // Cancel deletion
+  const cancelDelete = () => {
+    setIsConfirmModalOpen(false);
+    setBannerToDelete(null);
+  };
+
+  // Open modal with banner details
   const handleView = (banner) => {
     setSelectedBanner(banner);
     setIsModalOpen(true);
   };
 
+  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedBanner(null);
   };
 
+  // Fetch page headings
   const fetchHeadings = async () => {
     try {
-      const response = await axios.get("/api/pageHeading/heading?pageType=banner", { withCredentials: true });
+      const response = await axios.get("/api/pageHeading/heading?pageType=banner", {
+        withCredentials: true,
+      });
       const { heading, subheading } = response.data;
       setHeading(heading || "");
       setSubheading(subheading || "");
     } catch (error) {
       console.error("Error fetching headings:", error);
+      toast.error("Failed to fetch headings");
     }
   };
 
+  // Save page headings
   const saveHeadings = async () => {
     try {
       await axios.put(
@@ -196,21 +269,23 @@ const BannersTable = () => {
       notify();
     } catch (error) {
       console.error("Error saving headings:", error);
+      toast.error("Failed to save headings");
     }
   };
 
-
-
+  // Fetch all data on component mount
   useEffect(() => {
-    fetchData(pageIndex);
-  }, [pageIndex]);
+    fetchAllData();
+  }, []);
 
+  // Fetch headings on component mount
   useEffect(() => {
     fetchHeadings();
   }, []);
 
+  // Reset page index on filter change
   useEffect(() => {
-    setPageIndex(0); // Reset to first page when filters change
+    setPageIndex(0);
   }, [searchTerm, selectedSection]);
 
   const handleHeadingChange = (e) => setHeading(e.target.value);
@@ -219,37 +294,66 @@ const BannersTable = () => {
   const canPreviousPage = pageIndex > 0;
   const canNextPage = pageIndex + 1 < pageCount;
 
+  // Modal styles
+  const customModalStyles = {
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 1000,
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    content: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "white",
+      padding: "2rem",
+      borderRadius: "0.5rem",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      maxWidth: "600px",
+      width: "90%",
+      maxHeight: "80vh",
+      overflowY: "auto",
+      zIndex: 1001,
+    },
+  };
+
+  // Confirmation modal styles
+  const confirmModalStyles = {
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      zIndex: 1000,
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+    },
+    content: {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "white",
+      borderRadius: "0.5rem",
+      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      maxWidth: "400px",
+      width: "90%",
+      zIndex: 1001,
+      height: '200px',
+      maxHeight: '300px',
+    },
+  };
+
   return (
     <div className="p-4 overflow-x-auto">
-      <ToastContainer />
-      <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded">
-        <div className="grid md:grid-cols-2 md:gap-2 grid-cols-1">
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Heading</label>
-            <input
-              type="text"
-              value={heading}
-              onChange={handleHeadingChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Sub heading</label>
-            <input
-              type="text"
-              value={subheading}
-              onChange={handleSubheadingChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-            />
-          </div>
-        </div>
-        <button
-          onClick={saveHeadings}
-          className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300"
-        >
-          Save
-        </button>
-      </div>
+      {/* <ToastContainer /> */}
+
+      {/* Table Header and Create Button */}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">Banners</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
@@ -258,44 +362,66 @@ const BannersTable = () => {
           </Link>
         </button>
       </div>
+
+      {/* Search and Filter */}
       <div className="mb-4">
         <input
           type="text"
-          placeholder="Search by title..."
+          placeholder="Search by title, heading, or page type..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
         />
       </div>
-      <div className="mb-4 flex">
-        <label className="text-gray-700 font-bold mb-2 uppercase font-serif mr-4 flex items-center">
-          Select Section:
-        </label>
-        <select
-          value={selectedSection}
-          onChange={(e) => setSelectedSection(e.target.value)}
-          className="px-4 w-64 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-        >
-          <option value="">All</option>
-          <option value="PrivacyPolicy">Privacy Policy</option>
-          <option value="TermConditions">Terms & Conditions</option>
-          <option value="CookiePolicy">Cookie Policy</option>
-          <option value="Contact">Contact</option>
-          <option value="Collaborationinquiries">Collaboration inquiries</option>
-        </select>
-      </div>
+     
+
+      {/* Table or Loading/No Data */}
       {loadings ? (
-        <div className="flex justify-center">
+        <div className="flex justify-center items-center h-64">
           <UseAnimations animation={loading} size={56} />
         </div>
       ) : (
         <>
-          {filteredBanners.length === 0 ? (
-            <div className="flex justify-center items-center">
-              <iframe
-                className="w-96 h-96"
-                src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"
-              ></iframe>
+          {allBanners.length === 0 ? (
+            // No data available at all
+            <div className="flex flex-col justify-center items-center h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+              <div className="text-center">
+                <div className="text-4xl text-gray-400 mb-4">📋</div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">No banners available</h3>
+                <p className="text-gray-500 mb-4">There are no banners in the system yet.</p>
+                <Link
+                  to="/banner/createBanner"
+                  className="inline-flex items-center px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300"
+                >
+                  <Plus size={16} className="mr-2" />
+                  Create First Banner
+                </Link>
+              </div>
+            </div>
+          ) : filteredBanners.length === 0 ? (
+            // Data exists but no results match current filters
+            <div className="flex flex-col justify-center items-center h-64 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+              <div className="text-center">
+                <div className="text-4xl text-gray-400 mb-4">🔍</div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-2">No records found</h3>
+                <p className="text-gray-500 mb-4">
+                  {searchTerm || selectedSection
+                    ? "No banners match your current search criteria."
+                    : "No banners available for the current page."}
+                </p>
+                {(searchTerm || selectedSection) && (
+                  <button
+                    onClick={() => {
+                      setSearchTerm("");
+                      setSelectedSection("");
+                    }}
+                    className="inline-flex items-center px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300"
+                  >
+                    <X size={16} className="mr-2" />
+                    Clear Filters
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <table className="w-full mt-4 border-collapse" {...getTableProps()}>
@@ -349,32 +475,34 @@ const BannersTable = () => {
           )}
         </>
       )}
-      <div className="mt-4 flex justify-center">
+
+      {/* Pagination */}
+      <div className="mt-4 flex justify-center items-center gap-2">
         <button
           onClick={() => setPageIndex(0)}
           disabled={!canPreviousPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {"<<"}
         </button>
         <button
           onClick={() => setPageIndex(pageIndex - 1)}
           disabled={!canPreviousPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {"<"}
         </button>
         <button
           onClick={() => setPageIndex(pageIndex + 1)}
           disabled={!canNextPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {">"}
         </button>
         <button
           onClick={() => setPageIndex(pageCount - 1)}
           disabled={!canNextPage}
-          className="mr-2 px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition"
+          className="px-3 py-1 bg-slate-700 text-white rounded hover:bg-slate-900 transition disabled:opacity-50"
         >
           {">>"}
         </button>
@@ -382,39 +510,64 @@ const BannersTable = () => {
           Page <strong>{pageIndex + 1} of {pageCount}</strong>
         </span>
       </div>
+
+      {/* Modal for Banner Details */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
+        style={customModalStyles}
         contentLabel="Banner Details"
-        className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
       >
-        <div className="bg-white p-8 rounded shadow-lg min-w-54 m-4 relative">
+        <div className="relative">
           <button
             onClick={closeModal}
-            className="absolute top-5 right-5 text-gray-500 hover:text-gray-700"
+            className="absolute top-0 right-0 text-gray-500 hover:text-gray-700"
           >
             <X size={20} />
           </button>
-          <h2 className="text-xl font-bold font-serif mb-4">Banner</h2>
+          <h2 className="text-xl font-bold font-serif mb-4">Banner Details</h2>
           {selectedBanner && (
-            <div className="">
-              <div className="flex mt-2">
-                <p className="mr-2 font-semibold font-serif">Priority:</p>
-                <p>{selectedBanner.pageType}</p>
+            <div className="space-y-4">
+              <div className="flex">
+                <p className="mr-2 font-semibold font-serif">Page Type:</p>
+                <p>{selectedBanner.pageType || "N/A"}</p>
               </div>
-              <div className="flex mt-2">
+              <div className="flex">
                 <p className="mr-2 font-semibold font-serif">Section:</p>
-                <p>{selectedBanner.section}</p>
+                <p>{selectedBanner.section || "N/A"}</p>
               </div>
-              <div className="flex mt-2">
+              <div className="flex">
                 <p className="mr-2 font-semibold font-serif">Title:</p>
-                <p>{selectedBanner.title}</p>
+                <p>{selectedBanner.title || "N/A"}</p>
               </div>
-              <div className="mt-2">
+              <div className="flex">
+                <p className="mr-2 font-semibold font-serif">Heading:</p>
+                <p>{selectedBanner.heading || "N/A"}</p>
+              </div>
+              <div className="flex">
+                <p className="mr-2 font-semibold font-serif">Status:</p>
+                <p>{selectedBanner.status === "active" ? "Active" : "Inactive"}</p>
+              </div>
+              <div className="flex flex-col">
+                <p className="mr-2 font-semibold font-serif">Photo:</p>
+                {selectedBanner.photo ? (
+                  <img
+                    src={`/api/logo/download/${Array.isArray(selectedBanner.photo) && selectedBanner.photo.length > 0
+                      ? selectedBanner.photo[0]
+                      : selectedBanner.photo
+                      }`}
+                    alt="Banner"
+                    className="w-32 h-32 object-cover rounded mt-2"
+                  />
+                ) : (
+                  <p>No Image</p>
+                )}
+              </div>
+              <div className="flex flex-col">
                 <p className="mr-2 font-semibold font-serif">Description:</p>
                 <ReactQuill
                   readOnly={true}
-                  value={selectedBanner.details}
+                  value={selectedBanner.details || ""}
                   modules={{ toolbar: false }}
                   theme="bubble"
                   className="quill"
@@ -422,6 +575,33 @@ const BannersTable = () => {
               </div>
             </div>
           )}
+        </div>
+      </Modal>
+
+      {/* Confirmation Modal for Deletion */}
+      <Modal
+        isOpen={isConfirmModalOpen}
+        onRequestClose={cancelDelete}
+        style={confirmModalStyles}
+        contentLabel="Confirm Delete"
+      >
+        <div className="relative max-h-[250px] p-4 overflow-auto">
+          <h2 className="text-lg font-bold font-serif mb-2">Confirm Deletion</h2>
+          <p className="mb-3 text-sm">Are you sure you want to delete this banner? This action cannot be undone.</p>
+          <div className="flex justify-end gap-2">
+            <button
+              onClick={cancelDelete}
+              className="px-3 py-1 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition duration-300 text-sm"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmDelete}
+              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 text-sm"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </Modal>
     </div>

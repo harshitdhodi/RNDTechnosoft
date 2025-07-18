@@ -8,6 +8,7 @@ import GlobalSolution from '../components/GlobalSolution'
 import ExpertiseComponent from '../components/WhatWeDo/Growth';
 import { useGetCombinedDataQuery } from '../redux/slices/homepageSlice';
 import HexGridDemo from '../components/hexagon/Grid'
+import ValuesSection from '../components/AboutUs/OurValue2'
 export default function AboutUs() {
     const { 
       data, 
@@ -27,13 +28,13 @@ export default function AboutUs() {
 
   return (
     <div>
-        <HeroSection/>
+        <HeroSection pageType={"aboutcompany"}/>
         <WebSolution/>
-        <OurValues/>
+        <ValuesSection/>
         <ExpertiseComponent/>
         <BookAcall/>
        {/* <HexGridDemo expertData={data?.WeAreExpert} /> */}
-        <GlobalSolution globalData={data?.globalsolution}/>
+        {/* <GlobalSolution globalData={data?.globalsolution}/> */}
         
     </div>
   )

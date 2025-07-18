@@ -5,9 +5,9 @@ const path = require('path');
 // CREATE - Create a new technology
 const createTechnology = async (req, res) => {
   try {
-    const { alt, imgTitle,slug } = req.body;
+    const { alt,category, imgTitle,slug } = req.body;
     let photo;
-    
+    console.log(category)
     // Handle image upload via multer
     if (req.file) {
       photo = req.file.filename;
@@ -17,7 +17,8 @@ const createTechnology = async (req, res) => {
       photo,
       alt,
       imgTitle,
-      slug
+      slug,
+      category
     });
 
     const savedTechnology = await technology.save();
@@ -36,29 +37,18 @@ const createTechnology = async (req, res) => {
 // READ - Get all technologies
 const getAllTechnologies = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit;
+   
 
     const technologies = await Technology.find()
-      .skip(skip)
-      .limit(limit)
-      .sort({ createdAt: -1 });
-
-    const total = await Technology.countDocuments();
-    const totalPages = Math.ceil(total / limit);
-
+      .populate({
+        path: 'category',
+        select: 'heading' // optionally populate only the name or required fields
+      })
+   
     res.status(200).json({
       message: 'Technologies retrieved successfully',
       data: technologies,
-      pagination: {
-        currentPage: page,
-        totalPages,
-        totalItems: total,
-        itemsPerPage: limit,
-        hasNextPage: page < totalPages,
-        hasPrevPage: page > 1
-      }
+     
     });
   } catch (error) {
     res.status(500).json({ 
@@ -68,13 +58,17 @@ const getAllTechnologies = async (req, res) => {
   }
 };
 
+
 // READ - Get technology by ID
 const getTechnologyById = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    const technology = await Technology.findById(id);
-    
+
+    const technology = await Technology.findById(id).populate({
+      path: 'category',
+      select: 'name' // optional: only return the category name
+    });
+
     if (!technology) {
       return res.status(404).json({ 
         message: 'Technology not found' 
@@ -98,11 +92,12 @@ const getTechnologyById = async (req, res) => {
   }
 };
 
+
 // UPDATE - Update technology by ID
 const updateTechnology = async (req, res) => {
   try {
     const { id } = req.params;
-    const { alt, imgTitle,slug } = req.body;
+    const { alt, imgTitle,category,slug } = req.body;
     
     // Find existing technology
     const existingTechnology = await Technology.findById(id);
@@ -113,7 +108,7 @@ const updateTechnology = async (req, res) => {
     }
 
     // Prepare update data
-    const updateData = { alt, imgTitle ,slug };
+    const updateData = { alt,category, imgTitle ,slug };
     
     // Handle new image upload
     if (req.file) {

@@ -82,27 +82,25 @@ const OurWorkComponent = ({ ourWorkData }) => {
     ],
   };
 
-  const ProjectCard = ({ project }) => {
-    return (
-      <Link 
-        to={project.link}
-        className="relative flex justify-center items-end h-64 mx-3 overflow-hidden group"
-      >
-        <img 
-          src={`/api/logo/download/${project.photo}`} // Use the provided image URL directly
-          alt={project.alt || project.name} 
-          title={project.imgtitle} 
-          loading='preload'
-          className="w-full h-full transition-transform duration-300" 
-        />
-        <span className="project-button bg-white text-gray-950 font-semibold text-sm rounded-full 
-          py-2 px-6 shadow-lg hover:bg-gray-200 transition-all duration-300 absolute bottom-0 mb-12 
-          opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0">
-          {project.name}
-        </span>
-      </Link>
-    );
-  };
+const ProjectCard = ({ project }) => {
+  return (
+    <Link
+      to={project.link}
+      className="relative flex justify-center items-end h-64 mx-3 overflow-hidden rounded-none"
+    >
+      <img
+        src={`/api/logo/download/${project.photo}`}
+        alt={project.alt || project.name}
+        title={project.imgtitle}
+        loading="preload"
+        className="w-full h-full object-cover transition-transform duration-300 rounded-none"
+      />
+      <span className="project-button bg-white text-gray-950 font-semibold text-sm rounded-full py-2 px-6 shadow-lg hover:bg-gray-200 transition-all duration-300 absolute bottom-0 mb-12 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0">
+        {project.name}
+      </span>
+    </Link>
+  );
+};
 
   if (isLoading) {
     return (
