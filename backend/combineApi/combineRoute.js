@@ -9,7 +9,7 @@ const Package = require('../model/packages');
 const managecolor = require('../model/managecolor');
 const getFormattedCategoriesFromAllSchemas = require('../controller/navbardata');
 const router = express.Router();
-             
+
 // Modified functions to return data instead of sending responses
 
 const getHomeHero = async () => {
@@ -18,13 +18,18 @@ const getHomeHero = async () => {
 };
 
 const getMarquee = async () => {
-    const categories = await portfoliocategory.find().select('category -_id');
+    const categories = await portfoliocategory
+        .find({ status: 'active' }) // filter only active status
+        .select('category -_id');
+
     return categories.map(cat => cat.category);
 };
 
+
 const getOurWork = async () => {
-    const categories = await portfoliocategory.find()
-        .select('category photo _id alt imgtitle slug');
+    const categories = await portfoliocategory
+        .find({ status: 'active' }) // Filter for active categories
+        .select('category photo _id alt imgtitle slug status'); // Include status in selection
     return categories.map(cat => ({
         id: cat._id,
         name: cat.category,
@@ -32,6 +37,7 @@ const getOurWork = async () => {
         alt: cat.alt,
         imgtitle: cat.imgtitle,
         slug: cat.slug,
+        status: cat.status, // Optionally include status in the response
     }));
 };
 
@@ -88,7 +94,7 @@ const getStandardPackage = async () => {
 // Placeholder for getHomeCard1_2() function
 const getHomeCards = async () => {
     try {
-        const contentTypes = ["homecard1", "homecard2", "everyplan", "globalsolution","weareexpertsin"];
+        const contentTypes = ["homecard1", "homecard2", "everyplan", "globalsolution", "weareexpertsin"];
         const contents = await Content.find({ contentType: { $in: contentTypes }, status: true });
 
         // Categorize contents based on contentType
@@ -109,7 +115,7 @@ const getHomeCards = async () => {
         return categorizedContents;
     } catch (error) {
         console.error("Error retrieving contents by type:", error);
-        return {weareexpertsin:[], homecard1: [], homecard2: [], everyplan: [], globalsolution: [] }; // Return empty arrays in case of an error
+        return { weareexpertsin: [], homecard1: [], homecard2: [], everyplan: [], globalsolution: [] }; // Return empty arrays in case of an error
     }
 };
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Card from "./Card";
 
 export default function GridLayout({ serviceData }) {
+  console.log(serviceData)
   const [isMounted, setIsMounted] = useState(false);
   const [cardConfigs, setCardConfigs] = useState([]);
 
@@ -12,27 +13,27 @@ export default function GridLayout({ serviceData }) {
 
     const updateCardConfigs = () => {
       if (window.matchMedia("(min-width: 1025px)").matches) {
-        // Large screens
+        // Large screens (1025px and above)
         setCardConfigs([
           { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
           { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
           { colSpan: 1, rowSpan: 2, justifySelf: "auto" },
-          { colSpan: 1, rowSpan: 2,justifySelf: "start" },
+          { colSpan: 1, rowSpan: 2, justifySelf: "start" },
           { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
           { colSpan: 3, rowSpan: 1, justifySelf: "auto" },
         ]);
-      } else if (window.matchMedia("(min-width: 1024px)").matches) {
-        // Medium screens
+      } else if (window.matchMedia("(min-width: 768px)").matches) {
+        // Medium screens (768px to 1024px)
         setCardConfigs([
-          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
-          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
-          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
-          { colSpan: 1, rowSpan: 1, justifySelf: "start" },
           { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
           { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
+          { colSpan: 2, rowSpan: 1, justifySelf: "auto" },
         ]);
       } else {
-        // Small screens
+        // Small screens (below 768px)
         setCardConfigs([
           { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
           { colSpan: 1, rowSpan: 1, justifySelf: "auto" },
@@ -59,7 +60,7 @@ export default function GridLayout({ serviceData }) {
     {
       _id: "static-aiml",
       category: "AI/ML",
-      description: "Leverage cutting-edge artificial intelligence and machine learning to build intelligent solutions that drive innovation and efficiency.",
+      description: "We deliver AI/ML as a comprehensive service, providing end-to-end solutions from data preprocessing and model development to deployment and ongoing optimization. Our managed AI services eliminate the complexity of infrastructure management, allowing businesses to focus on leveraging intelligent insights rather than technical implementation. Through our cloud-based ML platform, we offer scalable artificial intelligence capabilities that can be seamlessly integrated into existing workflows and systems. Our expert team provides continuous model monitoring, performance tuning, and updates to ensure your AI solutions evolve with your business needs.",
       photo: null,
       tag: "AI/ML",
       slug: "ai-ml",
@@ -67,7 +68,7 @@ export default function GridLayout({ serviceData }) {
     {
       _id: "static-product-engineering",
       category: "Product Engineering",
-      description: "End-to-end product development services, from ideation to deployment, ensuring scalable and robust solutions tailored to your needs.",
+      description: "We provide comprehensive end-to-end product development services that transform your innovative ideas into market-ready solutions. Our product engineering approach encompasses the entire development lifecycle, from initial concept validation and technical architecture design to full-scale deployment and post-launch optimization. Our experienced engineering teams specialize in building scalable, robust, and future-proof products using cutting-edge technologies and industry best practices. We focus on creating solutions that not only meet your current business requirements but also adapt and grow with your evolving needs. Through agile methodologies, continuous integration, and rigorous quality assurance, we ensure your product launches successfully while maintaining the flexibility to iterate and improve based on user feedback and market demands",
       photo: null,
       tag: "Product Engineering",
       slug: "product-engineering",

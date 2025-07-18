@@ -90,10 +90,10 @@ const getFormattedCategoriesFromAllSchemas = async () => {
       // },  
       //   {
       //   id: "3",
-      //   name: "Technology",
-      //   slug: "website-packages",
-      //   component: "MainPackage",
-      //   subItems: formatCategories(packageCategories, "3"),
+      //   name: "Hire Talent",
+      //   slug: "hire-talent",
+    //   component: "hiretalent",
+       
       // },                            
       {
         id: "4",
@@ -104,7 +104,7 @@ const getFormattedCategoriesFromAllSchemas = async () => {
       },
       {
         id: "5",
-        name: "Blog",
+        name: "Blogs",
         slug: "blogs",
         component: "MainBlogs",
       },

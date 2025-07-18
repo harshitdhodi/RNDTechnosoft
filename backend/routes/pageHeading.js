@@ -3,15 +3,18 @@ const router = express.Router();
 const { requireAuth } = require('../middleware/authmiddleware');
 const { uploadLogo } = require("../middleware/logoUpload")
 
-const { getpageHeading, updatePageHeading,addPageHeading ,getAllPageHeadings } = require('../controller/pageHeading')
+const { getpageHeading, getPageHeadingById, updatePageHeadingById ,deletePageHeading, updatePageHeading,addPageHeading ,getAllPageHeadings } = require('../controller/pageHeading')
 
 router.post('/createHeading', requireAuth, uploadLogo, addPageHeading);
 router.get('/heading', getpageHeading,);
-router.put('/updateHeading', requireAuth, uploadLogo, updatePageHeading);
 router.get('/getAllPageHeadings', requireAuth, getAllPageHeadings);
+router.get('/:id', requireAuth, getPageHeadingById);
+router.put('/:id', requireAuth, uploadLogo, updatePageHeadingById);
+router.put('/updateHeading', requireAuth, uploadLogo, updatePageHeading);
+router.delete('/delete', deletePageHeading,);
 /**
  * @swagger
- * tags:
+ * tags: 
  *   name: PageHeadings 
  *   description: API for managing page headings
  */

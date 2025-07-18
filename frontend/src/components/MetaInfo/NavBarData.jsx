@@ -123,7 +123,7 @@ const NavbarDataTable = () => {
           placeholder="Search by page name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
+          className="w-full px-4 py-2 border rounded-md focus:outline-none transition duration-300"
         />
       </div>
       <h2 className="text-md font-semibold mb-4">Manage Menu Listings</h2>

@@ -1,142 +1,124 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Delete } from "lucide-react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
-const CaseStudyList = () => {
-  const [caseStudies, setCaseStudies] = useState([]);
+const IndustrySecDataTable = () => {
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch case studies
+  // Fetch all IndustrySecData entries
   useEffect(() => {
-    const fetchCaseStudies = async () => {
+    const fetchData = async () => {
       setIsLoading(true);
       try {
         const res = await axios.get("/api/caseStudy");
-        console.log("Fetched case studies:", res.data.data); // Debugging log
-        // Ensure res.data.data is an array; if not, set to empty array
-        setCaseStudies(Array.isArray(res.data.data) ? res.data.data : []);
+        setData(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
-        console.error("Error fetching case studies:", err);
-        setError("Failed to load case studies. Please try again later.");
-        setCaseStudies([]); // Reset to empty array on error
+        console.error("Error fetching industry section data:", err);
+        setError("Failed to load data.");
       } finally {
         setIsLoading(false);
       }
     };
-    fetchCaseStudies();
+    fetchData();
   }, []);
 
   // Handle delete
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this case study?")) return;
-    try {
-      await axios.delete(`/api/caseStudy/${id}`);
-      setCaseStudies(caseStudies.filter((study) => study._id !== id));
-      alert("Case study deleted successfully");
-    } catch (err) {
-      console.error("Error deleting case study:", err);
-      setError("Failed to delete case study.");
+    if (window.confirm("Are you sure you want to delete this entry?")) {
+      try {
+        await axios.delete(`/api/caseStudy/${id}`);
+        setData(data.filter((item) => item._id !== id));
+        alert("Entry deleted successfully");
+      } catch (err) {
+        console.error("Error deleting entry:", err);
+        setError("Failed to delete entry.");
+      }
     }
   };
 
   // Handle edit
   const handleEdit = (id) => {
-    navigate(`/edit-case-study/${id}`);
+    navigate(`/edit-industry-data/${id}`);
   };
 
   return (
-    <>
-    <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h1 className="text-2xl font-semibold mb-6">Case Studies</h1>
-      <div>
-        <button className="">
-Add Case Study
-        </button>
-      </div>
-      {error && <div className="text-red-500 mb-4">{error}</div>}
-      {isLoading ? (
-        <div className="text-center">Loading...</div>
-      ) : !Array.isArray(caseStudies) || caseStudies.length === 0 ? (
-        <div className="text-center">No case studies found.</div>
-      ) : (
+    <div className=" mt-10 p-6 bg-white rounded shadow">
+      <h1 className="text-2xl font-semibold mb-6">Industry Section Data</h1>
+      {/* {error && <div className="text-red-500 mb-4">{error}</div>} */}
+      {isLoading && <div className="text-center">Loading...</div>}
+      {!isLoading && (
         <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse">
+          <table className="min-w-full bg-white border">
             <thead>
-              <tr className="bg-gray-100">
-                <th className="border px-4 py-2 text-left">Image</th>
-                <th className="border px-4 py-2 text-left">Heading</th>
-                <th className="border px-4 py-2 text-left">Subheading</th>
-                <th className="border px-4 py-2 text-left">Industry</th>
-                <th className="border px-4 py-2 text-left">Details</th>
-                <th className="border px-4 py-2 text-left">Actions</th>
+              <tr>
+                <th className="py-2 px-4 border-b text-left">Type</th>
+                <th className="py-2 px-4 border-b text-left">Heading</th>
+           
+                <th className="py-2 px-4 border-b text-left">Category</th>
+                <th className="py-2 px-4 border-b text-left">Cards</th>
+                <th className="py-2 px-4 border-b text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {caseStudies.map((study) => (
-                <tr key={study._id} clas sName="hover:bg-gray-50">
-                  <td className="border px-4 py-2">
-                    {study.photo ? (
-                      <img
-                        src={`/api/logo/download/${study.photo}`}
-                        alt={study.altImg || "Case study image"}
-                        className="w-16 h-16 object-cover rounded"
-                      />
-                    ) : (
-                      "No Image"
-                    )}
-                  </td>
-                  <td className="border px-4 py-2">{study.heading}</td>
-                  <td className="border px-4 py-2">{study.subHeading || "N/A"}</td>
-                  <td className="border px-4 py-2">
-                    {study.industryCategory?.category || "N/A"}
-                  </td>
-                  <td className="border px-4 py-2">
-                    <div
-                      className="line-clamp-2"
-                      dangerouslySetInnerHTML={{ __html: study.details }}
-                    />
-                  </td>
-                  <td className="border px-4 py-2 flex space-x-2">
-                    <button
-                      onClick={() => handleEdit(study._id)}
-                      className="text-blue-600 hover:text-blue-800"
-                      title="Edit"
-                    >
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                        />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => handleDelete(study._id)}
-                      className="text-red-600 hover:text-red-800"
-                      title="Delete"
-                    >
-                    <Delete/>
-                    </button>
+              {data.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="py-4 px-4 text-center">
+                    No data available
                   </td>
                 </tr>
-              ))}
+              ) : (
+                data.map((item) => (
+                  <tr key={item._id}>
+                    <td className="py-2 px-4 border-b">{item.type}</td>
+                    <td className="py-2 px-4 border-b">{item.heading}</td>
+                    {/* <td className="py-2 px-4 border-b">{item.subHeading}</td> */}
+                    <td className="py-2 px-4 border-b">
+                      {item.category?.category || "N/A"}
+                    </td>
+                    <td className="py-2 px-4 border-b">
+                      {item.card?.length
+                        ? `${item.card.length} card(s): ${item.card
+                            .map((card) => card.title)
+                            .join(", ")}`
+                        : "No cards"}
+                    </td>
+                    <td className="py-2 px-4 border-b flex space-x-2">
+                      <button
+                        onClick={() => handleEdit(item._id)}
+                        className="text-blue-600 hover:text-blue-800"
+                        title="Edit"
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="text-red-600 hover:text-red-800"
+                        title="Delete"
+                      >
+                        <FaTrash />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       )}
+      <div className="mt-4">
+        <button
+          onClick={() => navigate("/industry-sec-data/create")}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Create New
+        </button>
+      </div>
     </div>
-    </>
   );
 };
 
-export default CaseStudyList;
+export default IndustrySecDataTable;
