@@ -266,7 +266,7 @@ function App() {
         </div>
       }>
         <ScrollToTop />
-        <DynamicMetaTags />
+        {/* <DynamicMetaTags /> */}
         {isLoading ? (
           // Show loading video while loading
           <>
