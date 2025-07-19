@@ -72,15 +72,15 @@ export default function CraftLeft() {
   const faqData = service.questions || [];
 
   return (
-    <div className="flex flex-col lg:mt-28 xl:py-0 items-center">
-      <div className="flex flex-col lg:flex-row-reverse gap-10 2xl:px-20 w-full">
+    <div className="flex xl:flex-col items-center">
+      <div className="flex flex-col lg:flex-row-reverse gap-10 lg:px-28 w-full">
         {/* Text Content for Large Screens */}
-        <div className="w-full 2xl:w-1/2 md:px-5 px-4 flex flex-col justify-center order-1">
+        <div className="w-full lg:w-[60%] px-4 flex flex-col justify-center order-1">
           <div className="max-w-full xl:pb-2 overflow-hidden">
             {service.heading ? (
               <div
                 dangerouslySetInnerHTML={{ __html: service.heading }}
-                className="md:text-4xl xl:text-5xl text-3xl font-bold md:pb-0 pb-6 break-words"
+                className="text-4xl font-bold pb-6 break-words"
               />
             ) : (
               <h2 className="text-4xl font-bold pb-6">Default Heading</h2>
@@ -134,7 +134,7 @@ export default function CraftLeft() {
         </div>
 
         {/* Video Content */}
-        <div className="w-full md:pr-20 lg:pr-0 2xl:w-1/2 flex items-center justify-center order-2">
+        <div className="w-full lg:w-[40%] md:pr-20 lg:pr-0 2xl:w-1/2 flex items-center justify-center order-2">
           <div className="relative xl:-top-10 md:-top-10 lg:-top-16 rounded-2xl md:left-10 -top-10 border-[3px] m-10 overflow-hidden group transition-all duration-300">
             {videoUrl ? (
               <video
@@ -151,7 +151,7 @@ export default function CraftLeft() {
                 <img
                   src={`/api/image/download/${service.photo[0]}`} // Display the first photo if video isn't available
                   alt="Service Image"
-                  className="w-[550px] h-[450px] object-cover rounded-2xl"
+                  className="w-[750px] h-[450px] sm:object-contain lg:object-fill md:object-fill md:h-auto rounded-2xl"
                 />
               )
             )}

@@ -3,6 +3,7 @@ import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { useParams } from 'react-router-dom';
 import img from "../../images/Rectangle.png";
+import ReactQuill from "react-quill";
 
 export default function Home() {
   const { slug } = useParams(); // Get slug from URL parameters
@@ -112,13 +113,11 @@ export default function Home() {
               <FinTechCard
                 key={index}
                 title={application.title}
-                features={
-                  application.details
-                    ? DOMPurify.sanitize(application.details, { ALLOWED_TAGS: [] }) // Strip HTML tags
-                        .split('\n')
-                        .filter(item => item.trim())
-                    : []
-                }
+               features={
+                application.details
+                  ? DOMPurify.sanitize(application.details)
+                  : ""
+              }
                 topImage={application.photo ? `/api/logo/download/${application.photo}` : null}
               />
             ))}
@@ -149,14 +148,11 @@ function FinTechCard({ title, features, topImage }) {
       </div>
       {/* Features list */}
       <div className="px-6 pb-6 flex-1">
-        <ul className="space-y-2">
-          {features.map((feature, index) => (
-            <li key={index} className="flex items-start">
-              <span className="mr-2 text-black">•</span>
-              <span className="text-sm">{feature}</span>
-            </li>
-          ))}
-        </ul>
+        <div
+        className="prose prose-sm max-w-none text-sm"
+        dangerouslySetInnerHTML={{ __html: features }}
+        >
+      </div>
       </div>
     </div>
   );
