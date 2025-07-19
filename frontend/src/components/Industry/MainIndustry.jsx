@@ -5,6 +5,7 @@ import TechBanner from '../technology/TechBanner'
 import IndustryInfo from './IndustryInfo'
 import CaseStudy from './CaseStudy'
 import Review from '../Websites/Review'
+import FAQ from '../Faq'
 
 const MainIndustry = () => {
   return (
@@ -15,6 +16,7 @@ const MainIndustry = () => {
       <FinTechServices />
       <CaseStudy/>  
       <Review />
+      <FAQ/>
     </div>
   )
 }

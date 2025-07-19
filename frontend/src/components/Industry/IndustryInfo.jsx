@@ -26,7 +26,7 @@ const IndustryInfo = () => {
         // Filter for applications type data
         let applicationsData = null;
         if (Array.isArray(data)) {
-          applicationsData = data.find(item => item.type === 'applications');
+          applicationsData = data.find(item => item.type === 'info');
         } else {
           applicationsData = data.type === 'applications' ? data : null;
         }

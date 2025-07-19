@@ -111,7 +111,7 @@ const IndustrySecDataTable = () => {
       )}
       <div className="mt-4">
         <button
-          onClick={() => navigate("/industry-sec-data/create")}
+          onClick={() => navigate("/add-case-study")}
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
         >
           Create New
