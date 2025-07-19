@@ -41,7 +41,6 @@ const insertDesignProcess = async (req, res) => {
         category: categoryId, // Assign categoryId to category field
         slug, // Store the slug in the DesignProcess model
         headingType: 'main', // Mark this as a sub-service
-
       });
   
       await designProcess.save();

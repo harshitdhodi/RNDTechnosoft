@@ -35,7 +35,7 @@ export default function Website() {
 
   // Extract slug from the URL
   const slug = location.pathname.split("/").filter(Boolean).pop();
-  const comingSoonSlugs = ["product-engineering"];
+  const comingSoonSlugs = [];
 
   // Check if the current slug is in the comingSoonSlugs array
   if (comingSoonSlugs.includes(slug)) {
@@ -44,7 +44,7 @@ export default function Website() {
         <div className="text-center space-y-6 p-6 max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-bold">Coming Soon</h1>
           <p className="text-lg md:text-xl text-gray-300">
-            We're working hard to bring you exciting content for{" "}
+            We&apos;re working hard to bring you exciting content for{" "}
             <span className="font-semibold capitalize">{slug.replace("-", " ")}</span>.
             Stay tuned for updates!
           </p>
