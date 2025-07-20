@@ -3,7 +3,6 @@ import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { useParams } from 'react-router-dom';
 import img from "../../images/Rectangle.png";
-import ReactQuill from "react-quill";
 
 export default function Home() {
   const { slug } = useParams(); // Get slug from URL parameters
@@ -42,14 +41,14 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className="relative min-h-screen">
-        <div className="absolute inset-0 h-full">
+        <div className="absolute inset-0 h-full w-full">
           <img
             src={img}
             alt="Background"
-            className="w-full h-full object-fill"
+            className="w-full h-full object-cover"
           />
         </div>
-        <div className="container mx-auto px-4 z-0 py-16 relative">
+        <div className="container mx-auto px-4 py-16 relative">
           <div className="flex justify-center items-center min-h-[50vh]">
             <div className="text-lg text-gray-600">Loading...</div>
           </div>
@@ -61,14 +60,14 @@ export default function Home() {
   if (error || !applicationsData) {
     return (
       <div className="relative min-h-screen">
-        <div className="absolute inset-0 h-full">
+        <div className="absolute inset-0 h-full w-full">
           <img
             src={img}
             alt="Background"
-            className="w-full h-full object-fill"
+            className="w-full h-full object-cover"
           />
         </div>
-        <div className="container mx-auto px-4 z-0 py-16 relative">
+        <div className="container mx-auto px-4 py-16 relative">
           <div className="flex justify-center items-center min-h-[50vh]">
             <div className="text-lg text-red-600">
               {error || 'No applications data available'}
@@ -81,7 +80,7 @@ export default function Home() {
 
   // Extract applications from the card array
   const applications = applicationsData.card || [];
-  const heading = applicationsData.heading || 'Trusted FinTech Software Development Partner';
+  const heading = applicationsData.heading || 'Trusted Healthcare Software Development Partner';
   const subHeading = applicationsData.subHeading || (
     'We create custom FinTech solutions that work flawlessly, manage financial services, and accelerate your ' +
     'business success. As a forward-thinking fintech app development company, we deliver secure, scalable, and ' +
@@ -91,33 +90,33 @@ export default function Home() {
   return (
     <div className="relative min-h-screen">
       {/* Background image */}
-      <div className="absolute inset-0 h-full">
+      <div className="absolute inset-0 h-full w-full">
         <img
           src={img}
           alt="Background"
-          className="w-full h-full object-fill"
+          className="w-full h-full object-cover"
         />
       </div>
 
       {/* Main content */}
-      <div className="max-w-8xl xl:px-12 xl:mx-20 mx-auto px-4 z-0 relative">
-        <div className="max-w-8xl pt-20 mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 relative">
+        <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">{heading}</h1>
           <p
-            className="text-lg mb-12"
+            className="text-lg mb-12 max-w-3xl mx-auto"
             dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(subHeading) }}
           />
 
-          <div className="grid grid-cols-1 pb-20 md:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-20">
             {applications.map((application, index) => (
               <FinTechCard
                 key={index}
                 title={application.title}
-               features={
-                application.details
-                  ? DOMPurify.sanitize(application.details)
-                  : ""
-              }
+                features={
+                  application.details
+                    ? DOMPurify.sanitize(application.details)
+                    : ""
+                }
                 topImage={application.photo ? `/api/logo/download/${application.photo}` : null}
               />
             ))}
@@ -130,14 +129,14 @@ export default function Home() {
 
 function FinTechCard({ title, features, topImage }) {
   return (
-    <div className="bg-white text-black rounded-lg shadow-lg overflow-hidden border border-gray-800 flex flex-col">
+    <div className="bg-white text-black rounded-lg shadow-lg overflow-hidden border border-gray-800 flex flex-col max-w-[600px] mx-auto">
       {/* Top image with title overlay */}
       <div className="p-6">
-        <div className="relative w-full h-48 rounded-md overflow-hidden"> {/* Fixed height */}
+        <div className="relative w-full h-[236px] rounded-md overflow-hidden">
           {topImage && (
-            <img src={topImage} alt="Card Top" className="w-full h-full object-fill" />
+            <img src={topImage} alt="Card Top" className="w-[548px] h-[236px] object-cover" />
           )}
-          <div className="absolute inset-0 bg-black bg-opacity-60 rounded-md" />
+          <div className="absolute inset-0 bg-black bg-opacity-40 rounded-md" />
           <div
             className="absolute left-0 bottom-[20%] px-4"
             style={{ width: "70%" }}
@@ -149,10 +148,9 @@ function FinTechCard({ title, features, topImage }) {
       {/* Features list */}
       <div className="px-6 pb-6 flex-1">
         <div
-        className="prose prose-sm max-w-none text-sm"
-        dangerouslySetInnerHTML={{ __html: features }}
-        >
-      </div>
+          className="prose prose-sm max-w-none text-sm text-left"
+          dangerouslySetInnerHTML={{ __html: features }}
+        />
       </div>
     </div>
   );

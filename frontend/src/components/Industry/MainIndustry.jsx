@@ -14,7 +14,7 @@ const MainIndustry = () => {
        <IndustryInfo />
         <Home />
       <FinTechServices />
-      <CaseStudy/>  
+      {/* <CaseStudy/>   */}
       <Review />
       <FAQ/>
     </div>
