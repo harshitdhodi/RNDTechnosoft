@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Briefcase,
   Search,
-  ChevronDown,
   ChevronRight,
   MapPin,
   Clock,
@@ -37,20 +36,21 @@ const Banner = () => {
 
     fetchHeadings();
   }, []);
+
   return (
     <div className="relative bg-gradient-to-r from-yellow-600 to-black h-80 md:h-[70vh]">
-      <div className="absolute inset-0 bg-black opacity-50"></div>
+     <div className="absolute inset-0 bg-black opacity-50"></div>
       <div className="relative h-full flex items-center justify-center px-4">
         <div className="text-center">
-          <h1 className="text-4xl md:text-6xl font-serif text-white mb-4">
+          <h1 className="text-4xl md:text-6xl font-semibold text-white mb-4">
             {heading}
           </h1>
-          <p className="text-xl md:text-2xl text-yellow-100 font-serif">
+          <p className="text-xl md:text-2xl text-red-100 font-semibold">
             {subheading}
           </p>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0">
+      <div className="absolute bottom-0 left-0 right-0 -mb-[1px]">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
           <path
             fill="#f3f4f6"
@@ -68,14 +68,10 @@ const JobCard = ({ job, onApply }) => {
 
   useEffect(() => {
     if (modalIsOpen) {
-      // Disable scrolling
       document.body.style.overflow = "hidden";
     } else {
-      // Enable scrolling
       document.body.style.overflow = "";
     }
-
-    // Cleanup function to ensure scrolling is re-enabled if the component is unmounted
     return () => {
       document.body.style.overflow = "";
     };
@@ -88,95 +84,73 @@ const JobCard = ({ job, onApply }) => {
   const closeModal = () => {
     setModalIsOpen(false);
   };
+
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl">
-      <img
-        src={`/api/image/download/${job.photo}`}
-        alt={`${job.department} department`}
-        className="w-full h-[17rem] "
-      />
-      <div className="p-6">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">
-              {job.jobtitle}
-            </h2>
-            {/* <p className="text-lg text-gray-600 mb-2">{job.department}</p> */}
-            <div className="flex flex-wrap gap-2">
-              <span className="flex items-center text-sm text-gray-500">
-                <MapPin size={16} className="mr-1" /> {job.jobType}
-              </span>
-              <span className="flex items-center text-sm text-gray-500">
-                <Clock size={16} className="mr-1" /> {job.employmentType}
-              </span>
-            </div>
-          </div>
-        </div>
-        <p className="text-gray-700 mb-4">
-          <ReactQuill
-            readOnly={true}
-            value={job.description}
-            modules={{ toolbar: false }}
-            theme="bubble"
-            className="quill"
-          />
-        </p>
-        {/* {expanded && (
-                    <div className="mt-4">
-                        <h3 className="font-semibold text-gray-800 mb-2">Requirements:</h3>
-                        <p className="text-gray-700">{job.requirements}</p>
-                    </div>
-                )} */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mt-6 h-[2cm] my-auto">
-          <button
-            onClick={onApply}
-            className="w-full sm:w-auto bg-yellow-400 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-full flex items-center justify-center transition duration-300 mb-3 sm:mb-0"
-          >
-            Apply Now
-            <ChevronRight className="ml-2" size={18} />
-          </button>
-          <button
-            onClick={openModal}
-            className="w-full sm:w-auto text-yellow-400 hover:text-yellow-600 font-semibold flex items-center justify-center transition duration-300"
-          >
-            Learn More
-            {/* <ChevronDown className="ml-1" size={18} /> */}
-          </button>
-        </div>
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden w-full max-w-md mx-auto h-full">
+  <img
+    src={`/api/image/download/${job.photo}`}
+    alt={`${job.department} department`}
+    className="w-full h-48 sm:h-56 md:h-64 object-cover"
+  />
+  <div className="p-5 flex flex-col flex-grow">
+    <div className="mb-3">
+      <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1 leading-snug">
+        {job.jobtitle}
+      </h2>
+      <div className="flex flex-wrap gap-3 text-sm text-gray-500">
+        <span className="flex items-center">
+          <MapPin size={16} className="mr-1" /> {job.jobType}
+        </span>
+        <span className="flex items-center">
+          <Clock size={16} className="mr-1" /> {job.employmentType}
+        </span>
       </div>
+    </div>
+
+    <div className="text-gray-700 text-sm sm:text-base mb-4 flex-grow">
+      <div
+        dangerouslySetInnerHTML={{ __html: job.description }}
+        className="prose prose-sm text-gray-700"
+      />
+    </div>
+
+
+    <div className="flex flex-col sm:flex-row gap-3 mt-auto">
+      <button
+        onClick={onApply}
+        className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 px-4 rounded-full flex items-center justify-center transition"
+      >
+        Apply Now
+        <ChevronRight className="ml-2" size={18} />
+      </button>
+      <button
+        onClick={openModal}
+        className="flex-1 text-yellow-500 hover:text-yellow-600 font-semibold py-2 px-4 rounded-full flex items-center justify-center transition border border-yellow-500"
+      >
+        Learn More
+      </button>
+    </div>
+  </div>
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Job Requirements"
-        className="fixed inset-0 bg-white p-8 max-w-lg mx-auto my-16 rounded-lg shadow-lg overflow-auto max-h-[80vh] "
+        className="fixed inset-0 bg-white p-6 sm:p-8 max-w-lg mx-auto my-8 sm:my-16 rounded-lg shadow-lg overflow-auto max-h-[80vh]"
         overlayClassName="fixed inset-0 bg-black bg-opacity-50 z-50"
       >
         <div className="flex justify-between items-center relative">
-          <h2 className="text-2xl font-bold mb-4">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">
             Requirements for {job.jobtitle}
           </h2>
           <button
             onClick={closeModal}
             aria-label="Close"
-            className=" absolute -top-4 -right-6 text-black hover:text-yellow-500"
+            className="absolute -top-4 -right-4 text-black hover:text-yellow-500"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X size={24} />
           </button>
         </div>
-        <div className="text-gray-700">
+        <div className="text-gray-700 text-sm sm:text-base">
           <ReactQuill
             readOnly={true}
             value={job.requirement}
@@ -187,7 +161,7 @@ const JobCard = ({ job, onApply }) => {
         </div>
         <button
           onClick={closeModal}
-          className="mt-4 bg-yellow-400 hover:bg-yellow-600 text-white py-2 px-4 rounded-full transition duration-300"
+          className="mt-4 bg-yellow-400 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-full transition duration-300 w-full sm:w-auto"
         >
           Close
         </button>
@@ -196,15 +170,13 @@ const JobCard = ({ job, onApply }) => {
   );
 };
 
-
-
 const JobApplicationModal = ({ job, isOpen, onClose }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [message, setMessage] = useState("");
   const [resume, setResume] = useState(null);
-  const [linkedin, setLinkedin] = useState(""); // New LinkedIn state
+  const [linkedin, setLinkedin] = useState("");
   const [clientIp, setClientIp] = useState("");
   const [utmParams, setUtmParams] = useState({});
   const [loading, setLoading] = useState(false);
@@ -251,7 +223,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           mobileNo,
           resume,
           message,
-          linkedin, // Add LinkedIn to the payload
+          linkedin,
           ipaddress: clientIp,
           ...utmParams,
         },
@@ -267,7 +239,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
       setMobileNo("");
       setMessage("");
       setResume(null);
-      setLinkedin(""); // Reset LinkedIn field
+      setLinkedin("");
     } catch (err) {
       console.error("Failed to submit application", err);
     } finally {
@@ -278,110 +250,127 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-8 max-w-lg w-full relative">
-        <button className="absolute top-3 right-3" onClick={onClose}>
-          <X size={24} />
-        </button>
-        <h2 className="text-2xl font-semibold mb-4">
-          Apply for {job.jobtitle}
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Name</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="John Doe"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-2 border rounded-lg"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Phone Number
-            </label>
-            <input
-              type="text"
-              name="mobileNo"
-              value={mobileNo}
-              placeholder="1234567890"
-              onChange={(e) => setMobileNo(e.target.value)}
-              className="w-full p-2 border rounded-lg"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="name@gmail.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded-lg"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              LinkedIn Profile
-            </label>
-            <input
-              type="url"
-              name="linkedin"
-              value={linkedin}
-              onChange={(e) => setLinkedin(e.target.value)}
-              className="w-full p-2 border rounded-lg"
-              placeholder="https://linkedin.com/in/your-profile"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">
-              Upload Resume
-            </label>
-            <input
-              type="file"
-              name="resume"
-              onChange={handleFileChange}
-              className="w-full"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-1">Message</label>
-            <textarea
-              name="message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="w-full p-2 border rounded-lg"
-            />
-          </div>
-          <button
-            type="submit"
-            className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg w-full ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={loading}
-          >
-            {loading ? "Submitting..." : "Submit Application"}
-          </button>
-        </form>
+   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4 sm:px-6">
+  <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-xl w-full relative shadow-xl">
+    {/* Close Button */}
+    <button
+      className="absolute top-4 right-4 text-gray-500 hover:text-yellow-500 transition"
+      onClick={onClose}
+    >
+      <X size={24} />
+    </button>
+
+    {/* Heading */}
+    <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-gray-800">
+      Apply for <span className="text-yellow-500">{job.jobtitle}</span>
+    </h2>
+
+    {/* Form */}
+    <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Name */}
+      <div>
+        <label className="block text-sm font-medium mb-1 text-gray-700">Name</label>
+        <input
+          type="text"
+          name="name"
+          placeholder="John Doe"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          required
+        />
       </div>
-    </div>
+
+      {/* Phone */}
+      <div>
+        <label className="block text-sm font-medium mb-1 text-gray-700">Phone Number</label>
+        <input
+          type="text"
+          name="mobileNo"
+          placeholder="1234567890"
+          value={mobileNo}
+          onChange={(e) => setMobileNo(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          required
+        />
+      </div>
+
+      {/* Email */}
+      <div>
+        <label className="block text-sm font-medium mb-1 text-gray-700">Email</label>
+        <input
+          type="email"
+          name="email"
+          placeholder="name@gmail.com"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          required
+        />
+      </div>
+
+      {/* LinkedIn (optional) */}
+      <div>
+        <label className="block text-sm font-medium mb-1 text-gray-700">
+          LinkedIn Profile <span className="text-gray-400 text-xs">(optional)</span>
+        </label>
+        <input
+          type="url"
+          name="linkedin"
+          value={linkedin}
+          onChange={(e) => setLinkedin(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+          placeholder="https://linkedin.com/in/your-profile"
+        />
+      </div>
+
+      {/* Resume Upload */}
+      <div>
+        <label className="block text-sm font-medium mb-1 text-gray-700">Upload Resume</label>
+        <input
+          type="file"
+          name="resume"
+          onChange={handleFileChange}
+          className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-md file:text-sm file:font-semibold file:bg-yellow-100 file:text-yellow-800 hover:file:bg-yellow-200"
+          required
+        />
+      </div>
+
+      {/* Message */}
+      <div>
+        <label className="block text-sm font-medium mb-1 text-gray-700">Message</label>
+        <textarea
+          name="message"
+          rows={4}
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+          placeholder="Tell us something more about your background or interest..."
+        />
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={loading}
+        className={`w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 px-4 rounded-md text-sm transition ${
+          loading ? "opacity-60 cursor-not-allowed" : ""
+        }`}
+      >
+        {loading ? "Submitting..." : "Submit Application"}
+      </button>
+    </form>
+  </div>
+</div>
+
   );
 };
-
-
-
 
 const CareerPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterDepartment, setFilterDepartment] = useState("All");
-  const [selectedJob, setSelectedJob] = useState(null); // For modal
-  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [selectedJob, setSelectedJob] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [careerOptions, setCareerOptions] = useState([]);
 
   const fetchData = async () => {
@@ -396,6 +385,7 @@ const CareerPage = () => {
       console.error(error);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -421,45 +411,50 @@ const CareerPage = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <Banner />
-      <div className="max-w-8xl xl:mx-12 xl:px-20 mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-4">
-        <div className="mb-12 flex flex-col md:flex-row justify-between  items-start">
-          <div className="flex flex-wrap w-1/2 justify-start gap-2">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-4">
+        <div className="mb-12 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-wrap justify-start gap-2">
             {departments.map((dept) => (
               <button
                 key={dept}
                 onClick={() => setFilterDepartment(dept)}
-                className={`px-4 py-2 rounded-full border border-gray-300 
+                className={`px-4 py-2 rounded-full border border-gray-300 text-sm font-medium
                             ${
                               filterDepartment === dept
                                 ? "bg-black text-white"
-                                : "bg-white text-black"
+                                : "bg-white text-black hover:bg-gray-100"
                             }`}
               >
                 {dept}
               </button>
             ))}
           </div>
-          <div className="w-full md:w-1/3 mb-4 md:mb-0">
+          <div className="w-full md:w-80">
             <div className="relative flex items-center">
               <input
                 type="text"
                 placeholder="Search jobs..."
-                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-1 focus:ring-black"
+                className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400 text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
-              <button className="absolute right-3 top-2.5 text-gray-400">
-                <Search size={20} />
-              </button>
+              <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
             </div>
           </div>
         </div>
-        <p className="text-gray-400">
-    Can’t find the job you want? Send your resume to <span className="hover:text-blue-900 transition-all duration-300 text-gray-500 "><a href="mailto:hr@rndtechnosoft.com">hr@rndtechnosoft.com</a></span> and we’ll contact you when a new position opens.
-</p>
+        <p className="text-gray-500 text-sm mb-8">
+          Can’t find the job you want? Send your resume to{" "}
+          <a
+            href="mailto:hr@rndtechnosoft.com"
+            className="text-yellow-500 hover:text-yellow-600 transition-all duration-300"
+          >
+            hr@rndtechnosoft.com
+          </a>{" "}
+          and we’ll contact you when a new position opens.
+        </p>
 
-        {filteredJobs.length > 0 ? (
-          <div className="grid gap-8 md:grid-cols-3 my-16">
+        {filteredJobs.length > 0 ? ( 
+          <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 my-8">
             {filteredJobs.map((job) => (
               <JobCard key={job.id} job={job} onApply={() => openModal(job)} />
             ))}
@@ -467,13 +462,13 @@ const CareerPage = () => {
         ) : (
           <div className="text-center py-12">
             <Briefcase className="mx-auto text-gray-400 mb-4" size={48} />
-            <p className="text-xl text-gray-600">
+            <p className="text-lg text-gray-600">
               No job openings match your criteria.
             </p>
           </div>
         )}
       </div>
-   
+
       {selectedJob && (
         <JobApplicationModal
           job={selectedJob}
