@@ -10,7 +10,7 @@ const DesignProcessSchema = new Schema({
     },
     subheading: {
         type: String,
-        
+        required: false,
         trim: true,
     },
     description: {
