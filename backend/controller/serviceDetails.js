@@ -693,18 +693,32 @@ const updateSubSubServiceDetail = async (req, res) => {
       updateFields.video = existingServiceDetail.video;
     }
 
-       // Parse questions from strings to objects if questions are provided
+      // Handle question parsing robustly
 if (updateFields.questions) {
-  // Ensure updateFields.questions is an array
-  if (Array.isArray(updateFields.questions)) {
-    updateFields.questions = updateFields.questions.map(question => JSON.parse(question));
-  } else {
-    // Handle case where it's not an array (perhaps log the error, or ignore)
-    console.error('Questions is not an array:', updateFields.questions);
+  try {
+    if (typeof updateFields.questions === 'string') {
+      // Single object as a string
+      updateFields.questions = [JSON.parse(updateFields.questions)];
+    } else if (Array.isArray(updateFields.questions)) {
+      // Array of strings or objects
+      updateFields.questions = updateFields.questions.map((item) =>
+        typeof item === 'string' ? JSON.parse(item) : item
+      );
+    } else if (typeof updateFields.questions === 'object') {
+      // Single object directly (not string)
+      updateFields.questions = [updateFields.questions];
+    } else {
+      console.warn("Unsupported format for questions:", updateFields.questions);
+      updateFields.questions = existingServiceDetail.questions;
+    }
+  } catch (err) {
+    console.error("Failed to parse questions:", err);
+    updateFields.questions = existingServiceDetail.questions;
   }
 } else {
   updateFields.questions = existingServiceDetail.questions;
 }
+
 
     // Handle alt text updates
     if (!updateFields.alt) {
