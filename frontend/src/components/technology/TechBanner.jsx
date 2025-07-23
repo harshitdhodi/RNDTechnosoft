@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function TechBanner({ serviceGridRef, pageType }) {
@@ -8,8 +8,8 @@ export default function TechBanner({ serviceGridRef, pageType }) {
   const [photo, setPhoto] = useState(null);
   const [alt, setAlt] = useState("");
   const [imgTitle, setImgTitle] = useState("");
-  const [showModal, setShowModal] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHeadings = async () => {
@@ -37,13 +37,6 @@ export default function TechBanner({ serviceGridRef, pageType }) {
     }
   };
 
-  const handleModalSubmit = (e) => {
-    e.preventDefault();
-    // Add form submission logic here (e.g., axios.post)
-    alert("Application submitted!");
-    setShowModal(false);
-  };
-
   return (
     <div className="relative">
       <img
@@ -52,7 +45,7 @@ export default function TechBanner({ serviceGridRef, pageType }) {
         title={imgTitle}
         className="w-full h-[55vh] object-fill"
       />
-      <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center gap-4 px-4 py-30 xl:pt-12 text-center">
+      <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center gap-4 px-4 pb-16 mt-14 xl:pt-24 text-center">
         <h1 className="text-white font-semibold text-4xl md:text-4xl capitalize md:max-w-xl xl:max-w-4xl">
           {heading}
         </h1>
@@ -66,64 +59,14 @@ export default function TechBanner({ serviceGridRef, pageType }) {
           >
             Get in Touch
           </a>
-          <button
-            onClick={() => setShowModal(true)}
+          <a
+          href="/hire-talent"
             className="bg-yellow-400 text-black font-medium py-3 px-6 rounded-md hover:bg-yellow-500 transition duration-300"
           >
-            Hire Us
-          </button>
+            Hire Talent
+          </a>
         </div>
       </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center px-4">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-xl font-bold"
-            >
-              &times;
-            </button>
-            <h2 className="text-2xl font-semibold mb-4 text-center">Hire Us</h2>
-            <form onSubmit={handleModalSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter your name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter your email"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea
-                  rows="4"
-                  required
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Tell us what you're looking for"
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-yellow-500 text-black font-semibold py-2 rounded-md hover:bg-yellow-600 transition"
-              >
-                Submit Application
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

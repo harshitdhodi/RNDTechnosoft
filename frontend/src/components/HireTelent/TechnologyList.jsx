@@ -6,20 +6,47 @@ const TechnologyList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [hireTalentData, setHireTalentData] = useState({
+    heading: '',
+    subHeading: '',
+    cards: [],
+  });
+
+  // Fetch heading + subheading
+  useEffect(() => {
+    const fetchHireTalentData = async () => {
+      try {
+        const response = await axios.get('/api/hire-talent/getByPageSection?pageSection=Technologies');
+        const data = response.data.data;
+
+        if (data.length > 0) {
+          setHireTalentData({
+            heading: data[0].heading || '',
+            subHeading: data[0].subHeading || '',
+            cards: data[0].card || [],
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching hire talent data:', err);
+        setError('Error loading heading/subheading');
+      }
+    };
+
+    fetchHireTalentData();
+  }, []);
+
+  // Fetch categories + technologies
   useEffect(() => {
     const fetchTechnologyData = async () => {
       try {
         setIsLoading(true);
 
-        // Fetch categories
         const categoryResponse = await axios.get('/api/techCategory');
         const categories = categoryResponse.data.data;
 
-        // Fetch technologies
         const technologyResponse = await axios.get('/api/technology');
         const technologies = technologyResponse.data.data;
 
-        // Format sections to match the original component structure
         const formattedSections = categories.map((category) => ({
           title: category.heading,
           icon: category.photo ? `/api/logo/download/${category.photo}` : '❓',
@@ -52,46 +79,63 @@ const TechnologyList = () => {
   }
 
   return (
-    <div className="p-4 sm:p-8 max-w-6xl mx-auto font-sans">
+    <div className="sm:p-8 max-w-6xl mx-auto font-sans">
       <div className="text-center mb-6 sm:mb-8 max-w-3xl mx-auto">
-        <h1 className="text-2xl sm:text-4xl font-serif font-medium mb-4">Our <span className='text-yellow-500'>Software Development</span> Team’s Core Strengths</h1>
+        <h1 className="text-4xl font-bold mb-4">
+          {hireTalentData.heading || (
+            <>
+              Our <span className="text-yellow-500">Software Development</span> Team’s Core Strengths
+            </>
+          )}
+        </h1>
         <p className="text-lg text-gray-600 mb-6 sm:mb-8">
-          Our software development team thrives on agility, precision, and innovation. From scalable architecture to seamless collaboration, we turn complex ideas into powerful digital solutions.
+          {hireTalentData.subHeading ||
+            'Our software development team thrives on agility, precision, and innovation. From scalable architecture to seamless collaboration, we turn complex ideas into powerful digital solutions.'}
         </p>
       </div>
+
       {sections.map((section, index) => (
-        <div key={index} className="flex flex-col sm:flex-row sm:items-center py-2 sm:py-4 ">
-          <div className="flex items-center border-b-2 border-dashed border-gray-400 p-2">
-            {section.icon.startsWith('/api/logo/download') ? (
-              <img
-                src={section.icon}
-                alt={section.title}
-                className="w-5 h-5 sm:w-6 sm:h-6 mr-2 object-contain"
-                onError={(e) => (e.target.outerHTML = '<span class="text-lg sm:text-2xl mr-2">❓</span>')}
-              />
-            ) : (
-              <span className="text-lg sm:text-2xl mr-2">{section.icon}</span>
-            )}
-            <h2 className="text-base sm:text-lg font-semibold">{section.title}</h2>
-          </div>
-          <div className="flex flex-wrap items-center mt-2 sm:mt-0 sm:w-2/3">
-            <span className="text-yellow-500 text-3xl sm:text-5xl mr-3 sm:mr-4 hidden sm:inline">→</span>
-            <div className="flex flex-wrap ">
-              {section.technologies.map((tech, techIndex) => (
-                <div key={techIndex} className="flex items-center">
-                  {tech.logo ? (
-                    <img
-                      src={tech.logo}
-                      alt={tech.name}
-                      className="w-full h-10 sm:w-1/4 sm:h-[95%] mr-2 object-fill"
-                      onError={(e) => (e.target.outerHTML = '<span class="w-5 h-5 sm:w-6 sm:h-6 mr-2 flex items-center justify-center text-gray-500">?</span>')}
-                    />
-                  ) : (
-                    <span className="w-5 h-5 sm:w-6 sm:h-6 mr-2 flex items-center justify-center text-gray-500">?</span>
-                  )}
-                  <span className="text-gray-700 text-sm sm:text-base font-medium">{tech.name}</span>
-                </div>
-              ))}
+        <div
+          key={index}
+          className="flex justify-center py-6 border-b border-gray-200"
+        >
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center max-w-5xl w-full px-4">
+            
+            {/* Left: Icon + Title */}
+            <div className="flex items-center gap-2 min-w-[220px] mx-auto">
+              {section.icon.startsWith('/api/logo/download') ? (
+                <img
+                  src={section.icon}
+                  alt={section.title}
+                  className="w-6 h-6 object-contain"
+                />
+              ) : (
+                <span className="text-2xl">{section.icon}</span>
+              )}
+              <h2 className="text-base font-semibold">{section.title}</h2>
+            </div>
+
+            {/* Arrow — visible only on sm+ */}
+            <div className="hidden sm:block w-[30px] text-yellow-500 text-2xl">→</div>
+
+            {/* Logos section */}
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-4">
+                {section.technologies.map((tech, techIndex) => (
+                  <div key={techIndex} className="flex items-center gap-2">
+                    {tech.logo ? (
+                      <img
+                        src={tech.logo}
+                        alt={tech.name}
+                        className="w-6 h-6 sm:w-8 sm:h-8 object-contain"
+                      />
+                    ) : (
+                      <span className="w-6 h-6 flex items-center justify-center text-gray-500">?</span>
+                    )}
+                    <span className="text-sm text-gray-800">{tech.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

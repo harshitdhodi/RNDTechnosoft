@@ -8,35 +8,43 @@ exports.createHireTalent = async (req, res) => {
     console.log('Received body:', req.body);
     console.log('Received files:', req.files);
 
-    // Parse card if it's a string
+    // Parse card if it's a JSON string
     if (typeof card === 'string') {
-      card = JSON.parse(card);
+      try {
+        card = JSON.parse(card);
+      } catch (err) {
+        return res.status(400).json({ error: 'Invalid card JSON format' });
+      }
     }
 
-    // Validate input
-    if (!heading || !pageSection || !Array.isArray(card)) {
-      return res.status(400).json({ error: 'Heading, pageSection, and card array are required' });
+    // Basic required field validation
+    if (!heading || !pageSection) {
+      return res.status(400).json({ error: 'Heading and pageSection are required' });
     }
 
-    // Map file uploads to corresponding card items
-    const updatedCards = card.map((cardItem, index) => {
-      const fileField = `card[${index}][photo]`;
-      const file = req.files && req.files[fileField] && req.files[fileField][0];
-      const photo = file ? file.filename : cardItem.photo || '';
+    // Process cards if provided and is a valid array
+    let updatedCards = [];
+    if (Array.isArray(card)) {
+      updatedCards = card.map((cardItem, index) => {
+        const fileField = `card[${index}][photo]`;
+        const file = req.files?.[fileField]?.[0];
+        const photo = file ? file.filename : cardItem.photo || '';
 
-      return {
-        cardInfo: cardItem.cardInfo,
-        photo,
-        altImg: cardItem.altImg,
-        imgTitle: cardItem.imgTitle,
-      };
-    });
+        return {
+          cardInfo: cardItem.cardInfo,
+          photo,
+          altImg: cardItem.altImg,
+          imgTitle: cardItem.imgTitle,
+        };
+      });
+    }
 
+    // Create document
     const newHireTalentData = new HireTalent({
       heading,
       subHeading,
       pageSection,
-      card: updatedCards,
+      ...(updatedCards.length > 0 && { card: updatedCards }), // Only include `card` if present
     });
 
     await newHireTalentData.save();
@@ -142,7 +150,7 @@ exports.getHireTalentsByPageSection = async (req, res) => {
     const { pageSection } = req.query;
 
     // Validate pageSection if provided
-    const validSections = ['TeamService', 'Applications', 'WhyChoose'];
+    const validSections = ['TeamService', 'Applications', 'WhyChoose', 'Technologies'];
     if (pageSection && !validSections.includes(pageSection)) {
       return res.status(400).json({ error: 'Invalid pageSection value. Must be one of: ' + validSections.join(', ') });
     }
