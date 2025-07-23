@@ -5,14 +5,14 @@ const HireTalentSchema = new mongoose.Schema({
   subHeading: { type: String, trim: true },
   card: [{
     cardInfo: { type: String, trim: true },
-    photo: { type: String, required: true },
+    photo: { type: String, required: false },
     altImg: { type: String, trim: true },
     imgTitle: { type: String, trim: true },
   }],
   pageSection: {
     type: String,
     trim: true,
-    enum: ['TeamService', 'Applications', 'WhyChoose'],
+    enum: ['TeamService', 'Applications', 'WhyChoose', 'Technologies'],
   },
 }, { timestamps: true });
 

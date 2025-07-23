@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import 'react-quill/dist/quill.snow.css';
-import { useParams, useNavigate } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 import DOMPurify from 'dompurify';
 import axios from "axios";
 import { X } from "lucide-react";
@@ -18,6 +18,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
   const [utmParams, setUtmParams] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { slug } = useParams();
 
   const handleFileChange = (e) => {
     setResume(e.target.files[0]);
@@ -61,6 +62,8 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           resume,
           message,
           linkedin,
+          path: slug,
+          jobTitle: job?.jobtitle || 'General Application',
           ipaddress: clientIp,
           ...utmParams,
         },
