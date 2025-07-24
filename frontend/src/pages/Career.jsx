@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Briefcase,
   Search,
@@ -11,7 +11,7 @@ import Modal from "react-modal";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -181,6 +181,8 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
   const [utmParams, setUtmParams] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const slug = pathname.slice(1, pathname.length);
 
   const handleFileChange = (e) => {
     setResume(e.target.files[0]);
@@ -225,6 +227,8 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           message,
           linkedin,
           ipaddress: clientIp,
+          path: slug,
+          jobTitle: job.jobtitle,
           ...utmParams,
         },
         {
@@ -250,119 +254,119 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-   <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4 sm:px-6">
-  <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-xl w-full relative shadow-xl">
-    {/* Close Button */}
-    <button
-      className="absolute top-4 right-4 text-gray-500 hover:text-yellow-500 transition"
-      onClick={onClose}
-    >
-      <X size={24} />
-    </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 px-4 sm:px-6">
+      <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-xl w-full relative shadow-xl">
+        {/* Close Button */}
+        <button
+          className="absolute top-4 right-4 text-gray-500 hover:text-yellow-500 transition"
+          onClick={onClose}
+        >
+          <X size={24} />
+        </button>
 
-    {/* Heading */}
-    <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-gray-800">
-      Apply for <span className="text-yellow-500">{job.jobtitle}</span>
-    </h2>
+        {/* Heading */}
+        <h2 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-gray-800">
+          Apply for <span className="text-yellow-500">{job.jobtitle}</span>
+        </h2>
 
-    {/* Form */}
-    <form onSubmit={handleSubmit} className="space-y-5">
-      {/* Name */}
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700">Name</label>
-        <input
-          type="text"
-          name="name"
-          placeholder="John Doe"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          required
-        />
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700">Name</label>
+            <input
+              type="text"
+              name="name"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              required
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700">Phone Number</label>
+            <input
+              type="text"
+              name="mobileNo"
+              placeholder="1234567890"
+              value={mobileNo}
+              onChange={(e) => setMobileNo(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              required
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700">Email</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="name@gmail.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              required
+            />
+          </div>
+
+          {/* LinkedIn (optional) */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700">
+              LinkedIn Profile <span className="text-gray-400 text-xs">(optional)</span>
+            </label>
+            <input
+              type="url"
+              name="linkedin"
+              value={linkedin}
+              onChange={(e) => setLinkedin(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              placeholder="https://linkedin.com/in/your-profile"
+            />
+          </div>
+
+          {/* Resume/Portfolio Upload */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700">Upload Resume/Portfolio</label>
+            <input
+              type="file"
+              name="resume"
+              onChange={handleFileChange}
+              className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-md file:text-sm file:font-semibold file:bg-yellow-100 file:text-yellow-800 hover:file:bg-yellow-200"
+              accept=".pdf,.doc,.docx"
+            />
+          </div>
+
+          {/* Message */}
+          <div>
+            <label className="block text-sm font-medium mb-1 text-gray-700">Project Details</label>
+            <textarea
+              name="message"
+              rows={4}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
+              placeholder="Tell us about your background, interest, or relevant experience..."
+              required
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 px-4 rounded-md text-sm transition ${
+              loading ? "opacity-60 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Submitting..." : "Submit Application"}
+          </button>
+        </form>
       </div>
-
-      {/* Phone */}
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700">Phone Number</label>
-        <input
-          type="text"
-          name="mobileNo"
-          placeholder="1234567890"
-          value={mobileNo}
-          onChange={(e) => setMobileNo(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          required
-        />
-      </div>
-
-      {/* Email */}
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700">Email</label>
-        <input
-          type="email"
-          name="email"
-          placeholder="name@gmail.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          required
-        />
-      </div>
-
-      {/* LinkedIn (optional) */}
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700">
-          LinkedIn Profile <span className="text-gray-400 text-xs">(optional)</span>
-        </label>
-        <input
-          type="url"
-          name="linkedin"
-          value={linkedin}
-          onChange={(e) => setLinkedin(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400"
-          placeholder="https://linkedin.com/in/your-profile"
-        />
-      </div>
-
-      {/* Resume Upload */}
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700">Upload Resume</label>
-        <input
-          type="file"
-          name="resume"
-          onChange={handleFileChange}
-          className="w-full text-sm file:mr-4 file:py-2 file:px-4 file:border-0 file:rounded-md file:text-sm file:font-semibold file:bg-yellow-100 file:text-yellow-800 hover:file:bg-yellow-200"
-          required
-        />
-      </div>
-
-      {/* Message */}
-      <div>
-        <label className="block text-sm font-medium mb-1 text-gray-700">Message</label>
-        <textarea
-          name="message"
-          rows={4}
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 resize-none"
-          placeholder="Tell us something more about your background or interest..."
-        />
-      </div>
-
-      {/* Submit Button */}
-      <button
-        type="submit"
-        disabled={loading}
-        className={`w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 px-4 rounded-md text-sm transition ${
-          loading ? "opacity-60 cursor-not-allowed" : ""
-        }`}
-      >
-        {loading ? "Submitting..." : "Submit Application"}
-      </button>
-    </form>
-  </div>
-</div>
-
+    </div>
   );
 };
 

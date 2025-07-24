@@ -19,6 +19,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
   const [utmParams, setUtmParams] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const {slug}= useParams();
 
   const handleFileChange = (e) => {
     setResume(e.target.files[0]);
@@ -62,6 +63,8 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           resume,
           message,
           linkedin,
+          path: slug,
+          jobTitle: job?.jobtitle,
           ipaddress: clientIp,
           ...utmParams,
         },
