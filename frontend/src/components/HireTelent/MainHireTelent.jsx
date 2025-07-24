@@ -4,6 +4,7 @@ import TeamServicesSection from './TeamService'
 import TeamEngagementSection from './TeamEngagementSection'
 import DedicatedTeam from './DedicatedTeam'
 import TechnologyList from './TechnologyList'
+import Faq from './../../pages/Faq';
 
 const MainHireTelent = () => {
   return (
@@ -13,6 +14,7 @@ const MainHireTelent = () => {
        <TeamEngagementSection />
        <DedicatedTeam />
        <TechnologyList />
+       <Faq/>
     </div>
   )
 }
