@@ -11,7 +11,6 @@ const careerInquirySchema = new mongoose.Schema({
   },
   linkedin: {
     type: String,
-   
   },
   email: {
     type: String,
@@ -56,6 +55,10 @@ const careerInquirySchema = new mongoose.Schema({
   utm_term: {
     type: String,
     required: false
+  },
+  path: {
+    type: String,
+    required: true
   },
   ipaddress: { type: String }
 }, { timestamps: true });

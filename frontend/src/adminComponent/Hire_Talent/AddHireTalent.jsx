@@ -196,6 +196,7 @@ const navigate = useNavigate()
             <option value="TeamService">Team Service</option>
             <option value="Applications">Applications</option>
             <option value="WhyChoose">Why Choose</option>
+            <option value="Technologies">Technologies</option>
           </select>
         </div>
         {formData.cards.map((card, cardIndex) => (

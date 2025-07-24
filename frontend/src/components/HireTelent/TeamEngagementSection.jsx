@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import JobApplicationModal from './JobApplicationModal'; // Adjust the import path as needed
 
-const    TeamEngagementSection = () => {
+const TeamEngagementSection = () => {
   const [engagementData, setEngagementData] = useState({
     heading: '',
     subHeading: '',
-    keyBenefits: [],
-    idealForYou: [],
+    cardHTML: '',
     image: '',
     imageAlt: '',
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
   // Fetch data from API
   useEffect(() => {
@@ -21,50 +22,16 @@ const    TeamEngagementSection = () => {
         const data = response.data.data;
 
         if (data.length > 0) {
-          // Parse cardInfo to extract keyBenefits and idealForYou
-          const keyBenefits = [];
-          const idealForYou = [];
+          const firstCard = data[0].card[0];
 
-          // Handle cards if available
-          if (data[0].card && data[0].card.length > 0) {
-            data[0].card.forEach((card) => {
-              const parser = new DOMParser();
-              const doc = parser.parseFromString(card.cardInfo, 'text/html');
-              const text = doc.querySelector('p')?.textContent || '';
-
-              // If cardInfo is empty, skip or add fallback
-              if (text) {
-                // For simplicity, alternate between keyBenefits and idealForYou
-                // Adjust this logic based on actual data structure
-                if (keyBenefits.length < 2) {
-                  keyBenefits.push(text);
-                } else {
-                  idealForYou.push(text);
-                }
-              }
-            });
-          }
-
-          // Fallback content if lists are empty
           setEngagementData({
             heading: data[0].heading || '',
             subHeading:
               data[0].subHeading ||
               'Acquire a dedicated team for your project. Our professionals integrate with your in-house workforce.',
-            keyBenefits: keyBenefits.length
-              ? keyBenefits
-              : [
-                  'Enhanced technical control and real-time collaboration',
-                  'No burden of recruitment or talent management',
-                ],
-            idealForYou: idealForYou.length
-              ? idealForYou
-              : [
-                  'You have a clear project vision and defined requirements',
-                  'You require team-level specific technical expertise',
-                ],
-            image: data[0].card[0]?.photo || '',
-            imageAlt: data[0].card[0]?.altImg || 'Team working together in office',
+            cardHTML: firstCard?.cardInfo || '',
+            image: firstCard?.photo || '',
+            imageAlt: firstCard?.altImg || 'Team working together in office',
           });
         }
         setLoading(false);
@@ -75,6 +42,15 @@ const    TeamEngagementSection = () => {
     };
     fetchData();
   }, []);
+
+  // Functions to open and close the modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <section className="px-4">
@@ -98,45 +74,26 @@ const    TeamEngagementSection = () => {
 
               <p className="text-gray-600 mb-8 leading-relaxed">{engagementData.subHeading}</p>
 
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Key Benefits</h3>
-                <ul className="space-y-2">
-                  {engagementData.keyBenefits.length === 0 ? (
-                    <li className="text-gray-600 text-sm">No benefits available.</li>
-                  ) : (
-                    engagementData.keyBenefits.map((benefit, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <span className="text-gray-600 text-sm">{benefit}</span>
-                      </li>
-                    ))
-                  )}
-                </ul>
-              </div>
+              <div
+                className="prose prose-sm max-w-none text-gray-700"
+                dangerouslySetInnerHTML={{ __html: engagementData.cardHTML }}
+              ></div>
 
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">Ideal For You If</h3>
-                <ul className="space-y-2">
-                  {engagementData.idealForYou.length === 0 ? (
-                    <li className="text-gray-600 text-sm">No conditions available.</li>
-                  ) : (
-                    engagementData.idealForYou.map((item, index) => (
-                      <li key={index} className="flex items-start">
-                        <div className="w-2 h-2 bg-yellow-400 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                        <span className="text-gray-600 text-sm">{item}</span>
-                      </li>
-                    ))
-                  )}
-                </ul>
-              </div>
-
-              <button className="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200">
+              <button
+                onClick={openModal} // Open modal on click
+                className="mt-8 bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
+              >
                 Hire Us Now →
               </button>
             </div>
           </div>
         )}
       </div>
+      <JobApplicationModal
+        job={null} // No specific job; using null for general application
+        isOpen={isModalOpen}
+        onClose={closeModal}
+      />
     </section>
   );
 };
