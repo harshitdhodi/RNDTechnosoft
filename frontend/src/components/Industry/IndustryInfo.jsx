@@ -65,7 +65,7 @@ const IndustryInfo = () => {
           <p className="text-gray-600 mb-6">{error}</p>
           <button 
             onClick={() => navigate('/industries')}
-            className="bg-[#f3ca0d] font-semibold py-3 px-6 rounded-lg text-gray-700 hover:bg-[#e6b70c] transition"
+            className="bg-[#f3ca0d] font-semibold py-3 px-6 rounded-lg text-gray-700 transition"
           >
             Back to Industries
           </button>
@@ -82,7 +82,7 @@ const IndustryInfo = () => {
           <p className="text-gray-600 mb-6">The requested industry information could not be found.</p>
           <button 
             onClick={() => navigate('/industries')}
-            className="bg-[#f3ca0d] font-semibold py-3 px-6 rounded-lg text-gray-700 hover:bg-[#e6b70c] transition"
+            className="bg-[#f3ca0d] font-semibold py-3 px-6 rounded-lg text-gray-700 transition"
           >
             Back to Industries
           </button>
@@ -112,9 +112,9 @@ const IndustryInfo = () => {
       
       <button 
         onClick={handleConsultationClick}
-        className="bg-[#f3ca0d] font-semibold py-3 px-6 rounded-lg flex items-center space-x-2 hover:bg-[#e6b70c] transition shadow-md"
+        className="bg-[#f3ca0d] text-black font-semibold py-3 px-6 rounded-lg flex items-center space-x-2 hover:text-white"
       >
-        <span className='text-gray-700'>{buttonText || 'Get a Consultation'}</span>
+        <span >{buttonText || 'Get a Consultation'}</span>
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
         </svg>

@@ -491,6 +491,18 @@ app.use((err, req, res, next) => {
         error: process.env.NODE_ENV === 'development' ? err : undefined,
     });
 });
+
+// Error handling middleware in index.js
+app.use((err, req, res, next) => {
+  err.statusCode = err.statusCode || 500; // Default to 500 if no status code
+  err.status = err.status || 'error'; // Default to 'error' for status message
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
+});
  
 // Server Initialization
 async function startServer() {
