@@ -8,13 +8,13 @@ const {
   deleteIndustrySecData,
   getDataByCategorySlug
 } = require('../controller/caseStudy'); // Adjust path to your controller
-const { TechSecImage } = require('../middleware/TechSecImage'); // Assuming you have a file TechSecImage middleware
+const { handleCardImages } = require('../middleware/TechSecImage'); // Assuming you have a file TechSecImage middleware
 
 // Routes
-router.post('/', TechSecImage, createIndustrySecData);
+router.post('/', handleCardImages, createIndustrySecData);
 router.get('/', getAllIndustrySecData);
 router.get('/:id', getIndustrySecDataById);
-router.put('/:id', TechSecImage, updateIndustrySecData);
+router.put('/:id', handleCardImages, updateIndustrySecData);
 router.delete('/:id', deleteIndustrySecData);
 router.get('/category/:slug', getDataByCategorySlug);
 

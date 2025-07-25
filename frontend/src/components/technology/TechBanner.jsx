@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import JobApplicationModal from '../HireTelent/JobApplicationmodal'; // Import the modal component
 
 export default function TechBanner({ serviceGridRef, pageType }) {
   const [heading, setHeading] = useState("");
@@ -8,6 +9,7 @@ export default function TechBanner({ serviceGridRef, pageType }) {
   const [photo, setPhoto] = useState(null);
   const [alt, setAlt] = useState("");
   const [imgTitle, setImgTitle] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -29,12 +31,20 @@ export default function TechBanner({ serviceGridRef, pageType }) {
     };
 
     fetchHeadings();
-  }, []);
+  }, [pageType]);
 
   const scrollToServices = () => {
     if (serviceGridRef.current) {
       serviceGridRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
   };
 
   return (
@@ -55,18 +65,23 @@ export default function TechBanner({ serviceGridRef, pageType }) {
         <div className="flex gap-4 mt-4 flex-wrap justify-center">
           <a
             href="/contact"
-            className="bg-yellow-400 text-black font-medium py-3 px-6 rounded-md hover:bg-yellow-500 transition duration-300"
+            className="bg-[#f3ca0d] text-black font-medium py-3 px-6 rounded-md hover:text-white"
           >
             Get in Touch
           </a>
-          <a
-          href="/hire-talent"
-            className="bg-yellow-400 text-black font-medium py-3 px-6 rounded-md hover:bg-yellow-500 transition duration-300"
+          <button
+            onClick={handleOpenModal} // Trigger modal on click
+            className="bg-[#f3ca0d] text-black font-medium py-3 px-6 rounded-md hover:text-white"
           >
             Hire Talent
-          </a>
+          </button>
         </div>
       </div>
+      <JobApplicationModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        job={{ jobtitle: 'General Application' }} // Pass job title or customize as needed
+      />
     </div>
   );
 }
