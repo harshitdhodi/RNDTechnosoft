@@ -1,138 +1,191 @@
-const IndustrySecData = require('../model/caseStudy'); // Adjust path to your model file
+const IndustrySecData = require('../model/caseStudy');
+const AppError = require('../utils/appError.js');
 
-// Create a new IndustrySecData entry
-const createIndustrySecData = async (req, res) => {
+exports.createIndustrySecData = async (req, res, next) => {
   try {
     const { type, heading, subHeading, category } = req.body;
-    let { card } = req.body;
 
-    console.log('Received body:', req.body);
-    console.log('Received files:', req.files);
+    // Parse card fields dynamically
+    const cardFields = Object.keys(req.body).reduce((acc, key) => {
+      const match = key.match(/card\[(\d+)\]\.(.+)/);
+      if (match) {
+        const index = parseInt(match[1], 10);
+        const field = match[2];
+        if (!acc[index]) acc[index] = {};
+        acc[index][field] = req.body[key];
+      }
+      return acc;
+    }, {});
 
-    // Parse card if it's a string
-    if (typeof card === 'string') {
-      card = JSON.parse(card);
-    }
+    // Convert to array but only include cards with at least title or details
+    const cards = Object.entries(cardFields)
+      .map(([index, fields]) => ({
+        title: fields.title?.trim() || "",
+        details: fields.details?.trim() || "",
+        photo: "", // default empty
+        altName: fields.altName?.trim() || "",
+        imgTitle: fields.imgTitle?.trim() || "",
+        _originalIndex: parseInt(index, 10),
+      }))
+      .filter(card => card.title || card.details); // ✅ Only keep non-empty cards
 
-    // Validate input
-    if (!type || !heading || !subHeading || !category || !Array.isArray(card)) {
-      return res.status(400).json({ error: 'Type, heading, subHeading, category, and card array are required' });
-    }
-
-    // Map file uploads to corresponding card items
-    const updatedCard = card.map((cardItem, index) => {
-      const fileField = `card[${index}][photo]`;
-      const file = req.files && req.files[fileField] && req.files[fileField][0];
-      const photo = file ? file.filename : cardItem.photo || '';
-
-      return {
-        photo,
-        title: cardItem.title,
-        details: cardItem.details,
-        altName: cardItem.altName,
-        imgTitle: cardItem.imgTitle,
-      };
-    });
-
-    const newIndustrySecData = new IndustrySecData({
-      type,
-      heading,
-      subHeading,
-      category,
-      card: updatedCard,
-    });
-
-    await newIndustrySecData.save();
-
-    res.status(201).json({ message: 'Industry section data created', data: newIndustrySecData });
-  } catch (error) {
-    console.error('Error in createIndustrySecData:', error);
-    res.status(500).json({ error: error.message });
-  }
-};
-
-// Update an IndustrySecData entry by ID
-const updateIndustrySecData = async (req, res) => {
-  try {
-    const { id } = req.params;
-    let { type, heading, category, subHeading, card } = req.body;
-
-    console.log('Received body:', req.body);
-    console.log('Received files:', req.files); 
-
-    // Parse card if sent as a string (from form-data)
-    if (typeof card === 'string') {
-      card = JSON.parse(card);
-    }
-
-    // Find the existing document
-    const industrySecData = await IndustrySecData.findById(id);
-    if (!industrySecData) {
-      return res.status(404).json({ error: 'Industry section data not found' });
-    }
-
-    // Update fields if provided
-    if (type) industrySecData.type = type;
-    if (heading) industrySecData.heading = heading;
-    if (category) industrySecData.category = category;
-    if (subHeading) industrySecData.subHeading = subHeading;
-
-    // Handle card updates
-    if (card && Array.isArray(card)) {
-      const files = req.files || {};
-
-      const updatedCard = card.map((cardItem, index) => {
-        const fileField = `card[${index}][photo]`;
-        const file = files[fileField]?.[0];
-        const photo = file ? file.filename : cardItem.photo || '';
-
-        return {
-          photo,
-          title: cardItem.title || cardItem.cardInfo || '', // Use cardInfo as title if title not provided
-          details: cardItem.details || '', // Keep details separate, or use cardInfo if needed
-          altName: cardItem.altName || cardItem.altImg || '',
-          imgTitle: cardItem.imgTitle || '',
-        };
+    // Process file uploads (if any)
+    if (req.files) {
+      Object.entries(req.files).forEach(([fieldName, fileArray]) => {
+        const match = fieldName.match(/card\[(\d+)\]\.photo/);
+        if (match && fileArray && fileArray[0]) {
+          const originalIndex = parseInt(match[1], 10);
+          const cardToUpdate = cards.find(c => c._originalIndex === originalIndex);
+          if (cardToUpdate) {
+            cardToUpdate.photo = fileArray[0].filename;
+          }
+        }
       });
-      industrySecData.card = updatedCard;
     }
 
-    industrySecData.updatedAt = Date.now();
+    cards.forEach(c => delete c._originalIndex);
 
-    await industrySecData.save();
+    // Validate cards only if any exist
+    const invalidCards = cards.filter(c => !c.title.trim() || !c.details.trim());
+    if (invalidCards.length > 0) {
+      return next(new AppError("Each card must have a title and details", 400));
+    }
 
-    res.status(200).json({ message: 'Industry section data updated', data: industrySecData });
+    // Prevent duplicate entry
+    const existingEntry = await IndustrySecData.findOne({
+      heading: heading.trim(),
+      category,
+      type,
+    });
+    if (existingEntry) {
+      return next(
+        new AppError(
+          `An entry with heading "${heading.trim()}", category "${category}", and type "${type}" already exists`,
+          400
+        )
+      );
+    }
+
+    const newEntry = await IndustrySecData.create({
+      type: type.trim(),
+      heading: heading.trim(),
+      subHeading: subHeading?.trim() || "",
+      category,
+      card: cards, // Can be empty
+    });
+
+    res.status(201).json({
+      status: "success",
+      message: "Industry section data created successfully",
+      data: newEntry,
+    });
   } catch (error) {
-    console.error('Error in updateIndustrySecData:', error);
+    console.error("Error creating:", error);
+    return next(new AppError(`Server error: ${error.message}`, 500));
+  }
+};
+
+
+exports.updateIndustrySecData = async (req, res, next) => {
+  try {
+    const { type, heading, subHeading, category } = req.body;
+    const existingEntry = await IndustrySecData.findById(req.params.id);
+    if (!existingEntry) {
+      return next(new AppError("No entry found with the provided ID", 404));
+    }
+
+    // Parse card fields dynamically
+    const cardFields = Object.keys(req.body).reduce((acc, key) => {
+      const match = key.match(/card\[(\d+)\]\.(.+)/);
+      if (match) {
+        const index = parseInt(match[1], 10);
+        const field = match[2];
+        if (!acc[index]) acc[index] = {};
+        acc[index][field] = req.body[key];
+      }
+      return acc;
+    }, {});
+
+    const cards = Object.entries(cardFields)
+      .map(([index, fields]) => {
+        const cardIndex = parseInt(index, 10);
+        const existingCard = existingEntry.card[cardIndex] || {};
+        return {
+          title: fields.title?.trim() || "",
+          details: fields.details?.trim() || "",
+          photo: existingCard.photo || "",
+          altName: fields.altName?.trim() || "",
+          imgTitle: fields.imgTitle?.trim() || "",
+          _originalIndex: cardIndex,
+        };
+      })
+      .filter(c => c.title || c.details); // ✅ Only keep cards with some content
+
+    if (req.files) {
+      Object.entries(req.files).forEach(([fieldName, fileArray]) => {
+        const match = fieldName.match(/card\[(\d+)\]\.photo/);
+        if (match && fileArray && fileArray[0]) {
+          const originalIndex = parseInt(match[1], 10);
+          const cardToUpdate = cards.find(c => c._originalIndex === originalIndex);
+          if (cardToUpdate) {
+            cardToUpdate.photo = fileArray[0].filename;
+          }
+        }
+      });
+    }
+
+    cards.forEach(c => delete c._originalIndex);
+
+    const invalidCards = cards.filter(c => !c.title.trim() || !c.details.trim());
+    if (invalidCards.length > 0) {
+      return next(new AppError("Each card must have a title and details", 400));
+    }
+
+    const updatedEntry = await IndustrySecData.findByIdAndUpdate(
+      req.params.id,
+      {
+        type: type.trim(),
+        heading: heading.trim(),
+        subHeading: subHeading?.trim() || "",
+        category,
+        card: cards,
+      },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      status: "success",
+      message: "Industry section data updated successfully",
+      data: updatedEntry,
+    });
+  } catch (error) {
+    console.error("Error updating:", error);
+    return next(new AppError(`Server error: ${error.message}`, 500));
+  }
+};
+  
+exports.getAllIndustrySecData = async (req, res) => {
+  try {
+    const data = await IndustrySecData.find().populate('category').sort({ createdAt: -1 });
+    res.status(200).json({ data });
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// Get all IndustrySecData entries
-const getAllIndustrySecData = async (req, res) => {
-  try {
-    const data = await IndustrySecData.find().populate('category');
-    res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching data', error: error.message });
-  }
-};
-
-// Get a single IndustrySecData entry by ID
-const getIndustrySecDataById = async (req, res) => {
+exports.getIndustrySecDataById = async (req, res) => {
   try {
     const data = await IndustrySecData.findById(req.params.id).populate('category');
     if (!data) {
       return res.status(404).json({ message: 'Data not found' });
     }
-    res.status(200).json(data);
+    res.status(200).json({ data });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching data', error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Delete an IndustrySecData entry by ID
-const deleteIndustrySecData = async (req, res) => {
+exports.deleteIndustrySecData = async (req, res) => {
   try {
     const deletedData = await IndustrySecData.findByIdAndDelete(req.params.id);
     if (!deletedData) {
@@ -140,35 +193,28 @@ const deleteIndustrySecData = async (req, res) => {
     }
     res.status(200).json({ message: 'Data deleted successfully' });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting data', error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// Get IndustrySecData entries by category slug
-const getDataByCategorySlug = async (req, res) => {
+exports.getDataByCategorySlug = async (req, res) => {
   try {
-    const { slug } = req.params; // or req.query.slug if passed as query parameter
-
+    const { slug } = req.params;
     const data = await IndustrySecData.find()
       .populate({
         path: 'category',
-        match: { slug: slug }
-      });
+        match: { slug }
+      })
+      .sort({ createdAt: -1 });
 
-    // Filter out documents where category is null (no match found)
     const filteredData = data.filter(item => item.category !== null);
 
-    res.status(200).json(filteredData);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching data', error: error.message });
-  }
-};
+    if (filteredData.length === 0) {
+      return res.status(404).json({ message: 'No records found' });
+    }
 
-module.exports = {
-  createIndustrySecData,
-  getAllIndustrySecData,
-  getIndustrySecDataById,
-  updateIndustrySecData,
-  deleteIndustrySecData,
-  getDataByCategorySlug
+    res.status(200).json({ data: filteredData });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
