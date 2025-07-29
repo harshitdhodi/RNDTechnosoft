@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import JobApplicationModal from '../HireTelent/JobApplicationmodal'; // Import the modal component
 
@@ -10,8 +10,8 @@ export default function TechBanner({ serviceGridRef, pageType }) {
   const [alt, setAlt] = useState("");
   const [imgTitle, setImgTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const location = useLocation();
-  const navigate = useNavigate();
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHeadings = async () => {
@@ -33,11 +33,11 @@ export default function TechBanner({ serviceGridRef, pageType }) {
     fetchHeadings();
   }, [pageType]);
 
-  const scrollToServices = () => {
-    if (serviceGridRef.current) {
-      serviceGridRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  // const scrollToServices = () => {
+  //   if (serviceGridRef.current) {
+  //     serviceGridRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // };
 
   const handleOpenModal = () => {
     setIsModalOpen(true); // Open the modal
@@ -48,40 +48,47 @@ export default function TechBanner({ serviceGridRef, pageType }) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full min-h-[70vh]">
       <img
-        src={`/api/logo/download/${photo}`}
+        src={`/api/logo/download/${photo}`} 
         alt={alt}
         title={imgTitle}
-        className="w-full h-[55vh] object-fill"
+        className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center gap-4 px-4 pb-16 mt-14 xl:pt-24 text-center">
-        <h1 className="text-white font-semibold text-4xl md:text-4xl capitalize md:max-w-xl xl:max-w-4xl">
+
+      <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center px-4 
+                      pt-24 sm:pt-28 md:pt-32 xl:pt-36 2xl:pt-40 pb-12 sm:pb-16 xl:pb-20 text-center">
+        
+        <h1 className="text-white font-semibold text-3xl md:text-4xl max-w-3xl leading-tight">
           {heading}
         </h1>
-        <p className="text-white text-lg md:text-xl md:max-w-2xl xl:w-[60%]">
+
+        <p className="text-white mt-3 text-base sm:text-lg md:text-xl max-w-xl md:max-w-2xl xl:max-w-3xl text-justify lg:text-center">
           {subHeading}
         </p>
-        <div className="flex gap-4 mt-4 flex-wrap justify-center">
+
+        <div className="flex gap-3 sm:gap-4 mt-4 flex-wrap justify-center">
           <a
             href="/contact"
-            className="bg-[#f3ca0d] text-black font-medium py-3 px-6 rounded-md hover:text-white"
+            className="btn-yellow"
           >
             Get in Touch
           </a>
           <button
-            onClick={handleOpenModal} // Trigger modal on click
-            className="bg-[#f3ca0d] text-black font-medium py-3 px-6 rounded-md hover:text-white"
+            onClick={handleOpenModal}
+            className="btn-yellow"
           >
             Hire Talent
           </button>
         </div>
-      </div>
-      <JobApplicationModal
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        job={{ jobtitle: 'General Application' }} // Pass job title or customize as needed
-      />
-    </div>
+  </div>
+
+  <JobApplicationModal
+    isOpen={isModalOpen}
+    onClose={handleCloseModal}
+    job={{ jobtitle: "General Application" }}
+  />
+</div>
+
   );
 }

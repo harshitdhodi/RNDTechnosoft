@@ -94,6 +94,13 @@
   box-shadow: none !important;
 }
 
+@layer components {
+  .btn-yellow {
+    @apply px-4 py-1.5 text-black font-semibold rounded hover:text-white bg-[#f3ca0d];
+  }
+}
+
+
 /* Responsive adjustments */
 /* Base Styles already defined - keeping as-is */
 

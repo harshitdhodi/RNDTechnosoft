@@ -18,7 +18,7 @@ exports.createHireTalent = async (req, res, next) => {
         const field = match[2];
         if (!acc[index]) acc[index] = {};
         acc[index][field] = req.body[key];
-      }i
+      }
       return acc;
     }, {});
     
