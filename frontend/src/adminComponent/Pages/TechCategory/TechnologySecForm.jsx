@@ -21,12 +21,14 @@ const TechnologySecDataForm = () => {
   const [technologies, setTechnologies] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [placeholder, setPlaceholder] = useState('Enter heading/subheading...');
 
   const typeOptions = [
     { value: 'hire developer', label: 'Hire Developer' },
     { value: 'Why Choose', label: 'Why Choose' },
     { value: 'Technology Application', label: 'Technology Application' },
   ];
+  
 
   // Fetch technologies for dropdown
   useEffect(() => {
@@ -87,6 +89,24 @@ const TechnologySecDataForm = () => {
 
   const handleChange = (e, index) => {
     const { name, value } = e.target;
+  
+    if (name === 'type') {
+      // Update placeholder dynamically based on selected type
+      switch (value) {
+        case 'hire developer':
+          setPlaceholder('Enter heading/subheading for Hire Developer...');
+          break;
+        case 'Why Choose':
+          setPlaceholder('Enter heading/subheading for Why Choose...');
+          break;
+        case 'Technology Application':
+          setPlaceholder('Enter heading/subheading for Technology Application...');
+          break;
+        default:
+          setPlaceholder('');
+      }
+    }
+  
     if (name.includes('card.')) {
       const cardField = name.split('.')[1];
       const updatedCards = [...formData.card];
@@ -96,6 +116,7 @@ const TechnologySecDataForm = () => {
       setFormData({ ...formData, [name]: value });
     }
   };
+  
 
   const debounce = (func, wait) => {
     let timeout;
@@ -296,8 +317,9 @@ const TechnologySecDataForm = () => {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Heading</label>
+          <label className="block text-sm font-medium text-gray-700">Heading/Sub heading</label>
           <ReactQuill
+            key={placeholder} // 👈 this forces remount on placeholder change
             value={formData.heading}
             onChange={(value) => handleQuillChange('heading', value)}
             className="mt-1 border border-gray-300 rounded-md"
@@ -320,6 +342,7 @@ const TechnologySecDataForm = () => {
                 ['clean'],
               ],
             }}
+            placeholder={placeholder}
           />
         </div>
         <div className="border-t pt-4">
@@ -384,6 +407,7 @@ const TechnologySecDataForm = () => {
                       ['clean'],
                     ],
                   }}
+                  placeholder='Enter heading...'
                 />
               </div>
               <div>
@@ -408,6 +432,7 @@ const TechnologySecDataForm = () => {
                       ['clean'],
                     ],
                   }}
+                  placeholder='Enter subheading...'
                 />
               </div>
               <div>
@@ -418,6 +443,7 @@ const TechnologySecDataForm = () => {
                   value={card.altName}
                   onChange={(e) => handleChange(e, index)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  placeholder='Enter alt name...'
                 />
               </div>
               <div>
@@ -428,6 +454,7 @@ const TechnologySecDataForm = () => {
                   value={card.imgTitle}
                   onChange={(e) => handleChange(e, index)}
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  placeholder='Enter photo title...'
                 />
               </div>
             </div>
