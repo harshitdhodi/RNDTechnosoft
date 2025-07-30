@@ -301,16 +301,16 @@ const Navbar = () => {
                 alt={colorlogo.alt || 'Logo'}
                 title={colorlogo.imgTitle || 'Logo'}
                 className="
-        h-8 w-auto
-        sm:h-10 
-        md:h-12 
-        lg:h-14 lg:w-[35%] 
-        xl:h-20 xl:w-[60%]
-        2xl:h-12
-        max-w-full
-        object-contain
-        transition-all duration-200
-      "
+                  h-8 w-auto
+                  sm:h-10 
+                  md:h-12 
+                  lg:h-14 lg:w-[35%] 
+                  xl:h-20 xl:w-[60%]
+                  2xl:h-12
+                  max-w-full
+                  object-contain
+                  transition-all duration-200
+                "
                 loading="lazy"
                 fetchPriority="high"
               />
