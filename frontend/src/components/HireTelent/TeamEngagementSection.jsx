@@ -81,7 +81,7 @@ const TeamEngagementSection = () => {
 
               <button
                 onClick={openModal} // Open modal on click
-                className="mt-8 bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-6 py-3 rounded-lg transition-colors duration-200"
+                className="mt-8  bg-[#f3ca0d] hover:text-white text-black font-semibold px-6 py-3 rounded-lg"
               >
                 Hire Us Now →
               </button>

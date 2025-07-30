@@ -254,7 +254,7 @@ const DedicatedTeam = () => {
             hireTalentData.cards.map((card, index) => (
               <div
                 key={card._id || index}
-                className="bg-white bg-opacity-90 backdrop-blur-md p-6 rounded-lg shadow-md border-t-4 border-yellow-400 text-black text-center"
+                className="bg-white bg-opacity-90 backdrop-blur-md p-6 rounded-lg shadow-md border-t-4 border-[#f3ca0d] text-black text-center"
               >
                 <div className="flex flex-col justify-start items-start space-y-3">
                   <img
@@ -275,7 +275,7 @@ const DedicatedTeam = () => {
         <div className="text-center mt-12">
           <button
             onClick={openModal}
-            className="bg-yellow-400 text-black font-medium py-3 px-16 rounded-md hover:bg-yellow-500 transition"
+            className=" bg-[#f3ca0d] text-black font-medium py-3 px-16 rounded-md hover:text-white"
           >
             Hire Us Now!
           </button>

@@ -290,8 +290,8 @@ const HireDevelopersSection = () => {
 
   return (
     <div className="bg-white py-16 px-4 services-landing3">
-      <div className="max-w-8xl 2xl:px-28  mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="max-w-8xl 2xl:px-28  xl:mx-24  mx-auto px-4 sm:px-6 lg:px-8 ">
+        <div className="grid lg:grid-cols-2 gap-12 items-center mx-5">
           {/* Left Content */}
           <div>
             <ReactQuill
@@ -304,7 +304,7 @@ const HireDevelopersSection = () => {
             />
             <button
               onClick={openModal} // Open JobApplicationModal on click
-              className="bg-[#f3ca0d] text-white px-8 py-3 rounded-lg font-medium transition-colors"
+              className="btn-yellow"
             >
               Hire {data?.technologyId?.imgTitle || 'React JS'} Developer
             </button>
