@@ -384,7 +384,7 @@ function App() {
                   <Route path="/homeanimation" element={<Homeanimation />} />
                   <Route path="/homeanimation/createHomeanimation" element={<CreateHomeanimation />} />
                   <Route path="/homeanimation/editHomeanimation/:id" element={<EditHomeanimation />} />
-                  <Route path="/portfolio" element={<Portfolio />} />
+                  <Route path="/portfolio" element={<Portfolio />} /> 
                   <Route path="/portfolio/createPortfolio" element={<CreatePortfolio />} />
                   <Route path="/portfolio/editPortfolio/:slugs" element={<EditPortfolio />} />
                   <Route path="/NewsCategory" element={<NewsCategory />} />
