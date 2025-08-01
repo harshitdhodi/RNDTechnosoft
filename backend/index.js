@@ -21,7 +21,19 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json({ limit: '50mb' }));
+
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.get('/portfolio', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'portfolio.pdf');
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'inline; filename="portfolio.pdf"');
+  res.sendFile(filePath, (err) => {
+      if (err) {
+          console.error('Error sending portfolio PDF:', err);
+          res.status(500).send('Error loading portfolio');
+      }
+  });
+});
 
 app.get('/sitemap.xml', async (req, res) => {
     try {
