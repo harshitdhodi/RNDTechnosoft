@@ -186,3 +186,9 @@
     font-size: 1.375rem;
   }
 }
+
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+  transform: rotate(360deg); /* So text reads from bottom to top */
+  /* letter-spacing: 2px; */
+}
