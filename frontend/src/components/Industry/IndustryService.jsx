@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import DOMPurify from 'dompurify';
 
@@ -8,6 +8,7 @@ export default function FinTechServices() {
   const [servicesData, setServicesData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchServicesData = async () => {
@@ -61,6 +62,19 @@ export default function FinTechServices() {
     );
   }
 
+  const handleConsultationClick = () => {
+    navigate('/contact');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 px-4">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        <p className="mt-4 text-gray-600">Loading industry information...</p>
+      </div>
+    );
+  }
+
   // Extract services from the card array
   const services = servicesData.card || [];
   const heading = servicesData.heading || '';
@@ -102,8 +116,20 @@ export default function FinTechServices() {
               )}
             </div>
           ))}
+          
         </div>
       )}
+      <div className="flex justify-center py-10">
+      <button 
+        onClick={handleConsultationClick}
+        className="btn-yellow rounded-lg flex items-center space-x-2"
+      >
+        <span>{'Get a Consultation'}</span>
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+      </div>
     </div>
   );
 }

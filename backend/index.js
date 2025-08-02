@@ -21,7 +21,19 @@ app.use(cors({
     credentials: true,
 }));
 app.use(express.json({ limit: '50mb' }));
+
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.get('/portfolio', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'portfolio.pdf');
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'inline; filename="portfolio.pdf"');
+  res.sendFile(filePath, (err) => {
+      if (err) {
+          console.error('Error sending portfolio PDF:', err);
+          res.status(500).send('Error loading portfolio');
+      }
+  });
+});
 
 app.get('/portfolio', (req, res) => {
   const filePath = path.join(__dirname, 'public', 'portfolio.pdf');
@@ -515,6 +527,18 @@ app.use((err, req, res, next) => {
         message: err.message || 'Internal Server Error',
         error: process.env.NODE_ENV === 'development' ? err : undefined,
     });
+});
+
+// Error handling middleware in index.js
+app.use((err, req, res, next) => {
+  err.statusCode = err.statusCode || 500; // Default to 500 if no status code
+  err.status = err.status || 'error'; // Default to 'error' for status message
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
 });
  
 // Server Initialization

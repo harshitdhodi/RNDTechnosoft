@@ -19,9 +19,10 @@ exports.CreateCareerInquiry = async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       mobileNo: req.body.mobileNo,
-      linkedin: req.body.linkedin,
+      linkedin: req.body.linkedin || '', // Make LinkedIn optional by providing a default empty string
       message: req.body.message,
-      resume: req.files['resume'] ? req.files['resume'][0].filename : null
+      resume: req.files['resume'] ? req.files['resume'][0].filename : null,
+      path: req.body.path
     });
 
     await newInquiry.save();
@@ -76,13 +77,13 @@ exports.CreateCareerInquiry = async (req, res) => {
                 font-size: 20px; /* Adjust font size as needed */
                 color: #333; /* Text color */
             }
-                 .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 120px; 
-            height: auto; 
-            object-fit: contain; /* Ensures aspect ratio is maintained */
-        }
+            .logo {
+                display: block;
+                margin: 0 auto 20px;
+                width: 120px; 
+                height: auto; 
+                object-fit: contain; /* Ensures aspect ratio is maintained */
+            }
         </style>
       </head>
       <body>
@@ -92,7 +93,7 @@ exports.CreateCareerInquiry = async (req, res) => {
             <p><span class="field">Name:</span> ${newInquiry.name}</p>
             <p><span class="field">Email:</span> ${newInquiry.email}</p>
             <p><span class="field">Phone:</span> ${newInquiry.mobileNo}</p>
-            <p><span class="field">LinkedIn:</span> ${newInquiry.linkedin}</p>
+            ${newInquiry.linkedin ? `<p><span class="field">LinkedIn:</span> ${newInquiry.linkedin}</p>` : ''}
             <p>${newInquiry.message}</p>
         </div>
       </body>
@@ -101,12 +102,13 @@ exports.CreateCareerInquiry = async (req, res) => {
 
     // Resume file from Multer
     const resumeFile = req.files['resume'] ? req.files['resume'][0] : null;
+    const jobTitle = req.body.job
 
     const mailOptions = {
       from: newInquiry.email,
       to: process.env.EMAIL_HR,
       replyTo: newInquiry.email,
-      subject: 'New Career Inquiry',
+      subject: jobTitle ? `New Career Inquiry for ${jobTitle}` : 'New Career Inquiry',
       html: emailHTML,
       attachments: [
         {
@@ -116,18 +118,19 @@ exports.CreateCareerInquiry = async (req, res) => {
         }
       ]
     };
-    console.log(mailOptions)
+
     // Send email
     await transporter.sendMail(mailOptions);
+
     // Send data to external API
     try {
       await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
-        API_KEY: "A78A8BC90C6F6235",
+        API_KEY: "8029760E3747D130",
         API_ID: "MW1V",
         name: newInquiry.name,
         email: newInquiry.email,
         phone: newInquiry.mobileNo,
-        linkedin: newInquiry.linkedin,
+        linkedin: newInquiry.linkedin || '', // Make LinkedIn optional in external API call
         subject: "Career Inquiry",
         message: newInquiry.message
       });

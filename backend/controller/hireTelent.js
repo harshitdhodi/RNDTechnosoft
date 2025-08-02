@@ -3,106 +3,52 @@ const AppError = require('../utils/appError.js');
 
 exports.createHireTalent = async (req, res, next) => {
   try {
-    console.log('Request received:');
-    console.log('Headers:', req.headers);
-    console.log('Body:', req.body);
-    console.log('Files:', req.files);
+    const { heading, subHeading, pageSection } = req.body;
+    let { card } = req.body;
 
-    const { heading, subHeading, pageSection, ...rest } = req.body;
+    console.log('Received body:', req.body);
+    console.log('Received files:', req.files);
 
-    // Parse card fields dynamically
-    const cards = [];
-    const cardFields = Object.keys(req.body).reduce((acc, key) => {
-      const match = key.match(/card\[(\d+)\]\[(.+)\]|card\[(\d+)\]\.(.+)/);
-      if (match) {
-        const index = parseInt(match[1] || match[3], 10);
-        const field = match[2] || match[4];
-        if (!acc[index]) acc[index] = {};
-        acc[index][field] = req.body[key];
-      }
-      return acc;
-    }, {});
-    
-    Object.entries(cardFields).forEach(([index, fields]) => {
-      cards[index] = {
-        cardInfo: fields.cardInfo || '',
-        photo: '',
-        altImg: fields.altImg || '',
-        imgTitle: fields.imgTitle || '',
+    // Parse card if it's a string
+    if (typeof card === 'string') {
+      card = JSON.parse(card);
+    }
+
+    // Validate input
+    if (!heading || !pageSection || !Array.isArray(card)) {
+      return res.status(400).json({ error: 'Heading, pageSection, and card array are required' });
+    }
+
+    // Map file uploads to corresponding card items
+    const updatedCards = card.map((cardItem, index) => {
+      const fileField = `card[${index}][photo]`;
+      const file = req.files && req.files[fileField] && req.files[fileField][0];
+      const photo = file ? file.filename : cardItem.photo || '';
+
+      return {
+        cardInfo: cardItem.cardInfo,
+        photo,
+        altImg: cardItem.altImg,
+        imgTitle: cardItem.imgTitle,
       };
     });
 
-    console.log('Parsed cards before files:', cards);
-
-    // Process file uploads
-    if (req.files) {
-      Object.entries(req.files).forEach(([fieldName, fileArray]) => {
-        const match = fieldName.match(/card\[(\d+)\]\.photo/);
-        if (match && fileArray && fileArray[0]) {
-          const index = parseInt(match[1], 10);
-          console.log(`Processing file for card ${index}:`, fileArray[0].filename);
-          if (!isNaN(index) && cards[index]) {
-            cards[index].photo = fileArray[0].filename;
-          }
-        }
-      });
-    }
-
-    console.log('Cards after processing files:', cards);
-
-    // Validate cards
-    const invalidCards = cards.filter((card) => !card.photo || !card.cardInfo);
-    if (invalidCards.length > 0) {
-      return next(new AppError('Each card must have both photo and card info', 400));
-    }
-
-    // Check for existing entry
-    const existingEntry = await HireTalent.findOne({
-      heading: heading.trim(),
+    const newHireTalentData = new HireTalent({
+      heading,
+      subHeading,
       pageSection,
+      card: updatedCards,
     });
 
-    if (existingEntry) {
-      return next(
-        new AppError(
-          `An entry with heading "${heading.trim()}" and page section "${pageSection}" already exists. Consider updating the existing entry or using a different heading.`,
-          400
-        )
-      );
-    }
+    await newHireTalentData.save();
 
-    // Create new hire talent entry
-    const hireTalent = await HireTalent.create({
-      heading: heading.trim(),
-      subHeading: subHeading ? subHeading.trim() : '',
-      pageSection,
-      card: cards,
-    });
-
-    res.status(201).json({
-      status: 'success',
-      message: 'Hire talent entry created successfully',
-      data: { hireTalent },
-    });
+    res.status(201).json({ message: 'Hire talent data created', data: newHireTalentData });
   } catch (error) {
-    console.error('Error creating hire talent entry:', error);
-
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map((val) => val.message);
-      return next(new AppError(`Validation error: ${messages.join('. ')}`, 400));
-    }
-
-    if (error.code === 11000) {
-      return next(new AppError('Duplicate entry detected', 400));
-    }
-
-    if (error.name === 'CastError') {
-      return next(new AppError('Invalid data format', 400));
-    }
-
-    return next(new AppError(`Server error: ${error.message}`, 500));
+    console.error('Error in createHireTalentData:', error);
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 exports.getAllHireTalents = async (req, res) => {
   try {
@@ -125,73 +71,59 @@ exports.getHireTalentById = async (req, res) => {
   }
 };
 
-exports.updateHireTalent = async (req, res, next) => {
+exports.updateHireTalent = async (req, res) => {
   try {
-    const { heading, subHeading, pageSection, ...rest } = req.body;
-    const cards = [];
-    // Reuse the same card parsing logic as createHireTalent
-    const cardFields = Object.keys(req.body).reduce((acc, key) => {
-      const match = key.match(/card\[(\d+)\]\[(.+)\]|card\[(\d+)\]\.(.+)/);
-      if (match) {
-        const index = parseInt(match[1] || match[3], 10);
-        const field = match[2] || match[4];
-        if (!acc[index]) acc[index] = {};
-        acc[index][field] = req.body[key];
-      }
-      return acc;
-    }, {});
+    const { heading, subHeading, pageSection } = req.body;
+    let { card } = req.body;
 
-    Object.entries(cardFields).forEach(([index, fields]) => {
-      cards[index] = {
-        cardInfo: fields.cardInfo || '',
-        photo: '',
-        altImg: fields.altImg || '',
-        imgTitle: fields.imgTitle || '',
-      };
-    });
+    console.log('Received body:', req.body);
+    console.log('Received files:', req.files);
 
-    if (req.files) {
-      Object.entries(req.files).forEach(([fieldName, fileArray]) => {
-        const match = fieldName.match(/card\[(\d+)\]\.photo/);
-        if (match && fileArray && fileArray[0]) {
-          const index = parseInt(match[1], 10);
-          if (!isNaN(index) && cards[index]) {
-            cards[index].photo = fileArray[0].filename;
-          }
-        }
+    // Parse card if it's a string
+    if (typeof card === 'string') {
+      card = JSON.parse(card);
+    }
+
+    // Build updates object
+    const updates = {};
+    if (heading !== undefined) updates.heading = heading;
+    if (subHeading !== undefined) updates.subHeading = subHeading;
+    if (pageSection !== undefined) updates.pageSection = pageSection;
+
+    // Handle card updates if provided
+    if (card && Array.isArray(card)) {
+      // Map file uploads to corresponding card items (same logic as create)
+      const updatedCards = card.map((cardItem, index) => {
+        const fileField = `card[${index}][photo]`;
+        const file = req.files && req.files[fileField] && req.files[fileField][0];
+        const photo = file ? file.filename : cardItem.photo || '';
+
+        return {
+          cardInfo: cardItem.cardInfo,
+          photo,
+          altImg: cardItem.altImg,
+          imgTitle: cardItem.imgTitle,
+        };
       });
+
+      updates.card = updatedCards;
     }
 
-    const invalidCards = cards.filter((card) => !card.photo || !card.cardInfo);
-    if (invalidCards.length > 0) {
-      return next(new AppError('Each card must have both photo and card info', 400));
-    }
-
-    const updatedEntry = await HireTalent.findOneAndUpdate(
-      { heading: heading.trim(), pageSection },
-      {
-        subHeading: subHeading ? subHeading.trim() : '',
-        card: cards,
-      },
-      { new: true, runValidators: true }
+    // Find and update the document
+    const updated = await HireTalent.findByIdAndUpdate(
+      req.params.id, 
+      updates, 
+      { new: true }
     );
 
-    if (!updatedEntry) {
-      return next(new AppError('No entry found with the provided heading and page section', 404));
+    if (!updated) {
+      return res.status(404).json({ message: 'Hire Talent not found' });
     }
 
-    res.status(200).json({
-      status: 'success',
-      message: 'Hire talent entry updated successfully',
-      data: { hireTalent: updatedEntry },
-    });
+    res.status(200).json({ message: 'Hire Talent updated', data: updated });
   } catch (error) {
-    console.error('Error updating hire talent entry:', error);
-    if (error.name === 'ValidationError') {
-      const messages = Object.values(error.errors).map((val) => val.message);
-      return next(new AppError(`Validation error: ${messages.join('. ')}`, 400));
-    }
-    return next(new AppError(`Server error: ${error.message}`, 500));
+    console.error('Error in updateHireTalent:', error);
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -211,7 +143,7 @@ exports.getHireTalentsByPageSection = async (req, res) => {
     const { pageSection } = req.query;
 
     // Validate pageSection if provided
-    const validSections = ['TeamService', 'Applications', 'WhyChoose'];
+    const validSections = ['TeamService', 'Applications', 'WhyChoose', 'Technologies'];
     if (pageSection && !validSections.includes(pageSection)) {
       return res.status(400).json({ error: 'Invalid pageSection value. Must be one of: ' + validSections.join(', ') });
     }

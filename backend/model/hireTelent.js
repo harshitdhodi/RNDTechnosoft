@@ -47,13 +47,8 @@ const HireTalentSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Page section is required'],
     trim: true,
-    enum: {
-      values: ['TeamService', 'Applications', 'WhyChoose'],
-      message: 'Page section must be one of: TeamService, Applications, WhyChoose'
-    }
-  }
-}, { 
-  timestamps: true 
-});
+    enum: ['TeamService', 'Applications', 'WhyChoose'],
+  },
+}, { timestamps: true });
 
 module.exports = mongoose.model('HireTalent', HireTalentSchema);
