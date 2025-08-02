@@ -52,19 +52,32 @@ const FAQ = () => {
     }
   }, [openIndex]);
 
-  const toggleFAQ = (index) => {
-    if (openIndex === index) {
+ const toggleFAQ = (index) => {
+  if (openIndex === index) {
+    // Close the same item
+    gsap.to(answerRefs.current[openIndex], {
+      height: 0,
+      opacity: 0,
+      duration: 0.3,
+      ease: "power1.inOut",
+      onComplete: () => setOpenIndex(null),
+    });
+  } else {
+    if (openIndex !== null) {
+      // Close previous before opening new
       gsap.to(answerRefs.current[openIndex], {
         height: 0,
         opacity: 0,
-        duration: 0.4,
-        ease: "power1.out",
-        onComplete: () => setOpenIndex(null),
+        duration: 0.3,
+        ease: "power1.inOut",
+        onComplete: () => setOpenIndex(index),
       });
     } else {
+      // No previous, just open new
       setOpenIndex(index);
     }
-  };
+  }
+};
 
   if (faqs.length === 0) {
     return null;
@@ -93,7 +106,7 @@ const FAQ = () => {
       </div>
       <div
         ref={(el) => (answerRefs.current[index] = el)}
-        className={`overflow-hidden transition-all duration-300 ${
+        className={`overflow-hidden ${
           openIndex === index ? "block" : "hidden"
         }`}
       >

@@ -17,6 +17,7 @@ const HireTalentForm = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 const navigate = useNavigate()
+
   // Quill modules configuration for toolbar
   const quillModules = {
     toolbar: [
@@ -123,20 +124,38 @@ const navigate = useNavigate()
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    // Client-side validation
+    const invalidCards = formData.cards.filter((card, index) => {
+      const hasCardInfo = card.cardInfo && card.cardInfo.trim() !== '';
+      const hasPhoto = card.photo instanceof File || (isEditMode && card.photo && typeof card.photo === 'string');
+      return !hasCardInfo || !hasPhoto;
+    });
+
+    if (invalidCards.length > 0) {
+      setError('Each card must have both card info and a photo');
+      return;
+    }
+
     try {
       const formDataToSend = new FormData();
-      formDataToSend.append('heading', formData.heading);
-      formDataToSend.append('subHeading', formData.subHeading);
+      formDataToSend.append('heading', formData.heading.trim());
+      formDataToSend.append('subHeading', formData.subHeading.trim());
       formDataToSend.append('pageSection', formData.pageSection);
+      
       formData.cards.forEach((card, index) => {
-        formDataToSend.append(`card[${index}][cardInfo]`, card.cardInfo); // HTML content
+        // Use dot notation for field names to match controller expectations
+        formDataToSend.append(`card[${index}].cardInfo`, card.cardInfo.trim()); // HTML content
+        formDataToSend.append(`card[${index}].altImg`, card.altImg.trim());
+        formDataToSend.append(`card[${index}].imgTitle`, card.imgTitle.trim());
+        
+        // Handle photo files with dot notation
         if (card.photo instanceof File) {
-          formDataToSend.append(`card[${index}][photo]`, card.photo);
-        } else if (card.photo) {
-          formDataToSend.append(`card[${index}][photo]`, card.photo);
+          formDataToSend.append(`card[${index}].photo`, card.photo);
+        } else if (card.photo && typeof card.photo === 'string') {
+          // For existing photos (in edit mode), send the filename
+          formDataToSend.append(`card[${index}].photo`, card.photo);
         }
-        formDataToSend.append(`card[${index}][altImg]`, card.altImg);
-        formDataToSend.append(`card[${index}][imgTitle]`, card.imgTitle);
       });
 
       const url = isEditMode ? `/api/hire-talent/${id}` : '/api/hire-talent';
@@ -157,7 +176,8 @@ const navigate = useNavigate()
         navigate('/hire-talent-table')
       }
     } catch (err) {
-      setError(`Error ${isEditMode ? 'updating' : 'submitting'} data: ${err.message}`);
+      const errorMessage = err.response?.data?.message || err.message;
+      setError(`Error ${isEditMode ? 'updating' : 'submitting'} data: ${errorMessage}`);
     }
   };
 
@@ -196,6 +216,7 @@ const navigate = useNavigate()
             <option value="TeamService">Team Service</option>
             <option value="Applications">Applications</option>
             <option value="WhyChoose">Why Choose</option>
+            <option value="Technologies">Technologies</option>
           </select>
         </div>
         {formData.cards.map((card, cardIndex) => (
