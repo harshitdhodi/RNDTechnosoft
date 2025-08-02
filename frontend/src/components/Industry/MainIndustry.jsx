@@ -6,6 +6,7 @@ import IndustryInfo from './IndustryInfo'
 import CaseStudy from './CaseStudy'
 import Review from '../Websites/Review'
 import FAQ from '../Faq'
+import BuildInfo from './BuildInfo'
 
 const MainIndustry = () => {
   return (
@@ -14,7 +15,7 @@ const MainIndustry = () => {
        <IndustryInfo />
         <Home />
       <FinTechServices />
-      {/* <CaseStudy/>   */}
+      <CaseStudy/>  
       <Review />
       <FAQ/>
     </div>
