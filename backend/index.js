@@ -23,6 +23,17 @@ app.use(cors({
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
+app.get('/portfolio', (req, res) => {
+  const filePath = path.join(__dirname, 'public', 'portfolio.pdf');
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'inline; filename="portfolio.pdf"');
+  res.sendFile(filePath, (err) => {
+      if (err) {
+          console.error('Error sending portfolio PDF:', err);
+          res.status(500).send('Error loading portfolio');
+      }
+  });
+});
 app.get('/sitemap.xml', async (req, res) => {
     try {
         let filePath = path.join(__dirname, 'public', 'sitemap.xml'); // Local variable
@@ -465,6 +476,9 @@ const swaggerDocs = require('./swaggerConfig');
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Static Files (After Sitemap and API Routes)
+// Route to serve the portfolio PDF
+
+
 app.use(express.static(path.join(__dirname, 'dist'), {
     setHeaders: (res, filePath) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
@@ -477,6 +491,17 @@ app.use(express.static(path.join(__dirname, 'dist'), {
     },
 }));
  
+// Error handling middleware in index.js
+app.use((err, req, res, next) => {
+  err.statusCode = err.statusCode || 500; // Default to 500 if no status code
+  err.status = err.status || 'error'; // Default to 'error' for status message
+
+  res.status(err.statusCode).json({
+    status: err.status,
+    message: err.message,
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
+});
 // Catch-All Route for SPA (Last)
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'dist', 'index.html'));
