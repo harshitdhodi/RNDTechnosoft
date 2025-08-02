@@ -165,7 +165,7 @@ export default function Sidebar() {
     {
       title: "Products", icon: <ShoppingCart size={20} />, submenu: [
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ProductCategory" },
-        { title: "Banefits", icon: <ShoppingCart size={20} />, path: "/benefits" },
+        { title: "Benefits", icon: <ShoppingCart size={20} />, path: "/benefits" },
         { title: "Products", icon: <ChartColumn size={20} />, path: "/product" },
       ]
     },

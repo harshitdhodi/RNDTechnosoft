@@ -122,9 +122,9 @@ export default function FinTechServices() {
       <div className="flex justify-center py-10">
       <button 
         onClick={handleConsultationClick}
-        className="bg-[#f3ca0d] font-semibold py-3 px-6 rounded-lg flex items-center space-x-2 hover:bg-[#e6b70c] transition shadow-md"
+        className="btn-yellow rounded-lg flex items-center space-x-2"
       >
-        <span className='text-gray-700'>{'Get a Consultation'}</span>
+        <span>{'Get a Consultation'}</span>
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
         </svg>

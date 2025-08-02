@@ -19,6 +19,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
   const [utmParams, setUtmParams] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const {slug}= useParams();
 
   const handleFileChange = (e) => {
     setResume(e.target.files[0]);
@@ -62,6 +63,8 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           resume,
           message,
           linkedin,
+          path: slug,
+          jobTitle: job?.jobtitle,
           ipaddress: clientIp,
           ...utmParams,
         },
@@ -278,7 +281,7 @@ const WhyChooseSection = () => {
 
   return (
     <div className="bg-gray-50 px-4">
-      <div className="max-w-8xl 2xl:px-28 mx-auto services-landing">
+      <div className="max-w-8xl services-landing max-w-8xl 2xl:px-28 mx-auto services-landing">
         {/* Header Section */}
         <div className="max-w-6xl 2xl:w-[80%] mx-auto">
           <div className="mb-12">
@@ -294,7 +297,7 @@ const WhyChooseSection = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12 max-w-8xl xl:mx-24  mx-auto sm:px-6 lg:px-8">
           {data.card.map((feature, index) => (
             <div
               key={index}
@@ -353,7 +356,7 @@ const WhyChooseSection = () => {
         <div className="text-center pb-8">
           <button
             onClick={openModal} // Open JobApplicationModal on click
-            className="bg-[#f3ca0d] text-white px-4 py-2 rounded-lg font-medium text-lg transition-colors "
+            className="btn-yellow"
           >
             Hire {data?.technologyId?.imgTitle || 'React JS'} Developer
           </button>

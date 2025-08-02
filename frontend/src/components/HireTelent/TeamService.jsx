@@ -69,11 +69,11 @@ const TeamServicesSection = () => {
               ) : (
                 teamServicesData.cards.map((service) => (
                   <div key={service._id} className="text-center">
-                    <div className="w-20 h-20 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="w-28 h-28 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-4 overflow-hidden">
                       <img
                         src={`/api/logo/download/${service.photo}`}
                         alt={service.altImg}
-                        className="w-12 h-12 object-contain"
+                        className="w-28 h-28 object-cover rounded-full"
                       />
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 mb-3">{service.title}</h3>

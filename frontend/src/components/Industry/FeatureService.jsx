@@ -11,32 +11,34 @@
     const [error, setError] = useState(null);
 
     useEffect(() => {
-      const fetchApplicationsData = async () => {
-        try {
-          setIsLoading(true);
-          setError(null);
+  const fetchApplicationsData = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
 
-          // Fetch data using dynamic slug
-          const response = await axios.get(`/api/caseStudy/category/${slug}`);
-          console.log('Applications data:', response.data);
+      const response = await axios.get(`/api/caseStudy/category/${slug}`);
+      console.log("Applications data:", response.data);
 
-          // Handle response as an array
-          const data = Array.isArray(response.data) ? response.data : [];
+      // ✅ Correctly extract the array
+      const data = Array.isArray(response.data.data) ? response.data.data : [];
 
-          // Find application type data
-          const applicationData = data.find(item => item.type === 'applications') || null;
+      // ✅ Find the "applications" type
+      const applicationData = data.find(
+        (item) => item.type === "applications"
+      ) || null;
 
-          setApplicationsData(applicationData);
-        } catch (err) {
-          console.error('Error fetching applications data:', err);
-          setError('Failed to load applications information');
-        } finally {
-          setIsLoading(false);
-        }
-      };
+      setApplicationsData(applicationData);
+    } catch (err) {
+      console.error("Error fetching applications data:", err);
+      setError("Failed to load applications information");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-      fetchApplicationsData();
-    }, [slug]); // Refetch if slug changes
+  fetchApplicationsData();
+}, [slug]);
+
 
     if (isLoading) {
       return (
