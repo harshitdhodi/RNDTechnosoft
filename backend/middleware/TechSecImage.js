@@ -1,139 +1,160 @@
-const fs = require('fs').promises;
-const path = require('path');
-const sharp = require('sharp');
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs').promises;
+const sharp = require('sharp');
+const AppError = require('../utils/appError');
 
-// Specify the directory for logos
+// Define the upload directory (keeping the existing path)
 const uploadDir = path.join(__dirname, '../logos');
 
-// Create logos directory if it doesn't exist
+// Ensure upload directory exists
 async function ensureUploadDir() {
   try {
-    await fs.access(uploadDir); // Check if directory exists
+    await fs.access(uploadDir);
   } catch (error) {
     if (error.code === 'ENOENT') {
-      await fs.mkdir(uploadDir, { recursive: true }); // Create directory if it doesn't exist
+      await fs.mkdir(uploadDir, { recursive: true });
     } else {
-      throw error; // Rethrow other errors
+      throw error;
     }
   }
 }
 
-// Define storage for uploaded photos
+// Configure storage for uploaded images
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: async function (req, file, cb) {
+    await ensureUploadDir();
     cb(null, uploadDir);
   },
-  filename: (req, file, cb) => {
-    const timestamp = Date.now();
-    cb(null, `${timestamp}.webp`);
-  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname).toLowerCase();
+    const filename = `img-${uniqueSuffix}${ext}`;
+    
+    // Store the filename in the request object for later use
+    if (!req.uploadedFiles) req.uploadedFiles = {};
+    if (!req.uploadedFiles.images) req.uploadedFiles.images = [];
+    req.uploadedFiles.images.push(filename);
+    
+    cb(null, filename);
+  }
 });
 
-// Initialize multer with defined storage options and file size limits
+// File filter to allow only image files
+const fileFilter = (req, file, cb) => {
+  const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+  
+  if (allowedMimeTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new AppError('Only image files (JPEG, PNG, WebP, GIF) are allowed', 400), false);
+  }
+};
+
+// Configure Multer with storage, file filter, and size limits
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
-  fileFilter: function (req, file, cb) {
-    if (!file.mimetype.startsWith('image/')) {
-      return cb(new Error('Only image files are allowed!'), false);
-    }
-    cb(null, true);
-  },
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit per file
+    files: 10 // Maximum 10 files
+  }
 });
 
-// Process the image to ensure WebP format
-const processLogoImage = async (filePath) => {
-  try {
-    // If the file is already a .webp, skip processing
-    if (path.extname(filePath).toLowerCase() === '.webp') {
-      return;
+// Middleware to handle dynamic field names for card photos
+// In TechSecImage.js, update the handleCardImages function:
+const handleCardImages = (req, res, next) => {
+  // Create a dynamic fields array based on the expected card fields
+  const fields = [];
+  for (let i = 0; i < 10; i++) { // Support up to 10 cards
+    fields.push({ name: `card[${i}].photo`, maxCount: 1 });
+  }
+  
+  // Use fields() to handle multiple files
+  upload.fields(fields)(req, res, function(err) {
+    if (err) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+        return next(new AppError('File too large. Maximum size is 10MB per file', 400));
+      }
+      if (err.code === 'LIMIT_FILE_COUNT') {
+        return next(new AppError('Too many files uploaded. Maximum is 10 files', 400));
+      }
+      if (err.message.includes('Unexpected field')) {
+        return next(new AppError('Invalid field name in file upload', 400));
+      }
+      return next(err);
     }
-    // Convert to WebP
-    await sharp(filePath)
-      .webp({ quality: 80 })
-      .toFile(filePath + '.temp');
-    await fs.rename(filePath + '.temp', filePath);
-  } catch (err) {
-    throw new Error(`Failed to process image: ${err.message}`);
-  }
+    next();
+  });
 };
 
-// Middleware to handle multiple logo file uploads under card[${index}][photo]
-const uploadLogo = async (req, res, next) => {
+// Middleware to process uploaded images (resize, optimize, etc.)
+const processImages = async (req, res, next) => {
+  if (!req.files) return next();
+  
   try {
-    // Ensure upload directory exists
-    await ensureUploadDir();
-
-    // Log incoming data for debugging
-    console.log('Incoming body:', req.body);
-    console.log('Incoming files:', req.files);
-
-    // Define a reasonable number of fields to handle multiple card uploads
-    const maxCards = 10; // Adjust based on your requirements
-    const fields = Array.from({ length: maxCards }, (_, index) => ({
-      name: `card[${index}][photo]`,
-      maxCount: 10, // Allow multiple files per card if needed
-    }));
-
-    console.log('Expected fields:', fields);
-
-    // Use upload.fields to process the file fields
-    await upload.fields(fields)(req, res, async (err) => {
-      if (err) {
-        console.error('Multer error:', err);
-        return res.status(400).json({
-          error: err.message || 'Error uploading files',
-        });
-      }
-
-      // If no files are uploaded, proceed
-      if (!req.files || Object.keys(req.files).length === 0) {
-        return next();
-      }
-
-      try {
-        // Process each uploaded file
-        for (const field in req.files) {
-          const files = req.files[field];
-          req.body[field] = req.body[field] || [];
-          for (const file of files) {
-            const filePath = file.path;
-            console.log('File saved to:', filePath);
-            await processLogoImage(filePath);
-            req.body[field].push(file.filename);
-          }
+    const processedFiles = [];
+    
+    // Process each uploaded file
+    for (const fieldName in req.files) {
+      const fileArray = req.files[fieldName];
+      for (const file of fileArray) {
+        const filePath = path.join(uploadDir, file.filename);
+        
+        try {
+          // Process image with sharp (resize, convert to webp, etc.)
+          await sharp(filePath)
+            .resize(800, 600, {
+              fit: 'inside',
+              withoutEnlargement: true
+            })
+            .toFormat('webp', { quality: 80 })
+            .toFile(`${filePath}.webp`);
+          
+          // Remove original file after processing
+          await fs.unlink(filePath);
+          
+          // Update filename to use webp version
+          file.filename = `${file.filename}.webp`;
+          processedFiles.push(file.filename);
+        } catch (error) {
+          console.error(`Error processing file ${file.filename}:`, error);
+          // If processing fails, keep the original file
+          processedFiles.push(file.filename);
         }
-
-        // Reconstruct card array from req.body non-file fields and files
-        const cardArray = [];
-        let index = 0;
-        while (req.body[`card[${index}][cardInfo]`] || req.body[`card[${index}][photo]`]) {
-          cardArray.push({
-            cardInfo: req.body[`card[${index}][cardInfo]`] || '',
-            photo: req.body[`card[${index}][photo]`] || [],
-            altImg: req.body[`card[${index}][altImg]`] || '',
-            imgTitle: req.body[`card[${index}][imgTitle]`] || '',
-          });
-          index++;
-        }
-        req.body.card = cardArray;
-
-        next();
-      } catch (processError) {
-        console.error('Processing error:', processError);
-        return res.status(500).json({
-          error: 'Error processing the images',
-          details: processError.message,
-        });
       }
-    });
-  } catch (err) {
-    console.error('Server error:', err);
-    return res.status(500).json({
-      error: 'Server error during upload',
-    });
+    }
+    
+    // Store processed file info in request object
+    req.processedFiles = processedFiles;
+    next();
+  } catch (error) {
+    console.error('Error in processImages middleware:', error);
+    next(new AppError('Error processing uploaded images', 500));
   }
 };
 
-module.exports = { TechSecImage: uploadLogo, uploadDir };
+// Cleanup middleware to remove uploaded files if there's an error
+const cleanupUploads = async (req, res, next) => {
+  if (res.statusCode >= 400 && req.uploadedFiles && req.uploadedFiles.images) {
+    for (const filename of req.uploadedFiles.images) {
+      try {
+        const filePath = path.join(uploadDir, filename);
+        await fs.unlink(filePath).catch(() => {});
+        // Clean up webp version if it exists
+        const webpPath = filename.endsWith('.webp') ? filePath : `${filePath}.webp`;
+        await fs.unlink(webpPath).catch(() => {});
+      } catch (error) {
+        console.error(`Error cleaning up file ${filename}:`, error);
+      }
+    }
+  }
+  next();
+};
+
+module.exports = {
+  handleCardImages,
+  processImages,
+  cleanupUploads,
+  upload // Exporting upload for single file uploads if needed
+};

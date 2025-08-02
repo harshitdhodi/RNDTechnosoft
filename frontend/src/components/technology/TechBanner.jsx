@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import JobApplicationModal from '../HireTelent/JobApplicationmodal'; // Import the modal component
 
 export default function TechBanner({ serviceGridRef, pageType }) {
   const [heading, setHeading] = useState("");
@@ -8,8 +9,9 @@ export default function TechBanner({ serviceGridRef, pageType }) {
   const [photo, setPhoto] = useState(null);
   const [alt, setAlt] = useState("");
   const [imgTitle, setImgTitle] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHeadings = async () => {
@@ -29,101 +31,64 @@ export default function TechBanner({ serviceGridRef, pageType }) {
     };
 
     fetchHeadings();
-  }, []);
+  }, [pageType]);
 
-  const scrollToServices = () => {
-    if (serviceGridRef.current) {
-      serviceGridRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+  // const scrollToServices = () => {
+  //   if (serviceGridRef.current) {
+  //     serviceGridRef.current.scrollIntoView({ behavior: 'smooth' });
+  //   }
+  // };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true); // Open the modal
   };
 
-  const handleModalSubmit = (e) => {
-    e.preventDefault();
-    // Add form submission logic here (e.g., axios.post)
-    alert("Application submitted!");
-    setShowModal(false);
+  const handleCloseModal = () => {
+    setIsModalOpen(false); // Close the modal
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full min-h-[70vh]">
       <img
-        src={`/api/logo/download/${photo}`}
+        src={`/api/logo/download/${photo}`} 
         alt={alt}
         title={imgTitle}
-        className="w-full h-[55vh] object-fill"
+        className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center gap-4 px-4 py-30 xl:pt-12 text-center">
-        <h1 className="text-white font-semibold text-4xl md:text-4xl capitalize md:max-w-xl xl:max-w-4xl">
+
+      <div className="absolute inset-0 bg-black bg-opacity-30 flex flex-col items-center justify-center px-4 
+                      pt-24 sm:pt-28 md:pt-32 xl:pt-36 2xl:pt-40 pb-12 sm:pb-16 xl:pb-20 text-center">
+        
+        <h1 className="text-white font-semibold text-3xl md:text-4xl max-w-3xl leading-tight">
           {heading}
         </h1>
-        <p className="text-white text-lg md:text-xl md:max-w-2xl xl:w-[60%]">
+
+        <p className="text-white mt-3 text-base sm:text-lg md:text-xl max-w-xl md:max-w-2xl xl:max-w-3xl text-justify lg:text-center">
           {subHeading}
         </p>
-        <div className="flex gap-4 mt-4 flex-wrap justify-center">
+
+        <div className="flex gap-3 sm:gap-4 mt-4 flex-wrap justify-center">
           <a
             href="/contact"
-            className="bg-yellow-400 text-black font-medium py-3 px-6 rounded-md hover:bg-yellow-500 transition duration-300"
+            className="btn-yellow"
           >
             Get in Touch
           </a>
           <button
-            onClick={() => setShowModal(true)}
-            className="bg-yellow-400 text-black font-medium py-3 px-6 rounded-md hover:bg-yellow-500 transition duration-300"
+            onClick={handleOpenModal}
+            className="btn-yellow"
           >
-            Hire Us
+            Hire Talent
           </button>
         </div>
-      </div>
+  </div>
 
-      {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center px-4">
-          <div className="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative">
-            <button
-              onClick={() => setShowModal(false)}
-              className="absolute top-3 right-4 text-gray-500 hover:text-gray-800 text-xl font-bold"
-            >
-              &times;
-            </button>
-            <h2 className="text-2xl font-semibold mb-4 text-center">Hire Us</h2>
-            <form onSubmit={handleModalSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                <input
-                  type="text"
-                  required
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter your name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  required
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Enter your email"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                <textarea
-                  rows="4"
-                  required
-                  className="w-full border border-gray-300 rounded-md p-2"
-                  placeholder="Tell us what you're looking for"
-                ></textarea>
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-yellow-500 text-black font-semibold py-2 rounded-md hover:bg-yellow-600 transition"
-              >
-                Submit Application
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
+  <JobApplicationModal
+    isOpen={isModalOpen}
+    onClose={handleCloseModal}
+    job={{ jobtitle: "General Application" }}
+  />
+</div>
+
   );
 }
