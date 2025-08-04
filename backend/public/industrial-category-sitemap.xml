@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.rndtechnosoft.com/education</loc>
-    <lastmod>2025-07-18T10:43:54.864Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.rndtechnosoft.com/health-care</loc>
-    <lastmod>2025-07-18T10:45:01.390Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/retail</loc>
+    <lastmod>2024-10-19T10:13:23.826Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -19,14 +13,20 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/retail</loc>
-    <lastmod>2024-10-19T10:13:23.826Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/e-commerce</loc>
+    <lastmod>2025-07-18T10:43:29.750Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.rndtechnosoft.com/e-commerce</loc>
-    <lastmod>2025-07-18T10:43:29.750Z</lastmod>
+    <loc>https://www.rndtechnosoft.com/education</loc>
+    <lastmod>2025-07-18T10:43:54.864Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/health-care</loc>
+    <lastmod>2025-07-18T10:45:01.390Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
