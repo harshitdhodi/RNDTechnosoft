@@ -27,6 +27,7 @@ exports.CreateCareerInquiry = async (req, res) => {
 
     await newInquiry.save();
     console.log("jobTitle", req.body.jobTitle)
+    const jobTitle = req.body.jobTitle;
 
     // HTML Email Template
     const emailHTML = ` 
@@ -90,12 +91,12 @@ exports.CreateCareerInquiry = async (req, res) => {
       <body>
         <div class="container">
             <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
-            <p class="centered-text">New Career Inquiry!!</p>
+            <p class="centered-text">New ${jobTitle} Inquiry!!</p>
             <p><span class="field">Name:</span> ${newInquiry.name}</p>
             <p><span class="field">Email:</span> ${newInquiry.email}</p>
             <p><span class="field">Phone:</span> ${newInquiry.mobileNo}</p>
             ${newInquiry.linkedin ? `<p><span class="field">LinkedIn:</span> ${newInquiry.linkedin}</p>` : ''}
-            <p>${newInquiry.message}</p>
+            <p><span class="field">Message:</span>${newInquiry.message}</p>
         </div>
       </body>
       </html>
@@ -103,7 +104,6 @@ exports.CreateCareerInquiry = async (req, res) => {
 
     // Resume file from Multer
     const resumeFile = req.files['resume'] ? req.files['resume'][0] : null;
-    const jobTitle = req.body.jobTitle;
 
     const mailOptions = {
       from: newInquiry.email,
