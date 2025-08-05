@@ -21,6 +21,7 @@ exports.CreateCareerInquiry = async (req, res) => {
     });
 
     await newInquiry.save();
+    const jobTitle = req.body.jobTitle; 
 
     // HTML Email Template
     const emailHTML = `
@@ -77,7 +78,7 @@ exports.CreateCareerInquiry = async (req, res) => {
       <body>
         <div class="container">
             <h2>RND Technosoft</h2>
-            <p class="centered-text">New Inquiry!!</p>
+            <p class="centered-text">New ${jobTitle} Inquiry!!</p>
             <p><span class="field">Name:</span> ${newInquiry.name}</p>
             <p><span class="field">Email:</span> ${newInquiry.email}</p>
             <p><span class="field">Phone:</span> ${newInquiry.mobileNo}</p>
@@ -95,7 +96,7 @@ exports.CreateCareerInquiry = async (req, res) => {
       from: newInquiry.email,
       to: process.env.EMAIL_USER,
       cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
-      subject: 'New Career Inquiry',
+      subject:  jobTitle ? `${jobTitle} Inquiry` : 'New Career Inquiry',
       html: emailHTML,
       attachments: [
         {
