@@ -26,9 +26,10 @@ exports.CreateCareerInquiry = async (req, res) => {
     });
 
     await newInquiry.save();
+    console.log("jobTitle", req.body.jobTitle)
 
     // HTML Email Template
-    const emailHTML = `
+    const emailHTML = ` 
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -102,13 +103,13 @@ exports.CreateCareerInquiry = async (req, res) => {
 
     // Resume file from Multer
     const resumeFile = req.files['resume'] ? req.files['resume'][0] : null;
-    const jobTitle = req.body.job
+    const jobTitle = req.body.jobTitle;
 
     const mailOptions = {
       from: newInquiry.email,
       to: process.env.EMAIL_HR,
       replyTo: newInquiry.email,
-      subject: jobTitle ? `New Career Inquiry for ${jobTitle}` : 'New Career Inquiry',
+      subject: jobTitle ? `${jobTitle} Inquiry` : 'New Career Inquiry', 
       html: emailHTML,
       attachments: [
         {
@@ -176,7 +177,7 @@ exports.getCountsAndData = async (req, res) => {
 
     const dataWithFields = await CareerInquiry.find({
       $or: [
-        { utm_source: { $exists: true, $ne: '' } },
+        { utm_source: { $exists: true, $ne: '' } }, 
         { utm_medium: { $exists: true, $ne: '' } },
         { utm_campaign: { $exists: true, $ne: '' } },
         { utm_id: { $exists: true, $ne: '' } },
