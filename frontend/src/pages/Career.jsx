@@ -235,7 +235,7 @@ const JobApplicationModal = ({ job, isOpen, onClose }) => {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-
+      
       navigate("/thankyou");
       onClose();
       setName("");
