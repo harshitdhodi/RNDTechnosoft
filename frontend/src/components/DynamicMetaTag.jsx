@@ -217,46 +217,58 @@ const DynamicMetaTags = () => {
         canonicalLink.setAttribute('href', window.location.origin + location.pathname);
 
         // Handle Google settings scripts
-        if (googleSettings) {
-            if (googleSettings.headerscript) {
-                const existingHeaderScript = document.querySelector('script[data-type="header"]');
-                if (existingHeaderScript) {
-                    existingHeaderScript.remove();
-                }
-                const headerScript = document.createElement("script");
-                headerScript.type = "text/javascript";
-                headerScript.dataset.type = "header";
-                headerScript.text = googleSettings.headerscript;
-                document.head.appendChild(headerScript);
-                createdTags.push(headerScript);
-            }
-
-            if (googleSettings.bodyscript) {
-                const existingBodyScript = document.querySelector('script[data-type="body"]');
-                if (existingBodyScript) {
-                    existingBodyScript.remove();
-                }
-                const bodyScript = document.createElement("script");
-                bodyScript.type = "text/javascript";
-                bodyScript.dataset.type = "body";
-                bodyScript.text = googleSettings.bodyscript;
-                document.body.appendChild(bodyScript);
-                createdTags.push(bodyScript);
-            }
-
-            if (googleSettings.footerscript) {
-                const existingFooterScript = document.querySelector('script[data-type="footer"]');
-                if (existingFooterScript) {
-                    existingFooterScript.remove();
-                }
-                const footerScript = document.createElement("script");
-                footerScript.type = "text/javascript";
-                footerScript.dataset.type = "footer";
-                footerScript.text = googleSettings.footerscript;
-                document.body.appendChild(footerScript);
-                createdTags.push(footerScript);
-            }
+     if (googleSettings) {
+    if (
+        googleSettings.headerscript &&
+        typeof googleSettings.headerscript === "string" &&
+        googleSettings.headerscript.trim().length > 0
+    ) {
+        const existingHeaderScript = document.querySelector('script[data-type="header"]');
+        if (existingHeaderScript) {
+            existingHeaderScript.remove();
         }
+        const headerScript = document.createElement("script");
+        headerScript.type = "text/javascript";
+        headerScript.dataset.type = "header";
+        headerScript.text = googleSettings.headerscript;
+        document.head.appendChild(headerScript);
+        createdTags.push(headerScript);
+    }
+
+    if (
+        googleSettings.bodyscript &&
+        typeof googleSettings.bodyscript === "string" &&
+        googleSettings.bodyscript.trim().length > 0
+    ) {
+        const existingBodyScript = document.querySelector('script[data-type="body"]');
+        if (existingBodyScript) {
+            existingBodyScript.remove();
+        }
+        const bodyScript = document.createElement("script");
+        bodyScript.type = "text/javascript";
+        bodyScript.dataset.type = "body";
+        bodyScript.text = googleSettings.bodyscript;
+        document.body.appendChild(bodyScript);
+        createdTags.push(bodyScript);
+    }
+
+    if (
+        googleSettings.footerscript &&
+        typeof googleSettings.footerscript === "string" &&
+        googleSettings.footerscript.trim().length > 0
+    ) {
+        const existingFooterScript = document.querySelector('script[data-type="footer"]');
+        if (existingFooterScript) {
+            existingFooterScript.remove();
+        }
+        const footerScript = document.createElement("script");
+        footerScript.type = "text/javascript";
+        footerScript.dataset.type = "footer";
+        footerScript.text = googleSettings.footerscript;
+        document.body.appendChild(footerScript);
+        createdTags.push(footerScript);
+    }
+}
 
         // Handle favicon
         if (favicon && favicon.photo) {

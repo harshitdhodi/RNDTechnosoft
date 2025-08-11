@@ -81,7 +81,6 @@ const getNews = async (req, res) => {
   }
 };
 
-
 const getNewsFront = async (req, res) => {
   try {
     // Fetch only active news and sort by date in descending order to get the latest news first
