@@ -26,9 +26,11 @@ exports.CreateCareerInquiry = async (req, res) => {
     });
 
     await newInquiry.save();
+    console.log("jobTitle", req.body.jobTitle)
+    const jobTitle = req.body.jobTitle;
 
     // HTML Email Template
-    const emailHTML = `
+    const emailHTML = ` 
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -89,12 +91,12 @@ exports.CreateCareerInquiry = async (req, res) => {
       <body>
         <div class="container">
             <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
-            <p class="centered-text">New Career Inquiry!!</p>
+            <p class="centered-text">New ${jobTitle} Inquiry!!</p>
             <p><span class="field">Name:</span> ${newInquiry.name}</p>
             <p><span class="field">Email:</span> ${newInquiry.email}</p>
             <p><span class="field">Phone:</span> ${newInquiry.mobileNo}</p>
             ${newInquiry.linkedin ? `<p><span class="field">LinkedIn:</span> ${newInquiry.linkedin}</p>` : ''}
-            <p>${newInquiry.message}</p>
+            <p><span class="field">Message:</span>${newInquiry.message}</p>
         </div>
       </body>
       </html>
@@ -102,13 +104,12 @@ exports.CreateCareerInquiry = async (req, res) => {
 
     // Resume file from Multer
     const resumeFile = req.files['resume'] ? req.files['resume'][0] : null;
-    const jobTitle = req.body.job
 
     const mailOptions = {
       from: newInquiry.email,
       to: process.env.EMAIL_HR,
       replyTo: newInquiry.email,
-      subject: jobTitle ? `New Career Inquiry for ${jobTitle}` : 'New Career Inquiry',
+      subject: jobTitle ? `${jobTitle} Inquiry` : 'New Career Inquiry', 
       html: emailHTML,
       attachments: [
         {
@@ -176,7 +177,7 @@ exports.getCountsAndData = async (req, res) => {
 
     const dataWithFields = await CareerInquiry.find({
       $or: [
-        { utm_source: { $exists: true, $ne: '' } },
+        { utm_source: { $exists: true, $ne: '' } }, 
         { utm_medium: { $exists: true, $ne: '' } },
         { utm_campaign: { $exists: true, $ne: '' } },
         { utm_id: { $exists: true, $ne: '' } },

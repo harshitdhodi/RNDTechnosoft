@@ -7,6 +7,7 @@ import ScrollToTop from '../components/ScrolltoTop';
 
 const Chatbot = lazy(() => import('./Chatbooth'));
 const Whatsapp = lazy(() => import('./Whatsapp'));
+const CateglogButton = lazy(() => import('./Categlog'));
 
 export default function Mainpage() {
   const { pathname } = useLocation();
@@ -26,6 +27,7 @@ export default function Mainpage() {
       <Suspense fallback={<div>Loading...</div>}>
         {/* <Chatbot /> */}
         <Whatsapp />
+        <CateglogButton />  
       </Suspense>
     </div>
   );
