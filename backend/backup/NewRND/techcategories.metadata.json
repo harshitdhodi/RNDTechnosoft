@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"}],"uuid":"0f0890869ea74ff1986d2fe3ea35f9a6","collectionName":"techcategories","type":"collection"}
