@@ -410,8 +410,8 @@ const HeroSection = () => {
         setTimeout(() => setIsLoading(false), 1000);
       } catch (error) {
         console.error("Error fetching hero section:", error);
-        setError("Failed to load hero section data. Please try again later.");
-        setIsLoading(false);
+        setError("We're in the process of updating our service list. Please check back soon.");
+        setIsLoading(false);  
       }
     };
 

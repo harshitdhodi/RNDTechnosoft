@@ -1,4 +1,4 @@
-import React, { useEffect, lazy, Suspense } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import Navbar from '../components/NavBar';
 import { Outlet } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
@@ -11,14 +11,16 @@ const CateglogButton = lazy(() => import('./Categlog'));
 
 export default function Mainpage() {
   const { pathname } = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setIsMobileMenuOpen(false); // Close mobile menu on route change
   }, [pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col ">
-      <Navbar />
+    <div className="min-h-screen flex flex-col">
+      <Navbar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
       <div className="overflow-hidden flex-grow">
         <Outlet />
       </div>
@@ -27,7 +29,7 @@ export default function Mainpage() {
       <Suspense fallback={<div>Loading...</div>}>
         {/* <Chatbot /> */}
         <Whatsapp />
-        <CateglogButton />  
+        <CateglogButton isMobileMenuOpen={isMobileMenuOpen} />
       </Suspense>
     </div>
   );

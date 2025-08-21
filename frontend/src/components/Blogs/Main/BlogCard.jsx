@@ -88,7 +88,7 @@ export default function HowRndHelp() {
               {blog.serviceCategoryName}
             </p>
             <img
-              src={`/api/image/download/${blog.photo[0]}`}
+              src={blog.photo ? `/api/image/download/${blog.photo[0]}` : '/placeholder.webp'}
               alt={blog.alt[0]}
               title={blog.imgtitle[0]}
               className="w-full h-48 sm:h-40 lg:h-48 rounded-md object-cover mb-2"
