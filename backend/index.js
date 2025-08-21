@@ -480,7 +480,7 @@ app.use('/api/technology', require('./routes/technology'));
 app.use('/api/technologySecData', require('./routes/technologySecData'));
 app.use('/api/caseStudy', require('./routes/caseStudy'));
 app.use('/api/hire-talent', require('./routes/hire_telent'));
-app.use("/api/google", require("./routes/googleReviews.js"));
+// app.use("/api/google", require("./routes/googleReviews.js"));
 
 
 // Swagger Setup 
