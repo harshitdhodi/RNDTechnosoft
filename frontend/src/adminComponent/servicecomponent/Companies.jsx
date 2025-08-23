@@ -149,13 +149,13 @@ const Companies = ({ categoryId }) => {
         <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">
           Companies
         </h1>
-        <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-          <Link
+        <Link
             to={`/company-gallery-form/${categoryId}?photoType=${photoType}`}
           >
-            <FaPlus size={15} />
-          </Link>
-        </button>
+          <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">  
+              <FaPlus size={15} />
+          </button>
+        </Link>
       </div>
       <div className="mb-4">
         <input

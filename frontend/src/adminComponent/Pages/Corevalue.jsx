@@ -18,7 +18,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
-
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 Modal.setAppElement('#root');
 
@@ -30,7 +30,8 @@ const CorevalueTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCorevalue, setSelectedCorevalue] = useState(null); // State for the selected banner
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const filteredCorevalues = useMemo(() => {
     return corevalues.filter((corevalue) =>
@@ -110,7 +111,7 @@ const CorevalueTable = () => {
             <button className="text-blue-500 hover:text-blue-700 transition">
               <Link to={`/corevalue/editCorevalue/${row.original._id}`}><Edit /></Link>
             </button>
-            <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteCorevalue(row.original._id)}>
+            <button className="text-red-500 hover:text-red-700 transition" onClick={() => handleDeleteClick(row.original)}>
               <Trash2 />
             </button>
           </div>
@@ -151,12 +152,16 @@ const CorevalueTable = () => {
     }
   };
 
-  const deleteCorevalue = async (id) => {
+  const deleteCorevalue = async () => {
     try {
-      const response = await axios.delete(`/api/corevalue/deleteCorevalue?id=${id}`, { withCredentials: true });
+      const response = await axios.delete(`/api/corevalue/deleteCorevalue?id=${selectedCorevalue._id}`, { withCredentials: true });
       fetchData();
+      toast.success("Core value deleted successfully");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete core value");
+    } finally {
+      handleClose();
     }
   };
 
@@ -171,6 +176,16 @@ const CorevalueTable = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedCorevalue(null);
+  };
+
+  const handleDeleteClick = (item) => {
+    setSelectedCorevalue(item);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsDeleteModalOpen(false);
     setSelectedCorevalue(null);
   };
 
@@ -193,8 +208,10 @@ const CorevalueTable = () => {
         subheading,
       }, { withCredentials: true });
       notify();
+      toast.success("Headings updated successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update headings");
     }
   };
 
@@ -346,6 +363,13 @@ const CorevalueTable = () => {
           </button>
         </div>
       </Modal>
+      <DeleteConfirmationModal
+      isOpen={isDeleteModalOpen}
+        onClose={handleClose}
+        onConfirm={deleteCorevalue}
+        itemName={selectedCorevalue?.title || 'Core Value'}
+        itemType="Core Value"
+      />
     </div>
   );
 };

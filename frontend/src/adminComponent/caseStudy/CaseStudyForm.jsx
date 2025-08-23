@@ -3,6 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const quillStyles = `
   .ql-container {
@@ -136,6 +138,7 @@ const CreateIndustrySecData = () => {
           );
         } catch (err) {
           setError("Failed to load industry section data.");
+          toast.error("Failed to load industry section data.");
         } finally {
           setIsLoading(false);
         }
@@ -167,8 +170,10 @@ const CreateIndustrySecData = () => {
         setImagePreviews(updatedPreviews);
       };
       reader.readAsDataURL(file);
+      toast.success("Image selected successfully.");
     } else {
       setError("Please upload a valid image file.");
+      toast.error("Please upload a valid image file.");
     }
   };
 
@@ -256,6 +261,7 @@ const handleSubmit = async (e) => {
     await axios[method](url, formDataToSend, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+    toast.success(`Data ${isEditMode ? "updated" : "submitted"} successfully!`);
 
     setSuccess(`Data ${isEditMode ? "updated" : "submitted"} successfully!`);
     if (!isEditMode) {
@@ -274,6 +280,7 @@ const handleSubmit = async (e) => {
       err.response?.data?.message ||
       `Error ${isEditMode ? "updating" : "submitting"} data.`;
     setError(errorMessage);
+    toast.error(errorMessage);
   } finally {
     setIsLoading(false);
   }
@@ -281,6 +288,7 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <ToastContainer />
       <style>{quillStyles}</style>
       <h1 className="text-2xl font-bold mb-4">
         {isEditMode ? "Edit Industry Section Data" : "Create Industry Section Data"}

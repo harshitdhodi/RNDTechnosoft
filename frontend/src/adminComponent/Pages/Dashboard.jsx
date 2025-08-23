@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Headphones, Handshake,  //Handshake
- ShoppingCart,  //ShoppingCart
- Flag,  //Flag
- Newspaper,  //Newspaper
- Users2,  //Users2
- MessageSquare,  //MessageSquare
-
-} from 'lucide-react';
+import { Headphones, Handshake, ShoppingCart, Flag, Newspaper, Users2, MessageSquare } from 'lucide-react';
 
 // Custom Bar Chart Component
 const CustomBarChart = ({ data, categories, title }) => {
@@ -119,6 +112,20 @@ const CustomPieChart = ({ data, labels, title }) => {
   let startAngle = 0;
   const colors = ['#4299E1', '#48BB78', '#ECC94B', '#F56565', '#9F7AEA'];
   
+  // Check if all values are zero
+  const nonZeroCount = data.filter(val => val > 0).length;
+  
+  if (total === 0) {
+    return (
+      <div className="custom-chart">
+        <h3 className="text-center mb-2 font-semibold">{title}</h3>
+        <div className="flex justify-center items-center h-[350px]">
+          <p className="text-gray-500">No data available for the pie chart</p>
+        </div>
+      </div>
+    );
+  }
+
   // Function to convert polar coordinates to cartesian
   const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
     const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
@@ -130,9 +137,11 @@ const CustomPieChart = ({ data, labels, title }) => {
   
   // Function to create SVG arc path
   const createArc = (x, y, radius, startAngle, endAngle) => {
-    const start = polarToCartesian(x, y, radius, endAngle);
+    // For a single slice (100%), slightly reduce endAngle to avoid full circle overlap
+    const adjustedEndAngle = nonZeroCount === 1 ? endAngle - 0.01 : endAngle;
+    const start = polarToCartesian(x, y, radius, adjustedEndAngle);
     const end = polarToCartesian(x, y, radius, startAngle);
-    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    const largeArcFlag = adjustedEndAngle - startAngle <= 180 ? "0" : "1";
     
     return [
       "M", start.x, start.y, 
@@ -171,18 +180,16 @@ const CustomPieChart = ({ data, labels, title }) => {
         <path d={arc} fill={colors[i % colors.length]} />
         
         {/* Percentage on slice */}
-        {percentage > 5 && (
-          <text 
-            x={labelPos.x} 
-            y={labelPos.y} 
-            textAnchor="middle" 
-            fontSize="14" 
-            fontWeight="bold" 
-            fill="white"
-          >
-            {Math.round(percentage)}%
-          </text>
-        )}
+        <text 
+          x={labelPos.x} 
+          y={labelPos.y} 
+          textAnchor="middle" 
+          fontSize="14" 
+          fontWeight="bold" 
+          fill="white"
+        >
+          {Math.round(percentage)}%
+        </text>
         
         {/* Legend */}
         <rect 
@@ -368,8 +375,6 @@ const AdminDashboard = () => {
                         </div>
                         <Users2 size={60} />
                     </div>
-                    
-                   
                 </div>
             </div>
             
@@ -390,8 +395,8 @@ const AdminDashboard = () => {
                     </div>
                     <div className="mt-12">
                         <CustomPieChart 
-                            data={chartData} 
-                            labels={chartCategories}
+                            data={chartData.slice(1, 3)} 
+                            labels={chartCategories.slice(1, 3)}
                             title="Inquiries by Type (Pie Chart)" 
                         />
                     </div>
