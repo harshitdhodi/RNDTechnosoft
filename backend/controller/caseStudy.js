@@ -1,5 +1,6 @@
 const IndustrySecData = require('../model/caseStudy');
 const AppError = require('../utils/appError.js');
+const IndustriesCategory = require("../model/industriescategory");
 
 exports.createIndustrySecData = async (req, res, next) => {
   try {
@@ -17,19 +18,17 @@ exports.createIndustrySecData = async (req, res, next) => {
       return acc;
     }, {});
 
-    // Convert to array but only include cards with at least title or details
     const cards = Object.entries(cardFields)
       .map(([index, fields]) => ({
         title: fields.title?.trim() || "",
         details: fields.details?.trim() || "",
-        photo: "", // default empty
+        photo: "",
         altName: fields.altName?.trim() || "",
         imgTitle: fields.imgTitle?.trim() || "",
         _originalIndex: parseInt(index, 10),
       }))
-      .filter(card => card.title || card.details); // ✅ Only keep non-empty cards
+      .filter(card => card.title || card.details);
 
-    // Process file uploads (if any)
     if (req.files) {
       Object.entries(req.files).forEach(([fieldName, fileArray]) => {
         const match = fieldName.match(/card\[(\d+)\]\.photo/);
@@ -45,22 +44,37 @@ exports.createIndustrySecData = async (req, res, next) => {
 
     cards.forEach(c => delete c._originalIndex);
 
-    // Validate cards only if any exist
+    // Validate cards
     const invalidCards = cards.filter(c => !c.title.trim() || !c.details.trim());
     if (invalidCards.length > 0) {
       return next(new AppError("Each card must have a title and details", 400));
     }
 
-    // Prevent duplicate entry
+    // ✅ New check: Prevent same category + type regardless of heading
+    const categoryTypeExists = await IndustrySecData.findOne({
+      category,
+      type: type.trim(),
+    });
+    const categoryName = await IndustriesCategory.findById(category);
+    if (categoryTypeExists) {
+      return next(
+        new AppError(
+          `An entry with category "${categoryName.category}" and type "${type}" already exists`,
+          400
+        )
+      );
+    }
+
+    // Existing duplicate check: category + type + heading
     const existingEntry = await IndustrySecData.findOne({
       heading: heading.trim(),
       category,
-      type,
+      type: type.trim(),
     });
     if (existingEntry) {
       return next(
         new AppError(
-          `An entry with heading "${heading.trim()}", category "${category}", and type "${type}" already exists`,
+          `An entry with heading "${heading.trim()}", category "${existingEntry.category.category}", and type "${type}" already exists`,
           400
         )
       );
@@ -71,7 +85,7 @@ exports.createIndustrySecData = async (req, res, next) => {
       heading: heading.trim(),
       subHeading: subHeading?.trim() || "",
       category,
-      card: cards, // Can be empty
+      card: cards,
     });
 
     res.status(201).json({

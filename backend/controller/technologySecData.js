@@ -131,7 +131,6 @@ const getAllTechnologySecData = async (req, res) => {
 // Get a single TechnologySecData entry by ID
 const getTechnologySecDataById = async (req, res) => {
   try {
-    console.log("hello")
     const data = await TechnologySecData.findById(req.params.id);
     if (!data) {
       return res.status(404).json({ message: 'Data not found' });

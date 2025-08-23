@@ -55,7 +55,7 @@ const getAllPageHeadings = async (req, res) => {
 
 const updatePageHeading = async (req, res) => {
   const pageType = req.query.pageType;
-  const { heading, subheading,alt,imgTitle } = req.body;
+  const { heading, subheading, alt, imgTitle } = req.body;
   let photo;
 
   // Check if a new file was uploaded
@@ -65,8 +65,9 @@ const updatePageHeading = async (req, res) => {
 
   try {
     // Find the page heading by pageType
+    console.log("trying to find page heading");
     let pageHeading = await PageHeadings.findOne({ pageType });
-
+    console.log("found");
     if (!pageHeading) {
       // If no page heading exists for the given pageType, create a new one
       pageHeading = new PageHeadings({
@@ -77,6 +78,7 @@ const updatePageHeading = async (req, res) => {
         imgTitle,
         photo: photo || '', // Set photo only if it's uploaded
       });
+      console.log("creating new page heading");
       await pageHeading.save();
 
       return res.status(201).json({
