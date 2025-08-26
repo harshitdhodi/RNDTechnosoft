@@ -15,6 +15,7 @@ exports.createHireTalent = async (req, res, next) => {
     }
 
     // Validate input
+<<<<<<< HEAD
     if (!heading || !pageSection || !Array.isArray(card) || card.length === 0) {
       return res.status(400).json({ error: 'Heading, pageSection, and non-empty card array are required' });
     }
@@ -28,19 +29,32 @@ exports.createHireTalent = async (req, res, next) => {
       return res.status(400).json({ 
         error: `A record for pageSection "${pageSection}" already exists.` 
       });
+=======
+    if (!heading || !pageSection || !Array.isArray(card)) {
+      return res.status(400).json({ error: 'Heading, pageSection, and card array are required' });
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
 
     // Map file uploads to corresponding card items
     const updatedCards = card.map((cardItem, index) => {
+<<<<<<< HEAD
       const fileField = `card[${index}].photo`;
+=======
+      const fileField = `card[${index}][photo]`;
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       const file = req.files && req.files[fileField] && req.files[fileField][0];
       const photo = file ? file.filename : cardItem.photo || '';
 
       return {
         cardInfo: cardItem.cardInfo,
         photo,
+<<<<<<< HEAD
         altImg: cardItem.altImg || '',
         imgTitle: cardItem.imgTitle || '',
+=======
+        altImg: cardItem.altImg,
+        imgTitle: cardItem.imgTitle,
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       };
     });
 
@@ -55,8 +69,13 @@ exports.createHireTalent = async (req, res, next) => {
 
     res.status(201).json({ message: 'Hire talent data created', data: newHireTalentData });
   } catch (error) {
+<<<<<<< HEAD
     console.error('Error in createHireTalent:', error);
     next(error);
+=======
+    console.error('Error in createHireTalentData:', error);
+    res.status(500).json({ error: error.message });
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
 };
 
@@ -82,7 +101,11 @@ exports.getHireTalentById = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 exports.updateHireTalent = async (req, res, next) => {
+=======
+exports.updateHireTalent = async (req, res) => {
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   try {
     const { heading, subHeading, pageSection } = req.body;
     let { card } = req.body;
@@ -95,6 +118,7 @@ exports.updateHireTalent = async (req, res, next) => {
       card = JSON.parse(card);
     }
 
+<<<<<<< HEAD
     // Check for duplicate pageSection in other documents
     if (pageSection) {
       const existingRecord = await HireTalent.findOne({ 
@@ -109,6 +133,8 @@ exports.updateHireTalent = async (req, res, next) => {
       }
     }
 
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     // Build updates object
     const updates = {};
     if (heading !== undefined) updates.heading = heading;
@@ -117,16 +143,27 @@ exports.updateHireTalent = async (req, res, next) => {
 
     // Handle card updates if provided
     if (card && Array.isArray(card)) {
+<<<<<<< HEAD
       const updatedCards = card.map((cardItem, index) => {
         const fileField = `card[${index}].photo`;
+=======
+      // Map file uploads to corresponding card items (same logic as create)
+      const updatedCards = card.map((cardItem, index) => {
+        const fileField = `card[${index}][photo]`;
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         const file = req.files && req.files[fileField] && req.files[fileField][0];
         const photo = file ? file.filename : cardItem.photo || '';
 
         return {
           cardInfo: cardItem.cardInfo,
           photo,
+<<<<<<< HEAD
           altImg: cardItem.altImg || '',
           imgTitle: cardItem.imgTitle || '',
+=======
+          altImg: cardItem.altImg,
+          imgTitle: cardItem.imgTitle,
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         };
       });
 
@@ -135,8 +172,13 @@ exports.updateHireTalent = async (req, res, next) => {
 
     // Find and update the document
     const updated = await HireTalent.findByIdAndUpdate(
+<<<<<<< HEAD
       req.params.id,
       updates,
+=======
+      req.params.id, 
+      updates, 
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       { new: true }
     );
 
@@ -147,7 +189,11 @@ exports.updateHireTalent = async (req, res, next) => {
     res.status(200).json({ message: 'Hire Talent updated', data: updated });
   } catch (error) {
     console.error('Error in updateHireTalent:', error);
+<<<<<<< HEAD
     next(error);
+=======
+    res.status(500).json({ error: error.message });
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
 };
 

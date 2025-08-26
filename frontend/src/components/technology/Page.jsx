@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from "react";
 import WhyChooseSection from "./WhyChoose";
 import HireDevelopersSection from "./HireDeveloperSectio";
@@ -63,3 +64,27 @@ const TechnologyPage = () => {
 };
 
 export default TechnologyPage;
+=======
+import React from 'react'
+import WhyChooseSection from './WhyChoose'
+import HireDevelopersSection from './HireDeveloperSectio'
+import TechBanner from './TechBanner'
+import ExpertiseComponent from '../WhatWeDo/Growth'
+import Review from '../Websites/Review'
+import ServicesLanding from './Application'
+
+const TechnologyPage = () => {
+  return (
+    <div>
+      <TechBanner pageType={"technology"}/>
+      <ServicesLanding />
+      <WhyChooseSection />
+      <ExpertiseComponent />
+      <HireDevelopersSection />
+      <Review />
+    </div>
+  )
+}
+
+export default TechnologyPage
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

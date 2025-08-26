@@ -11,25 +11,40 @@ import loading from "react-useanimations/lib/loading";
 
 Modal.setAppElement('#root');
 
+<<<<<<< HEAD
 const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
+=======
+const ServicesTable = ({ categoryId ,subcategoryId,subsubcategoryId}) => {
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedService, setSelectedService] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+<<<<<<< HEAD
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [serviceToDelete, setServiceToDelete] = useState(null);
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const pageSize = 5;
   const navigate = useNavigate();
 
   const filteredServices = useMemo(() => {
     return services.filter((service) =>
+<<<<<<< HEAD
       service?.heading?.toLowerCase().includes(searchTerm.toLowerCase())
+=======
+      service.heading.toLowerCase().includes(searchTerm.toLowerCase())
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     );
   }, [services, searchTerm]);
 
   const columns = useMemo(
     () => [
+<<<<<<< HEAD
+=======
+   
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       {
         Header: "Heading",
         accessor: "heading",
@@ -59,7 +74,11 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
         disableSortBy: true,
       },
       {
+<<<<<<< HEAD
         Header: "Active",
+=======
+        Header: "Status",
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         accessor: "status",
         Cell: ({ value }) => value ? <FaCheck className="text-green-500" /> : <FaTimes className="text-red-500" />,
         disableSortBy: true,
@@ -74,6 +93,7 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
             <Link to={`/services/editService/${row.original._id}`} className="text-blue-500 hover:text-blue-700 transition">
               <FaEdit />
             </Link>
+<<<<<<< HEAD
             <button
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => {
@@ -81,6 +101,9 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
                 setIsDeleteModalOpen(true);
               }}
             >
+=======
+            <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteService(row.original._id)}>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               <FaTrashAlt />
             </button>
           </div>
@@ -115,6 +138,7 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
     setSelectedService(null);
   };
 
+<<<<<<< HEAD
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setServiceToDelete(null);
@@ -145,6 +169,20 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
       console.error('Error fetching services:', error);
       toast.error("Failed to fetch services.");
       setServices([]); // Reset to empty array to prevent undefined state
+=======
+  const fetchData = async (pageIndex) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/api/serviceDetails/getServiceDetails?categoryId=${categoryId}&page=${pageIndex + 1}`, { withCredentials: true });
+      const servicesWithIds = response.data.data.map((service, index) => ({
+        ...service,
+        id: pageIndex * pageSize + index + 1,
+      }));
+      setServices(servicesWithIds);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch services.");
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     } finally {
       setLoading(false);
     }
@@ -152,6 +190,7 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
 
   const deleteService = async (id) => {
     try {
+<<<<<<< HEAD
       console.log('Deleting service with id:', id);
       await axios.delete(`/api/serviceDetails/deleteServiceDetail?id=${id}`, { withCredentials: true });
       toast.success("Service deleted successfully.", { autoClose: 3000 });
@@ -162,6 +201,14 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
       console.error('Error deleting service:', error);
       toast.error("Failed to delete service.");
       closeDeleteModal();
+=======
+      await axios.delete(`/api/serviceDetails/deleteServiceDetail?id=${id}`, { withCredentials: true });
+      toast.success("Service deleted successfully.");
+      fetchData(0);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete service.");
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -191,6 +238,7 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
         />
       </div>
       {loading ? (
+<<<<<<< HEAD
         <div className="flex justify-center">
           <UseAnimations animation={loading} size={56} />
         </div>
@@ -310,9 +358,62 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
             </button>
           </div>
         </div>
+=======
+        <UseAnimations animation={loading} />
+      ) : (
+        <table {...getTableProps()} className="min-w-full border-collapse border border-gray-300">
+          <thead>
+            {headerGroups.map(headerGroup => (
+              <tr {...headerGroup.getHeaderGroupProps()} className="bg-gray-100">
+                {headerGroup.headers.map(column => (
+                  <th {...column.getHeaderProps()} className="border border-gray-300 p-2 text-left font-bold">
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map(row => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} className="border border-gray-300 hover:bg-gray-50">
+                  {row.cells.map(cell => (
+                    <td {...cell.getCellProps()} className="border border-gray-300 p-2">
+                      {cell.render("Cell")}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
+
+      {/* Modal for viewing service details */}
+      <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
+        <h2 className="text-xl font-bold">{selectedService?.heading}</h2>
+        <div dangerouslySetInnerHTML={{ __html: selectedService?.description }} />
+        <h3 className="font-bold mt-4">Questions</h3>
+        <ul>
+          {selectedService?.questions?.map((question) => (
+            <li key={question._id}>
+              <strong>{question.question}</strong>: {question.answer}
+            </li>
+          ))}
+        </ul>
+        <button onClick={closeModal} className="mt-4 p-2 bg-red-500 text-white rounded">
+          Close
+        </button>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       </Modal>
     </div>
   );
 };
 
+<<<<<<< HEAD
 export default ServicesTable;
+=======
+export default ServicesTable;
+ 
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

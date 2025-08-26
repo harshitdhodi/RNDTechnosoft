@@ -121,6 +121,7 @@ const updateTechnologySecData = async (req, res) => {
 // Get all TechnologySecData entries
 const getAllTechnologySecData = async (req, res) => {
   try {
+<<<<<<< HEAD
     const data = await TechnologySecData.find();
 
     // collect unique technologyIds from your entries
@@ -143,6 +144,10 @@ const getAllTechnologySecData = async (req, res) => {
     }));
 
     res.status(200).json(enrichedData);
+=======
+    const data = await TechnologySecData.find().populate('technologyId');
+    res.status(200).json(data);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data', error: error.message });
   }
@@ -151,6 +156,10 @@ const getAllTechnologySecData = async (req, res) => {
 // Get a single TechnologySecData entry by ID
 const getTechnologySecDataById = async (req, res) => {
   try {
+<<<<<<< HEAD
+=======
+    console.log("hello")
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const data = await TechnologySecData.findById(req.params.id);
     if (!data) {
       return res.status(404).json({ message: 'Data not found' });
@@ -217,6 +226,7 @@ const getDataByTechnologySlug = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 const getDataExistsBySlug = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -259,12 +269,18 @@ const getDataExistsBySlug = async (req, res) => {
 };
 
 
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 module.exports = {
   createTechnologySecData,
   getAllTechnologySecData,
   getTechnologySecDataById,
   updateTechnologySecData,
   deleteTechnologySecData,
+<<<<<<< HEAD
   getDataByTechnologySlug,
   getDataExistsBySlug
+=======
+  getDataByTechnologySlug
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 };

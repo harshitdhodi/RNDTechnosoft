@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { Eye } from 'lucide-react';
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { v4 as uuidv4 } from 'uuid';
+<<<<<<< HEAD
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 const TechnologySecDataForm = () => {
   const { id } = useParams();
@@ -25,17 +31,21 @@ const TechnologySecDataForm = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState('Enter heading/subheading...');
+<<<<<<< HEAD
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   
   // Validation state
   const [validationErrors, setValidationErrors] = useState({});
   const [touched, setTouched] = useState({});
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const typeOptions = [
     { value: 'hire developer', label: 'Hire Developer' },
     { value: 'Why Choose', label: 'Why Choose' },
     { value: 'Technology Application', label: 'Technology Application' },
   ];
+<<<<<<< HEAD
 
   // Character limits
   const CHAR_LIMITS = {
@@ -171,17 +181,28 @@ const TechnologySecDataForm = () => {
       return newErrors;
     });
   };
+=======
+  
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   // Fetch technologies for dropdown
   useEffect(() => {
     const fetchTechnologies = async () => {
       try {
+<<<<<<< HEAD
         const response = await axios.get('/api/technology', { withCredentials: true });
+=======
+        const response = await axios.get('/api/technology');
+        console.log('Fetched technologies:', response.data.data);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         setTechnologies(response.data.data || response.data);
       } catch (err) {
         setError('Failed to fetch technologies');
         console.error('Fetch technologies error:', err);
+<<<<<<< HEAD
         toast.error('Failed to fetch technologies');
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       }
     };
     fetchTechnologies();
@@ -193,8 +214,14 @@ const TechnologySecDataForm = () => {
       const fetchData = async () => {
         try {
           setLoading(true);
+<<<<<<< HEAD
           const response = await axios.get(`/api/technologySecData/${id}`, { withCredentials: true });
           const data = response.data.data || response.data;
+=======
+          const response = await axios.get(`/api/technologySecData/${id}`);
+          const data = response.data.data || response.data;
+          console.log('Fetched data for update:', data);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           
           setFormData({
             technologyId: data.technologyId || '',
@@ -209,7 +236,10 @@ const TechnologySecDataForm = () => {
         } catch (err) {
           setError('Failed to fetch data');
           console.error('Fetch error:', err);
+<<<<<<< HEAD
           toast.error('Failed to fetch data');
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         } finally {
           setLoading(false);
         }
@@ -232,12 +262,17 @@ const TechnologySecDataForm = () => {
   const handleChange = (e, index) => {
     const { name, value } = e.target;
   
+<<<<<<< HEAD
     setTouched(prev => ({
       ...prev,
       [`${name}${index !== undefined ? `.${index}` : ''}`]: true
     }));
 
     if (name === 'type') {
+=======
+    if (name === 'type') {
+      // Update placeholder dynamically based on selected type
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       switch (value) {
         case 'hire developer':
           setPlaceholder('Enter heading/subheading for Hire Developer...');
@@ -251,12 +286,15 @@ const TechnologySecDataForm = () => {
         default:
           setPlaceholder('');
       }
+<<<<<<< HEAD
       
       updateValidationErrors('type', value);
     }
     
     if (name === 'technologyId') {
       updateValidationErrors('technologyId', value);
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   
     if (name.includes('card.')) {
@@ -264,12 +302,19 @@ const TechnologySecDataForm = () => {
       const updatedCards = [...formData.card];
       updatedCards[index] = { ...updatedCards[index], [cardField]: value };
       setFormData({ ...formData, card: updatedCards });
+<<<<<<< HEAD
       
       updateValidationErrors(`card.${cardField}`, value, index);
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const debounce = (func, wait) => {
     let timeout;
@@ -280,6 +325,7 @@ const TechnologySecDataForm = () => {
   };
 
   const handleQuillChange = debounce((field, value, index) => {
+<<<<<<< HEAD
     setTouched(prev => ({
       ...prev,
       [`${field}${index !== undefined ? `.${index}` : ''}`]: true
@@ -288,18 +334,26 @@ const TechnologySecDataForm = () => {
     if (field === 'heading') {
       setFormData({ ...formData, heading: value });
       updateValidationErrors('heading', value);
+=======
+    if (field === 'heading') {
+      setFormData({ ...formData, heading: value });
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     } else if (field === 'card.heading' || field === 'card.subHeading') {
       const cardField = field.split('.')[1];
       const updatedCards = [...formData.card];
       updatedCards[index] = { ...updatedCards[index], [cardField]: value };
       setFormData({ ...formData, card: updatedCards });
+<<<<<<< HEAD
       
       updateValidationErrors(`card.${cardField}`, value, index);
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   }, 300);
 
   const handleFileChange = (e, index) => {
     const selectedFile = e.target.files[0];
+<<<<<<< HEAD
     
     setTouched(prev => ({
       ...prev,
@@ -315,12 +369,19 @@ const TechnologySecDataForm = () => {
       return;
     }
 
+=======
+    if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
+      setError(`File for card ${index + 1} must be less than 5MB`);
+      return;
+    }
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const updatedFiles = [...files];
     updatedFiles[index] = selectedFile;
     setFiles(updatedFiles);
 
     const updatedPreviews = [...previews];
     updatedPreviews[index] = selectedFile ? URL.createObjectURL(selectedFile) : null;
+<<<<<<< HEAD
     setPreviews(updatedPreviews);
     
     if (selectedFile) {
@@ -330,6 +391,10 @@ const TechnologySecDataForm = () => {
         return newErrors;
       });
     }
+=======
+    console.log('Preview for index', index, ':', updatedPreviews[index]);
+    setPreviews(updatedPreviews);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const addCard = () => {
@@ -344,6 +409,7 @@ const TechnologySecDataForm = () => {
   const removeCard = (index) => {
     if (formData.card.length === 1) {
       setError('At least one card is required');
+<<<<<<< HEAD
       toast.error('At least one card is required');
       return;
     }
@@ -358,6 +424,10 @@ const TechnologySecDataForm = () => {
       return newErrors;
     });
     
+=======
+      return;
+    }
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     setFormData({
       ...formData,
       card: formData.card.filter((_, i) => i !== index),
@@ -369,6 +439,7 @@ const TechnologySecDataForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+<<<<<<< HEAD
     
     const allErrors = validateAllFields();
     setValidationErrors(allErrors);
@@ -379,11 +450,22 @@ const TechnologySecDataForm = () => {
       return;
     }
     
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     setLoading(true);
 
     if (formData.card.length !== files.length || formData.card.length !== previews.length) {
       setError('Card, files, and previews arrays are out of sync');
+<<<<<<< HEAD
       toast.error('Card, files, and previews arrays are out of sync');
+=======
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.technologyId) {
+      setError('Please select a technology');
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       setLoading(false);
       return;
     }
@@ -395,10 +477,17 @@ const TechnologySecDataForm = () => {
       fileFormData.append('technologyId', formData.technologyId || '');
 
       formData.card.forEach((card, index) => {
+<<<<<<< HEAD
         fileFormData.append(`card[${index}][heading]`, card.heading || '');
         fileFormData.append(`card[${index}][subHeading]`, card.subHeading || '');
         fileFormData.append(`card[${index}][altName]`, card.altName || '');
         fileFormData.append(`card[${index}][imgTitle]`, card.imgTitle || '');
+=======
+        fileFormData.append(`card[${index}]heading`, card.heading || '');
+        fileFormData.append(`card[${index}]subHeading`, card.subHeading || '');
+        fileFormData.append(`card[${index}]altName`, card.altName || '');
+        fileFormData.append(`card[${index}]imgTitle`, card.imgTitle || '');
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         if (files[index]) {
           fileFormData.append(`card[${index}][photo]`, files[index]);
         } else if (card.photo) {
@@ -406,15 +495,30 @@ const TechnologySecDataForm = () => {
         }
       });
 
+<<<<<<< HEAD
+=======
+      // Log FormData entries
+      for (let [key, value] of fileFormData.entries()) {
+        console.log(key, value instanceof File ? value.name : value);
+      }
+
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       const response = await axios({
         method: isUpdate ? 'put' : 'post',
         url: `/api/technologySecData${isUpdate ? `/${id}` : ''}`,
         data: fileFormData,
         headers: { 'Content-Type': 'multipart/form-data' },
+<<<<<<< HEAD
         withCredentials: true
       });
 
       toast.success(isUpdate ? 'Technology section updated successfully' : 'Technology section created successfully');
+=======
+      });
+
+      console.log('API Response:', response.data);
+
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       setFormData(prev => ({
         ...prev,
         technologyId: response.data.data?.technologyId || response.data.technologyId || prev.technologyId,
@@ -444,9 +548,13 @@ const TechnologySecDataForm = () => {
       setFiles([]);
       navigate('/tech-sec-data');
     } catch (err) {
+<<<<<<< HEAD
       const errorMessage = err.response?.data?.error || 'Failed to save data';
       setError(errorMessage);
       toast.error(errorMessage);
+=======
+      setError(err.response?.data?.error || 'Failed to save data');
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       console.error('API Error:', err.response?.data || err);
     } finally {
       setLoading(false);
@@ -455,9 +563,17 @@ const TechnologySecDataForm = () => {
 
   // Helper function to get image source
   const getImageSrc = (card, index) => {
+<<<<<<< HEAD
     if (previews[index] && previews[index].startsWith('blob:')) {
       return previews[index];
     }
+=======
+    // If there's a preview (new file selected), use it
+    if (previews[index] && previews[index].startsWith('blob:')) {
+      return previews[index];
+    }
+    // If there's a card photo from server, use the correct API endpoint
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     if (card.photo) {
       if (card.photo.startsWith('http')) {
         return card.photo;
@@ -467,6 +583,7 @@ const TechnologySecDataForm = () => {
     return null;
   };
 
+<<<<<<< HEAD
   // Helper function to render character count
   const renderCharCount = (value, limits, isHtml = false) => {
     const currentLength = isHtml ? getPlainTextLength(value) : (value || '').length;
@@ -523,13 +640,29 @@ const TechnologySecDataForm = () => {
           <label className="block text-sm font-medium text-gray-700 font-serif">
             Technology <span className="text-red-500">*</span>
           </label>
+=======
+  return (
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl font-bold mb-6">
+        {isUpdate ? 'Update Technology Section' : 'Add Technology Section'}
+      </h2>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      {loading && <p className="text-gray-500 mb-4">Loading...</p>}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Technology</label>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           <select
             name="technologyId"
             value={formData.technologyId}
             onChange={(e) => handleChange(e)}
+<<<<<<< HEAD
             className={`mt-1 block w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
               validationErrors.technologyId ? 'border-red-500' : 'border-gray-300'
             }`}
+=======
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="" disabled>Select Technology</option>
             {technologies.map((tech) => (
@@ -538,6 +671,7 @@ const TechnologySecDataForm = () => {
               </option>
             ))}
           </select>
+<<<<<<< HEAD
           {validationErrors.technologyId && (
             <p className="text-red-500 text-sm mt-1">{validationErrors.technologyId}</p>
           )}
@@ -879,6 +1013,184 @@ const TechnologySecDataForm = () => {
           </div>
         </div>
       )}
+=======
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Type</label>
+          <select
+            name="type"
+            value={formData.type}
+            onChange={(e) => handleChange(e)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+          >
+            <option value="" disabled>Select Type</option>
+            {typeOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Heading/Sub heading</label>
+          <ReactQuill
+            key={placeholder} // 👈 this forces remount on placeholder change
+            value={formData.heading}
+            onChange={(value) => handleQuillChange('heading', value)}
+            className="mt-1 border border-gray-300 rounded-md"
+            theme="snow"
+            modules={{
+              toolbar: [
+                [{ font: [] }],
+                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+                [{ script: 'sub' }, { script: 'super' }],
+                [{ indent: '-1' }, { indent: '+1' }],
+                ['link', 'image', 'video'],
+                [{ direction: 'rtl' }],
+                [
+                  { color: ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff','#f3ca0d'] }, // custom colors
+                  { background: ['#ffffff', '#f4cccc', '#fce5cd', '#fff2cc', '#d9ead3', '#cfe2f3', '#d9d2e9'] } // custom backgrounds
+                ],
+                [{ align: [] }],
+                ['clean'],
+              ],
+            }}
+            placeholder={placeholder}
+          />
+        </div>
+        <div className="border-t pt-4">
+          <h3 className="text-lg font-semibold mb-2">Cards</h3>
+          {formData.card.map((card, index) => (
+            <div key={card.key} className="border p-4 rounded-md mb-4 relative">
+              <h4 className="text-md font-medium mb-2">Card {index + 1}</h4>
+              <button
+                type="button"
+                onClick={() => removeCard(index)}
+                className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                disabled={formData.card.length === 1}
+              >
+                Remove
+              </button>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Card Photo</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(e, index)}
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                />
+                {getImageSrc(card, index) && (
+                  <div className="mt-2">
+                    <img
+                      src={getImageSrc(card, index)}
+                      alt={card.altName || `Card ${index + 1} preview`}
+                      className="max-w-xs h-auto rounded-md"
+                      onError={(e) => {
+                        console.error('Image load error:', e.target.src);
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  </div>
+                )}
+                {card.photo && !previews[index] && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Current photo: {card.photo}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Card Heading</label>
+                <ReactQuill
+                  value={card.heading}
+                  onChange={(value) => handleQuillChange('card.heading', value, index)}
+                  className="mt-1 border border-gray-300 rounded-md"
+                  theme="snow"
+                  modules={{
+                    toolbar: [
+                      [{ font: [] }],
+                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+                      [{ script: 'sub' }, { script: 'super' }],
+                      [{ indent: '-1' }, { indent: '+1' }],
+                      ['link', 'image', 'video'],
+                      [{ direction: 'rtl' }],
+                      [{ color: [] }, { background: [] }],
+                      [{ align: [] }],
+                      ['clean'],
+                    ],
+                  }}
+                  placeholder='Enter heading...'
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Card Sub Heading</label>
+                <ReactQuill
+                  value={card.subHeading}
+                  onChange={(value) => handleQuillChange('card.subHeading', value, index)}
+                  className="mt-1 border border-gray-300 rounded-md"
+                  theme="snow"
+                  modules={{
+                    toolbar: [
+                      [{ font: [] }],
+                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                      [{ list: 'ordered' }, { list: 'bullet' }, { list: 'check' }],
+                      [{ script: 'sub' }, { script: 'super' }],
+                      [{ indent: '-1' }, { indent: '+1' }],
+                      ['link', 'image', 'video'],
+                      [{ direction: 'rtl' }],
+                      [{ color: [] }, { background: [] }],
+                      [{ align: [] }],
+                      ['clean'],
+                    ],
+                  }}
+                  placeholder='Enter subheading...'
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Card Alt Name</label>
+                <input
+                  type="text"
+                  name="card.altName"
+                  value={card.altName}
+                  onChange={(e) => handleChange(e, index)}
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  placeholder='Enter alt name...'
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Card Photo Title</label>
+                <input
+                  type="text"
+                  name="card.imgTitle"
+                  value={card.imgTitle}
+                  onChange={(e) => handleChange(e, index)}
+                  className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+                  placeholder='Enter photo title...'
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addCard}
+            className="mt-2 bg-green-500 text-white p-2 rounded-md hover:bg-green-600"
+          >
+            Add Card
+          </button>
+        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+        >
+          {loading ? 'Saving...' : isUpdate ? 'Update' : 'Create'}
+        </button>
+      </form>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     </div>
   );
 };

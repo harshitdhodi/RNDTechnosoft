@@ -4,7 +4,11 @@ const fs = require('fs').promises;
 const sharp = require('sharp');
 const AppError = require('../utils/appError');
 
+<<<<<<< HEAD
 // Define the upload directory
+=======
+// Define the upload directory (keeping the existing path)
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const uploadDir = path.join(__dirname, '../logos');
 
 // Ensure upload directory exists
@@ -62,24 +66,35 @@ const upload = multer({
 });
 
 // Middleware to handle dynamic field names for card photos
+<<<<<<< HEAD
 const handleCardImages = (req, res, next) => {
   // Log incoming request body and files for debugging
   console.log('Incoming request body:', req.body);
   console.log('Incoming request files:', req.files);
   console.log('Incoming field names:', Object.keys(req.files || {}));
 
+=======
+// In TechSecImage.js, update the handleCardImages function:
+const handleCardImages = (req, res, next) => {
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   // Create a dynamic fields array based on the expected card fields
   const fields = [];
   for (let i = 0; i < 10; i++) { // Support up to 10 cards
     fields.push({ name: `card[${i}].photo`, maxCount: 1 });
+<<<<<<< HEAD
     // Also support bracket notation for compatibility
     fields.push({ name: `card[${i}][photo]`, maxCount: 1 });
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
   
   // Use fields() to handle multiple files
   upload.fields(fields)(req, res, function(err) {
     if (err) {
+<<<<<<< HEAD
       console.error('Multer error:', err);
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       if (err.code === 'LIMIT_FILE_SIZE') {
         return next(new AppError('File too large. Maximum size is 10MB per file', 400));
       }
@@ -87,6 +102,7 @@ const handleCardImages = (req, res, next) => {
         return next(new AppError('Too many files uploaded. Maximum is 10 files', 400));
       }
       if (err.message.includes('Unexpected field')) {
+<<<<<<< HEAD
         return next(new AppError(`Invalid field name in file upload. Expected card[N].photo or card[N][photo]`, 400));
       }
       return next(err);
@@ -101,6 +117,12 @@ const handleCardImages = (req, res, next) => {
       req.files = normalizedFiles;
       console.log('Normalized req.files:', req.files);
     }
+=======
+        return next(new AppError('Invalid field name in file upload', 400));
+      }
+      return next(err);
+    }
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     next();
   });
 };
@@ -173,5 +195,9 @@ module.exports = {
   handleCardImages,
   processImages,
   cleanupUploads,
+<<<<<<< HEAD
   upload
+=======
+  upload // Exporting upload for single file uploads if needed
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 };

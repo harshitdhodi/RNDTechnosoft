@@ -19,7 +19,10 @@ import { useGetCombinedDataQuery } from "../redux/slices/homepageSlice";
 import { useDispatch } from "react-redux";
 import Companies from "../components/Design/companies";
 import HexGridDemo from "../components/hexagon/Grid";
+<<<<<<< HEAD
 import GoogleReviewsWidget from "../components/GoogleReviews";
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 export default function Website() {
   const dispatch = useDispatch();
@@ -84,7 +87,11 @@ export default function Website() {
     <div className="mt-12">
         <FAQ />
     </div>
+<<<<<<< HEAD
       <GoogleReviewsWidget />
+=======
+       <Review />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       <LatestBlog />
     </div>
   );

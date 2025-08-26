@@ -7,6 +7,7 @@ const fs = require('fs');
 const createTechCategory = async (req, res) => {
   try {
     const { heading, subheading, alt, imgTitle } = req.body;
+<<<<<<< HEAD
 
     // Check if heading already exists
     const existingCategory = await TechCategory.findOne({ heading });
@@ -20,6 +21,13 @@ const createTechCategory = async (req, res) => {
       photo = req.file.filename;
     }
 
+=======
+  let photo;
+  // Handle image upload via multer
+  if (req.file) {
+    photo = req.file.filename;
+  }
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const techCategory = new TechCategory({
       heading,
       subheading,
@@ -78,6 +86,7 @@ const updateTechCategory = async (req, res) => {
       imgTitle,
     };
 
+<<<<<<< HEAD
     // Check if heading already exists for another category
     if (heading) {
       const existingCategory = await TechCategory.findOne({
@@ -89,6 +98,8 @@ const updateTechCategory = async (req, res) => {
       }
     }
 
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     if (req.file) {
       // If a new photo is uploaded, update the photo field and delete the old one
       const oldCategory = await TechCategory.findById(req.params.id);

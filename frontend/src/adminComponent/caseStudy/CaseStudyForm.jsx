@@ -3,8 +3,11 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+<<<<<<< HEAD
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 const quillStyles = `
   .ql-container {
@@ -138,7 +141,10 @@ const CreateIndustrySecData = () => {
           );
         } catch (err) {
           setError("Failed to load industry section data.");
+<<<<<<< HEAD
           toast.error("Failed to load industry section data.");
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         } finally {
           setIsLoading(false);
         }
@@ -170,10 +176,15 @@ const CreateIndustrySecData = () => {
         setImagePreviews(updatedPreviews);
       };
       reader.readAsDataURL(file);
+<<<<<<< HEAD
       toast.success("Image selected successfully.");
     } else {
       setError("Please upload a valid image file.");
       toast.error("Please upload a valid image file.");
+=======
+    } else {
+      setError("Please upload a valid image file.");
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -261,7 +272,10 @@ const handleSubmit = async (e) => {
     await axios[method](url, formDataToSend, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+<<<<<<< HEAD
     toast.success(`Data ${isEditMode ? "updated" : "submitted"} successfully!`);
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
     setSuccess(`Data ${isEditMode ? "updated" : "submitted"} successfully!`);
     if (!isEditMode) {
@@ -280,7 +294,10 @@ const handleSubmit = async (e) => {
       err.response?.data?.message ||
       `Error ${isEditMode ? "updating" : "submitting"} data.`;
     setError(errorMessage);
+<<<<<<< HEAD
     toast.error(errorMessage);
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   } finally {
     setIsLoading(false);
   }
@@ -288,7 +305,10 @@ const handleSubmit = async (e) => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+<<<<<<< HEAD
       <ToastContainer />
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       <style>{quillStyles}</style>
       <h1 className="text-2xl font-bold mb-4">
         {isEditMode ? "Edit Industry Section Data" : "Create Industry Section Data"}

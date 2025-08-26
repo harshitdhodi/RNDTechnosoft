@@ -362,6 +362,7 @@ const getPortfolioByServiceSlug = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 const searchPortfolio = async (req, res) => {
   try {
     const {
@@ -624,3 +625,13 @@ const simpleSearchPortfolio = async (req, res) => {
 };
 
 module.exports = { searchPortfolio, simpleSearchPortfolio, getPortfolioByServiceSlug, getPortfolioFront, getPortfolioBySlug, insertPortfolio, getPortfolio, updatePortfolio, deletePortfolio, getPortfolioById, countPortfolio, deletePhotoAndAltText, getCategoryPortfolio, getSubcategoryPortfolio, getSubSubcategoryPortfolio };
+=======
+
+
+
+
+
+
+
+module.exports = {getPortfolioByServiceSlug, getPortfolioFront, getPortfolioBySlug, insertPortfolio, getPortfolio, updatePortfolio, deletePortfolio, getPortfolioById, countPortfolio, deletePhotoAndAltText, getCategoryPortfolio, getSubcategoryPortfolio, getSubSubcategoryPortfolio };
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

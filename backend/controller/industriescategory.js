@@ -1,5 +1,8 @@
 const IndustriesCategory = require("../model/industriescategory");
+<<<<<<< HEAD
 const Service = require('../model/service'); 
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const fs = require('fs');
 const path = require('path');
 

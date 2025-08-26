@@ -90,11 +90,19 @@ export default function Sidebar() {
     },
     {
       title: "Technology", icon: <GraduationCap size={20} />, submenu: [
+<<<<<<< HEAD
         { title: "Technology Categories List", icon: <MessagesSquare size={20} />, path: "/tech-category" },
         { title: "Add Technology Category", icon: <MailOpen size={20} />, path: "/add-technology" },
         { title: "Technology List & Add Form", icon: <MailOpen size={20} />, path: "/technology" },
         { title: "Add Technology Content Sections", icon: <MailOpen size={20} />, path: "/manage-tech-sec" },
         { title: "Technology Sections Data List", icon: <MailOpen size={20} />, path: "/tech-sec-data" }
+=======
+        { title: "Technology Category Table", icon: <MessagesSquare size={20} />, path: "/tech-category" },
+        { title: "Technology Category Form", icon: <MailOpen size={20} />, path: "/add-technology" },
+        { title: "Technologies", icon: <MailOpen size={20} />, path: "/technology" },
+        { title: "Add Technology data", icon: <MailOpen size={20} />, path: "/manage-tech-sec" },
+        { title: "Technology Section data", icon: <MailOpen size={20} />, path: "/tech-sec-data" }
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
       ]
     },
@@ -114,7 +122,10 @@ export default function Sidebar() {
         { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
         { title: "Why Partner With Us", icon: <Wrench size={20} />, path: "/why-partner-us" },
         { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+<<<<<<< HEAD
         { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
         { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
@@ -129,6 +140,10 @@ export default function Sidebar() {
       title: "Industries", icon: <Building2 size={20} />, submenu: [
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/IndustriesCategory" },
         { title: "Industries", icon: <Wrench size={20} />, path: "/industries" },
+<<<<<<< HEAD
+=======
+        { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         { title: "Industry Data", icon: <Wrench size={20} />, path: "/industry-data" },
       ]
     },

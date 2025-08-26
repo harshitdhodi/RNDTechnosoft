@@ -2,7 +2,10 @@ import { useState } from "react";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+<<<<<<< HEAD
 import "react-toastify/dist/ReactToastify.css";
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 import { useNavigate } from "react-router-dom";
 
 const CreateContactInfo = () => {
@@ -20,6 +23,7 @@ const CreateContactInfo = () => {
     email1: "",
     email2: "",
   });
+<<<<<<< HEAD
   const [imagePreview, setImagePreview] = useState(null);
   const [errors, setErrors] = useState({});
   const [showToast, setShowToast] = useState({ show: false, message: "", type: "" });
@@ -130,6 +134,16 @@ const CreateContactInfo = () => {
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
+=======
+  const [imagePreview, setImagePreview] = useState(null); // New state for image preview
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleQuillChange = (field, value) => {
@@ -137,11 +151,14 @@ const CreateContactInfo = () => {
       ...prevData,
       [field]: value,
     }));
+<<<<<<< HEAD
 
     // Clear error for this field
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }));
     }
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleFileChange = (e) => {
@@ -150,6 +167,7 @@ const CreateContactInfo = () => {
       ...prevData,
       photo: file,
     }));
+<<<<<<< HEAD
 
     // Validate image immediately
     const imageError = validateImage(file);
@@ -157,6 +175,10 @@ const CreateContactInfo = () => {
 
     // Create preview only if valid
     if (file && !imageError) {
+=======
+    // Create a preview URL for the selected image
+    if (file) {
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       const previewUrl = URL.createObjectURL(file);
       setImagePreview(previewUrl);
     } else {
@@ -164,6 +186,7 @@ const CreateContactInfo = () => {
     }
   };
 
+<<<<<<< HEAD
   const validateForm = () => {
     const newErrors = {};
 
@@ -216,6 +239,10 @@ const CreateContactInfo = () => {
       return;
     }
 
+=======
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const formDataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
       formDataToSend.append(key, formData[key]);
@@ -228,6 +255,7 @@ const CreateContactInfo = () => {
         },
         withCredentials: true,
       });
+<<<<<<< HEAD
       showToastMessage("Contact information created successfully!", "success");
       setTimeout(() => {
         navigate(`/contactinfo`);
@@ -238,6 +266,11 @@ const CreateContactInfo = () => {
         error.response?.data?.message || "Error creating contact information. Please try again.", 
         "error"
       );
+=======
+      navigate(`/contactinfo`); // Redirect after successful submission
+    } catch (error) {
+      console.error("Error creating contact info:", error);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -247,6 +280,7 @@ const CreateContactInfo = () => {
       case "Sales Office Address":
         return (
           <div className="mb-4">
+<<<<<<< HEAD
             <label className="block mb-1">
               Address <span className="text-red-500">*</span>
             </label>
@@ -265,20 +299,36 @@ const CreateContactInfo = () => {
             {errors.address && (
               <p className="text-red-500 text-sm mt-1">{errors.address}</p>
             )}
+=======
+            <label className="block mb-1">Address</label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              className="border rounded w-full p-2"
+              required
+            />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </div>
         );
       case "Phone No":
         return (
           <>
             <div className="mb-4">
+<<<<<<< HEAD
               <label className="block mb-1">
                 Phone 1 <span className="text-red-500">*</span>
               </label>
+=======
+              <label className="block mb-1">Phone 1</label>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               <input
                 type="text"
                 name="phone1"
                 value={formData.phone1}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className={`border rounded w-full p-2 ${errors.phone1 ? 'border-red-500' : ''}`}
                 placeholder="+91-1234567890"
                 required
@@ -286,6 +336,11 @@ const CreateContactInfo = () => {
               {errors.phone1 && (
                 <p className="text-red-500 text-sm mt-1">{errors.phone1}</p>
               )}
+=======
+                className="border rounded w-full p-2"
+                required
+              />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mb-4">
               <label className="block mb-1">Phone 2</label>
@@ -294,12 +349,17 @@ const CreateContactInfo = () => {
                 name="phone2"
                 value={formData.phone2}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className={`border rounded w-full p-2 ${errors.phone2 ? 'border-red-500' : ''}`}
                 placeholder="+91-1234567890"
               />
               {errors.phone2 && (
                 <p className="text-red-500 text-sm mt-1">{errors.phone2}</p>
               )}
+=======
+                className="border rounded w-full p-2"
+              />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
           </>
         );
@@ -307,20 +367,30 @@ const CreateContactInfo = () => {
         return (
           <>
             <div className="mb-4">
+<<<<<<< HEAD
               <label className="block mb-1">
                 Email 1 <span className="text-red-500">*</span>
               </label>
+=======
+              <label className="block mb-1">Email 1</label>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               <input
                 type="email"
                 name="email1"
                 value={formData.email1}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className={`border rounded w-full p-2 ${errors.email1 ? 'border-red-500' : ''}`}
                 required
               />
               {errors.email1 && (
                 <p className="text-red-500 text-sm mt-1">{errors.email1}</p>
               )}
+=======
+                className="border rounded w-full p-2"
+                required
+              />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mb-4">
               <label className="block mb-1">Email 2</label>
@@ -329,11 +399,16 @@ const CreateContactInfo = () => {
                 name="email2"
                 value={formData.email2}
                 onChange={handleChange}
+<<<<<<< HEAD
                 className={`border rounded w-full p-2 ${errors.email2 ? 'border-red-500' : ''}`}
               />
               {errors.email2 && (
                 <p className="text-red-500 text-sm mt-1">{errors.email2}</p>
               )}
+=======
+                className="border rounded w-full p-2"
+              />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
           </>
         );
@@ -344,6 +419,7 @@ const CreateContactInfo = () => {
 
   return (
     <div className="container mx-auto p-4">
+<<<<<<< HEAD
       {/* Toast Message */}
       {showToast.show && (
         <div className={`fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg ${
@@ -360,11 +436,22 @@ const CreateContactInfo = () => {
           <label className="block mb-1">
             Type <span className="text-red-500">*</span>
           </label>
+=======
+      <h1 className="text-2xl font-bold mb-4">Create Contact Info</h1>
+      <form onSubmit={handleSubmit}>
+        {/* New Type Field */}
+        <div className="mb-4">
+          <label className="block mb-1">Type</label>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           <select
             name="type"
             value={formData.type}
             onChange={handleChange}
+<<<<<<< HEAD
             className={`border rounded w-full p-2 ${errors.type ? 'border-red-500' : ''}`}
+=======
+            className="border rounded w-full p-2"
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             required
           >
             <option value="">Select Type</option>
@@ -373,14 +460,18 @@ const CreateContactInfo = () => {
             <option value="Head Office Address">Head Office Address</option>
             <option value="Sales Office Address">Sales Office Address</option>
           </select>
+<<<<<<< HEAD
           {errors.type && (
             <p className="text-red-500 text-sm mt-1">{errors.type}</p>
           )}
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         </div>
 
         <div className="mb-4">
           <label className="block mb-1">Title</label>
           <input
+<<<<<<< HEAD
             type="text"
             name="title"
             value={formData.title}
@@ -417,11 +508,37 @@ const CreateContactInfo = () => {
           <label className="block mb-1">
             Image Title <span className="text-red-500">*</span>
           </label>
+=======
+            type="title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            className="border rounded w-full p-2"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1">Photo</label>
+          <input
+            type="file"
+            name="photo"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="border rounded w-full p-2"
+            required
+          />
+          {imagePreview && (
+            <img src={imagePreview} alt="Selected" className="mt-2 w-32 h-32 object-cover" />
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1">Image Title</label>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           <input
             type="text"
             name="imgTitle"
             value={formData.imgTitle}
             onChange={handleChange}
+<<<<<<< HEAD
             className={`border rounded w-full p-2 ${errors.imgTitle ? 'border-red-500' : ''}`}
             maxLength="100"
             required
@@ -435,11 +552,20 @@ const CreateContactInfo = () => {
           <label className="block mb-1">
             Alt Text <span className="text-red-500">*</span>
           </label>
+=======
+            className="border rounded w-full p-2"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label className="block mb-1">Alt Text</label>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           <input
             type="text"
             name="alt"
             value={formData.alt}
             onChange={handleChange}
+<<<<<<< HEAD
             className={`border rounded w-full p-2 ${errors.alt ? 'border-red-500' : ''}`}
             maxLength="100"
             required
@@ -455,6 +581,14 @@ const CreateContactInfo = () => {
           type="submit" 
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
         >
+=======
+            className="border rounded w-full p-2"
+            required
+          />
+        </div>
+        {renderConditionalFields()}
+        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           Create Contact Info
         </button>
       </form>
@@ -462,4 +596,8 @@ const CreateContactInfo = () => {
   );
 };
 
+<<<<<<< HEAD
 export default CreateContactInfo;
+=======
+export default CreateContactInfo;
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

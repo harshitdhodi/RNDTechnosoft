@@ -34,7 +34,11 @@ const IndustrySecDataSchema = new mongoose.Schema({
     required: [true, 'Type is required'],
     trim: true,
     enum: { 
+<<<<<<< HEAD
       values: ['info', 'applications', 'software-service', 'case-studies'],
+=======
+      values: ['info', 'applications', 'software-service', 'case-studies', 'build'],
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       message: 'Type must be one of: info, applications, software-service, case-studies'
     }
   },

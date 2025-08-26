@@ -8,6 +8,7 @@ const EditAddress = () => {
     const [headOfficeAddress, setHeadOfficeAddress] = useState("");
     const [salesOfficeAddress, setSalesOfficeAddress] = useState("");
     const [location, setLocation] = useState("");
+<<<<<<< HEAD
     const [errors, setErrors] = useState({ headOfficeAddress: "", salesOfficeAddress: "", location: "" });
 
     const navigate = useNavigate();
@@ -16,16 +17,26 @@ const EditAddress = () => {
     const googleMapsShortLinkRegex = /^https:\/\/maps\.app\.goo\.gl\/[a-zA-Z0-9]{6,}$/;
     const googleMapsEmbedRegex = /^https:\/\/www\.google\.com\/maps\/embed\?pb=/;
 
+=======
+
+    const navigate = useNavigate();
+
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     useEffect(() => {
         fetchAddress();
     }, []);
 
+<<<<<<< HEAD
     const notify = (message, type = "success") => {
         if (type === "success") {
             toast.success(message);
         } else {
             toast.error(message);
         }
+=======
+    const notify = () => {
+        toast.success("Updated Successfully!");
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     };
 
     const fetchAddress = async () => {
@@ -37,6 +48,7 @@ const EditAddress = () => {
             setSalesOfficeAddress(address.salesOfficeAddress || "");
             setLocation(address.location || "");
         } catch (error) {
+<<<<<<< HEAD
             console.error("Error fetching address:", error);
             notify("Failed to fetch address data", "error");
         }
@@ -66,11 +78,15 @@ const EditAddress = () => {
         // Invalid URL type
         else {
             return `Invalid ${field} URL. Must be a valid Google Maps short link or embed URL`;
+=======
+            console.error(error);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+<<<<<<< HEAD
 
         // Validate all fields
         const headOfficeError = validateUrl(headOfficeAddress, "Head Office Address");
@@ -87,6 +103,8 @@ const EditAddress = () => {
             return;
         }
 
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         try {
             const addressData = {
                 headOfficeAddress,
@@ -95,11 +113,17 @@ const EditAddress = () => {
             };
 
             const response = await axios.put('/api/address/putAddress', addressData, { withCredentials: true });
+<<<<<<< HEAD
             notify("Updated Successfully!");
             setErrors({ headOfficeAddress: "", salesOfficeAddress: "", location: "" });
         } catch (error) {
             console.error("Error updating address:", error);
             notify("Failed to update address", "error");
+=======
+            notify();
+        } catch (error) {
+            console.error(error);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         }
     };
 
@@ -116,12 +140,18 @@ const EditAddress = () => {
                     id="headOfficeAddress"
                     value={headOfficeAddress}
                     onChange={(e) => setHeadOfficeAddress(e.target.value)}
+<<<<<<< HEAD
                     className={`w-full p-2 border rounded focus:outline-none ${errors.headOfficeAddress ? "border-red-500" : ""}`}
                     required
                 />
                 {errors.headOfficeAddress && (
                     <p className="text-red-500 text-sm mt-1">{errors.headOfficeAddress}</p>
                 )}
+=======
+                    className="w-full p-2 border rounded focus:outline-none"
+                    required
+                />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mb-4">
                 <label htmlFor="salesOfficeAddress" className="block font-semibold mb-2">
@@ -132,6 +162,7 @@ const EditAddress = () => {
                     id="salesOfficeAddress"
                     value={salesOfficeAddress}
                     onChange={(e) => setSalesOfficeAddress(e.target.value)}
+<<<<<<< HEAD
                     className={`w-full p-2 border rounded focus:outline-none ${errors.salesOfficeAddress ? "border-red-500" : ""}`}
                     required
                 />
@@ -142,18 +173,33 @@ const EditAddress = () => {
             <div className="mb-4">
                 <label htmlFor="location" className="block font-semibold mb-2">
                     Google Location
+=======
+                    className="w-full p-2 border rounded focus:outline-none"
+                    required
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="location" className="block font-semibold mb-2">
+                   Google Location
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                 </label>
                 <input
                     type="text"
                     id="location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
+<<<<<<< HEAD
                     className={`w-full p-2 border rounded focus:outline-none ${errors.location ? "border-red-500" : ""}`}
                     required
                 />
                 {errors.location && (
                     <p className="text-red-500 text-sm mt-1">{errors.location}</p>
                 )}
+=======
+                    className="w-full p-2 border rounded focus:outline-none"
+                    required
+                />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mt-4">
                 <button
@@ -167,4 +213,8 @@ const EditAddress = () => {
     );
 };
 
+<<<<<<< HEAD
 export default EditAddress;
+=======
+export default EditAddress;
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

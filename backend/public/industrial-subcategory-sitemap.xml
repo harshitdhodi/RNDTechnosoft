@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<<<<<<< HEAD
   <url>
     <loc>https://rndtechnosoft.com/manual-testing</loc>
     <lastmod>2025-08-02T19:33:27.924Z</lastmod>
@@ -12,4 +13,6 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 </urlset>

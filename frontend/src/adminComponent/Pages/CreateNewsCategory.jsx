@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
 import { toast } from "react-toastify";
 import {
     validateCategory,
@@ -18,6 +19,8 @@ import {
     validatePriority,
     validateChangeFreq
 } from '../../utiles/validations.js';
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 const NewCategoryForm = () => {
     const [category, setCategory] = useState("");
@@ -27,7 +30,11 @@ const NewCategoryForm = () => {
     const [parentCategoryId, setParentCategoryId] = useState("");
     const [subCategoryId, setSubCategoryId] = useState("");
     const [categories, setCategories] = useState([]);
+<<<<<<< HEAD
     const [priority, setPriority] = useState("0");
+=======
+    const [priority, setPriority] = useState("");
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const [changeFreq, setChangeFreq] = useState("");
     const [url, setUrl] = useState("")
     const [slug, setSlug] = useState("");
@@ -38,6 +45,7 @@ const NewCategoryForm = () => {
     const [metacanonical, setMetacanonical] = useState("")
     const [metaschema, setMetaschema] = useState("")
     const [otherMeta, setOthermeta] = useState("")
+<<<<<<< HEAD
     
     // Validation error states
     const [errors, setErrors] = useState({
@@ -123,6 +131,13 @@ const NewCategoryForm = () => {
         setPhoto(file);
         const error = validateField('photo', file);
         updateError('photo', error);
+=======
+    const navigate = useNavigate();
+
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        setPhoto(file);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     };
 
     const handleDeleteImage = () => {
@@ -143,7 +158,11 @@ const NewCategoryForm = () => {
     };
 
     const generateUrl = () => {
+<<<<<<< HEAD
         let baseUrl = "https://rndtechnosoft.com";
+=======
+        let baseUrl = "https://rndtechnoft.com";
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         if (parentCategoryId && !subCategoryId) {
             return `${baseUrl}/${slug}`;
         } else if (parentCategoryId && subCategoryId) {
@@ -175,6 +194,7 @@ const NewCategoryForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+<<<<<<< HEAD
         
         // Validate all fields
         const newErrors = {
@@ -203,6 +223,8 @@ const NewCategoryForm = () => {
             return;
         }
         
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         try {
             let urls = '/api/news/insertCategory';
             const formData = new FormData();
@@ -232,7 +254,10 @@ const NewCategoryForm = () => {
             }
 
             const response = await axios.post(urls, formData, { withCredentials: true });
+<<<<<<< HEAD
             toast.success("Category created successfully!");
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
             setCategory("");
             setDetails("")
@@ -254,7 +279,10 @@ const NewCategoryForm = () => {
             navigate('/NewsCategory');
         } catch (error) {
             console.error(error);
+<<<<<<< HEAD
             toast.error("An error occurred while creating the category.");
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         }
     };
 
@@ -339,6 +367,7 @@ const NewCategoryForm = () => {
                 </div>
             )}
             <div className="mb-4">
+<<<<<<< HEAD
                 <label htmlFor="category" className="block font-semibold mb-2">
                     Category <span className="text-red-500">*</span>
                 </label>
@@ -372,6 +401,32 @@ const NewCategoryForm = () => {
                     className={`w-full p-2 border rounded focus:outline-none ${errors.details ? 'border-red-500' : 'border-gray-300'}`}
                 />
                 {errors.details && <p className="text-red-500 text-sm mt-1">{errors.details}</p>}
+=======
+                <label htmlFor="title" className="block font-semibold mb-2">
+                    Category
+                </label>
+                <input
+                    type="text"
+                    id="title"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    required
+                />
+            </div>
+            <div className="mb-4">
+                <label htmlFor="title" className="block font-semibold mb-2">
+                    Details
+                </label>
+                <input
+                    type="text"
+                    id="title"
+                    value={details}
+                    onChange={(e) => setDetails(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    required
+                />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mb-8">
                 <label htmlFor="photo" className="block font-semibold mb-2">Photo</label>
@@ -380,10 +435,16 @@ const NewCategoryForm = () => {
                     name="photo"
                     id="photo"
                     onChange={handlePhotoChange}
+<<<<<<< HEAD
                     className={`border rounded focus:outline-none ${errors.photo ? 'border-red-500' : 'border-gray-300'}`}
                     accept="image/*"
                 />
                 {errors.photo && <p className="text-red-500 text-sm mt-1">{errors.photo}</p>}
+=======
+                    className="border rounded focus:outline-none"
+                    accept="image/*"
+                />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
                 {photo && (
                     <div className="mt-2 w-56 relative group">
@@ -405,6 +466,7 @@ const NewCategoryForm = () => {
                                 type="text"
                                 id="alt"
                                 value={altText}
+<<<<<<< HEAD
                                 onChange={(e) => {
                                     setAltText(e.target.value);
                                     const error = validateField('altText', e.target.value);
@@ -413,6 +475,12 @@ const NewCategoryForm = () => {
                                 className={`w-full p-2 border rounded focus:outline-none ${errors.altText ? 'border-red-500' : 'border-gray-300'}`}
                             />
                             {errors.altText && <p className="text-red-500 text-sm mt-1">{errors.altText}</p>}
+=======
+                                onChange={(e) => setAltText(e.target.value)}
+                                className="w-full p-2 border rounded focus:outline-none"
+                                required
+                            />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                         </div>
                     </div>
                 )}
@@ -425,6 +493,7 @@ const NewCategoryForm = () => {
                     type="text"
                     id="slug"
                     value={slug}
+<<<<<<< HEAD
                     onChange={(e) => {
                         setSlug(e.target.value);
                         const error = validateField('slug', e.target.value);
@@ -433,6 +502,11 @@ const NewCategoryForm = () => {
                     className={`w-full p-2 border rounded focus:outline-none ${errors.slug ? 'border-red-500' : 'border-gray-300'}`}
                 />
                 {errors.slug && <p className="text-red-500 text-sm mt-1">{errors.slug}</p>}
+=======
+                    onChange={(e) => setSlug(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mb-4 mt-4">
                 <label htmlFor="url" className="block font-semibold mb-2">
@@ -447,6 +521,7 @@ const NewCategoryForm = () => {
                 />
             </div>
             <div className="mb-4">
+<<<<<<< HEAD
                 <label htmlFor="metatitle" className="block font-semibold mb-2">
                     Meta Title
                 </label>
@@ -564,6 +639,90 @@ const NewCategoryForm = () => {
                     rows="3"
                 ></textarea>
                 {errors.metaschema && <p className="text-red-500 text-sm mt-1">{errors.metaschema}</p>}
+=======
+                <label htmlFor="meta" className="block font-semibold mb-2">
+                    Meta Title
+                </label>
+                <textarea
+                    id="meta"
+                    value={metatitle}
+                    onChange={(e) => setMetatitle(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    rows="3"
+                ></textarea>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="meta" className="block font-semibold mb-2">
+                    Meta Description
+                </label>
+                <textarea
+                    id="meta"
+                    value={metadescription}
+                    onChange={(e) => setMetadescription(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    rows="3"
+                ></textarea>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="meta" className="block font-semibold mb-2">
+                    Meta Keywords
+                </label>
+                <textarea
+                    id="meta"
+                    value={metakeywords}
+                    onChange={(e) => setMetakeywords(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    rows="3"
+                ></textarea>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="meta" className="block font-semibold mb-2">
+                    Meta Canonical
+                </label>
+                <textarea
+                    id="meta"
+                    value={metacanonical}
+                    onChange={(e) => setMetacanonical(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    rows="3"
+                ></textarea>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="meta" className="block font-semibold mb-2">
+                    Meta Language
+                </label>
+                <textarea
+                    id="meta"
+                    value={metalanguage}
+                    onChange={(e) => setMetalanguage(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    rows="3"
+                ></textarea>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="meta" className="block font-semibold mb-2">
+                    Other Meta
+                </label>
+                <textarea
+                    id="meta"
+                    value={otherMeta}
+                    onChange={(e) => setOthermeta(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    rows="3"
+                ></textarea>
+            </div>
+            <div className="mb-4">
+                <label htmlFor="meta" className="block font-semibold mb-2">
+                    Schema
+                </label>
+                <textarea
+                    id="meta"
+                    value={metaschema}
+                    onChange={(e) => setMetaschema(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                    rows="3"
+                ></textarea>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mb-4">
                 <label htmlFor="priority" className="block font-semibold mb-2">
@@ -576,6 +735,7 @@ const NewCategoryForm = () => {
                     max={1}
                     step={0.01}
                     value={priority}
+<<<<<<< HEAD
                     onChange={(e) => {
                         setPriority(e.target.value);
                         const error = validateField('priority', e.target.value);
@@ -584,6 +744,11 @@ const NewCategoryForm = () => {
                     className={`w-full p-2 border rounded focus:outline-none ${errors.priority ? 'border-red-500' : 'border-gray-300'}`}
                 />
                 {errors.priority && <p className="text-red-500 text-sm mt-1">{errors.priority}</p>}
+=======
+                    onChange={(e) => setPriority(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+                />
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <div className="mb-4">
                 <label htmlFor="changeFreq" className="block font-semibold mb-2">
@@ -592,12 +757,17 @@ const NewCategoryForm = () => {
                 <select
                     id="changeFreq"
                     value={changeFreq}
+<<<<<<< HEAD
                     onChange={(e) => {
                         setChangeFreq(e.target.value);
                         const error = validateField('changeFreq', e.target.value);
                         updateError('changeFreq', error);
                     }}
                     className={`w-full p-2 border rounded focus:outline-none ${errors.changeFreq ? 'border-red-500' : 'border-gray-300'}`}
+=======
+                    onChange={(e) => setChangeFreq(e.target.value)}
+                    className="w-full p-2 border rounded focus:outline-none"
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                 >
                     <option value="">Select Change Frequency</option>
                     <option value="always">Always</option>
@@ -607,7 +777,10 @@ const NewCategoryForm = () => {
                     <option value="monthly">Monthly</option>
                     <option value="yearly">Yearly</option>
                 </select>
+<<<<<<< HEAD
                 {errors.changeFreq && <p className="text-red-500 text-sm mt-1">{errors.changeFreq}</p>}
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </div>
             <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
                 Add Category
@@ -616,4 +789,8 @@ const NewCategoryForm = () => {
     );
 };
 
+<<<<<<< HEAD
 export default NewCategoryForm;
+=======
+export default NewCategoryForm;
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

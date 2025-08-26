@@ -18,7 +18,11 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
+<<<<<<< HEAD
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
+=======
+
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 Modal.setAppElement('#root');
 
@@ -30,8 +34,12 @@ const CorevalueTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCorevalue, setSelectedCorevalue] = useState(null); // State for the selected banner
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+<<<<<<< HEAD
   const navigate = useNavigate();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+=======
+  const navigate = useNavigate()
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const filteredCorevalues = useMemo(() => {
     return corevalues.filter((corevalue) =>
@@ -39,6 +47,13 @@ const CorevalueTable = () => {
     );
   }, [corevalues, searchTerm]);
 
+<<<<<<< HEAD
+=======
+  const notify = () => {
+    toast.success("Updated Successfully!");
+  };
+
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const columns = useMemo(
     () => [
       {
@@ -107,7 +122,11 @@ const CorevalueTable = () => {
             <button className="text-blue-500 hover:text-blue-700 transition">
               <Link to={`/corevalue/editCorevalue/${row.original._id}`}><Edit /></Link>
             </button>
+<<<<<<< HEAD
             <button className="text-red-500 hover:text-red-700 transition" onClick={() => handleDeleteClick(row.original)}>
+=======
+            <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteCorevalue(row.original._id)}>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               <Trash2 />
             </button>
           </div>
@@ -148,6 +167,7 @@ const CorevalueTable = () => {
     }
   };
 
+<<<<<<< HEAD
   const deleteCorevalue = async () => {
     try {
       const response = await axios.delete(`/api/corevalue/deleteCorevalue?id=${selectedCorevalue._id}`, { withCredentials: true });
@@ -158,6 +178,14 @@ const CorevalueTable = () => {
       toast.error("Failed to delete core value");
     } finally {
       handleClose();
+=======
+  const deleteCorevalue = async (id) => {
+    try {
+      const response = await axios.delete(`/api/corevalue/deleteCorevalue?id=${id}`, { withCredentials: true });
+      fetchData();
+    } catch (error) {
+      console.error(error);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -175,6 +203,7 @@ const CorevalueTable = () => {
     setSelectedCorevalue(null);
   };
 
+<<<<<<< HEAD
   const handleDeleteClick = (item) => {
     setSelectedCorevalue(item);
     setIsDeleteModalOpen(true);
@@ -185,6 +214,8 @@ const CorevalueTable = () => {
     setSelectedCorevalue(null);
   };
 
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const fetchHeadings = async () => {
     try {
       const response = await axios.get('/api/pageHeading/heading?pageType=corevalue', { withCredentials: true });
@@ -203,10 +234,16 @@ const CorevalueTable = () => {
         heading,
         subheading,
       }, { withCredentials: true });
+<<<<<<< HEAD
       toast.success("Headings updated successfully!");
     } catch (error) {
       console.error(error);
       toast.error("Failed to update headings");
+=======
+      notify();
+    } catch (error) {
+      console.error(error);
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -250,11 +287,17 @@ const CorevalueTable = () => {
       </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Core Values</h1>
+<<<<<<< HEAD
         <Link to="/corevalue/createCorevalue">
           <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
             <Plus size={15} />
           </button>
         </Link>
+=======
+        <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
+          <Link to="/corevalue/createCorevalue"><Plus size={15} /></Link>
+        </button>
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       </div>
       <div className="mb-4">
         <input
@@ -360,6 +403,7 @@ const CorevalueTable = () => {
           </button>
         </div>
       </Modal>
+<<<<<<< HEAD
       <DeleteConfirmationModal
       isOpen={isDeleteModalOpen}
         onClose={handleClose}
@@ -367,6 +411,8 @@ const CorevalueTable = () => {
         itemName={selectedCorevalue?.title || 'Core Value'}
         itemType="Core Value"
       />
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     </div>
   );
 };

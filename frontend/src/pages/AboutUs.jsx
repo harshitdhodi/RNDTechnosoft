@@ -15,7 +15,11 @@ export default function AboutUs() {
       isLoading, 
       isError, 
       error 
+<<<<<<< HEAD
     } = useGetCombinedDataQuery();  
+=======
+    } = useGetCombinedDataQuery();
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     // Handle loading state
   if (isLoading) {
     return <div>Loading...</div>;

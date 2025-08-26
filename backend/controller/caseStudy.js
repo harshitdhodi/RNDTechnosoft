@@ -1,6 +1,9 @@
 const IndustrySecData = require('../model/caseStudy');
 const AppError = require('../utils/appError.js');
+<<<<<<< HEAD
 const IndustriesCategory = require("../model/industriescategory");
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 exports.createIndustrySecData = async (req, res, next) => {
   try {
@@ -18,17 +21,31 @@ exports.createIndustrySecData = async (req, res, next) => {
       return acc;
     }, {});
 
+<<<<<<< HEAD
+=======
+    // Convert to array but only include cards with at least title or details
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const cards = Object.entries(cardFields)
       .map(([index, fields]) => ({
         title: fields.title?.trim() || "",
         details: fields.details?.trim() || "",
+<<<<<<< HEAD
         photo: "",
+=======
+        photo: "", // default empty
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         altName: fields.altName?.trim() || "",
         imgTitle: fields.imgTitle?.trim() || "",
         _originalIndex: parseInt(index, 10),
       }))
+<<<<<<< HEAD
       .filter(card => card.title || card.details);
 
+=======
+      .filter(card => card.title || card.details); // ✅ Only keep non-empty cards
+
+    // Process file uploads (if any)
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     if (req.files) {
       Object.entries(req.files).forEach(([fieldName, fileArray]) => {
         const match = fieldName.match(/card\[(\d+)\]\.photo/);
@@ -44,12 +61,17 @@ exports.createIndustrySecData = async (req, res, next) => {
 
     cards.forEach(c => delete c._originalIndex);
 
+<<<<<<< HEAD
     // Validate cards
+=======
+    // Validate cards only if any exist
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const invalidCards = cards.filter(c => !c.title.trim() || !c.details.trim());
     if (invalidCards.length > 0) {
       return next(new AppError("Each card must have a title and details", 400));
     }
 
+<<<<<<< HEAD
     // ✅ New check: Prevent same category + type regardless of heading
     const categoryTypeExists = await IndustrySecData.findOne({
       category,
@@ -70,11 +92,22 @@ exports.createIndustrySecData = async (req, res, next) => {
       heading: heading.trim(),
       category,
       type: type.trim(),
+=======
+    // Prevent duplicate entry
+    const existingEntry = await IndustrySecData.findOne({
+      heading: heading.trim(),
+      category,
+      type,
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     });
     if (existingEntry) {
       return next(
         new AppError(
+<<<<<<< HEAD
           `An entry with heading "${heading.trim()}", category "${existingEntry.category.category}", and type "${type}" already exists`,
+=======
+          `An entry with heading "${heading.trim()}", category "${category}", and type "${type}" already exists`,
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           400
         )
       );
@@ -85,7 +118,11 @@ exports.createIndustrySecData = async (req, res, next) => {
       heading: heading.trim(),
       subHeading: subHeading?.trim() || "",
       category,
+<<<<<<< HEAD
       card: cards,
+=======
+      card: cards, // Can be empty
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     });
 
     res.status(201).json({
@@ -231,6 +268,7 @@ exports.getDataByCategorySlug = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+<<<<<<< HEAD
 };
 
 exports.getDataExistsBySlug = async (req, res, next) => {
@@ -291,4 +329,6 @@ exports.getDataExistsBySlug = async (req, res, next) => {
     console.error("Error checking industry data existence:", error);
     return next(new AppError(`Error checking data existence: ${error.message}`, 500));
   }
+=======
+>>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 };
