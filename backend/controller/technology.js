@@ -42,7 +42,7 @@ const getAllTechnologies = async (req, res) => {
     const technologies = await Technology.find()
       .populate({
         path: 'category',
-        select: 'heading' // optionally populate only the name or required fields
+        select: 'name' // optionally populate only the name or required fields
       })
    
     res.status(200).json({
@@ -66,7 +66,7 @@ const getTechnologyById = async (req, res) => {
 
     const technology = await Technology.findById(id).populate({
       path: 'category',
-      select: 'name' // optional: only return the category name
+      select: 'heading' // optional: only return the category heading
     });
 
     if (!technology) {

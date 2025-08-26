@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {updateBlogVisits,getLatestBlogs,getAllNews, insertNews,getNewsFront,getNewsBySlug, getNews, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById,fetchUrlmeta, editUrlmeta, fetchUrlmetaById  } = require('../controller/news');
+const { searchNews, updateBlogVisits,getLatestBlogs,getAllNews, insertNews,getNewsFront,getNewsBySlug, getNews, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById,fetchUrlmeta, editUrlmeta, fetchUrlmetaById  } = require('../controller/news');
 const { getCategoryBySlug,getCategoryBlogsBySlug,insertCategory, insertSubCategory, insertSubSubCategory, updateCategory, updateSubCategory, updatesubsubcategory, deletecategory, deletesubcategory, deletesubsubcategory, getAll, getSpecificCategory, getSpecificSubcategory, getSpecificSubSubcategory, fetchCategoryUrlPriorityFreq, editCategoryUrlPriorityFreq, fetchCategoryUrlPriorityFreqById,fetchCategoryUrlmeta, editCategoryUrlmeta, fetchCategoryUrlmetaById  } = require('../controller/newsCategory')
 const { uploadLogo } = require("../middleware/logoUpload")
 
@@ -24,6 +24,7 @@ router.get('/fetchUrlPriorityFreqById', requireAuth, fetchUrlPriorityFreqById)
 router.get('/fetchUrlmeta', fetchUrlmeta)
 router.put('/editUrlmeta', requireAuth, editUrlmeta)
 router.get('/fetchUrlmetaById', requireAuth, fetchUrlmetaById)
+router.get('/searchNews', requireAuth, searchNews)
 
 
 router.post('/insertCategory', requireAuth, uploadLogo, insertCategory)

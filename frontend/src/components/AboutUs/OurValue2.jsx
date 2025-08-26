@@ -5,7 +5,7 @@ import bg from "../../images/Rectangle2.png"
 const ValuesSection = () => {
     const [values, setValues] = useState([]);
     const [heading, setHeading] = useState('Our Values');
-    const [subHeading, setSubHeading] = useState('This is the foundation for our value statement, and our commitment at [YOUR COMPANY] is inspired by the following core values. Here\'s what sets us apart:');
+    const [subHeading, setSubHeading] = useState('This is the foundation for our value statement, and our commitment at RND Technosoft is inspired by the following core values. Here\'s what sets us apart:');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -14,7 +14,8 @@ const ValuesSection = () => {
                     withCredentials: true,
                 });
                 console.log(response.data.data)
-                setValues(response.data.data); // Set the array of values
+                const activeValues = response.data.data.filter(value => value.status === 'active');
+                setValues(activeValues); // Set the array of values
             } catch (error) {
                 console.error("Error fetching core values:", error);
             }

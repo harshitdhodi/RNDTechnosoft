@@ -121,8 +121,28 @@ const updateTechnologySecData = async (req, res) => {
 // Get all TechnologySecData entries
 const getAllTechnologySecData = async (req, res) => {
   try {
-    const data = await TechnologySecData.find().populate('technologyId');
-    res.status(200).json(data);
+    const data = await TechnologySecData.find();
+
+    // collect unique technologyIds from your entries
+    const technologyIds = [...new Set(data.map(item => item.technologyId))];
+
+    // fetch all matching technologies
+    const technologies = await Technology.find({ _id: { $in: technologyIds } })
+      .select('imgTitle');
+
+    // map for quick lookup
+    const techMap = {};
+    technologies.forEach(t => {
+      techMap[t._id.toString()] = t;
+    });
+
+    // attach technology object to each entry
+    const enrichedData = data.map(item => ({
+      ...item.toObject(),
+      technology: techMap[item.technologyId] || null,
+    }));
+
+    res.status(200).json(enrichedData);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching data', error: error.message });
   }
@@ -197,11 +217,54 @@ const getDataByTechnologySlug = async (req, res) => {
   }
 };
 
+const getDataExistsBySlug = async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const technology = await Technology.findOne({ slug });
+    if (!technology) {
+      return res.status(200).json({ exists: false });
+    }
+
+    // check existence for each type
+    const hireDeveloperExists = await TechnologySecData.exists({
+      technologyId: technology._id.toString(),
+      type: "hire developer"
+    });
+
+    const whyChooseExists = await TechnologySecData.exists({
+      technologyId: technology._id.toString(),
+      type: "Why Choose"
+    });
+
+    const technologyAppExists = await TechnologySecData.exists({
+      technologyId: technology._id.toString(),
+      type: "Technology Application"
+    });
+
+    res.status(200).json({
+      exists: hireDeveloperExists || whyChooseExists || technologyAppExists ? true : false,
+      sections: {
+        hireDeveloper: !!hireDeveloperExists,
+        whyChoose: !!whyChooseExists,
+        technologyApplication: !!technologyAppExists
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error checking data existence",
+      error: error.message
+    });
+  }
+};
+
+
 module.exports = {
   createTechnologySecData,
   getAllTechnologySecData,
   getTechnologySecDataById,
   updateTechnologySecData,
   deleteTechnologySecData,
-  getDataByTechnologySlug
+  getDataByTechnologySlug,
+  getDataExistsBySlug
 };

@@ -324,3 +324,23 @@ export const validateAddress = (value, isRequired = false) => {
   }
   return '';
 };
+
+export const validateHeading = (value) => {
+  if (!value || value.trim().length === 0) {
+    return "Heading is required";
+  }
+  if (value.length > 50) {
+    return "Heading must not exceed 50 characters";
+  }
+  return "";
+};
+
+export const validateSubheading = (value) => {
+  if (!value || value.trim().length === 0) {
+    return "Subheading is required";
+  }
+  if (value.length > 100) {
+    return "Subheading must not exceed 100 characters";
+  }
+  return "";
+};

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Eye } from 'lucide-react';
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { v4 as uuidv4 } from 'uuid';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const TechnologySecDataForm = () => {
   const { id } = useParams();
@@ -22,6 +25,7 @@ const TechnologySecDataForm = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [placeholder, setPlaceholder] = useState('Enter heading/subheading...');
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   
   // Validation state
   const [validationErrors, setValidationErrors] = useState({});
@@ -81,7 +85,6 @@ const TechnologySecDataForm = () => {
       case 'card.heading':
         const cardHeadingLength = getPlainTextLength(value);
         const cardHeadingKey = `card.${index}.heading`;
-        // Only validate if value is provided (optional field)
         if (value && value.trim() !== '' && cardHeadingLength > 0) {
           if (cardHeadingLength < CHAR_LIMITS.cardHeading.min) {
             errors[cardHeadingKey] = `Card heading must be at least ${CHAR_LIMITS.cardHeading.min} characters`;
@@ -94,7 +97,6 @@ const TechnologySecDataForm = () => {
       case 'card.subHeading':
         const cardSubHeadingLength = getPlainTextLength(value);
         const cardSubHeadingKey = `card.${index}.subHeading`;
-        // Only validate if value is provided (optional field)
         if (value && value.trim() !== '' && cardSubHeadingLength > 0) {
           if (cardSubHeadingLength < CHAR_LIMITS.cardSubHeading.min) {
             errors[cardSubHeadingKey] = `Card sub heading must be at least ${CHAR_LIMITS.cardSubHeading.min} characters`;
@@ -106,7 +108,6 @@ const TechnologySecDataForm = () => {
       
       case 'card.altName':
         const altNameKey = `card.${index}.altName`;
-        // Only validate if value is provided (optional field)
         if (value && value.trim() !== '') {
           if (value.length < CHAR_LIMITS.altName.min) {
             errors[altNameKey] = `Alt name must be at least ${CHAR_LIMITS.altName.min} characters`;
@@ -118,7 +119,6 @@ const TechnologySecDataForm = () => {
       
       case 'card.imgTitle':
         const imgTitleKey = `card.${index}.imgTitle`;
-        // Only validate if value is provided (optional field)
         if (value && value.trim() !== '') {
           if (value.length < CHAR_LIMITS.imgTitle.min) {
             errors[imgTitleKey] = `Image title must be at least ${CHAR_LIMITS.imgTitle.min} characters`;
@@ -129,7 +129,6 @@ const TechnologySecDataForm = () => {
         break;
       
       case 'card.photo':
-        // Card photo is optional - no validation needed
         break;
     }
     
@@ -140,18 +139,15 @@ const TechnologySecDataForm = () => {
   const validateAllFields = () => {
     let allErrors = {};
     
-    // Validate main fields
     allErrors = { ...allErrors, ...validateField('technologyId', formData.technologyId) };
     allErrors = { ...allErrors, ...validateField('type', formData.type) };
     allErrors = { ...allErrors, ...validateField('heading', formData.heading) };
     
-    // Validate card fields (optional - only validate if filled)
     formData.card.forEach((card, index) => {
       allErrors = { ...allErrors, ...validateField('card.heading', card.heading, index) };
       allErrors = { ...allErrors, ...validateField('card.subHeading', card.subHeading, index) };
       allErrors = { ...allErrors, ...validateField('card.altName', card.altName, index) };
       allErrors = { ...allErrors, ...validateField('card.imgTitle', card.imgTitle, index) };
-      // Skip photo validation since it's optional
     });
     
     return allErrors;
@@ -163,11 +159,9 @@ const TechnologySecDataForm = () => {
     setValidationErrors(prev => {
       const newErrors = { ...prev };
       
-      // Remove old errors for this field
       if (index !== null) {
         const fieldKey = `card.${index}.${fieldName.split('.')[1]}`;
         delete newErrors[fieldKey];
-        // Add new errors
         Object.assign(newErrors, fieldErrors);
       } else {
         delete newErrors[fieldName];
@@ -182,12 +176,12 @@ const TechnologySecDataForm = () => {
   useEffect(() => {
     const fetchTechnologies = async () => {
       try {
-        const response = await axios.get('/api/technology');
-        console.log('Fetched technologies:', response.data.data);
+        const response = await axios.get('/api/technology', { withCredentials: true });
         setTechnologies(response.data.data || response.data);
       } catch (err) {
         setError('Failed to fetch technologies');
         console.error('Fetch technologies error:', err);
+        toast.error('Failed to fetch technologies');
       }
     };
     fetchTechnologies();
@@ -199,9 +193,8 @@ const TechnologySecDataForm = () => {
       const fetchData = async () => {
         try {
           setLoading(true);
-          const response = await axios.get(`/api/technologySecData/${id}`);
+          const response = await axios.get(`/api/technologySecData/${id}`, { withCredentials: true });
           const data = response.data.data || response.data;
-          console.log('Fetched data for update:', data);
           
           setFormData({
             technologyId: data.technologyId || '',
@@ -216,6 +209,7 @@ const TechnologySecDataForm = () => {
         } catch (err) {
           setError('Failed to fetch data');
           console.error('Fetch error:', err);
+          toast.error('Failed to fetch data');
         } finally {
           setLoading(false);
         }
@@ -238,14 +232,12 @@ const TechnologySecDataForm = () => {
   const handleChange = (e, index) => {
     const { name, value } = e.target;
   
-    // Mark field as touched
     setTouched(prev => ({
       ...prev,
       [`${name}${index !== undefined ? `.${index}` : ''}`]: true
     }));
 
     if (name === 'type') {
-      // Update placeholder dynamically based on selected type
       switch (value) {
         case 'hire developer':
           setPlaceholder('Enter heading/subheading for Hire Developer...');
@@ -260,7 +252,6 @@ const TechnologySecDataForm = () => {
           setPlaceholder('');
       }
       
-      // Validate type field
       updateValidationErrors('type', value);
     }
     
@@ -274,7 +265,6 @@ const TechnologySecDataForm = () => {
       updatedCards[index] = { ...updatedCards[index], [cardField]: value };
       setFormData({ ...formData, card: updatedCards });
       
-      // Validate card field
       updateValidationErrors(`card.${cardField}`, value, index);
     } else {
       setFormData({ ...formData, [name]: value });
@@ -290,7 +280,6 @@ const TechnologySecDataForm = () => {
   };
 
   const handleQuillChange = debounce((field, value, index) => {
-    // Mark field as touched
     setTouched(prev => ({
       ...prev,
       [`${field}${index !== undefined ? `.${index}` : ''}`]: true
@@ -305,7 +294,6 @@ const TechnologySecDataForm = () => {
       updatedCards[index] = { ...updatedCards[index], [cardField]: value };
       setFormData({ ...formData, card: updatedCards });
       
-      // Validate card field
       updateValidationErrors(`card.${cardField}`, value, index);
     }
   }, 300);
@@ -313,7 +301,6 @@ const TechnologySecDataForm = () => {
   const handleFileChange = (e, index) => {
     const selectedFile = e.target.files[0];
     
-    // Mark field as touched
     setTouched(prev => ({
       ...prev,
       [`card.photo.${index}`]: true
@@ -324,6 +311,7 @@ const TechnologySecDataForm = () => {
         ...prev,
         [`card.${index}.photo`]: 'File must be less than 5MB'
       }));
+      toast.error('File must be less than 5MB');
       return;
     }
 
@@ -333,10 +321,8 @@ const TechnologySecDataForm = () => {
 
     const updatedPreviews = [...previews];
     updatedPreviews[index] = selectedFile ? URL.createObjectURL(selectedFile) : null;
-    console.log('Preview for index', index, ':', updatedPreviews[index]);
     setPreviews(updatedPreviews);
     
-    // Clear photo validation error if file is selected
     if (selectedFile) {
       setValidationErrors(prev => {
         const newErrors = { ...prev };
@@ -358,10 +344,10 @@ const TechnologySecDataForm = () => {
   const removeCard = (index) => {
     if (formData.card.length === 1) {
       setError('At least one card is required');
+      toast.error('At least one card is required');
       return;
     }
     
-    // Remove validation errors for this card
     setValidationErrors(prev => {
       const newErrors = { ...prev };
       delete newErrors[`card.${index}.heading`];
@@ -384,12 +370,12 @@ const TechnologySecDataForm = () => {
     e.preventDefault();
     setError(null);
     
-    // Validate all fields
     const allErrors = validateAllFields();
     setValidationErrors(allErrors);
     
     if (Object.keys(allErrors).length > 0) {
       setError('Please fix all validation errors before submitting');
+      toast.error('Please fix all validation errors before submitting');
       return;
     }
     
@@ -397,6 +383,7 @@ const TechnologySecDataForm = () => {
 
     if (formData.card.length !== files.length || formData.card.length !== previews.length) {
       setError('Card, files, and previews arrays are out of sync');
+      toast.error('Card, files, and previews arrays are out of sync');
       setLoading(false);
       return;
     }
@@ -408,10 +395,10 @@ const TechnologySecDataForm = () => {
       fileFormData.append('technologyId', formData.technologyId || '');
 
       formData.card.forEach((card, index) => {
-        fileFormData.append(`card[${index}]heading`, card.heading || '');
-        fileFormData.append(`card[${index}]subHeading`, card.subHeading || '');
-        fileFormData.append(`card[${index}]altName`, card.altName || '');
-        fileFormData.append(`card[${index}]imgTitle`, card.imgTitle || '');
+        fileFormData.append(`card[${index}][heading]`, card.heading || '');
+        fileFormData.append(`card[${index}][subHeading]`, card.subHeading || '');
+        fileFormData.append(`card[${index}][altName]`, card.altName || '');
+        fileFormData.append(`card[${index}][imgTitle]`, card.imgTitle || '');
         if (files[index]) {
           fileFormData.append(`card[${index}][photo]`, files[index]);
         } else if (card.photo) {
@@ -419,20 +406,15 @@ const TechnologySecDataForm = () => {
         }
       });
 
-      // Log FormData entries
-      for (let [key, value] of fileFormData.entries()) {
-        console.log(key, value instanceof File ? value.name : value);
-      }
-
       const response = await axios({
         method: isUpdate ? 'put' : 'post',
         url: `/api/technologySecData${isUpdate ? `/${id}` : ''}`,
         data: fileFormData,
         headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true
       });
 
-      console.log('API Response:', response.data);
-
+      toast.success(isUpdate ? 'Technology section updated successfully' : 'Technology section created successfully');
       setFormData(prev => ({
         ...prev,
         technologyId: response.data.data?.technologyId || response.data.technologyId || prev.technologyId,
@@ -462,7 +444,9 @@ const TechnologySecDataForm = () => {
       setFiles([]);
       navigate('/tech-sec-data');
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to save data');
+      const errorMessage = err.response?.data?.error || 'Failed to save data';
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error('API Error:', err.response?.data || err);
     } finally {
       setLoading(false);
@@ -471,11 +455,9 @@ const TechnologySecDataForm = () => {
 
   // Helper function to get image source
   const getImageSrc = (card, index) => {
-    // If there's a preview (new file selected), use it
     if (previews[index] && previews[index].startsWith('blob:')) {
       return previews[index];
     }
-    // If there's a card photo from server, use the correct API endpoint
     if (card.photo) {
       if (card.photo.startsWith('http')) {
         return card.photo;
@@ -513,9 +495,24 @@ const TechnologySecDataForm = () => {
     }
   };
 
+  // Open preview modal
+  const openPreviewModal = () => {
+    if (!formData.type) {
+      toast.error('Please select a type to preview the example image');
+      return;
+    }
+    setIsPreviewModalOpen(true);
+  };
+
+  // Close preview modal
+  const closePreviewModal = () => {
+    setIsPreviewModalOpen(false);
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-6">
+      <ToastContainer />
+      <h2 className="text-2xl font-bold mb-6 font-serif">
         {isUpdate ? 'Update Technology Section' : 'Add Technology Section'}
       </h2>
       {error && <p className="text-red-500 mb-4 p-3 bg-red-50 rounded-md">{error}</p>}
@@ -523,7 +520,7 @@ const TechnologySecDataForm = () => {
       
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 font-serif">
             Technology <span className="text-red-500">*</span>
           </label>
           <select
@@ -547,43 +544,54 @@ const TechnologySecDataForm = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">
+          <label className="block text-sm font-medium text-gray-700 font-serif">
             Type <span className="text-red-500">*</span>
           </label>
-          <select
-            name="type"
-            value={formData.type}
-            onChange={(e) => handleChange(e)}
-            className={`mt-1 block w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              validationErrors.type ? 'border-red-500' : 'border-gray-300'
-            }`}
-          >
-            <option value="" disabled>Select Type</option>
-            {typeOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-4">
+            <select
+              name="type"
+              value={formData.type}
+              onChange={(e) => handleChange(e)}
+              className={`mt-1 block w-full p-3 border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                validationErrors.type ? 'border-red-500' : 'border-gray-300'
+              }`}
+            >
+              <option value="" disabled>Select Type</option>
+              {typeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
           {validationErrors.type && (
             <p className="text-red-500 text-sm mt-1">{validationErrors.type}</p>
           )}
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
             Heading/Sub heading <span className="text-red-500">*</span>
           </label>
           
-          {/* Example Image */}
           {formData.type && (
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <p className="text-sm text-gray-600 mb-2">Example for {formData.type}:</p>
-              <img 
-                src={getExampleImageSrc(formData.type)}
-                alt={`Example heading for ${formData.type}`}
-                className="border rounded-md shadow-sm max-w-md max-h-60 object-contain"
-              />
+              <div className="relative">
+                <img 
+                  src={getExampleImageSrc(formData.type)}
+                  alt={`Example heading for ${formData.type}`}
+                  className="border rounded-md shadow-sm max-w-lg max-h-80 object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={openPreviewModal}
+                  className="absolute top-2 right-2 bg-white text-gray-700 p-2 rounded-full hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+                  title="Preview Image"
+                >
+                  <Eye className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           )}
 
@@ -623,10 +631,10 @@ const TechnologySecDataForm = () => {
         </div>
 
         <div className="border-t pt-4">
-          <h3 className="text-lg font-semibold mb-2">Cards</h3>
+          <h3 className="text-lg font-semibold mb-2 font-serif">Cards</h3>
           {formData.card.map((card, index) => (
             <div key={card.key} className="border p-4 rounded-md mb-4 relative bg-gray-50">
-              <h4 className="text-md font-medium mb-4">Card {index + 1}</h4>
+              <h4 className="text-md font-medium mb-4 font-serif">Card {index + 1}</h4>
               <button
                 type="button"
                 onClick={() => removeCard(index)}
@@ -640,7 +648,7 @@ const TechnologySecDataForm = () => {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 font-serif">
                     Card Photo
                   </label>
                   <input
@@ -675,7 +683,7 @@ const TechnologySecDataForm = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
                     Card Heading
                   </label>
                   <div className="min-h-[140px] mb-10">
@@ -710,7 +718,7 @@ const TechnologySecDataForm = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2 font-serif">
                     Card Sub Heading
                   </label>
                   <div className="min-h-[140px] mb-10">
@@ -745,7 +753,7 @@ const TechnologySecDataForm = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 font-serif">
                     Card Alt Name
                   </label>
                   <input
@@ -766,7 +774,7 @@ const TechnologySecDataForm = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 font-serif">
                     Card Photo Title
                   </label>
                   <input
@@ -821,6 +829,56 @@ const TechnologySecDataForm = () => {
           </button>
         </div>
       </form>
+
+      {/* Preview Modal */}
+      {isPreviewModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-4xl w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold font-serif">
+                Example Image for {formData.type}
+              </h3>
+              <button
+                onClick={closePreviewModal}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <img
+                src={getExampleImageSrc(formData.type)}
+                alt={`Example heading for ${formData.type}`}
+                className="max-w-full max-h-[90vh] object-contain rounded-md border"
+                onError={(e) => {
+                  console.error("Image load error:", e.target.src);
+                  e.target.style.display = "none";
+                }}
+              />
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={closePreviewModal}
+                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors duration-200"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

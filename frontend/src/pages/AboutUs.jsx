@@ -15,7 +15,7 @@ export default function AboutUs() {
       isLoading, 
       isError, 
       error 
-    } = useGetCombinedDataQuery();
+    } = useGetCombinedDataQuery();  
     // Handle loading state
   if (isLoading) {
     return <div>Loading...</div>;

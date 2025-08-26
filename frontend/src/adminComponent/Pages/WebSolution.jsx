@@ -28,18 +28,31 @@ const contentTypeMap = [
 const contentSchema = z.object({
   heading: z.string()
     .min(3, "Heading must be at least 3 characters")
-    .max(200, "Heading must not exceed 200 characters"),
+    .max(200, "Heading must not exceed 200 characters")
+    .refine(val => val.trim() !== '', "Heading cannot be empty or only spaces"),
   subheading: z.string()
     .max(300, "Subheading must not exceed 300 characters")
+    .refine(val => val.trim() !== '', "Subheading cannot be only spaces")
     .optional(),
   description: z.string()
     .max(5000, "Description must not exceed 5000 characters")
+    .refine(val => val.trim() !== '', "Description cannot be only spaces")
     .optional(),
   videoAlt: z.string()
     .max(200, "Video alt text must not exceed 200 characters")
+    .refine(val => val.trim() !== '', "Video alt text cannot be only spaces")
     .optional(),
   videotitle: z.string()
     .max(200, "Video title must not exceed 200 characters")
+    .refine(val => val.trim() !== '', "Video title cannot be only spaces")
+    .optional(),
+  photoAlt: z.string()
+    .max(200, "Photo alt text must not exceed 200 characters")
+    .refine(val => val.trim() !== '', "Photo alt text cannot be only spaces")
+    .optional(),
+  imgtitle: z.string()
+    .max(200, "Image title must not exceed 200 characters")
+    .refine(val => val.trim() !== '', "Image title cannot be only spaces")
     .optional(),
   status: z.boolean()
 });
@@ -96,8 +109,13 @@ const EditExtraPage = () => {
   const [initialVideotitle, setInitialVideotitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
-  
-  // Get content type name and flags
+  const [enableSubsections, setEnableSubsections] = useState(false);
+  const [enableQuestions, setEnableQuestions] = useState(false);
+  const [headingCount, setHeadingCount] = useState(0);
+  const [subheadingCount, setSubheadingCount] = useState(0);
+  const [descriptionCount, setDescriptionCount] = useState(0);
+
+  // Get content type info
   const getContentTypeInfo = () => {
     const contentTypeInfo = contentTypeMap.find(item => item.type === contentType);
     return contentTypeInfo || { name: 'Content', hasSubsections: false, hasQuestions: false };
@@ -108,6 +126,13 @@ const EditExtraPage = () => {
   useEffect(() => {
     fetchContentDetails();
   }, []);
+
+  useEffect(() => {
+    // Update character counts
+    setHeadingCount(heading.replace(/<[^>]*>/g, '').length);
+    setSubheadingCount(subheading.replace(/<[^>]*>/g, '').length);
+    setDescriptionCount(description.replace(/<[^>]*>/g, '').length);
+  }, [heading, subheading, description]);
 
   const fetchContentDetails = async () => {
     try {
@@ -167,11 +192,13 @@ const EditExtraPage = () => {
   const validateForm = () => {
     try {
       const formData = {
-        heading: heading.replace(/<[^>]*>/g, ''), // Strip HTML tags for validation
+        heading: heading.replace(/<[^>]*>/g, ''),
         subheading: subheading?.replace(/<[^>]*>/g, '') || '',
         description: description?.replace(/<[^>]*>/g, '') || '',
         videoAlt: videoAlt || initialVideoAlt,
         videotitle: videotitle || initialVideotitle,
+        photoAlt: photoAlts[0] || initialPhotoAlts[0] || '',
+        imgtitle: imgtitle[0] || initialImgtitle[0] || '',
         status: Boolean(status)
       };
       
@@ -244,7 +271,7 @@ const EditExtraPage = () => {
   };
 
   const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0]; // Only accept one file
+    const selectedFile = e.target.files[0];
     
     if (selectedFile) {
       const error = fileValidation.image(selectedFile);
@@ -253,9 +280,9 @@ const EditExtraPage = () => {
         return;
       }
       
-      setPhoto([selectedFile]); // Replace with single file
-      setPhotoAlts([""]); // Reset to single alt text
-      setImgtitle([""]); // Reset to single title
+      setPhoto([selectedFile]);
+      setPhotoAlts([""]);
+      setImgtitle([""]);
     }
   };
 
@@ -303,7 +330,6 @@ const EditExtraPage = () => {
         { withCredentials: true }
       );
       
-      // Clear all initial photo data
       setInitialPhotos([]);
       setInitialPhotoAlts([]);
       setInitialImgtitle([]);
@@ -326,13 +352,11 @@ const EditExtraPage = () => {
     e.preventDefault();
     try {
       if (initialVideo) {
-        // Delete from backend if it's an existing video
         await axios.delete(`/api/content/${contentId}/video/${initialVideo}`, {
           withCredentials: true,
         });
       }
       
-      // Clear all video-related state
       setVideo(null);
       setInitialVideo("");
       setVideoAlt("");
@@ -389,6 +413,9 @@ const EditExtraPage = () => {
                 modules={modules}
                 style={{ height: '80px' }}
               />
+              <p className="text-sm text-gray-500 mt-2">
+                Characters: {headingCount}/200
+              </p>
             </div>
             {errors.heading && (
               <p className="text-red-500 text-sm mt-2">{errors.heading}</p>
@@ -409,6 +436,9 @@ const EditExtraPage = () => {
                 modules={modules}
                 style={{ height: '80px' }}
               />
+              <p className="text-sm text-gray-500 mt-2">
+                Characters: {subheadingCount}/300
+              </p>
             </div>
             {errors.subheading && (
               <p className="text-red-500 text-sm mt-2">{errors.subheading}</p>
@@ -429,6 +459,9 @@ const EditExtraPage = () => {
                 modules={modules}
                 style={{ height: '160px' }}
               />
+              <p className="text-sm text-gray-500 mt-2">
+                Characters: {descriptionCount}/5000
+              </p>
             </div>
             {errors.description && (
               <p className="text-red-500 text-sm mt-2">{errors.description}</p>
@@ -445,7 +478,7 @@ const EditExtraPage = () => {
                 <div className="relative bg-white border rounded-lg shadow-sm p-4">
                   <img
                     src={`/api/image/download/${initialPhotos[0]}`}
-                    alt="Current photo"
+                    alt={initialPhotoAlts[0] || "Current photo"}
                     className="w-full h-48 object-cover rounded-md mb-3"
                   />
                   <div className="space-y-3">
@@ -460,6 +493,9 @@ const EditExtraPage = () => {
                         placeholder="Describe this image for accessibility"
                         className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
+                      {errors.photoAlt && (
+                        <p className="text-red-500 text-sm mt-2">{errors.photoAlt}</p>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-600 mb-1">
@@ -472,6 +508,9 @@ const EditExtraPage = () => {
                         placeholder="Enter image title"
                         className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
+                      {errors.imgtitle && (
+                        <p className="text-red-500 text-sm mt-2">{errors.imgtitle}</p>
+                      )}
                     </div>
                   </div>
 
@@ -486,7 +525,6 @@ const EditExtraPage = () => {
               </div>
             </div>
           )}
-
 
           {/* Add New Photo */}
           {(!initialPhotos || initialPhotos.length === 0) && (
@@ -509,7 +547,7 @@ const EditExtraPage = () => {
                   <div className="relative bg-white border rounded-lg shadow-sm p-4">
                     <img
                       src={URL.createObjectURL(photo[0])}
-                      alt="New Photo"
+                      alt={photoAlts[0] || "New Photo"}
                       className="w-full h-48 object-cover rounded-md mb-3"
                     />
                     <div className="space-y-3">
@@ -524,6 +562,9 @@ const EditExtraPage = () => {
                           placeholder="Describe this image for accessibility"
                           className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
+                        {errors.photoAlt && (
+                          <p className="text-red-500 text-sm mt-2">{errors.photoAlt}</p>
+                        )}
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-600 mb-1">
@@ -536,6 +577,9 @@ const EditExtraPage = () => {
                           placeholder="Enter image title"
                           className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
+                        {errors.imgtitle && (
+                          <p className="text-red-500 text-sm mt-2">{errors.imgtitle}</p>
+                        )}
                       </div>
                     </div>
                     <button
@@ -623,7 +667,7 @@ const EditExtraPage = () => {
           </div>
 
           {/* Status */}
-          <div className="mb-8">
+          <div className="mb- 8">
             <label htmlFor="status" className="block text-sm font-semibold text-gray-700 mb-2">
               Status
             </label>
@@ -633,6 +677,7 @@ const EditExtraPage = () => {
               onChange={(e) => setStatus(e.target.value === "active")}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
+              <option value="" disabled>Select status</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
             </select>
@@ -667,8 +712,21 @@ const EditExtraPage = () => {
         {/* Subsections Component */}
         <div className="mt-8">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Subsections</h2>
-            {getContentTypeInfo().hasSubsections ? (
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-700">Subsections</h2>
+              {!getContentTypeInfo().hasSubsections && (
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={enableSubsections}
+                    onChange={(e) => setEnableSubsections(e.target.checked)}
+                    className="form-checkbox h-5 w-5 text-blue-600"
+                  />
+                  <span className="text-sm text-gray-700">Enable Subsections</span>
+                </label>
+              )}
+            </div>
+            {(getContentTypeInfo().hasSubsections || enableSubsections) ? (
               <SubsectionsComponent
                 subsections={subsections}
                 setSubsections={setSubsections}
@@ -679,7 +737,7 @@ const EditExtraPage = () => {
                 <div className="flex">
                   <div className="ml-3">
                     <p className="text-sm text-yellow-800">
-                      <strong>Note:</strong> Subsection editing is not available for this content type ({getContentTypeInfo().name}).
+                      <strong>Note:</strong> Subsection editing is not available for this content type ({getContentTypeInfo().name}). Enable the toggle to add subsections.
                     </p>
                   </div>
                 </div>
@@ -691,8 +749,21 @@ const EditExtraPage = () => {
         {/* Questions Component */}
         <div className="mt-8">
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-700 mb-4">Questions</h2>
-            {getContentTypeInfo().hasQuestions ? (
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-xl font-semibold text-gray-700">Questions</h2>
+              {!getContentTypeInfo().hasQuestions && (
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={enableQuestions}
+                    onChange={(e) => setEnableQuestions(e.target.checked)}
+                    className="form-checkbox h-5 w-5 text-blue-600"
+                  />
+                  <span className="text-sm text-gray-700">Enable Questions</span>
+                </label>
+              )}
+            </div>
+            {(getContentTypeInfo().hasQuestions || enableQuestions) ? (
               <QuestionsComponent
                 questions={questions}
                 setQuestions={setQuestions}
@@ -703,7 +774,7 @@ const EditExtraPage = () => {
                 <div className="flex">
                   <div className="ml-3">
                     <p className="text-sm text-yellow-800">
-                      <strong>Note:</strong> Question editing is not available for this content type ({getContentTypeInfo().name}).
+                      <strong>Note:</strong> Question editing is not available for this content type ({getContentTypeInfo().name}). Enable the toggle to add questions.
                     </p>
                   </div>
                 </div>

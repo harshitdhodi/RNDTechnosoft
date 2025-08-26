@@ -39,10 +39,6 @@ const CorevalueTable = () => {
     );
   }, [corevalues, searchTerm]);
 
-  const notify = () => {
-    toast.success("Updated Successfully!");
-  };
-
   const columns = useMemo(
     () => [
       {
@@ -207,7 +203,6 @@ const CorevalueTable = () => {
         heading,
         subheading,
       }, { withCredentials: true });
-      notify();
       toast.success("Headings updated successfully!");
     } catch (error) {
       console.error(error);
@@ -255,9 +250,11 @@ const CorevalueTable = () => {
       </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Core Values</h1>
-        <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-          <Link to="/corevalue/createCorevalue"><Plus size={15} /></Link>
-        </button>
+        <Link to="/corevalue/createCorevalue">
+          <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
+            <Plus size={15} />
+          </button>
+        </Link>
       </div>
       <div className="mb-4">
         <input

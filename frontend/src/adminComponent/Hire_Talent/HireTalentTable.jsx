@@ -165,9 +165,6 @@ const HireTalentTable = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Image
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Heading
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -184,14 +181,6 @@ const HireTalentTable = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {Array.isArray(data) && data.map((item) => (
                   <tr key={item._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <img
-                        src={`/api/logo/download/${item.photo}`}
-                        alt={item.altImg}
-                        title={item.imgTitle}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{item.heading}</div>
                     </td>

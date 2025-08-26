@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaCheck, FaEye, FaTimes, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaCheck, FaEye, FaTimes, FaArrowUp, FaArrowDown, FaPlus, FaTimesCircle } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
@@ -12,6 +12,7 @@ import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import { z } from "zod";
+import { debounce } from 'lodash';
 
 Modal.setAppElement('#root');
 
@@ -43,6 +44,42 @@ const NewsTable = () => {
   const navigate = useNavigate();
   const pageSize = 5;
 
+  // Debounced fetchData function
+  const debouncedFetchData = useMemo(
+    () => debounce((page, term) => {
+      setLoading(true);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+      axios
+        .get(`/api/news/searchNews?page=${page + 1}&limit=${pageSize}&search=${encodeURIComponent(term)}`, {
+          withCredentials: true,
+          signal: controller.signal,
+        })
+        .then((response) => {
+          clearTimeout(timeoutId);
+          const newsWithIds = response.data.data.map((newsItem, index) => ({
+            ...newsItem,
+            id: page * pageSize + index + 1,
+            title: newsItem.title || 'Untitled',
+            postedBy: newsItem.postedBy || 'Unknown',
+            categoryName: newsItem.categoryName || 'Uncategorized',
+          }));
+          setNews(newsWithIds);
+          setPageCount(response.data.totalPages);
+        })
+        .catch((error) => {
+          console.error("Error retrieving news:", error);
+          const statusCode = error.response?.status ? `(${error.response.status})` : '';
+          toast.error(error.name === 'AbortError' ? 'Request timed out' : `Failed to fetch news ${statusCode}.`);
+        })
+        .finally(() => {
+          clearTimeout(timeoutId);
+          setLoading(false);
+        });
+    }, 300),
+    [pageSize, setNews, setPageCount, setLoading]
+  );
+
   const filteredNews = useMemo(() => {
     return news.filter((newsItem) => {
       if (metaFilter === "Meta Available") {
@@ -52,10 +89,8 @@ const NewsTable = () => {
         return !newsItem.metatitle || newsItem.metatitle.length === 0 || !newsItem.metadescription || newsItem.metadescription.length === 0;
       }
       return true;
-    }).filter((newsItem) =>
-      newsItem.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [news, searchTerm, metaFilter]);
+    });
+  }, [news, metaFilter]);
 
   const notify = () => {
     toast.success("Updated Successfully!");
@@ -183,25 +218,6 @@ const NewsTable = () => {
     useSortBy
   );
 
-  const fetchData = async (pageIndex) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`/api/news/getNews?page=${pageIndex + 1}`, { withCredentials: true });
-      const newsWithIds = response.data.data.map((newsItem, index) => ({
-        ...newsItem,
-        id: pageIndex * pageSize + index + 1
-      }));
-      setNews(newsWithIds);
-      setPageCount(Math.ceil(response.data.total / pageSize));
-    } catch (error) {
-      console.error(error);
-      const statusCode = error.response?.status ? `(${error.response.status})` : '';
-      toast.error(`Failed to fetch news ${statusCode}.`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleView = (news) => {
     setSelectedNews(news);
     setIsModalOpen(true);
@@ -217,7 +233,7 @@ const NewsTable = () => {
     try {
       await axios.delete(`/api/news/deleteNews?slugs=${newsToDelete.slug}`, { withCredentials: true });
       toast.success(`News item "${newsToDelete.title}" deleted successfully!`);
-      fetchData(pageIndex);
+      debouncedFetchData(pageIndex, searchTerm);
     } catch (error) {
       console.error(error);
       const statusCode = error.response?.status ? `(${error.response.status})` : '';
@@ -233,14 +249,29 @@ const NewsTable = () => {
     setNewsToDelete(null);
   };
 
-  useEffect(() => {
-    fetchData(pageIndex);
-  }, [pageIndex]);
-
-  // Reset pagination to first page when search term or filter changes
-  useEffect(() => {
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setMetaFilter("All");
     setPageIndex(0);
-  }, [searchTerm, metaFilter]);
+    debouncedFetchData(0, '');
+  };
+
+  const handleSearchChange = (e) => {
+    const newSearchTerm = e.target.value; // Removed trim() to allow spaces
+    setSearchTerm(newSearchTerm);
+    setPageIndex(0);
+    debouncedFetchData(0, newSearchTerm);
+  };
+
+  useEffect(() => {
+    if (pageCount > 0 && pageIndex >= pageCount) {
+      setPageIndex(pageCount - 1);
+    }
+    debouncedFetchData(pageIndex, searchTerm);
+    return () => {
+      debouncedFetchData.cancel();
+    };
+  }, [pageIndex, searchTerm, pageCount, debouncedFetchData]);
 
   const fetchHeadings = async () => {
     try {
@@ -257,7 +288,6 @@ const NewsTable = () => {
 
   const saveHeadings = async () => {
     try {
-      // Validate inputs using Zod
       const validationResult = headingSchema.safeParse({ heading, subheading });
       if (!validationResult.success) {
         const errors = validationResult.error.errors.map(err => err.message).join(", ");
@@ -327,31 +357,47 @@ const NewsTable = () => {
             <option value="All">All</option>
             <option value="Meta Available">Meta Available</option>
             <option value="Meta Unavailable">Meta Unavailable</option>
-          </select> 
+          </select>
           <Link to="/news/createNews">
-            <button className="px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-900 transition duration-300 font-serif flex items-center gap-2 text-sm sm:text-base"> 
+            <button className="px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-900 transition duration-300 font-serif flex items-center gap-2 text-sm sm:text-base">
               <FaPlus size={15} />
             </button>
           </Link>
         </div>
       </div>
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <input
           type="text"
-          placeholder="Search by title..."
+          placeholder="Search by title or posted by..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300 text-sm sm:text-base"
+          onChange={handleSearchChange}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300 text-sm sm:text-base pr-10"
+          aria-label="Search news by title or posted by"
         />
+        {searchTerm && (
+          <button
+            onClick={handleClearSearch}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+            aria-label="Clear search"
+          >
+            <FaTimesCircle size={20} />
+          </button>
+        )}
       </div>
       <h2 className="text-md sm:text-lg font-semibold mb-4 font-serif">Manage News</h2>
       {loadings ? (
         <div className="flex justify-center"><UseAnimations animation={loading} size={56} /></div>
       ) : (
         <>
-          {news.length === 0 ? (
-            <div className="flex justify-center items-center h-64">
-              <iframe className="w-64 h-64 sm:w-96 sm:h-96" src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"></iframe>
+          {filteredNews.length === 0 ? (
+            <div className="flex flex-col justify-center items-center h-64">
+              <p className="text-lg font-semibold text-gray-600 mb-4">No results found</p>
+              <button
+                onClick={handleClearSearch}
+                className="px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-900 transition duration-300 font-serif text-sm sm:text-base"
+              >
+                Clear Search
+              </button>
             </div>
           ) : (
             <table className="w-full mt-4 border-collapse" {...getTableProps()}>
@@ -409,6 +455,7 @@ const NewsTable = () => {
             onClick={() => setPageIndex(0)}
             disabled={pageIndex === 0}
             className="px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400 transition disabled:opacity-50 text-sm sm:text-base"
+            aria-label="Go to first page"
           >
             {"<<"}
           </button>
@@ -416,6 +463,7 @@ const NewsTable = () => {
             onClick={() => setPageIndex(pageIndex - 1)}
             disabled={pageIndex === 0}
             className="px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400 transition disabled:opacity-50 text-sm sm:text-base"
+            aria-label="Go to previous page"
           >
             {"<"}
           </button>
@@ -423,6 +471,7 @@ const NewsTable = () => {
             onClick={() => setPageIndex(pageIndex + 1)}
             disabled={pageIndex + 1 >= pageCount}
             className="px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400 transition disabled:opacity-50 text-sm sm:text-base"
+            aria-label="Go to next page"
           >
             {">"}
           </button>
@@ -430,11 +479,12 @@ const NewsTable = () => {
             onClick={() => setPageIndex(pageCount - 1)}
             disabled={pageIndex + 1 >= pageCount}
             className="px-3 py-1 bg-gray-300 rounded-md hover:bg-gray-400 transition disabled:opacity-50 text-sm sm:text-base"
+            aria-label="Go to last page"
           >
             {">>"}
           </button>
         </div>
-        <span className="text-sm sm:text-base">
+        <span className="text-sm sm:text-base" aria-live="polite">
           Page <strong>{pageIndex + 1} of {pageCount}</strong>
         </span>
       </div>

@@ -232,3 +232,63 @@ exports.getDataByCategorySlug = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+exports.getDataExistsBySlug = async (req, res, next) => {
+  try {
+    const { slug } = req.params;
+    
+    // Find the category by slug
+    const category = await IndustriesCategory.findOne({ slug });
+    if (!category) {
+      return res.status(200).json({ exists: false });
+    }
+
+    // Check existence for each type based on your enum values
+    const infoExists = await IndustrySecData.exists({
+      category: category._id,
+      type: "info"
+    });
+
+    const applicationsExists = await IndustrySecData.exists({
+      category: category._id,
+      type: "applications"
+    });
+
+    const softwareServiceExists = await IndustrySecData.exists({
+      category: category._id,
+      type: "software-service"
+    });
+
+    const caseStudiesExists = await IndustrySecData.exists({
+      category: category._id,
+      type: "case-studies"
+    });
+
+    const buildExists = await IndustrySecData.exists({
+      category: category._id,
+      type: "build"
+    });
+
+    // Check if any data exists for this category
+    const hasAnyData = infoExists || applicationsExists || softwareServiceExists || 
+                       caseStudiesExists || buildExists;
+
+    res.status(200).json({
+      exists: hasAnyData,
+      category: {
+        id: category._id,
+        name: category.category,
+        slug: category.slug
+      },
+      sections: {
+        info: !!infoExists,
+        applications: !!applicationsExists,
+        softwareService: !!softwareServiceExists,
+        caseStudies: !!caseStudiesExists,
+      }
+    });
+  } catch (error) {
+    console.error("Error checking industry data existence:", error);
+    return next(new AppError(`Error checking data existence: ${error.message}`, 500));
+  }
+};

@@ -4,7 +4,7 @@ const fs = require('fs').promises;
 const sharp = require('sharp');
 const AppError = require('../utils/appError');
 
-// Define the upload directory (keeping the existing path)
+// Define the upload directory
 const uploadDir = path.join(__dirname, '../logos');
 
 // Ensure upload directory exists
@@ -62,17 +62,24 @@ const upload = multer({
 });
 
 // Middleware to handle dynamic field names for card photos
-// In TechSecImage.js, update the handleCardImages function:
 const handleCardImages = (req, res, next) => {
+  // Log incoming request body and files for debugging
+  console.log('Incoming request body:', req.body);
+  console.log('Incoming request files:', req.files);
+  console.log('Incoming field names:', Object.keys(req.files || {}));
+
   // Create a dynamic fields array based on the expected card fields
   const fields = [];
   for (let i = 0; i < 10; i++) { // Support up to 10 cards
     fields.push({ name: `card[${i}].photo`, maxCount: 1 });
+    // Also support bracket notation for compatibility
+    fields.push({ name: `card[${i}][photo]`, maxCount: 1 });
   }
   
   // Use fields() to handle multiple files
   upload.fields(fields)(req, res, function(err) {
     if (err) {
+      console.error('Multer error:', err);
       if (err.code === 'LIMIT_FILE_SIZE') {
         return next(new AppError('File too large. Maximum size is 10MB per file', 400));
       }
@@ -80,9 +87,19 @@ const handleCardImages = (req, res, next) => {
         return next(new AppError('Too many files uploaded. Maximum is 10 files', 400));
       }
       if (err.message.includes('Unexpected field')) {
-        return next(new AppError('Invalid field name in file upload', 400));
+        return next(new AppError(`Invalid field name in file upload. Expected card[N].photo or card[N][photo]`, 400));
       }
       return next(err);
+    }
+    // Normalize file field names in req.files to use dot notation
+    if (req.files) {
+      const normalizedFiles = {};
+      for (const fieldName in req.files) {
+        const normalizedFieldName = fieldName.replace(/\[([^\]]*)\]/g, '.$1');
+        normalizedFiles[normalizedFieldName] = req.files[fieldName];
+      }
+      req.files = normalizedFiles;
+      console.log('Normalized req.files:', req.files);
     }
     next();
   });
@@ -156,5 +173,5 @@ module.exports = {
   handleCardImages,
   processImages,
   cleanupUploads,
-  upload // Exporting upload for single file uploads if needed
+  upload
 };
