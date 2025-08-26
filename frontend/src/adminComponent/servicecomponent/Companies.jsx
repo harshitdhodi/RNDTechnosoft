@@ -15,10 +15,11 @@ import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 
 const Companies = ({ categoryId }) => {
+  console.log(categoryId);
   const [companies, setCompanies] = useState([]);
   const [loadings, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [photoType, setPhotoType] = useState("company"); // Changed to "company"
+  const [photoType, setPhotoType] = useState("company");
   const navigate = useNavigate();
 
   const filteredCompanies = useMemo(() => {
@@ -40,15 +41,23 @@ const Companies = ({ categoryId }) => {
       {
         Header: "Category",
         accessor: "categoryName",
-        Cell: ({ row }) => (
-          <span
-            className="hover:text-blue-500 cursor-pointer"
-            onClick={() => navigate(`/companies/edit/${row.original._id}`)}
-          >
-            {row.original.categoryName}
-          </span>
-        ),
+        Cell: ({ row }) => {
+          // Get category name from categoryId array (if it exists)
+          const categoryName = row.original.categoryId && 
+                               row.original.categoryId.length > 0 ? 
+                               row.original.categoryId[0].category : 
+                               "No Category";
+          return (
+            <span
+              className="hover:text-blue-500 cursor-pointer"
+              onClick={() => navigate(`/companies/edit/${row.original._id}`)}
+            >
+              {categoryName}
+            </span>
+          );
+        },
       },
+   
       {
         Header: "Images",
         accessor: "images",
@@ -82,7 +91,7 @@ const Companies = ({ categoryId }) => {
         disableSortBy: true,
       },
     ],
-    []
+    [categoryId, photoType, navigate]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -101,12 +110,12 @@ const Companies = ({ categoryId }) => {
         `/api/serviceImages/getGallery?categoryId=${categoryId}&photoType=${photoType}`,
         { withCredentials: true }
       );
-      const companiesWithIds = response.data.map((item, index) => ({
+      const companiesWithIds = response.data.data.map((item, index) => ({
         ...item,
         id: index + 1,
       }));
       setCompanies(companiesWithIds);
-    } catch (error) {
+    } catch (error) { 
       console.error(error);
     } finally {
       setLoading(false);
@@ -130,7 +139,7 @@ const Companies = ({ categoryId }) => {
     if (categoryId) {
       fetchData(categoryId);
     }
-  }, [categoryId, photoType]); // Include photoType in dependencies
+  }, [categoryId, photoType]); 
 
   return (
     <div className="p-4 overflow-x-auto">
@@ -140,13 +149,13 @@ const Companies = ({ categoryId }) => {
         <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">
           Companies
         </h1>
-        <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-          <Link
-            to={`/services/createImage/${categoryId}?photoType=${photoType}`}
+        <Link
+            to={`/company-gallery-form/${categoryId}?photoType=${photoType}`}
           >
-            <FaPlus size={15} />
-          </Link>
-        </button>
+          <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">  
+              <FaPlus size={15} />
+          </button>
+        </Link>
       </div>
       <div className="mb-4">
         <input

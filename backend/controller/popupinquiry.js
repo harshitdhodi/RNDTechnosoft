@@ -21,9 +21,10 @@ const createPopupInquiry = async (req, res) => {
 
     // Prepare the email content for the admin
     const adminMailOptions = {
-      from: email, // Sender email
-      replyto: email,
+      from: process.env.EMAIL_USER, // Sender email
+      replyTo: newInquiry.email,
       to: process.env.EMAIL_USER, // Admin's email address
+      cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
       subject: "New Inquiry Received",
       html: `
                 <div style="text-align: center;">
@@ -37,15 +38,16 @@ const createPopupInquiry = async (req, res) => {
             `,
     };
 
+    // Prepare the email content for the user
     const userMailOptions = {
       from: process.env.EMAIL_USER, // Sender email
-      to: email, // User's email address
+      to: newInquiry.email, // User's email address
       subject: "Inquiry Submitted Successfully",
       html: `
                 <div style="text-align: center;">
                     <img src="https://rndtechnosoft.com/api/logo/download/photo_1730452853512.png" alt="RND Technosoft Logo" style="width: 150px; height: auto;"/>
                     <h2>Thank You for Your Inquiry</h2>
-                    <p>Hi ${name},</p>
+                    <p>Hi ${newInquiry.name},</p>
                     <p>Thank you for reaching out to us! Your inquiry has been submitted successfully.</p>
                     <p>Our team will get back to you shortly.</p>
                     <p>Best regards,<br>RND Technosoft</p>

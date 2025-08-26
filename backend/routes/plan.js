@@ -7,7 +7,7 @@ const {
   getStandardPackage,
   getSinglePackage,
   getCategoryPackages,
-  getSubcategoryPackages,
+  getSubcategoryPackages,getPackagesByCategoryOrSubcategory,
   getSubSubcategoryPackages,getAllnormalPackagesSlug,getAllhourlyPackagesSlug,getAllPackagesFront,getPackagesBySlug
   ,getCategoryHeadingBySlug
 } = require('../controller/plan'); // Adjust the path as necessary
@@ -40,7 +40,7 @@ router.get('/category', getCategoryPackages);
 // Route to get plans by subcategory
 router.get('/subcategory', getSubcategoryPackages);
 router.get('/subsubcategory', getSubSubcategoryPackages);
-
+router.get('/getPackagesByCategoryOrSubcategory', getPackagesByCategoryOrSubcategory)
 router.get('/front/:slug',getAllnormalPackagesSlug)
 router.get('/hourlypackage/:slug',getAllhourlyPackagesSlug)
 
@@ -62,7 +62,7 @@ router.put('/updatesubsubcategory',requireAuth,uploadLogo,updatesubsubcategory)
 router.delete('/deletecategory',requireAuth,deletecategory)
 router.delete('/deletesubcategory',requireAuth,deletesubcategory)
 router.delete('/deletesubsubcategory',requireAuth,deletesubsubcategory)
-router.get('/getAll',requireAuth,getAll)
+router.get('/getAll',getAll)
 router.get('/getSpecificCategory',requireAuth,getSpecificCategory)
 router.get('/getSpecificSubcategory',requireAuth,getSpecificSubcategory)
 router.get('/getSpecificSubSubcategory',requireAuth,getSpecificSubSubcategory)

@@ -1,12 +1,15 @@
 const CareerInquiry = require('../model/carrerinquiry');
 const path = require('path')
 const nodemailer = require('nodemailer');
+const { default: axios } = require('axios');
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  host: 'smtp.gmail.com', // Gmail SMTP server
+  port: 587, // Port
+  secure: false, // Use `true` for 465, `false` for other ports
   auth: {
     user: process.env.EMAIL_HR,
-    pass: process.env.EMAIL_HRPASS
+    pass: process.env.HR_PASS
   }
 });
 
@@ -16,14 +19,18 @@ exports.CreateCareerInquiry = async (req, res) => {
       name: req.body.name,
       email: req.body.email,
       mobileNo: req.body.mobileNo,
+      linkedin: req.body.linkedin || '', // Make LinkedIn optional by providing a default empty string
       message: req.body.message,
-      resume: req.files['resume'] ? req.files['resume'][0].filename : null
+      resume: req.files['resume'] ? req.files['resume'][0].filename : null,
+      path: req.body.path
     });
 
     await newInquiry.save();
+    console.log("jobTitle", req.body.jobTitle)
+    const jobTitle = req.body.jobTitle;
 
     // HTML Email Template
-    const emailHTML = `
+    const emailHTML = ` 
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -72,23 +79,24 @@ exports.CreateCareerInquiry = async (req, res) => {
                 font-size: 20px; /* Adjust font size as needed */
                 color: #333; /* Text color */
             }
-                 .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 120px; 
-            height: auto; 
-            object-fit: contain; /* Ensures aspect ratio is maintained */
-        }
+            .logo {
+                display: block;
+                margin: 0 auto 20px;
+                width: 120px; 
+                height: auto; 
+                object-fit: contain; /* Ensures aspect ratio is maintained */
+            }
         </style>
       </head>
       <body>
         <div class="container">
             <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
-            <p class="centered-text">New Career Inquiry!!</p>
+            <p class="centered-text">New ${jobTitle} Inquiry!!</p>
             <p><span class="field">Name:</span> ${newInquiry.name}</p>
             <p><span class="field">Email:</span> ${newInquiry.email}</p>
             <p><span class="field">Phone:</span> ${newInquiry.mobileNo}</p>
-            <p>${newInquiry.message}</p>
+            ${newInquiry.linkedin ? `<p><span class="field">LinkedIn:</span> ${newInquiry.linkedin}</p>` : ''}
+            <p><span class="field">Message:</span>${newInquiry.message}</p>
         </div>
       </body>
       </html>
@@ -101,7 +109,7 @@ exports.CreateCareerInquiry = async (req, res) => {
       from: newInquiry.email,
       to: process.env.EMAIL_HR,
       replyTo: newInquiry.email,
-      subject: 'New Career Inquiry',
+      subject: jobTitle ? `${jobTitle} Inquiry` : 'New Career Inquiry', 
       html: emailHTML,
       attachments: [
         {
@@ -112,10 +120,25 @@ exports.CreateCareerInquiry = async (req, res) => {
       ]
     };
 
-    console.log(mailOptions)
-
     // Send email
     await transporter.sendMail(mailOptions);
+
+    // Send data to external API
+    try {
+      await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
+        API_KEY: "8029760E3747D130",
+        API_ID: "MW1V",
+        name: newInquiry.name,
+        email: newInquiry.email,
+        phone: newInquiry.mobileNo,
+        linkedin: newInquiry.linkedin || '', // Make LinkedIn optional in external API call
+        subject: "Career Inquiry",
+        message: newInquiry.message
+      });
+    } catch (externalError) {
+      console.error('Failed to send data to external DB:', externalError.message);
+      // Optional: log more details or notify internally
+    }
 
     // Respond to the client
     res.status(201).json({ success: true, data: newInquiry });
@@ -154,7 +177,7 @@ exports.getCountsAndData = async (req, res) => {
 
     const dataWithFields = await CareerInquiry.find({
       $or: [
-        { utm_source: { $exists: true, $ne: '' } },
+        { utm_source: { $exists: true, $ne: '' } }, 
         { utm_medium: { $exists: true, $ne: '' } },
         { utm_campaign: { $exists: true, $ne: '' } },
         { utm_id: { $exists: true, $ne: '' } },

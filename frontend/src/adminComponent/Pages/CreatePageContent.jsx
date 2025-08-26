@@ -1,17 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import { IconContext } from "react-icons";
-import * as AllIcons from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const iconComponents = Object.entries(AllIcons).map(([key, value]) => ({
-    name: key,
-    icon: value,
-}));
+import { X } from 'lucide-react';
 
 const modules = {
     toolbar: [
@@ -40,8 +34,7 @@ const NewPageContentForm = () => {
     const [photoAlts, setPhotoAlts] = useState([]);
     const [status, setStatus] = useState("active");
     const [showIconContainer, setShowIconContainer] = useState(false);
-    const navigate = useNavigate()
-
+    const navigate = useNavigate();
 
     const handlePhotoChange = (e) => {
         const files = Array.from(e.target.files); // Convert FileList to array
@@ -56,13 +49,10 @@ const NewPageContentForm = () => {
         setPhotoAlts([...photoAlts, ...newPhotoAlts]);
     };
 
-
     const handleDeleteImage = (index) => {
         setPhotos((prevPhotos) => prevPhotos.filter((_, i) => i !== index));
         setPhotoAlts((prevPhotoAlts) => prevPhotoAlts.filter((_, i) => i !== index));
     };
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -89,15 +79,11 @@ const NewPageContentForm = () => {
             setPhotos([]);
             setPhotoAlts([]);
             setStatus("active");
-            navigate('/extrapages')
+            navigate('/extrapages');
         } catch (error) {
             console.error(error);
         }
     };
-
-    const filteredIcons = iconComponents.filter((icon) =>
-        icon.name.toLowerCase().includes(heading.toLowerCase())
-    );
 
     return (
         <form onSubmit={handleSubmit} className="p-4">
@@ -145,9 +131,7 @@ const NewPageContentForm = () => {
                                     setShowIconContainer(false);
                                 }}
                             >
-                                <IconContext.Provider value={{ size: "1.5em" }}>
-                                    {React.createElement(icon.icon)}
-                                </IconContext.Provider>
+                                <LucideIcon name={icon.name} size={24} />
                             </div>
                         ))}
                     </div>
@@ -187,12 +171,11 @@ const NewPageContentForm = () => {
                                         alt={`Service ${index + 1}`}
                                         className="h-32 w-56 object-cover"
                                     />
-
                                     <button
                                         onClick={() => handleDeleteImage(index)}
                                         className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex items-center justify-center hover:bg-red-600 focus:outline-none"
                                     >
-                                        X
+                                        <X size={16} />
                                     </button>
                                 </div>
                                 <label className="block mt-2">

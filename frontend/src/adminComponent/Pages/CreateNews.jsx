@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -6,195 +6,179 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const NewNewsForm = () => {
+const NewCoreValueForm = () => {
   const [title, setTitle] = useState("");
-  const [details, setDetails] = useState("");
-  const [photos, setPhotos] = useState([]);
-  const [photoAlts, setPhotoAlts] = useState([]);
-  const [imgtitle, setImgtitle] = useState([]);
-
-  const [date, setDate] = useState("");
+  const [description, setDescription] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [photoAlt, setPhotoAlt] = useState("");
+  const [imgtitle, setImgtitle] = useState("");
   const [status, setStatus] = useState("active");
-  const [slug, setSlug] = useState("");
-  const [metatitle, setMetatitle] = useState("");
-  const [metadescription, setMetadescription] = useState("");
-  const [metakeywords, setMetakeywords] = useState("");
-  const [metalanguage, setMetalanguage] = useState("")
-  const [metacanonical, setMetacanonical] = useState("")
-  const [metaschema, setMetaschema] = useState("")
-  const [otherMeta, setOthermeta] = useState("")
-  const [url, setUrl] = useState("");
-  const [priority, setPriority] = useState("");
-  const [changeFreq, setChangeFreq] = useState("");
-  const [postedBy, setPostedBy] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [parentCategoryId, setParentCategoryId] = useState("");
-  const [subCategoryId, setSubCategoryId] = useState("");
-  const [subSubCategoryId, setSubSubCategoryId] = useState("");
-    // State for categories, parent, sub, and sub-sub categories with updated naming convention
-    const [servicecategories, setServiceCategories] = useState([]);
-    const [serviceparentCategoryId, setServiceParentCategoryId] = useState("");
-    const [servicesubCategoryId, setServiceSubCategoryId] = useState("");
-    const [servicesubSubCategoryId, setServiceSubSubCategoryId] = useState("");
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const validationRules = {
+    title: { min: 3, max: 100, required: true },
+    description: { min: 10, max: 5000, required: true },
+    alt: { min: 3, max: 100, required: true },
+    imgtitle: { min: 3, max: 100, required: true }
+  };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await axios.get('/api/news/getall', { withCredentials: true });
-      setCategories(response.data);
-    } catch (error) {
-      console.error(error);
+  const stripHtmlTags = (html) => {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
+
+  const validateField = (fieldName, value, customRules = null) => {
+    const rules = customRules || validationRules[fieldName];
+    if (!rules) return '';
+
+    const textValue = fieldName === 'description' ? stripHtmlTags(value) : value;
+    const length = textValue.length;
+
+    if (rules.required && (!value || value.trim() === '')) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
     }
+
+    if (value && length < rules.min) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must be at least ${rules.min} characters`;
+    }
+
+    if (value && length > rules.max) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must be no more than ${rules.max} characters`;
+    }
+
+    return '';
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    newErrors.title = validateField('title', title);
+    newErrors.description = validateField('description', description);
+
+    if (photo) {
+      const altError = validateField('alt', photoAlt);
+      const titleError = validateField('imgtitle', imgtitle);
+      
+      if (altError) newErrors.alt = altError;
+      if (titleError) newErrors.imgtitle = titleError;
+    }
+
+    Object.keys(newErrors).forEach(key => {
+      if (!newErrors[key]) delete newErrors[key];
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const clearFieldError = (fieldName) => {
+    if (errors[fieldName]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[fieldName];
+        return newErrors;
+      });
+    }
+  };
+
+  const validateImageFile = (file) => {
+    if (!file.type.startsWith('image/')) {
+      return 'Please select only image files';
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return 'Image size must be less than 5MB';
+    }
+
+    return '';
   };
 
   const handlePhotoChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (photos.length + files.length > 5) {
-      toast.error("You can only upload up to 5 photos");
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const error = validateImageFile(file);
+    if (error) {
+      toast.error(`${file.name}: ${error}`);
+      e.target.value = '';
       return;
     }
-    setPhotos([...photos, ...files]);
-    const newPhotoAlts = Array.from({ length: files.length }, () => "");
-    setPhotoAlts([...photoAlts, ...newPhotoAlts]);
-    const newImgtitle = Array.from({ length: files.length }, () => "");
-    setImgtitle([...imgtitle, ...newImgtitle]);
+
+    if (photo) {
+      const shouldReplace = window.confirm("An image already exists. Do you want to replace it with the new image?");
+      if (!shouldReplace) {
+        e.target.value = '';
+        return;
+      }
+      handleDeleteImage();
+    }
+
+    setPhoto(file);
+    setPhotoAlt("");
+    setImgtitle("");
+    e.target.value = '';
   };
 
-  const handleDeleteImage = (index) => {
-    setPhotos((prevPhotos) => prevPhotos.filter((_, i) => i !== index));
-    setPhotoAlts((prevPhotoAlts) => prevPhotoAlts.filter((_, i) => i !== index));
-    setImgtitle((prevImgtitle) => prevImgtitle.filter((_, i) => i !== index));
-
+  const handleDeleteImage = () => {
+    setPhoto(null);
+    setPhotoAlt("");
+    setImgtitle("");
+    clearFieldError('alt');
+    clearFieldError('imgtitle');
+    toast.success("Image removed successfully");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error("Please fix the validation errors");
+      return;
+    }
+
+    if (!photo) {
+      toast.error("Exactly one image is required");
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const formData = new FormData();
       formData.append('title', title);
-      formData.append('details', details);
-      formData.append('slug', slug);
-      formData.append('metatitle', metatitle);
-      formData.append('metakeywords', metakeywords);
-      formData.append('metadescription', metadescription);
-      formData.append('metalanguage', metalanguage);
-      formData.append('metacanonical', metacanonical);
-      formData.append('metaschema', metaschema);
-      formData.append('otherMeta', otherMeta);
-      formData.append('url', url);
-      formData.append('priority', priority);
-      formData.append('changeFreq', changeFreq);
-      photos.forEach((photo, index) => {
-        formData.append(`photo`, photo);
-        formData.append(`alt`, photoAlts[index]);
-        formData.append(`imgtitle`, imgtitle[index]);
-
-      });
-      formData.append('postedBy', postedBy);
-      formData.append('date', date);
+      formData.append('description', description);
+      formData.append('photo', photo);
+      formData.append('alt', photoAlt);
+      formData.append('imgtitle', imgtitle);
       formData.append('status', status);
-      formData.append('categories', parentCategoryId);
-      formData.append('subcategories', subCategoryId);
-      formData.append('subSubcategories', subSubCategoryId);
-      formData.append('servicecategories', serviceparentCategoryId);
-      formData.append('servicesubcategories', servicesubCategoryId);
-      formData.append('servicesubSubcategories', servicesubSubCategoryId);
-      const response = await axios.post('/api/news/insertNews', formData, {
+
+      await axios.post('/api/corevalue/createCoreValue', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         withCredentials: true
       });
 
-
-
-      // Reset form state
+      toast.success("Core Value added successfully!");
       setTitle("");
-      setDetails("");
-      setPhotos([]);
-      setPostedBy("");
-      setDate("");
-      setSlug("");
-      setMetatitle("");
-      setMetadescription("")
-      setMetakeywords("");
-      setMetalanguage("");
-      setMetacanonical("");
-      setMetaschema("");
-      setOthermeta("");
-      setUrl("");
-      setPriority("");
-      setChangeFreq("");
+      setDescription("");
+      setPhoto(null);
+      setPhotoAlt("");
+      setImgtitle("");
       setStatus("active");
-      setParentCategoryId("");
-      setSubCategoryId("");
-      setSubSubCategoryId("");
-      setPhotoAlts([]);
-      setImgtitle([]);
-
-      // Navigate to news page after successful submission
-      navigate('/News');
+      setErrors({});
+      navigate('/CoreValue');
     } catch (error) {
       console.error(error);
+      toast.error("Failed to add core value");
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  const renderCategoryOptions = (category) => (
-    <option key={category._id} value={category.slug}>
-      {category.category}
-    </option>
-  );
-
-  const handleParentCategoryChange = (e) => {
-    const selectedCategoryId = e.target.value;
-    setParentCategoryId(selectedCategoryId);
-    setSubCategoryId("");
-    setSubSubCategoryId("");
-  };
-
-  const handleSubCategoryChange = (e) => {
-    const selectedSubCategoryId = e.target.value;
-    setSubCategoryId(selectedSubCategoryId);
-    setSubSubCategoryId("");
-  };
-
-  const handleSubSubCategoryChange = (e) => {
-    const selectedSubSubCategoryId = e.target.value;
-    setSubSubCategoryId(selectedSubSubCategoryId);
-  };
-
-  const findCategoryById = (categories, id) => {
-    for (const category of categories) {
-      if (category.slug === id) return category;
-      if (category.subCategories) {
-        const subCategory = findCategoryById(category.subCategories, id);
-        if (subCategory) return subCategory;
-      }
-    }
-    return null;
-  };
-
-  const findSubCategories = (categories, parentCategoryId) => {
-    const parentCategory = findCategoryById(categories, parentCategoryId);
-    return parentCategory ? parentCategory.subCategories || [] : [];
-  };
-
-  const findSubSubCategories = (categories, parentCategoryId, subCategoryId) => {
-    const parentCategory = findCategoryById(categories, parentCategoryId);
-    if (parentCategory && parentCategory.subCategories) {
-      const subCategory = findCategoryById(parentCategory.subCategories, subCategoryId);
-      return subCategory ? subCategory.subSubCategory || [] : [];
-    }
-    return [];
-  };
-
-  const subCategories = parentCategoryId ? findSubCategories(categories, parentCategoryId) : [];
-  const subSubCategories = (parentCategoryId && subCategoryId) ? findSubSubCategories(categories, parentCategoryId, subCategoryId) : [];
-
 
   const modules = {
     toolbar: [
@@ -215,501 +199,185 @@ const NewNewsForm = () => {
     }
   };
 
-  useEffect(() => {
-    if (slug) {
-      setUrl(`https://rndtechnosoft.com/${slug}`);
-    }
-  }, [slug]);
+  const getCharacterCount = (value, fieldName) => {
+    const textValue = fieldName === 'description' ? stripHtmlTags(value) : value;
+    return textValue.length;
+  };
 
-  useEffect(() => {
-    setSlug(title.replace(/\s+/g, '-')
-      .toLowerCase()
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/--+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '')
+  const getCharacterCountDisplay = (value, fieldName) => {
+    const count = getCharacterCount(value, fieldName);
+    const rules = validationRules[fieldName];
+    if (!rules) return '';
+
+    const isOverLimit = count > rules.max;
+    const isUnderLimit = count < rules.min && count > 0;
+    
+    let colorClass = 'text-gray-500';
+    if (isOverLimit) colorClass = 'text-red-500';
+    else if (isUnderLimit) colorClass = 'text-amber-500';
+    
+    return (
+      <div className={`text-sm ${colorClass}`}>
+        {count}/{rules.max} characters
+        {rules.min > 0 && count > 0 && count < rules.min && ` (minimum ${rules.min})`}
+      </div>
     );
-  }, [title])
-
-  useEffect(() => {
-    setSlug(slug.toLowerCase()
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/--+/g, '-')
-    );
-  }, [slug])
-
-
-useEffect(() => {
-  fetchServiceCategories();
-}, []);
-
-// Fetch all service categories
-const fetchServiceCategories = async () => {
-  try {
-      const response = await axios.get('/api/services/getall', { withCredentials: true });
-      setServiceCategories(response.data);
-  } catch (error) {
-      console.error(error);
-  }
-};
-
-// Render options for the parent, sub, and sub-sub categories
-const renderServiceCategoryOptions = (category) => (
-  <option key={category._id} value={category.slug}>
-      {category.category}
-  </option>
-);
-
-// Handle changes for parent category
-const handleServiceParentCategoryChange = (e) => {
-  const selectedCategoryId = e.target.value;
-  setServiceParentCategoryId(selectedCategoryId);
-  setServiceSubCategoryId(""); // Reset subcategory selection
-  setServiceSubSubCategoryId(""); // Reset sub-subcategory selection
-};
-
-// Handle changes for subcategory
-const handleServiceSubCategoryChange = (e) => {
-  const selectedSubCategoryId = e.target.value;
-  setServiceSubCategoryId(selectedSubCategoryId);
-  setServiceSubSubCategoryId(""); // Reset sub-subcategory selection
-};
-
-// Handle changes for sub-subcategory
-const handleServiceSubSubCategoryChange = (e) => {
-  const selectedSubSubCategoryId = e.target.value;
-  setServiceSubSubCategoryId(selectedSubSubCategoryId);
-};
-
-// Find category by ID recursively
-const findServiceCategoryById = (categories, id) => {
-  for (const category of categories) {
-      if (category.slug === id) return category;
-      if (category.subCategories) {
-          const subCategory = findServiceCategoryById(category.subCategories, id);
-          if (subCategory) return subCategory;
-      }
-  }
-  return null;
-};
-
-// Find subcategories based on selected parent category
-const findServiceSubCategories = (categories, serviceparentCategoryId) => {
-  const parentCategory = findServiceCategoryById(categories, serviceparentCategoryId);
-  return parentCategory ? parentCategory.subCategories || [] : [];
-};
-
-// Find sub-subcategories based on selected subcategory
-const findServiceSubSubCategories = (categories, serviceparentCategoryId, servicesubCategoryId) => {
-  const parentCategory = findServiceCategoryById(categories, serviceparentCategoryId);
-  if (parentCategory && parentCategory.subCategories) {
-      const subCategory = findServiceCategoryById(parentCategory.subCategories, servicesubCategoryId);
-      return subCategory ? subCategory.subSubCategories || [] : [];
-  }
-  return [];
-};
-
-// Get subcategories and sub-subcategories based on the selected parent and subcategory
-const subServiceCategories = serviceparentCategoryId ? findServiceSubCategories(servicecategories, serviceparentCategoryId) : [];
-const subSubServiceCategories = (serviceparentCategoryId && servicesubCategoryId) ? findServiceSubSubCategories(servicecategories, serviceparentCategoryId, servicesubCategoryId) : [];
-
-
-
-
-
-
-
-
-
-
-
-
+  };
 
   return (
     <form onSubmit={handleSubmit} className="p-4">
       <ToastContainer />
-      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Add News</h1>
-      <div className="mb-4">
-        <label htmlFor="parentCategory" className="block font-semibold mb-2">
-          Parent Category
-        </label>
-        <select
-          id="parentCategory"
-          value={parentCategoryId}
-          onChange={handleParentCategoryChange}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        >
-          <option value="">Select Parent Category</option>
-          {categories.map(renderCategoryOptions)}
-        </select>
-      </div>
-      {subCategories.length > 0 && (
-        <div className="mb-4">
-          <label htmlFor="subCategory" className="block font-semibold mb-2">
-            Subcategory (optional)
-          </label>
-          <select
-            id="subCategory"
-            value={subCategoryId}
-            onChange={handleSubCategoryChange}
-            className="w-full p-2 border rounded focus:outline-none"
-          >
-            <option value="">Select Subcategory</option>
-            {subCategories.map((subCategory) => (
-              <option key={subCategory._id} value={subCategory.slug}>
-                {subCategory.category}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-      {subSubCategories.length > 0 && (
-        <div className="mb-4">
-          <label htmlFor="subSubCategory" className="block font-semibold mb-2">
-            Sub-Subcategory (optional)
-          </label>
-          <select
-            id="subSubCategory"
-            value={subSubCategoryId}
-            onChange={handleSubSubCategoryChange}
-            className="w-full p-2 border rounded focus:outline-none"
-          >
-            <option >Select Sub-Subcategory</option>
-            {subSubCategories.map((subSubCategory) => (
-              <option key={subSubCategory._id} value={subSubCategory.slug}>
-                {subSubCategory.category}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-
-
-
-<div className="mb-4">
-                <label htmlFor="parentCategory" className="block font-semibold mb-2">
-                    Parent Service Category
-                </label>
-                <select
-                    id="parentCategory"
-                    value={serviceparentCategoryId}
-                    onChange={handleServiceParentCategoryChange}
-                    className="w-full p-2 border rounded focus:outline-none"
-                    required
-                >
-                    <option value="">Select Parent Category</option>
-                    {servicecategories.map(renderServiceCategoryOptions)}
-                </select>
-            </div>
-
-            {/* Subcategory */}
-            {subServiceCategories.length > 0 && (
-                <div className="mb-4">
-                    <label htmlFor="subCategory" className="block font-semibold mb-2">
-                        Sub-Service Category (optional)
-                    </label>
-                    <select
-                        id="subCategory"
-                        value={servicesubCategoryId}
-                        onChange={handleServiceSubCategoryChange}
-                        className="w-full p-2 border rounded focus:outline-none"
-                    >
-                        <option value="">Select Subcategory</option>
-                        {subServiceCategories.map(renderServiceCategoryOptions)}
-                    </select>
-                </div>
-            )}
-
-            {/* Sub-Subcategory */}
-            {subSubServiceCategories.length > 0 && (
-                <div className="mb-4">
-                    <label htmlFor="subSubCategory" className="block font-semibold mb-2">
-                        Sub-Sub-Service Category (optional)
-                    </label>
-                    <select
-                        id="subSubCategory"
-                        value={servicesubSubCategoryId}
-                        onChange={handleServiceSubSubCategoryChange}
-                        className="w-full p-2 border rounded focus:outline-none"
-                    >
-                        <option value="">Select Sub-Subcategory</option>
-                        {subSubServiceCategories.map(renderServiceCategoryOptions)}
-                    </select>
-                </div>
-            )}
+      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center mb-6">Add Core Value</h1>
+      
       <div className="mb-4">
         <label htmlFor="title" className="block font-semibold mb-2">
-          Title
+          Title <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
           id="title"
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
+          onChange={(e) => {
+            setTitle(e.target.value);
+            clearFieldError('title');
+          }}
+          className={`w-full p-2 border rounded focus:outline-none focus:border-blue-500 ${
+            errors.title ? 'border-red-500' : ''
+          }`}
         />
+        {getCharacterCountDisplay(title, 'title')}
+        {errors.title && (
+          <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+        )}
       </div>
+
       <div className="mb-8">
-        <label htmlFor="details" className="block font-semibold mb-2">
-          Description
+        <label htmlFor="description" className="block font-semibold mb-2">
+          Description <span className="text-red-500">*</span>
         </label>
         <ReactQuill
-          value={details}
-          onChange={setDetails}
-          modules={modules} // Include modules for image handling
-          className="quill"
+          value={description}
+          onChange={(value) => {
+            setDescription(value);
+            clearFieldError('description');
+          }}
+          modules={modules}
+          className={`quill ${errors.description ? 'border-red-500' : ''}`}
         />
+        {getCharacterCountDisplay(description, 'description')}
+        {errors.description && (
+          <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+        )}
       </div>
-      <div className="mt-4">
+
+      <div className="mb-4">
         <label htmlFor="photo" className="block font-semibold mb-2">
-          Photos
+          Photo (Max 1 image, 5MB) <span className="text-red-500">*</span>
         </label>
         <input
           type="file"
           name="photo"
           id="photo"
-          multiple
           onChange={handlePhotoChange}
-          className="border rounded focus:outline-none"
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
           accept="image/*"
         />
-        {photos.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-4">
-            {photos.map((photo, index) => (
-              <div key={index} className="relative w-56">
-                <button
-                  type="button"
-                  className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex items-center justify-center hover:bg-red-600 focus:outline-none"
-                  onClick={() => handleDeleteImage(index)}
-                >
-                  X
-                </button>
-                <img
-                  src={URL.createObjectURL(photo)}
-                  alt=""
-                  className=" h-32 w-56 object-cover"
+        <p className="text-sm text-gray-500 mt-1">
+          Accepted formats: JPG, PNG, GIF, WEBP. Maximum 1 image, 5MB.
+        </p>
+        
+        {photo && (
+          <div className="mt-4">
+            <h4 className="font-semibold text-gray-700 mb-2">Selected Image:</h4>
+            <div className="relative w-56 border rounded-lg p-2">
+              <button
+                type="button"
+                className="absolute top-4 right-4 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-blue-600 focus:outline-none z-10"
+                onClick={handleDeleteImage}
+                title="Remove image"
+              >
+                <span className="text-xs font-bold">×</span>
+              </button>
+              <img
+                src={URL.createObjectURL(photo)}
+                alt=""
+                className="h-32 w-52 object-cover rounded"
+              />
+              
+              <div className="mt-2">
+                <label className="block text-sm font-medium mb-1">
+                  Alt Text <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={photoAlt}
+                  onChange={(e) => {
+                    setPhotoAlt(e.target.value);
+                    clearFieldError('alt');
+                  }}
+                  className={`w-full p-2 border rounded focus:outline-none focus:border-blue-500 ${
+                    errors.alt ? 'border-red-500' : ''
+                  }`}
+                  placeholder="Describe this image..."
                 />
-                <label>Alternative Text :
-                  <input
-                    type="text"
-                    value={photoAlts[index]}
-                    onChange={(e) => {
-                      const newPhotoAlts = [...photoAlts];
-                      newPhotoAlts[index] = e.target.value;
-                      setPhotoAlts(newPhotoAlts);
-                    }}
-                    className="w-full p-2 mt-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <label>Image Title Text :
-                  <input
-                    type="text"
-                    value={imgtitle[index]}
-                    onChange={(e) => {
-                      const newImgtitle = [...imgtitle];
-                      newImgtitle[index] = e.target.value;
-                      setImgtitle(newImgtitle);
-                    }}
-                    className="w-full p-2 mt-2 border rounded focus:outline-none"
-                  />
-                </label>
+                {getCharacterCountDisplay(photoAlt, 'alt')}
+                {errors.alt && (
+                  <p className="text-red-500 text-xs mt-1">{errors.alt}</p>
+                )}
               </div>
 
-            ))}
+              <div className="mt-2">
+                <label className="block text-sm font-medium mb-1">
+                  Image Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={imgtitle}
+                  onChange={(e) => {
+                    setImgtitle(e.target.value);
+                    clearFieldError('imgtitle');
+                  }}
+                  className={`w-full p-2 border rounded focus:outline-none focus:border-blue-500 ${
+                    errors.imgtitle ? 'border-red-500' : ''
+                  }`}
+                  placeholder="Image title..."
+                />
+                {getCharacterCountDisplay(imgtitle, 'imgtitle')}
+                {errors.imgtitle && (
+                  <p className="text-red-500 text-xs mt-1">{errors.imgtitle}</p>
+                )}
+              </div>
+            </div>
           </div>
         )}
-      </div>
-      <div className="mb-4 mt-4">
-        <label htmlFor="postedBy" className="block font-semibold mb-2">
-          Posted By:
-        </label>
-        <input
-          type="text"
-          id="postedBy"
-          value={postedBy}
-          onChange={(e) => setPostedBy(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="date" className="block font-semibold mb-2">
-          Date
-        </label>
-        <input
-          type="date"
-          id="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        />
-      </div>
-      <div className="mb-4 mt-4">
-        <label htmlFor="slug" className="block font-semibold mb-2">
-          Slug
-        </label>
-        <input
-          type="text"
-          id="slug"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="url" className="block font-semibold mb-2">
-          URL
-        </label>
-        <input
-          disabled
-          type="url"
-          id="url"
-          value={`https://rndtechnosoft.com/${slug}`}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Title
-        </label>
-        <textarea
-          id="meta"
-          value={metatitle}
-          onChange={(e) => setMetatitle(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Description
-        </label>
-        <textarea
-          id="meta"
-          value={metadescription}
-          onChange={(e) => setMetadescription(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Keywords
-        </label>
-        <textarea
-          id="meta"
-          value={metakeywords}
-          onChange={(e) => setMetakeywords(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Canonical
-        </label>
-        <textarea
-          id="meta"
-          value={metacanonical}
-          onChange={(e) => setMetacanonical(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Language
-        </label>
-        <textarea
-          id="meta"
-          value={metalanguage}
-          onChange={(e) => setMetalanguage(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Other Meta
-        </label>
-        <textarea
-          id="meta"
-          value={otherMeta}
-          onChange={(e) => setOthermeta(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Schema
-        </label>
-        <textarea
-          id="meta"
-          value={metaschema}
-          onChange={(e) => setMetaschema(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-
-      <div className="mb-4">
-        <label htmlFor="priority" className="block font-semibold mb-2">
-          Priority
-        </label>
-        <input
-          type="number"
-          id="priority"
-          min={0}
-          max={1}
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="changeFreq" className="block font-semibold mb-2">
-          Change Frequency
-        </label>
-        <select
-          id="changeFreq"
-          value={changeFreq}
-          onChange={(e) => setChangeFreq(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        >
-          <option value="">Select Change Frequency</option>
-          <option value="always">Always</option>
-          <option value="hourly">Hourly</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
       </div>
 
       <div className="mb-4">
         <label htmlFor="status" className="block font-semibold mb-2">
-          Status
+          Status <span className="text-red-500">*</span>
         </label>
         <select
           id="status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
         >
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
       </div>
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-        Add News
+
+      <button 
+        type="submit"
+        disabled={isSubmitting}
+        className={`bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 ${
+          isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+      >
+        {isSubmitting ? 'Adding Core Value...' : 'Add Core Value'}
       </button>
     </form>
   );
 };
 
-export default NewNewsForm;
+export default NewCoreValueForm;

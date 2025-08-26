@@ -38,7 +38,16 @@ exports.getAllCareers = async (req, res) => {
 
 exports.getAllActiveCareers = async (req, res) => {
     try {
-        const careers = await Career.find({ status: 'active' });
+        const careers = await Career.aggregate([
+            { $match: { status: 'active' } },
+            {
+                $addFields: {
+                    lowerJobtitle: { $toLower: { $trim: { input: '$jobtitle' } } } // Trim spaces
+                }
+            },
+            { $sort: { lowerJobtitle: 1 } }, // Sort A to Z
+            { $project: { lowerJobtitle: 0 } } // Remove temporary field
+        ]);
         res.status(200).json(careers);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
@@ -48,36 +57,51 @@ exports.getAllActiveCareers = async (req, res) => {
 // Get a single career by ID
 exports.getCareerById = async (req, res) => {
     try {
-        const { id } = req.query
-        const career = await Career.findById(id);
+        const { id } = req.query;
+        console.log(id);
+
+        // Get all career data
+        const allCareers = await Career.find();
+
+        // Find the career with the matching id
+        const career = allCareers.find(c => c._id.toString() === id);
+
         if (!career) {
             return res.status(404).json({ message: 'Career not found' });
         }
+
         res.status(200).json(career);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }
 };
 
+
 // Update a career by ID
 exports.updateCareer = async (req, res) => {
     const { id } = req.query;
     const updateFields = req.body;
-
+console.log(req.files);
     try {
-        const existingCareerOption = await Career.findById(id);
+        // Fetch all careers
+        const allCareers = await Career.find();
+
+        // Find the one with the matching id
+        const existingCareerOption = allCareers.find(c => c._id.toString() === id);
 
         if (!existingCareerOption) {
             return res.status(404).json({ message: 'Career option not found' });
         }
 
+        // Handle photo update logic
         if (req.files && req.files['photo'] && req.files['photo'].length > 0) {
-            const newPhotoPaths = req.files['photo'].map(file => file.filename); // Using filename to get the stored file names
+            const newPhotoPaths = req.files['photo'].map(file => file.filename);
             updateFields.photo = [...existingCareerOption.photo, ...newPhotoPaths];
         } else {
             updateFields.photo = existingCareerOption.photo;
         }
 
+        // Perform the update
         const updatedCareerOption = await Career.findByIdAndUpdate(
             id,
             updateFields,
@@ -86,13 +110,14 @@ exports.updateCareer = async (req, res) => {
 
         res.status(200).json(updatedCareerOption);
     } catch (error) {
+        console.log('Error updating career option:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
 
+
 exports.deletePhotoAndAltText = async (req, res) => {
     const { id, imageFilename, index } = req.params;
-
     try {
         const careerOption = await Career.findById(id);
 
@@ -129,22 +154,11 @@ exports.deleteCareer = async (req, res) => {
             return res.status(404).json({ message: 'Career not found' });
         }
 
-        // Assuming `deletedCareer.photo` contains the path to the image
-        if (deletedCareer.photo) {
-            // Construct the full path to the image file
-            const imagePath = path.join(__dirname, '..', 'images', deletedCareer.photo);
-
-            // Delete the image file
-            fs.unlink(imagePath, (err) => {
-                if (err) {
-                    console.error('Error deleting the image:', err);
-                    return res.status(500).json({ message: 'Career deleted, but error deleting the image', error: err });
-                }
-            });
-        }
+    
 
         res.status(200).json({ message: 'Career deleted successfully' });
     } catch (error) {
+        console.log('Error deleting career:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };

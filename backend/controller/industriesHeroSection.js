@@ -13,6 +13,7 @@ const getHeroSectionByCategory = async (req, res) => {
         heading: heroSection.heading,
         subheading: heroSection.subheading,
         category: heroSection.category,
+        tagline: heroSection.tagline,
       });
     } else {
       return res.status(404).json({ message: 'Hero section not found' });
@@ -34,6 +35,7 @@ const getHeroSectionByCategorySub = async (req, res) => {
         heading: heroSection.heading,
         subheading: heroSection.subheading,
         category: heroSection.category,
+        tagline: heroSection.tagline,
       });
     } else {
       return res.status(404).json({ message: 'Hero section not found' });
@@ -54,6 +56,7 @@ const getHeroSectionByCategorySubSub = async (req, res) => {
       category: categoryId,
       subcategory: subcategoryId,
       subsubcategory: subsubcategoryId, // Add subsubcategory to the query
+      tagline: tagline || 'Default Tagline',
     }).populate('category').populate('subcategory').populate('subsubcategory');
 
     if (heroSection) {
@@ -63,6 +66,7 @@ const getHeroSectionByCategorySubSub = async (req, res) => {
         category: heroSection.category,
         subcategory: heroSection.subcategory,
         subsubcategory: heroSection.subsubcategory,
+        tagline: heroSection.tagline,
       });
     } else {
       return res.status(404).json({ message: 'Hero section not found' });
@@ -85,6 +89,7 @@ const getHeroSectionBySlug = async (req, res) => {
       return res.status(200).json({
         heading: heroSection.heading,
         subheading: heroSection.subheading,
+        tagline: heroSection.tagline,
       });
     } else {
       return res.status(404).json({ message: 'Hero section not found' });
@@ -97,8 +102,8 @@ const getHeroSectionBySlug = async (req, res) => {
 
 const upsertHeroSection = async (req, res) => {
   const { categoryId } = req.params; // Extract categoryId from request parameters
-  const { heading, subheading} = req.body;
-  console.log(categoryId)
+  const { heading, subheading, tagline } = req.body;
+  console.log(categoryId);
   try {
     // Find the category in the IndustriesCategory schema using the categoryId
     const category = await IndustriesCategory.findById(categoryId);
@@ -118,15 +123,17 @@ const upsertHeroSection = async (req, res) => {
       heroSection = new HeroSection({
         heading: heading || 'Default Heading',
         subheading: subheading || 'Default Subheading',
+        tagline: tagline || 'Default Tagline',
         category: categoryId,
         slug: slug, // Store the slug from the category
-        headingType:  'main', // Default to 'main' if not provided
+        headingType: 'main', // Default to 'main' if not provided
       });
       await heroSection.save();
       return res.status(201).json({
         message: `Hero section created for category ${categoryId}`,
         heading: heroSection.heading,
         subheading: heroSection.subheading,
+        tagline: heroSection.tagline,
         slug: heroSection.slug,
         headingType: heroSection.headingType,
       });
@@ -135,7 +142,8 @@ const upsertHeroSection = async (req, res) => {
     // Update existing HeroSection
     if (heading) heroSection.heading = heading;
     if (subheading) heroSection.subheading = subheading;
-    heroSection.headingType =  'main'; // Default to 'main' if not provided
+    if (tagline) heroSection.tagline = tagline; // Update tagline if provided
+    heroSection.headingType = 'main'; // Default to 'main' if not provided
     heroSection.slug = slug; // Update the slug from the category
 
     await heroSection.save();
@@ -143,6 +151,7 @@ const upsertHeroSection = async (req, res) => {
       message: `Hero section updated for category ${categoryId}`,
       heading: heroSection.heading,
       subheading: heroSection.subheading,
+      tagline: heroSection.tagline,
       slug: heroSection.slug,
       headingType: heroSection.headingType,
     });
@@ -155,7 +164,7 @@ const upsertHeroSection = async (req, res) => {
 
 const upsertHeroSectionSub = async (req, res) => {
   const { categoryId, subcategoryId } = req.params; // Extract categoryId and subcategoryId from request parameters
-  const { heading, subheading } = req.body;
+  const { heading, subheading ,tagline} = req.body;
 
   try {
     // Find the category in the IndustriesCategory schema using the categoryId
@@ -198,6 +207,7 @@ const upsertHeroSectionSub = async (req, res) => {
         subheading: existingHeroSection.subheading,
         slug: existingHeroSection.slug,
         headingType: existingHeroSection.headingType,
+        tagline: existingHeroSection.tagline,
       });
     } else {
       // Create a new HeroSection if it doesn't exist
@@ -208,6 +218,7 @@ const upsertHeroSectionSub = async (req, res) => {
         subcategory: subcategoryId,
         slug: slug, // Store the combined slug from subcategory
         headingType: 'sub', // Default to 'sub' if not provided
+        tagline: tagline || 'Default Tagline',
       });
 
       await newHeroSection.save();
@@ -217,6 +228,7 @@ const upsertHeroSectionSub = async (req, res) => {
         subheading: newHeroSection.subheading,
         slug: newHeroSection.slug,
         headingType: newHeroSection.headingType,
+        tagline: newHeroSection.tagline,
       });
     }
   } catch (err) {
@@ -228,7 +240,7 @@ const upsertHeroSectionSub = async (req, res) => {
 
 const upsertHeroSectionSubSub = async (req, res) => {
   const { categoryId, subcategoryId, subsubcategoryId } = req.params;
-  const { heading, subheading } = req.body;
+  const { heading, subheading,tagline } = req.body;
 
   try {
     // Find the category in the IndustriesCategory schema using the categoryId
@@ -260,6 +272,7 @@ const upsertHeroSectionSubSub = async (req, res) => {
         category: categoryId,
         subcategory: subcategoryId,
         subsubcategory: subsubcategoryId,
+        tagline: tagline || 'Default Tagline',
       },
       {
         $set: {
@@ -267,6 +280,7 @@ const upsertHeroSectionSubSub = async (req, res) => {
           subheading: subheading || 'Default Subheading',
           headingType: 'subsub',
           slug: slug,
+          tagline: tagline || 'Default Tagline',
         },
       },
       { upsert: true, new: true } // Create a new document if it doesn't exist, and return the new document
@@ -278,6 +292,7 @@ const upsertHeroSectionSubSub = async (req, res) => {
       subheading: heroSection.subheading,
       slug: heroSection.slug,
       headingType: heroSection.headingType,
+      tagline: heroSection.tagline,
     });
   } catch (err) {
     console.error(err);

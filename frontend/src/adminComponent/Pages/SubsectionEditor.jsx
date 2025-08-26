@@ -73,7 +73,7 @@ const SubsectionsComponent = ({
     });
 
     try {
-      await axios.put(
+      await axios.zz(
         `/api/content/newsubsections/${contentId}`,
         formData,
         {
@@ -182,7 +182,7 @@ const SubsectionsComponent = ({
         <>
           <div className="mb-4">
             <h3 className="font-semibold mb-2">Add New Subsection</h3>
-            
+
             <div className="mb-4">
               <label htmlFor="serviceParentCategory" className="block font-semibold mb-2">
                 Service Parent Category
@@ -293,29 +293,47 @@ const SubsectionsComponent = ({
           </div>
 
           <form onSubmit={handleSubsectionsSubmit}>
-            <div>
+            <div className="grid xl:grid-cols-4 lg:grid-cols-3 grid-cols-1 gap-4">
               {subsections.map((sub, index) => (
-                <div key={index} className="border p-4 mb-2">
-                  <h4 className="font-semibold mb-2">{sub.title}</h4>
-                  <div dangerouslySetInnerHTML={{ __html: sub.description }} />
-                  {sub.photo && <img src={`/api/image/download/${sub.photo}`} alt={sub.photoAlt} className="w-32 h-32 object-cover mb-2" />}
-                  <button
-                    type="button"
-                    onClick={() => setEditingIndex(index)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteSubsection(index)}
-                    className="bg-red-500 text-white px-4 py-2 rounded"
-                  >
-                    Delete
-                  </button>
+                <div key={index} className="border p-4 mb-2 flex flex-col items-center">
+                  <h4 className="font-semibold mb-2 text-center">{sub.title}</h4>
+
+                  {sub.photo && (
+                    sub.photo.endsWith(".webm") ? (
+                      <video
+                        src={`/api/image/download/${sub.photo}`}
+                        controls
+                        className="w-32 h-32 object-cover mb-2"
+                      />
+                    ) : (
+                      <img
+                        src={`/api/image/download/${sub.photo}`}
+                        alt={sub.photoAlt}
+                        className="w-32 h-32 object-cover mb-2"
+                      />
+                    )
+                  )}
+
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setEditingIndex(index)}
+                      className="bg-blue-500 text-white px-4 py-2 rounded"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteSubsection(index)}
+                      className="bg-red-500 text-white px-4 py-2 rounded"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
+
           </form>
         </>
       )}

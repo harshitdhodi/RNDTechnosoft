@@ -1,6 +1,14 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaCheck, FaEye, FaTimes, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { Edit,  //Edit
+  Trash2,  //Trash2
+  Check,  //Check
+  Eye,  //Eye
+  X,  //X
+  ArrowUp,  //ArrowUp
+  ArrowDown,  //ArrowDown
+  Plus  //Plus
+ } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
@@ -10,7 +18,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
-
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 
 Modal.setAppElement('#root');
 
@@ -22,17 +30,14 @@ const CorevalueTable = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCorevalue, setSelectedCorevalue] = useState(null); // State for the selected banner
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const filteredCorevalues = useMemo(() => {
     return corevalues.filter((corevalue) =>
       corevalue.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [corevalues, searchTerm]);
-
-  const notify = () => {
-    toast.success("Updated Successfully!");
-  };
 
   const columns = useMemo(
     () => [
@@ -89,7 +94,7 @@ const CorevalueTable = () => {
       {
         Header: "Status",
         accessor: "status",
-        Cell: ({ value }) => (value === "active" ? <FaCheck className="text-green-500" /> : <FaTimes className="text-red-500" />),
+        Cell: ({ value }) => (value === "active" ? <Check className="text-green-500" /> : <X className="text-red-500" />),
         disableSortBy: true,
       },
       {
@@ -97,13 +102,13 @@ const CorevalueTable = () => {
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition" onClick={() => handleView(row.original)}>
-              <FaEye />
+              <Eye />
             </button>
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/corevalue/editCorevalue/${row.original._id}`}><FaEdit /></Link>
+              <Link to={`/corevalue/editCorevalue/${row.original._id}`}><Edit /></Link>
             </button>
-            <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteCorevalue(row.original._id)}>
-              <FaTrashAlt />
+            <button className="text-red-500 hover:text-red-700 transition" onClick={() => handleDeleteClick(row.original)}>
+              <Trash2 />
             </button>
           </div>
         ),
@@ -143,12 +148,16 @@ const CorevalueTable = () => {
     }
   };
 
-  const deleteCorevalue = async (id) => {
+  const deleteCorevalue = async () => {
     try {
-      const response = await axios.delete(`/api/corevalue/deleteCorevalue?id=${id}`, { withCredentials: true });
+      const response = await axios.delete(`/api/corevalue/deleteCorevalue?id=${selectedCorevalue._id}`, { withCredentials: true });
       fetchData();
+      toast.success("Core value deleted successfully");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to delete core value");
+    } finally {
+      handleClose();
     }
   };
 
@@ -163,6 +172,16 @@ const CorevalueTable = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+    setSelectedCorevalue(null);
+  };
+
+  const handleDeleteClick = (item) => {
+    setSelectedCorevalue(item);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsDeleteModalOpen(false);
     setSelectedCorevalue(null);
   };
 
@@ -184,9 +203,10 @@ const CorevalueTable = () => {
         heading,
         subheading,
       }, { withCredentials: true });
-      notify();
+      toast.success("Headings updated successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update headings");
     }
   };
 
@@ -230,9 +250,11 @@ const CorevalueTable = () => {
       </div>
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Core Values</h1>
-        <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-          <Link to="/corevalue/createCorevalue"><FaPlus size={15} /></Link>
-        </button>
+        <Link to="/corevalue/createCorevalue">
+          <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
+            <Plus size={15} />
+          </button>
+        </Link>
       </div>
       <div className="mb-4">
         <input
@@ -267,12 +289,12 @@ const CorevalueTable = () => {
                               <span className="ml-1">
                                 {column.isSorted ? (
                                   column.isSortedDesc ? (
-                                    <FaArrowDown />
+                                    <ArrowDown />
                                   ) : (
-                                    <FaArrowUp />
+                                    <ArrowUp />
                                   )
                                 ) : (
-                                  <FaArrowDown className="text-gray-400" />
+                                  <ArrowDown className="text-gray-400" />
                                 )}
                               </span>
                             )}
@@ -309,7 +331,7 @@ const CorevalueTable = () => {
       >
         <div className="bg-white p-8 rounded shadow-lg w-96 relative">
         <button onClick={closeModal} className="absolute top-5 right-5 text-gray-500 hover:text-gray-700">
-            <FaTimes size={20} />
+            <X size={20} />
           </button>
           <h2 className="text-xl font-bold mb-4 uppercase font-serif">Core value </h2>
           {selectedCorevalue && (
@@ -338,6 +360,13 @@ const CorevalueTable = () => {
           </button>
         </div>
       </Modal>
+      <DeleteConfirmationModal
+      isOpen={isDeleteModalOpen}
+        onClose={handleClose}
+        onConfirm={deleteCorevalue}
+        itemName={selectedCorevalue?.title || 'Core Value'}
+        itemType="Core Value"
+      />
     </div>
   );
 };

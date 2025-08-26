@@ -108,47 +108,60 @@ export default function HowRndHelp() {
       {/* Main content */}
       <div
         ref={containerRef}
-        className="flex flex-col mx-4 md:mx-20 lg:mx-40 md:flex-row items-center mt-12 md:mt-40 space-y-6 md:space-y-0 md:space-x-8"
+        className="flex flex-col mx-4 md:mx-20 lg:px-0 lg:pl-10 lg:mx-0 xl:px-0 xl:mx-0 2xl:px-10 2xl:mx-0 sm:mx-40 md:flex-row items-center mt-12 md:mt-40 space-y-6 md:space-y-0 md:space-x-8"
       >
-        <div className={`flex flex-col items-center md:w-2/3 space-y-4 ${isLargeScreen ? 'fade-in' : ''}`}>
+        <div className={`flex flex-col items-left 2xl:ml-16 xl:ml-0 xl:pl-24 md:w-2/3 2xl:w-[80%] space-y-4 ${isLargeScreen ? 'fade-in' : ''}`}>
           <h2 className="text-2xl md:text-5xl text-white font-serif font-bold">{heading}</h2>
           <p className="text-white text-lg md:text-xl">{subheading}</p>
         </div>
-        <div className={`md:flex justify-center md:w-1/2 hidden ${isLargeScreen ? 'fade-in' : ''}`}>
+        <div className={`md:flex justify-center md:w-1/2 xl:pl-8 lg:w-[35%] xl:w-[50%] 2xl:w-[40%] hidden ${isLargeScreen ? 'fade-in' : ''}`}>
           <img
             src={`/api/logo/download/${existingPhoto}`}
             alt={alt}
             title={imgTitle}
-            className="w-32 h-32 md:w-52 md:h-52 max-w-sm md:max-w-md rounded-lg"
+            className="w-32 h-32 md:w-52 md:h-52 2xl:h-[30rem] lg:w-[20rem] lg:h-[20rem] xl:h-[28rem] 2xl:w-[35rem] xl:w-[40rem] max-w-sm md:max-w-md rounded-lg"
           />
         </div>
       </div>
 
-      {/* Cards grid */}
-      <div
-        ref={fadeInContainerRef}
-        className="grid lg:grid-cols-2 justify-center items-center gap-4 w-[80%] mx-auto mt-12 pb-20 my-20"
-      >
-        {cards.map((card, index) => (
-          <div key={index} className="flex flex-col">
-            <div className={`bg-white text-gray-900 p-6 md:p-12 rounded-3xl shadow-lg transition-transform duration-300 w-full h-full ${isLargeScreen ? 'fade-in' : ''}`}>
-              <img src={`/api/icon/download/${card.icon}`} alt={card.title} className="h-12 w-12 mb-4" />
-              <h3 className="text-xl md:text-3xl font-bold mb-4">{card.title}</h3>
-              <div>
-                {card.questionsAndAnswers.map((feature, i) => (
-                  <div key={i} className="flex flex-col gap-3 mb-2">
-                    <div className="flex items-center gap-2 justify-start">
-                      <FaCheckCircle className="text-xl" />
-                      <span className="text-lg md:text-xl font-bold" dangerouslySetInnerHTML={{ __html: feature.question }}></span>
-                    </div>
-                    <span className="pl-6" dangerouslySetInnerHTML={{ __html: feature.answer }}></span>
-                  </div>
-                ))}
-              </div>
+
+{/* Cards grid */}
+<div  
+  ref={fadeInContainerRef}
+  className="grid lg:grid-cols-2 justify-center items-center gap-6 w-[90rem] xl:w-[74rem] lg:w-[55rem] lg:px-0 mx-auto 2xl:px-[60px]  mt-12 pb-20 my-20"
+>
+  {cards.map((card, index) => (
+    <div
+      key={index}
+      className={`flex flex-col bg-white text-gray-900 p-6 md:p-8 rounded-3xl shadow-lg transition-transform duration-300 w-full h-full ${isLargeScreen ? 'fade-in' : ''}`}
+      style={{ minHeight: '500px', maxHeight: '650px' }} // Ensures consistent height
+    >
+      <img
+        src={`/api/icon/download/${card.icon}`}
+        alt={card.title}
+        className="h-12 w-12 mb-4 mx-auto"
+      />
+      <h3 className="text-xl md:text-2xl font-bold mb-4 text-center">{card.title}</h3>
+      <div className="flex flex-col gap-3">
+        {card.questionsAndAnswers.map((feature, i) => (
+          <div key={i} className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 justify-start">
+              <FaCheckCircle className="text-xl text-green-500" />
+              <span
+                className="text-lg md:text-xl font-bold"
+                dangerouslySetInnerHTML={{ __html: feature.question }}
+              ></span>
             </div>
+            <span
+              className="pl-6 text-sm md:text-base"
+              dangerouslySetInnerHTML={{ __html: feature.answer }}
+            ></span>
           </div>
         ))}
       </div>
+    </div>
+  ))}
+</div>
 
       {/* Bottom SVG */}
       <div className="absolute inset-x-0 bottom-0">

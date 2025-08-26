@@ -21,7 +21,7 @@ const HowItWorks = () => {
           axios.get(`/api/heroSection/front/${slug}`, { withCredentials: true }),
           axios.get(`/api/homepage/getImage/${slug}`, { withCredentials: true })
         ]);
-
+ 
         // Set data in state
         setHeroSection(heroResponse.data);
         setImage(imageResponse.data.photo);

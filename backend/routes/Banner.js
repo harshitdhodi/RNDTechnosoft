@@ -4,7 +4,7 @@ const { uploadPhoto } = require('../middleware/fileUpload');
 const {insertBanner, getBanner, updateBanner, deleteBanner,getBannerfront, getBannerById,deletePhotoAndAltText,getCountBySection,countBanner} = require('../controller/Banner');
 const { requireAuth } = require('../middleware/authmiddleware');
 
-
+ 
 router.post("/insertBanner",requireAuth,uploadPhoto,insertBanner);
 router.get('/getBanner',requireAuth, getBanner);
 router.get('/countBanner',requireAuth, countBanner);

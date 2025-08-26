@@ -13,9 +13,15 @@ exports.getAllCorevalue = async (req, res) => {
 };
 
 exports.createCoreValue = async (req, res) => {
-  const { title, description,alt,imgtitle,status } = req.body;
+  const { title, description, alt, imgtitle, status } = req.body;
   const photo = req.files['photo'] ? req.files['photo'].map(file => file.filename) : [];
   try {
+    // Check for duplicate title
+    const existingCorevalue = await Corevalue.findOne({ title });
+    if (existingCorevalue) {
+      return res.status(400).json({ message: 'Corevalue with this title already exists' });
+    }
+
     const newCorevalue = new Corevalue({
       title,
       description,

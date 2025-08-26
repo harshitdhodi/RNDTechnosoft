@@ -50,38 +50,48 @@ const processImage = async (tempPath, finalPath) => {
       .toFile(finalPath);
 
     // Check file size and reduce quality if needed
-    let fileSize = fs.statSync(finalPath).size;
+    let fileSize = (await fs.promises.stat(finalPath)).size;
     let quality = 80;
 
-    // Gradually reduce quality if file is too large
     while (fileSize > 100 * 1024 && quality > 10) {
       await sharp(tempPath)
         .webp({ quality })
         .resize({ width: 1024, withoutEnlargement: true })
         .toFile(finalPath);
 
-      fileSize = fs.statSync(finalPath).size;
+      fileSize = (await fs.promises.stat(finalPath)).size;
       quality -= 10;
     }
 
-    // Clean up temporary file
-    if (fs.existsSync(tempPath)) {
-      fs.unlinkSync(tempPath);
+    // Clean up temporary file asynchronously
+    try {
+      await fs.promises.unlink(tempPath);
+    } catch (unlinkErr) {
+      console.warn('Could not delete temp file:', unlinkErr.message);
     }
 
     return finalPath;
   } catch (err) {
     // Clean up any files if processing fails
-    if (fs.existsSync(tempPath)) {
-      fs.unlinkSync(tempPath);
+    try {
+      if (await fileExists(tempPath)) await fs.promises.unlink(tempPath);
+      if (await fileExists(finalPath)) await fs.promises.unlink(finalPath);
+    } catch (cleanupErr) {
+      console.error('Cleanup error:', cleanupErr);
     }
-    if (fs.existsSync(finalPath)) {
-      fs.unlinkSync(finalPath);
-    }
-    console.error('Error processing image:', err);
     throw new Error('Error processing image');
   }
 };
+
+// Helper function to check file existence
+async function fileExists(path) {
+  try {
+    await fs.promises.access(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
 
 // Middleware to handle the file upload and process the image
 const uploadSub = async (req, res, next) => {

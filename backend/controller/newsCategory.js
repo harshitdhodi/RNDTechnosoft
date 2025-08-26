@@ -454,37 +454,46 @@ const getAll = async (req, res) => {
 const getSpecificCategory = async (req, res) => {
   try {
     const { categoryId } = req.query;
-    const categories = await NewsCategory.findOne({slug:categoryId});
 
-    if (!categories) {
-      return res.status(404).json({ message: 'Category not found' });
+    // Determine whether to search by _id or slug
+    const query = mongoose.Types.ObjectId.isValid(categoryId)
+      ? { _id: categoryId }
+      : { slug: categoryId };
+
+    const category = await NewsCategory.findOne(query);
+
+    if (!category) {
+      return res.status(404).json({ message: "Category not found" });
     }
-    res.status(200).json(categories);
+
+    res.status(200).json(category);
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
-}
+};
 
 const getSpecificSubcategory = async (req, res) => {
   const { categoryId, subCategoryId } = req.query;
+
   try {
-    // Find category by slug (categoryId)
-    const category = await NewsCategory.findOne({ slug: categoryId });
-    if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
+    const query = mongoose.Types.ObjectId.isValid(categoryId)
+      ? { _id: categoryId }
+      : { slug: categoryId };
 
-    // Find subcategory by slug (subCategoryId) in the subCategories array
-    const subCategory = category.subCategories.find(sub => sub.slug === subCategoryId);
-    if (!subCategory) {
-      return res.status(404).json({ message: 'Subcategory not found' });
-    }
+    const category = await NewsCategory.findOne(query);
 
-    // Return the subcategory
+    if (!category) return res.status(404).json({ message: "Category not found" });
+
+    const subCategory = category.subCategories?.find(
+      (sub) =>
+        sub._id.toString() === subCategoryId || sub.slug === subCategoryId
+    );
+
+    if (!subCategory) return res.status(404).json({ message: "Subcategory not found" });
+
     res.status(200).json(subCategory);
   } catch (error) {
-    console.error(error); // Log the error for debugging
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
 };
 
@@ -493,29 +502,29 @@ const getSpecificSubSubcategory = async (req, res) => {
   const { categoryId, subCategoryId, subSubCategoryId } = req.query;
 
   try {
-    // Find category by slug (categoryId)
-    const category = await NewsCategory.findOne({ slug: categoryId });
-    if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
+    const query = mongoose.Types.ObjectId.isValid(categoryId)
+      ? { _id: categoryId }
+      : { slug: categoryId };
 
-    // Find subcategory by slug (subCategoryId) in the subCategories array
-    const subCategory = category.subCategories.find(sub => sub.slug === subCategoryId);
-    if (!subCategory) {
-      return res.status(404).json({ message: 'Subcategory not found' });
-    }
+    const category = await NewsCategory.findOne(query);
+    if (!category) return res.status(404).json({ message: "Category not found" });
 
-    // Find sub-subcategory by slug (subSubCategoryId) in the subCategory's subSubCategories array
-    const subSubCategory = subCategory.subSubCategories.find(subSub => subSub.slug === subSubCategoryId);
-    if (!subSubCategory) {
-      return res.status(404).json({ message: 'Sub-subcategory not found' });
-    }
+    const subCategory = category.subCategories?.find(
+      (sub) =>
+        sub._id.toString() === subCategoryId || sub.slug === subCategoryId
+    );
+    if (!subCategory) return res.status(404).json({ message: "Subcategory not found" });
 
-    // Return the sub-subcategory
+    const subSubCategory = subCategory.subSubCategories?.find(
+      (subSub) =>
+        subSub._id.toString() === subSubCategoryId || subSub.slug === subSubCategoryId
+    );
+    if (!subSubCategory)
+      return res.status(404).json({ message: "Sub-subcategory not found" });
+
     res.status(200).json(subSubCategory);
   } catch (error) {
-    console.error('Server error:', error);  // Log the error for debugging
-    res.status(500).json({ message: 'Server error', error });
+    res.status(500).json({ message: "Server error", error });
   }
 };
 

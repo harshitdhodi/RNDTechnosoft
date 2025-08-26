@@ -2,293 +2,428 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'
+import 'react-quill/dist/quill.snow.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EditCoreValue = () => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [photo, setPhoto] = useState([]);
-    const [status, setStatus] = useState("active");
-    const { id } = useParams();
-    const [initialPhotos, setInitialPhotos] = useState([]);
-    const [photoAlts, setPhotoAlts] = useState([]);
-    const [imgtitle, setImgtitle] = useState([]);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [photo, setPhoto] = useState(null);
+  const [photoAlt, setPhotoAlt] = useState("");
+  const [imgtitle, setImgtitle] = useState("");
+  const [status, setStatus] = useState("active");
+  const [initialPhoto, setInitialPhoto] = useState(null);
+  const [initialPhotoAlt, setInitialPhotoAlt] = useState("");
+  const [initialImgtitle, setInitialImgtitle] = useState("");
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-    const [initialphotoAlts, setInitialPhotoAlts] = useState([]);
-    const [initialImgtitle, setInitialImgtitle] = useState([]);
+  const validationRules = {
+    title: { min: 3, max: 100, required: true },
+    description: { min: 10, max: 5000, required: true },
+    alt: { min: 3, max: 100, required: true },
+    imgtitle: { min: 3, max: 100, required: true }
+  };
 
-    const navigate = useNavigate();
+  const stripHtmlTags = (html) => {
+    const tmp = document.createElement("DIV");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  };
 
-    const modules = {
-        toolbar: [
-            [{ 'font': [] }],
-            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
-            [{ 'script': 'sub' }, { 'script': 'super' }],
-            [{ 'indent': '-1' }, { 'indent': '+1' }],
-            ['link', 'image', 'video'],
-            [{ 'direction': 'rtl' }],
-            [{ 'color': [] }, { 'background': [] }],
-            [{ 'align': [] }],
-            ['clean']
-        ],
-        clipboard: {
-            matchVisual: false,
-        }
-    };
+  const validateField = (fieldName, value, customRules = null) => {
+    const rules = customRules || validationRules[fieldName];
+    if (!rules) return '';
 
+    const textValue = fieldName === 'description' ? stripHtmlTags(value) : value;
+    const length = textValue.length;
 
-    useEffect(() => {
-        fetchCoreValue();
-    }, []);
+    if (rules.required && (!value || value.trim() === '')) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
+    }
 
-    const fetchCoreValue = async () => {
-        try {
-            const response = await axios.get(`/api/corevalue/getCoreValueById?id=${id}`, { withCredentials: true });
-            const coreValue = response.data;
-            setTitle(coreValue.title);
-            setDescription(coreValue.description);
-            setInitialPhotos(coreValue.photo);
-            setStatus(coreValue.status);
-            setInitialPhotoAlts(coreValue.alt);
-            setInitialImgtitle(coreValue.imgtitle)
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    if (value && length < rules.min) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must be at least ${rules.min} characters`;
+    }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('status', status);
-            // Combine initial and new photo alts into a single array
-            const combinedAlts = [...initialphotoAlts, ...photoAlts];
-            const combinedImgtitle = [...initialImgtitle, ...imgtitle];
+    if (value && length > rules.max) {
+      return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} must be no more than ${rules.max} characters`;
+    }
 
-            // Append photos and their respective alts to FormData
-            photo.forEach((p) => {
-                formData.append('photo', p);
-            });
+    return '';
+  };
 
-            combinedAlts.forEach((a) => {
-                formData.append('alt', a);
-            });
-            combinedImgtitle.forEach((m) => {
-                formData.append('imgtitle', m);
-            });
+  const validateForm = () => {
+    const newErrors = {};
 
-            const response = await axios.put(`/api/corevalue/updateCorevalue?id=${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                },
-                withCredentials: true
-            });
+    newErrors.title = validateField('title', title);
+    newErrors.description = validateField('description', description);
 
-            navigate('/corevalue');
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    if (photo || initialPhoto) {
+      const altError = validateField('alt', photo ? photoAlt : initialPhotoAlt);
+      const titleError = validateField('imgtitle', photo ? imgtitle : initialImgtitle);
+      
+      if (altError) newErrors.alt = altError;
+      if (titleError) newErrors.imgtitle = titleError;
+    }
 
-    const handleFileChange = (e) => {
-        const newPhotos = Array.from(e.target.files);
-        setPhoto([...photo, ...newPhotos]);
-    };
+    Object.keys(newErrors).forEach(key => {
+      if (!newErrors[key]) delete newErrors[key];
+    });
 
-    const handleInitialAltTextChange = (e, index) => {
-        const newPhotoAlts = [...initialphotoAlts];
-        newPhotoAlts[index] = e.target.value;
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-        setInitialPhotoAlts(newPhotoAlts);
-    };
+  const clearFieldError = (fieldName) => {
+    if (errors[fieldName]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[fieldName];
+        return newErrors;
+      });
+    }
+  };
 
-    const handleNewAltTextChange = (e, index) => {
-        const newPhotoAlts = [...photoAlts];
-        newPhotoAlts[index] = e.target.value;
+  const validateImageFile = (file) => {
+    if (!file.type.startsWith('image/')) {
+      return 'Please select only image files';
+    }
 
-        setPhotoAlts(newPhotoAlts);
-    };
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      return 'Image size must be less than 5MB';
+    }
 
-    const handleInitialImgtitleChange = (e, index) => {
-        const newImgtitles = [...initialImgtitle];
-        newImgtitles[index] = e.target.value;
+    return '';
+  };
 
-        setInitialImgtitle(newImgtitles);
-    };
+  const fetchCoreValue = async () => {
+    try {
+      const response = await axios.get(`/api/corevalue/getCoreValueById?id=${id}`, { withCredentials: true });
+      const coreValue = response.data;
+      setTitle(coreValue.title);
+      setDescription(coreValue.description);
+      setStatus(coreValue.status);
 
-    const handleNewImgtitleChange = (e, index) => {
-        const newImgtitles = [...imgtitle];
-        newImgtitles[index] = e.target.value;
+      if (coreValue.photo && coreValue.photo.length > 0) {
+        setInitialPhoto(coreValue.photo[0]);
+        setInitialPhotoAlt(coreValue.alt && coreValue.alt[0] ? coreValue.alt[0] : "");
+        setInitialImgtitle(coreValue.imgtitle && coreValue.imgtitle[0] ? coreValue.imgtitle[0] : "");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch core value");
+    }
+  };
 
-        setImgtitle(newImgtitles);
-    };
+  useEffect(() => {
+    fetchCoreValue();
+  }, []);
 
-    const handleDeleteInitialPhoto = (e, photoFilename, index) => {
-        e.preventDefault();
-        axios.delete(`/api/corevalue/${id}/image/${photoFilename}/${index}`, { withCredentials: true })
-            .then(response => {
-                const updatedPhotos = initialPhotos.filter(photo => photo !== photoFilename);
-                setInitialPhotos(updatedPhotos);
-                const updatedPhotoAlts = [...initialphotoAlts];
-                updatedPhotoAlts.splice(index, 1);
-                setInitialPhotoAlts(updatedPhotoAlts);
-                const updatedImgtitle = [...initialImgtitle];
-                updatedImgtitle.splice(index, 1);
-                setInitialImgtitle(updatedImgtitle);
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    const handleDeleteNewPhoto = (e, index) => {
-        e.preventDefault();
-        const updatedPhotos = [...photo];
-        updatedPhotos.splice(index, 1);
-        setPhoto(updatedPhotos);
-        const updatedPhotoAlts = [...photoAlts];
-        updatedPhotoAlts.splice(index, 1);
-        setPhotoAlts(updatedPhotoAlts);
-        const updatedImgtitle = [...imgtitle];
-        updatedImgtitle.splice(index, 1);
-        setImgtitle(updatedImgtitle);
-    };
+    const error = validateImageFile(file);
+    if (error) {
+      toast.error(`${file.name}: ${error}`);
+      e.target.value = '';
+      return;
+    }
 
+    if (photo || initialPhoto) {
+      const shouldReplace = window.confirm("An image already exists. Do you want to replace it with the new image?");
+      if (!shouldReplace) {
+        e.target.value = '';
+        return;
+      }
+      handleDeletePhoto();
+    }
 
+    setPhoto(file);
+    setPhotoAlt("");
+    setImgtitle("");
+    e.target.value = '';
+  };
 
+  const handleDeletePhoto = () => {
+    if (initialPhoto) {
+      axios.delete(`/api/corevalue/${id}/image/${initialPhoto}/0`, { withCredentials: true })
+        .then(() => {
+          setInitialPhoto(null);
+          setInitialPhotoAlt("");
+          setInitialImgtitle("");
+        })
+        .catch(error => {
+          console.error(error);
+          toast.error("Failed to delete image");
+        });
+    }
+    setPhoto(null);
+    setPhotoAlt("");
+    setImgtitle("");
+    clearFieldError('alt');
+    clearFieldError('imgtitle');
+    toast.success("Image removed successfully");
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      toast.error("Please fix the validation errors");
+      return;
+    }
+
+    if (!photo && !initialPhoto) {
+      toast.error("Exactly one image is required");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('status', status);
+
+      if (photo) {
+        formData.append('photo', photo);
+        formData.append('alt', photoAlt);
+        formData.append('imgtitle', imgtitle);
+      } else if (initialPhoto) {
+        formData.append('alt', initialPhotoAlt);
+        formData.append('imgtitle', initialImgtitle);
+      }
+
+      await axios.put(`/api/corevalue/updateCorevalue?id=${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        withCredentials: true
+      });
+
+      toast.success("Core Value updated successfully!");
+      navigate('/corevalue');
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update core value");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const modules = {
+    toolbar: [
+      [{ 'font': [] }],
+      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+      [{ 'script': 'sub' }, { 'script': 'super' }],
+      [{ 'indent': '-1' }, { 'indent': '+1' }],
+      ['link', 'image', 'video'],
+      [{ 'direction': 'rtl' }],
+      [{ 'color': [] }, { 'background': [] }],
+      [{ 'align': [] }],
+      ['clean']
+    ],
+    clipboard: {
+      matchVisual: false,
+    }
+  };
+
+  const getCharacterCount = (value, fieldName) => {
+    const textValue = fieldName === 'description' ? stripHtmlTags(value) : value;
+    return textValue.length;
+  };
+
+  const getCharacterCountDisplay = (value, fieldName) => {
+    const count = getCharacterCount(value, fieldName);
+    const rules = validationRules[fieldName];
+    if (!rules) return '';
+
+    const isOverLimit = count > rules.max;
+    const isUnderLimit = count < rules.min && count > 0;
+    
+    let colorClass = 'text-gray-500';
+    if (isOverLimit) colorClass = 'text-red-500';
+    else if (isUnderLimit) colorClass = 'text-amber-500';
+    
     return (
-        <form onSubmit={handleSubmit} className="p-4">
-            <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Core Value</h1>
-            <div className="mb-4">
-                <label htmlFor="title" className="block font-semibold mb-2">Title</label>
-                <input
-                    type="text"
-                    id="title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                />
-            </div>
-            <div className="mb-4">
-                <label htmlFor="details" className="block font-semibold mb-2">Description</label>
-                <ReactQuill
-                    value={description}
-                    onChange={(value) => setDescription(value)}
-                    modules={modules}
-                    className="bg-white"
-                />
-            </div>
-
-            <div className="mb-4">
-                <label className="block font-semibold mb-2">Current Photos</label>
-                <div className="flex flex-wrap gap-4">
-                    {initialPhotos.map((photo, index) => (
-                        <div key={index} className="relative w-56">
-                            <img
-                                src={`/api/image/download/${photo}`}
-                                alt={`Photo ${index + 1}`}
-                                className="w-56 h-32 object-cover"
-                            />
-                            <label htmlFor={`alt-${index}`} className="block mt-2">
-                                Alternative Text :
-                                <input
-                                    type="text"
-                                    id={`alt-${index}`}
-                                    value={initialphotoAlts[index]}
-                                    onChange={(e) => handleInitialAltTextChange(e, index)}
-                                    className="w-full p-2 border rounded focus:outline-none"
-                                />
-                            </label>
-                            <label htmlFor={`imgtitle-${index}`} className="block mt-2">
-                                Image Title Text :
-                                <input
-                                    type="text"
-                                    id={`imgtitle-${index}`}
-                                    value={initialImgtitle[index]}
-                                    onChange={(e) => handleInitialImgtitleChange(e, index)}
-                                    className="w-full p-2 border rounded focus:outline-none"
-                                />
-                            </label>
-                            <button
-                                onClick={(e) => handleDeleteInitialPhoto(e, photo, index)}
-                                className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex justify-center items-center"
-                            >
-                                <span className="text-xs">X</span>
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className="mb-4">
-                <label className="block font-semibold mb-2">Add New Photos</label>
-                <input
-                    type="file"
-                    onChange={handleFileChange}
-                    multiple
-                    accept="image/*"
-                    className="p-2 border rounded"
-                />
-                <div className="flex flex-wrap gap-4 mt-4">
-                    {photo.map((file, index) => (
-                        <div key={index} className="relative w-56">
-                            <img
-                                src={URL.createObjectURL(file)}
-                                alt={`New Photo ${index + 1}`}
-                                className="w-56 h-32 object-cover"
-                            />
-
-                            <label htmlFor={`alt-new-${index}`} className="block mt-2">
-                                Alt Text:
-                                <input
-                                    type="text"
-                                    id={`alt-new-${index}`}
-                                    value={photoAlts[index] || ""}
-                                    onChange={(e) => handleNewAltTextChange(e, index)}
-                                    className="w-full p-2 border rounded focus:outline-none"
-                                />
-                            </label>
-                            <label htmlFor={`imgtitle-new-${index}`} className="block mt-2">
-                                Alt Text:
-                                <input
-                                    type="text"
-                                    id={`imgtitle-new-${index}`}
-                                    value={imgtitle[index] || ""}
-                                    onChange={(e) => handleNewImgtitleChange(e, index)}
-                                    className="w-full p-2 border rounded focus:outline-none"
-                                />
-                            </label>
-                            <button
-                                onClick={(e) => handleDeleteNewPhoto(e, index)}
-                                className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex
-                justify-center items-center"
-                            >
-                                <span className="text-xs">X</span>
-                            </button>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className="mb-4">
-                <label htmlFor="status" className="block font-semibold mb-2">Status</label>
-                <select
-                    id="status"
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                >
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-            <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded focus:outline-none">
-                Update Core Value
-            </button>
-        </form>
+      <div className={`text-sm ${colorClass}`}>
+        {count}/{rules.max} characters
+        {rules.min > 0 && count > 0 && count < rules.min && ` (minimum ${rules.min})`}
+      </div>
     );
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="p-4">
+      <ToastContainer />
+      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center mb-6">Edit Core Value</h1>
+      
+      <div className="mb-4">
+        <label htmlFor="title" className="block font-semibold mb-2">
+          Title <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="title"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+            clearFieldError('title');
+          }}
+          className={`w-full p-2 border rounded focus:outline-none focus:border-blue-500 ${
+            errors.title ? 'border-red-500' : ''
+          }`}
+        />
+        {getCharacterCountDisplay(title, 'title')}
+        {errors.title && (
+          <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+        )}
+      </div>
+
+      <div className="mb-8">
+        <label htmlFor="description" className="block font-semibold mb-2">
+          Description <span className="text-red-500">*</span>
+        </label>
+        <ReactQuill
+          value={description}
+          onChange={(value) => {
+            setDescription(value);
+            clearFieldError('description');
+          }}
+          modules={modules}
+          className={`quill ${errors.description ? 'border-red-500' : ''}`}
+        />
+        {getCharacterCountDisplay(description, 'description')}
+        {errors.description && (
+          <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="photo" className="block font-semibold mb-2">
+          Photo (Max 1 image, 5MB) <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="file"
+          name="photo"
+          id="photo"
+          onChange={handlePhotoChange}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
+          accept="image/*"
+        />
+        <p className="text-sm text-gray-500 mt-1">
+          Accepted formats: JPG, PNG, GIF, WEBP. Maximum 1 image, 5MB.
+        </p>
+        
+        {(photo || initialPhoto) && (
+          <div className="mt-4">
+            <h4 className="font-semibold text-gray-700 mb-2">Selected Image:</h4>
+            <div className="relative w-56 border rounded-lg p-2">
+              <button
+                type="button"
+                className="absolute top-4 right-4 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600 focus:outline-none z-10"
+                onClick={handleDeletePhoto}
+                title="Remove image"
+              >
+                <span className="text-xs font-bold">×</span>
+              </button>
+              <img
+                src={photo ? URL.createObjectURL(photo) : `/api/image/download/${initialPhoto}`}
+                alt=""
+                className="h-32 w-52 object-cover rounded"
+              />
+              
+              <div className="mt-2">
+                <label className="block text-sm font-medium mb-1">
+                  Alt Text <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={photo ? photoAlt : initialPhotoAlt}
+                  onChange={(e) => {
+                    if (photo) {
+                      setPhotoAlt(e.target.value);
+                    } else {
+                      setInitialPhotoAlt(e.target.value);
+                    }
+                    clearFieldError('alt');
+                  }}
+                  className={`w-full p-2 border rounded focus:outline-none focus:border-blue-500 ${
+                    errors.alt ? 'border-red-500' : ''
+                  }`}
+                  placeholder="Describe this image..."
+                />
+                {getCharacterCountDisplay(photo ? photoAlt : initialPhotoAlt, 'alt')}
+                {errors.alt && (
+                  <p className="text-red-500 text-xs mt-1">{errors.alt}</p>
+                )}
+              </div>
+
+              <div className="mt-2">
+                <label className="block text-sm font-medium mb-1">
+                  Image Title <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={photo ? imgtitle : initialImgtitle}
+                  onChange={(e) => {
+                    if (photo) {
+                      setImgtitle(e.target.value);
+                    } else {
+                      setInitialImgtitle(e.target.value);
+                    }
+                    clearFieldError('imgtitle');
+                  }}
+                  className={`w-full p-2 border rounded focus:outline-none focus:border-blue-500 ${
+                    errors.imgtitle ? 'border-red-500' : ''
+                  }`}
+                  placeholder="Image title..."
+                />
+                {getCharacterCountDisplay(photo ? imgtitle : initialImgtitle, 'imgtitle')}
+                {errors.imgtitle && (
+                  <p className="text-red-500 text-xs mt-1">{errors.imgtitle}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="mb-4">
+        <label htmlFor="status" className="block font-semibold mb-2">
+          Status <span className="text-red-500">*</span>
+        </label>
+        <select
+          id="status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
+        >
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+
+      <button 
+        type="submit"
+        disabled={isSubmitting}
+        className={`bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-200 ${
+          isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
+      >
+        {isSubmitting ? 'Updating Core Value...' : 'Update Core Value'}
+      </button>
+    </form>
+  );
 };
 
 export default EditCoreValue;

@@ -2,124 +2,199 @@ const ServiceImage = require('../model/serviceImages'); // Assuming this is your
 const ServiceCategory = require('../model/serviceCategory'); // Ensure you have the ServiceCategory model imported
 const path = require('path');
 const fs = require('fs');
-
+exports.getAllServiceImages = async (req, res) => {
+    try {
+        const serviceImages = await ServiceImage.find();
+        res.status(200).json({
+            success: true,
+            data: serviceImages,
+            message: 'Service images fetched successfully'
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch service images',
+            error: error.message
+        });
+    }
+};
 // Get all images with category names, filter by categoryId, photoType, and headingType if provided
 exports.getAllImages = async (req, res) => {
     try {
-        const { categoryId, photoType } = req.query; // Get categoryId and photoType from query params
-        const filter = { headingType: 'main' }; // Add headingType filter by default
-
-        if (photoType) {
-            filter.photoType = photoType;
-        }
-
-        if (categoryId) {
-            filter.categoryId = { $in: categoryId.split(',') }; // Handle multiple category IDs if they are comma-separated
-        }
-
-        // Fetch the images based on the filter and populate the categoryId field
-        const images = await ServiceImage.find(filter).populate('categoryId', 'category');
-
-        // Map over images to include the categoryName in the response
-        const galleryWithCategoryNames = images.map(image => ({
-            ...image.toJSON(),
-            categoryName: image.categoryId.length ? image.categoryId.map(cat => cat.category).join(', ') : "Uncategorized"
-        }));
-
-        res.status(200).json(galleryWithCategoryNames);
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+      const { categoryId, photoType } = req.query;
+  
+      // Validate required query parameters
+      if (!categoryId || !photoType) {
+        return res.status(400).json({
+          success: false,
+          message: "Both categoryId and photoType are required"
+        });
+      }
+  
+    //   console.log("Query Parameters:", { categoryId, photoType });
+  
+      // Fetch all ServiceImage documents with populated categoryId
+      const allServiceImages = await ServiceImage.find({})
+        .populate('categoryId')  // Populate the categoryId field
+        .lean();
+        
+    //   console.log("All Service Images:", allServiceImages);
+  
+      // Filter the data in memory
+      const filteredImages = allServiceImages.filter(image => {
+        // Check if categoryId exists, is an array, and its first element matches
+        // Since categoryId is now populated, we need to compare the _id
+        const categoryMatch = Array.isArray(image.categoryId) && 
+                             image.categoryId.length > 0 && 
+                             image.categoryId[0]._id.toString() === categoryId;
+        
+        // Check photoType and headingType
+        const photoTypeMatch = image.photoType === photoType;
+        const headingTypeMatch = image.headingType === "main";
+  
+        // Return true if all conditions match
+        return categoryMatch && photoTypeMatch && headingTypeMatch;
+      });
+  
+    //   console.log("Filtered Data:", filteredImages);
+  
+      // Handle case where no matches are found
+      if (filteredImages.length === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "No matching images found"
+        });
+      }
+  
+      // Success response
+      res.status(200).json({
+        success: true,
+        data: filteredImages,
+        message: "Filtered service images fetched successfully"
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch filtered service images",
+        error: error.message
+      });
     }
-};
-
+  };
 
 
 // Get all images filtered by subcategoryId and include subcategory names
 exports.getAllSubImages = async (req, res) => {
     try {
-        const { subcategoryId, photoType } = req.query; // Get query params
-        const filter = { headingType: 'sub' }; // Default filter for headingType
+        const { subcategoryId, photoType } = req.query;
+        const filter = { headingType: 'sub' }; // Default filter for sub heading type
 
         if (photoType) {
             filter.photoType = photoType;
         }
 
         if (subcategoryId) {
-            filter.subcategory = { $in: subcategoryId.split(',') }; // Handle multiple subcategory IDs
+            filter.subcategory = { $in: subcategoryId.split(',') }; // Ensure array matching
         }
 
-        // Fetch the images based on the filter and populate the subcategory field
+        // console.log("Query Filter:", filter); // Debugging log
+
+        // Fetch the images and populate the subcategory field
         const images = await ServiceImage.find(filter)
             .populate({
-                path: 'subcategory', // Populate subcategory field
-                select: 'category subCategories', // Include subCategories if needed
+                path: 'subcategory',
+                select: 'category subCategories',
                 populate: {
-                    path: 'subCategories.subSubCategory', // Populate nested subSubCategory field if needed
+                    path: 'subCategories.subSubCategory',
                     select: 'category'
                 }
             });
 
-        // Map over images to include the subcategoryName in the response
+        // console.log("Fetched Images:", images); // Debugging log
+
+        // Format response to include subcategoryName
         const galleryWithNames = images.map(image => ({
             ...image.toJSON(),
             subcategoryName: image.subcategory ? image.subcategory.category : "Uncategorized"
         }));
 
-        res.status(200).json(galleryWithNames);
+        res.status(200).json({
+            success: true,
+            data: galleryWithNames,
+            message: "Filtered sub images fetched successfully"
+        });
+
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to fetch sub images",
+            error: err.message 
+        });
     }
 };
+
 
 // Get all images filtered by subsubcategoryId, and include details for subcategory and subsubcategory
 exports.getAllSubSubImages = async (req, res) => {
     try {
-        const { subsubcategoryId, photoType } = req.query; // Get query params
-        const filter = { headingType: 'subsub' }; // Default filter for headingType
+        const { subsubcategoryId, photoType } = req.query;
+        const filter = { headingType: 'subsub' }; // Default filter for sub-sub heading type
 
         if (photoType) {
             filter.photoType = photoType;
         }
 
         if (subsubcategoryId) {
-            filter.subsubcategory = { $in: subsubcategoryId.split(',') }; // Handle multiple subsubcategory IDs
+            filter.subsubcategory = { $in: subsubcategoryId.split(',') }; // Ensure array matching
         }
 
-        // Fetch the images based on the filter and populate the fields
+        // console.log("Query Filter:", filter); // Debugging log
+
+        // Fetch the images and populate the fields
         const images = await ServiceImage.find(filter)
             .populate({
-                path: 'subcategory', // Populate subcategory field
-                select: 'category subCategories', // Include subCategories
+                path: 'subcategory',
+                select: 'category subCategories',
                 populate: {
-                    path: 'subCategories.subSubCategory', // Populate nested subSubCategory field
-                    select: 'category' // Select fields to include
+                    path: 'subCategories.subSubCategory',
+                    select: 'category'
                 }
             })
             .populate({
-                path: 'subsubcategory', // Populate subsubcategory field
-                select: 'category' // Select fields to include
+                path: 'subsubcategory',
+                select: 'category'
             });
 
-        // Map over images to include the subcategoryName and subsubcategoryName in the response
+        // console.log("Fetched Images:", images); // Debugging log
+
+        // Format response to include subcategoryName and subsubcategoryName
         const galleryWithNames = images.map(image => ({
             ...image.toJSON(),
             subcategoryName: image.subcategory ? image.subcategory.category : "Uncategorized",
             subsubcategoryName: image.subsubcategory ? image.subsubcategory.category : "Uncategorized"
         }));
 
-        res.status(200).json(galleryWithNames);
+        res.status(200).json({
+            success: true,
+            data: galleryWithNames,
+            message: "Filtered sub-sub images fetched successfully"
+        });
+
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ 
+            success: false,
+            message: "Failed to fetch sub-sub images",
+            error: err.message 
+        });
     }
 };
-
 
 
 
 exports.getAllImagesSlug = async (req, res) => {
     try {
         const { slug, photoType } = req.params; // Extract from URL params
-        console.log("Received parameters:", { slug, photoType });
+        // console.log("Received parameters:", { slug, photoType });
 
         // Create filter object based on provided parameters
         const filter = {};
@@ -152,7 +227,7 @@ exports.getAllImagesSlug = async (req, res) => {
 
 exports.addNewImage = async (req, res) => {
     try {
-        console.log(req.body.categoryId);
+        // console.log(req.body.categoryId);
         if (!req.file) {
             return res.status(400).json({ message: 'No image file provided' });
         }
@@ -190,7 +265,7 @@ exports.addNewImage = async (req, res) => {
 
 exports.addNewSubImage = async (req, res) => {
     try {
-        console.log(req.body.subcategoryId);
+        // console.log(req.body.subcategoryId);
         if (!req.file) {
             return res.status(400).json({ message: 'No image file provided' });
         }
@@ -245,7 +320,7 @@ exports.addNewSubImage = async (req, res) => {
 
 exports.addNewSubSubImage = async (req, res) => {
     try {
-        console.log(req.body.subsubcategoryId);
+        // console.log(req.body.subsubcategoryId);
         if (!req.file) {
             return res.status(400).json({ message: 'No image file provided' });
         }
@@ -512,6 +587,7 @@ exports.getGalleryById = async (req, res) => {
             photoType: photoType
         }).populate('categoryId', 'category'); // Populate to get category names
 
+        console.log("Gallery:", gallery); // Debugging log
         // If no gallery is found, return a 404 error
         if (!gallery) {
             return res.status(404).json({ message: 'Gallery not found' });

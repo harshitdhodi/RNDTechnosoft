@@ -1,0 +1,111 @@
+[
+  {
+    "_id": "66c80700960e5ced8f340dae",
+    "video": "video-1728013771487.mp4",
+    "photo": "photo-1728013771510.webp",
+    "title": "Adaptable Design on Your Terms",
+    "subtitle": "Choose the Plan That Suits Your Needs",
+    "description": "<p class=\"ql-align-justify\">We offer you a flexible subscription basis that will help you advance your business the way you want it and on a monthly or annually basis. We also provide web design packages for you to improve your web presence and aid your growth</p>",
+    "iconPhoto": [
+      "iconPhoto-1730950816380.png",
+      "iconPhoto-1730950830870.png",
+      "iconPhoto-1730950851777.png",
+      "iconPhoto-1730950872138.png",
+      "iconPhoto-1730950887760.png"
+    ],
+    "iconTitle": [
+      "<p>Websites</p>",
+      "<p>Design</p>",
+      "<p>Social Media</p>",
+      "<p>Branding</p>",
+      "SEO"
+    ],
+    "paragraph": "",
+    "author": "",
+    "createdAt": "2024-08-23T03:50:24.899Z",
+    "updatedAt": "2024-11-07T03:41:27.844Z",
+    "__v": 0,
+    "photoAltName": "rocket",
+    "photoTitleName": "rocket"
+  },
+  {
+    "_id": "66c839e8693ccd620d532e3d",
+    "video": "video-1728014273998.mp4",
+    "photo": "photo-1728014273999.webp",
+    "title": "Stay on Top of what's New",
+    "subtitle": "No Limits to Your Design Needs",
+    "description": "",
+    "iconPhoto": [
+      "iconPhoto-1730950903818.png",
+      "iconPhoto-1730950917623.png",
+      "iconPhoto-1730950937504.png",
+      "iconPhoto-1730950950865.png"
+    ],
+    "iconTitle": [
+      "<p><strong>Tailored designs</strong> that meet your company objectives</p>",
+      "<p><strong>Prioritize tasks</strong> to ensure an effective creative workflow.</p>",
+      "<p><strong>Receive designs </strong> within 1-2 days, guaranteed.</p>",
+      "<p><strong>Unlimited modifications </strong>to ensure your 100% pleasure.</p>"
+    ],
+    "paragraph": "<p class=\"ql-align-justify\">In terms of submitting requests within your portal, you can make as many as necessary to cater for your needs in task management. It is easy to track all the ongoing, scheduled, and completed activities to enable one to track the progress of the work being done at all times.</p>",
+    "author": "Ravi Shah, Co-founder & CEO at RND Technosoft.",
+    "authPhoto": "authPhoto-1729051257097.jpg",
+    "createdAt": "2024-08-23T07:27:36.192Z",
+    "updatedAt": "2024-11-07T03:42:30.960Z",
+    "__v": 0,
+    "photoAltName": "img",
+    "photoTitleName": "img"
+  },
+  {
+    "_id": "66c838fb693ccd620d532e3a",
+    "video": "video-1728014137506.mp4",
+    "photo": "photo-1728014137521.webp",
+    "title": "Smooth Project Management at Your Fingertips",
+    "subtitle": "All-in-One Creative Workspace",
+    "description": "",
+    "iconPhoto": [
+      "iconPhoto-1730950966075.png",
+      "iconPhoto-1730950979422.png",
+      "iconPhoto-1730950991761.png"
+    ],
+    "iconTitle": [
+      "<p><strong>Centralized</strong> campaign workflow management.</p>",
+      "<p><strong>Scalable</strong>, dynamic content production</p>",
+      "<p><strong>Real-time</strong> performance tracking analytics.</p>"
+    ],
+    "paragraph": "<p>Our comprehensive solution cuts across the entire creative process hence eliminating the need for a number of applications. This lets you attend to requests, sort files and work directly and interactively with your designers while being able to easily fit your workflow. It is more effective and easy to work this way because all tools that you need are collected in one place</p>",
+    "author": "Krishna Ramolia, Manager at RND Technosoft.",
+    "authPhoto": "authPhoto-1729051236385.jpg",
+    "createdAt": "2024-08-23T07:23:39.515Z",
+    "updatedAt": "2024-11-07T03:43:11.839Z",
+    "__v": 0,
+    "photoAltName": "img",
+    "photoTitleName": "img"
+  },
+  {
+    "_id": "66c84b17693ccd620d532e4e",
+    "video": "video-1728014417692.mp4",
+    "photo": "photo-1728014417698.webp",
+    "title": "Decisions Made Flexible",
+    "subtitle": "Free from Restrictions",
+    "description": "",
+    "iconPhoto": [
+      "iconPhoto-1730951006571.png",
+      "iconPhoto-1730951024578.png",
+      "iconPhoto-1730951039153.png"
+    ],
+    "iconTitle": [
+      "<p><strong>Transparent Pricing </strong> Enjoy a fixed monthly rate with no hidden fees.</p>",
+      "<p><strong>Flexible Subscription </strong> Pause or cancel anytime to suit your needs</p>",
+      "<p><strong>Quick Project Start </strong>Launch your project immediately without delays</p>"
+    ],
+    "paragraph": "<p class=\"ql-align-justify\">It's offering a simple month-to-month subscription with which you can jump right into your project, has no long-term contract, and neither hidden charges nor protracted haggling with negotiations; you can pause or cancel at your convenience.</p>",
+    "author": "Ravi Shah, Co-founder & CEO at RND Technosoft",
+    "authPhoto": "authPhoto-1729051272931.png",
+    "createdAt": "2024-08-23T08:40:55.242Z",
+    "updatedAt": "2024-11-07T03:43:59.236Z",
+    "__v": 0,
+    "photoAltName": "img",
+    "photoTitleName": "img"
+  }
+]

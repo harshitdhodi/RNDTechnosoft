@@ -26,18 +26,18 @@ const insertFAQ = async (req, res) => {
 
 const getFAQ = async (req, res) => {
   try {
-    const { page = 1 } = req.query;
-    const limit = 5;
-    const count = await FAQ.countDocuments();
+    // const { page = 1 } = req.query;
+    // const limit = 20;
+    // const count = await FAQ.countDocuments();
     const faq = await FAQ.find()
-      .skip((page - 1) * limit) // Skip records for previous pages
-      .limit(limit);
+      // .skip((page - 1) * limit) // Skip records for previous pages
+      // .limit(limit);
 
     res.status(200).json({
       data: faq,
-      total: count,
-      currentPage: page,
-      hasNextPage: count > page * limit
+      // total: count,
+      // currentPage: page,
+      // hasNextPage: count > page * limit
     });
   } catch (error) {
 

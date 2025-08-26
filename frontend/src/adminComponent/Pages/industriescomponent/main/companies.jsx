@@ -124,7 +124,7 @@ const Companies = ({ categoryId }) => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }; 
 
   useEffect(() => {
     if (categoryId) {

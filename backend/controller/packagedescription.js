@@ -105,7 +105,7 @@ const deletePackage = async (req, res) => {
 const getAllPackages = async (req, res) => {
   try {
     const { page = 1, packageCategoryId } = req.query; // Get category filters from query
-    const limit = 5;
+    const limit = 15;
 
     // Build query object dynamically based on provided filters
     let filter = {};
