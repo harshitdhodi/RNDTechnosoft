@@ -13,10 +13,7 @@
     "@coreui/react": "^5.2.0",
     "@emotion/react": "^11.13.0",
     "@emotion/styled": "^11.13.0",
-<<<<<<< HEAD
     "@hookform/resolvers": "^5.2.1",
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     "@mui/icons-material": "^6.1.2",
     "@mui/material": "^6.1.2",
     "@reduxjs/toolkit": "^2.6.1",
@@ -44,10 +41,7 @@
     "react-dom": "^18.3.1",
     "react-helmet": "^6.1.0",
     "react-hexagon": "^1.1.3",
-<<<<<<< HEAD
     "react-hook-form": "^7.62.0",
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     "react-icons": "^5.2.1",
     "react-image": "^4.1.0",
     "react-modal": "^3.16.1",
@@ -58,11 +52,7 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",
     "react-table": "^7.8.0",
-<<<<<<< HEAD
     "react-toastify": "^10.0.6",
-=======
-    "react-toastify": "^10.0.5",
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     "react-use": "^17.5.1",
     "react-useanimations": "^2.10.0",
     "react-window": "^1.8.11",
@@ -76,12 +66,8 @@
     "vite-plugin-pwa": "^0.21.1",
     "vite-plugin-svgr": "^4.3.0",
     "vite-plugin-tailwind-purgecss": "^0.3.5",
-<<<<<<< HEAD
     "web-vitals": "^2.1.4",
     "zod": "^4.0.17"
-=======
-    "web-vitals": "^2.1.4"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

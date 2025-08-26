@@ -3,11 +3,8 @@ import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-<<<<<<< HEAD
 import { toast, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 const GetInTouchCard = () => {
   const { contentType } = useParams();
@@ -21,16 +18,9 @@ const GetInTouchCard = () => {
   const [subsections, setSubsections] = useState([
     { photo: "", photoAlt: "", title: "", description: "" },
   ]);
-<<<<<<< HEAD
   const [status, setStatus] = useState("active");
 
   const [contentId, setContentId] = useState("");
-=======
-  const [status, setStatus] = useState(false);
-
-  const [contentId, setContentId] = useState("");
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [videotitle, setVideotitle] = useState("")
   const [imgtitle, setImgtitle] = useState([])
 
@@ -41,21 +31,17 @@ const GetInTouchCard = () => {
   const [initialImgtitle, setInitialImgtitle] = useState([]);
   const [initialVideo, setInitialVideo] = useState("")
   const [initialVideotitle, setInitialVideotitle] = useState("")
-<<<<<<< HEAD
 
   // Validation states
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchContentDetails();
   }, []);
 
-<<<<<<< HEAD
   // Success and error notification functions
   const notifySuccess = (message) => {
     toast.success(message);
@@ -64,8 +50,6 @@ const GetInTouchCard = () => {
   const notifyError = (message) => {
     toast.error(message);
   };
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const fetchContentDetails = async () => {
     try {
@@ -76,7 +60,6 @@ const GetInTouchCard = () => {
       setHeading(content.heading || "");
       setSubheading(content.subheading || "");
       setDescription(content.description || "");
-<<<<<<< HEAD
       setInitialPhotos(content.photo || []);
       setStatus(content.status || "active");
 
@@ -88,41 +71,19 @@ const GetInTouchCard = () => {
 
       setQuestions(
         content.questions && content.questions.length > 0
-=======
-      setInitialPhotos(content.photo);
-      setStatus(content.status);
-
-      setInitialPhotoAlts(content.photoAlt);
-      setInitialVideo(content.video);
-
-      setInitialVideoAlt(content.videoAlt);
-      setInitialImgtitle(content.imgtitle)
-      setInitialVideotitle(content.videotitle)
-      setQuestions(
-        content.questions.length > 0
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           ? content.questions
           : [{ question: "", answer: "" }]
       );
       setSubsections(
-<<<<<<< HEAD
         content.subsections && content.subsections.length > 0
-=======
-        content.subsections.length > 0
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           ? content.subsections
           : [{ photo: "", photoAlt: "", title: "", description: "" }]
       );
       setContentId(content._id || "");
-<<<<<<< HEAD
       notifySuccess('Content loaded successfully');
     } catch (error) {
       notifyError('Error loading content. Please try again.');
       console.error('Fetch error:', error);
-=======
-    } catch (error) {
-      console.error(error);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -145,7 +106,6 @@ const GetInTouchCard = () => {
     }
   };
 
-<<<<<<< HEAD
   // Validation function
   const validateForm = () => {
     const newErrors = {};
@@ -207,10 +167,6 @@ const GetInTouchCard = () => {
 
     setIsSubmitting(true);
 
-=======
-  const handleSubmit = async (e) => {
-    e.preventDefault();
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     try {
       const formData = new FormData();
       formData.append("heading", heading);
@@ -218,17 +174,9 @@ const GetInTouchCard = () => {
       formData.append("description", description);
       formData.append("status", status);
 
-<<<<<<< HEAD
       formData.append('video', video || initialVideo);
       formData.append('videoAlt', videoAlt || initialVideoAlt);
       formData.append('videotitle', videotitle || initialVideotitle);
-=======
-
-      formData.append('video', video || initialVideo);
-      formData.append('videoAlt', videoAlt || initialVideoAlt);
-      formData.append('videotitle', videotitle || initialVideotitle); // Ensure this line is correct
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
       const combinedAlts = [...initialphotoAlts, ...photoAlts];
       const combinedImgtitle = [...initialImgtitle, ...imgtitle];
@@ -245,23 +193,13 @@ const GetInTouchCard = () => {
         formData.append('imgtitle', m);
       });
 
-<<<<<<< HEAD
       const response = await axios.put(`/api/content/bookcall`, formData, {
-=======
-      // Log formData to the console
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-
-      await axios.put(`/api/content/bookcall`, formData, {
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
       });
 
-<<<<<<< HEAD
       notifySuccess('Content updated successfully!');
       setTimeout(() => {
         navigate(`/edit-card`);
@@ -377,32 +315,12 @@ const GetInTouchCard = () => {
     
     // Clear the file input
     e.target.value = '';
-=======
-      navigate(`/edit-card`);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-
-
-  const handleFileChange = (e) => {
-    const newPhotos = Array.from(e.target.files);
-    setPhoto([...photo, ...newPhotos]);
-  };
-
-  const handleVideoChange = (e) => {
-    const selectedVideo = e.target.files[0];
-    console.log(selectedVideo)
-    setVideo(selectedVideo);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleInitialAltTextChange = (e, index) => {
     const newPhotoAlts = [...initialphotoAlts];
     newPhotoAlts[index] = e.target.value;
     setInitialPhotoAlts(newPhotoAlts);
-<<<<<<< HEAD
     
     // Clear error when user starts typing
     if (errors.photoAlt) {
@@ -410,15 +328,12 @@ const GetInTouchCard = () => {
       delete newErrors.photoAlt;
       setErrors(newErrors);
     }
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleNewAltTextChange = (e, index) => {
     const newPhotoAlts = [...photoAlts];
     newPhotoAlts[index] = e.target.value;
     setPhotoAlts(newPhotoAlts);
-<<<<<<< HEAD
     
     // Clear error when user starts typing
     if (errors.newPhotoAlt) {
@@ -426,15 +341,12 @@ const GetInTouchCard = () => {
       delete newErrors.newPhotoAlt;
       setErrors(newErrors);
     }
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleInitialImgtitleChange = (e, index) => {
     const newImgtitles = [...initialImgtitle];
     newImgtitles[index] = e.target.value;
     setInitialImgtitle(newImgtitles);
-<<<<<<< HEAD
     
     // Clear error when user starts typing
     if (errors.imgTitle) {
@@ -442,15 +354,12 @@ const GetInTouchCard = () => {
       delete newErrors.imgTitle;
       setErrors(newErrors);
     }
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleNewImgtitleChange = (e, index) => {
     const newImgtitles = [...imgtitle];
     newImgtitles[index] = e.target.value;
     setImgtitle(newImgtitles);
-<<<<<<< HEAD
     
     // Clear error when user starts typing
     if (errors.newImgTitle) {
@@ -481,35 +390,10 @@ const GetInTouchCard = () => {
       notifyError('Failed to delete image. Please try again.');
       console.error('Delete error:', error);
     }
-=======
-  };
-
-
-
-
-  const handleDeleteInitialPhoto = async (e, photoFilename, index) => {
-    e.preventDefault();
-    await axios.delete(
-      `/api/content/deletePhotoAndAltText/${contentId}/${photoFilename}/${index}`, { withCredentials: true })
-      .then(response => {
-        const updatedPhotos = initialPhotos.filter(photo => photo !== photoFilename);
-        setInitialPhotos(updatedPhotos);
-        const updatedPhotoAlts = [...initialphotoAlts];
-        updatedPhotoAlts.splice(index, 1);
-        setInitialPhotoAlts(updatedPhotoAlts);
-        const updatedImgtitle = [...initialImgtitle];
-        updatedImgtitle.splice(index, 1);
-        setInitialImgtitle(updatedImgtitle);
-      })
-      .catch(error => {
-        console.error(error);
-      });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleDeleteNewPhoto = (e, index) => {
     e.preventDefault();
-<<<<<<< HEAD
     
     const confirmDelete = window.confirm('Are you sure you want to remove this image?');
     if (!confirmDelete) return;
@@ -519,22 +403,10 @@ const GetInTouchCard = () => {
     setImgtitle([]);
     
     notifySuccess('Image removed successfully');
-=======
-    const updatedPhotos = [...photo];
-    updatedPhotos.splice(index, 1);
-    setPhoto(updatedPhotos);
-    const updatedPhotoAlts = [...photoAlts];
-    updatedPhotoAlts.splice(index, 1);
-    setPhotoAlts(updatedPhotoAlts);
-    const updatedImgtitle = [...imgtitle];
-    updatedImgtitle.splice(index, 1);
-    setPhotoAlts(updatedImgtitle);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleDeleteVideo = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     
     const confirmDelete = window.confirm('Are you sure you want to delete this video? This action cannot be undone.');
     if (!confirmDelete) return;
@@ -556,22 +428,10 @@ const GetInTouchCard = () => {
       notifySuccess('Video deleted successfully');
     } catch (error) {
       notifyError('Failed to delete video. Please try again.');
-=======
-    try {
-      const videoFilename = video.name; // Get the current video filename
-      await axios.delete(`/api/content/${contentId}/video/${videoFilename}`, {
-        withCredentials: true,
-      });
-      // Reset video state
-      setVideo(null);
-      setVideoAlt(""); // Optionally reset alt text
-    } catch (error) {
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       console.error('Error deleting video:', error);
     }
   };
 
-<<<<<<< HEAD
   // Clear errors when user starts typing in ReactQuill fields
   const handleHeadingChange = (value) => {
     setHeading(value);
@@ -825,156 +685,12 @@ const GetInTouchCard = () => {
         <div className="mb-4">
           <label htmlFor="video" className="block font-semibold mb-2">
             {(initialVideo || video) ? 'Replace Video' : 'Upload Video'}
-=======
-  return (
-    <div>
-      <form onSubmit={handleSubmit} className="p-4">
-        <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Testimonial</h1>
-        {/* Heading */}
-        <div className="mb-4">
-          <label htmlFor="heading" className="block font-semibold mb-2">
-            Heading
-          </label>
-
-          <ReactQuill
-            value={heading}
-            onChange={setHeading}
-            className="bg-white"
-            modules={modules} // Include modules for image handling
-
-          />
-        </div>
-        {/* Subheading */}
-        <div className="mb-4">
-          <label htmlFor="subheading" className="block font-semibold mb-2">
-            Subheading
-          </label>
-
-          <ReactQuill
-            value={subheading}
-            onChange={setSubheading}
-            className="bg-white"
-            modules={modules} // Include modules for image handling
-
-          />
-        </div>
-
-
-        {/* Description */}
-        <div className="mb-8">
-          <label htmlFor="description" className="block font-semibold mb-2">
-            Description
-          </label>
-          <ReactQuill
-            value={description}
-            onChange={setDescription}
-            className="bg-white"
-            modules={modules} // Include modules for image handling
-
-          />
-        </div>
-
-
-
-
-        <div className="mb-4">
-          <label className="block font-semibold mb-2">Current Photos</label>
-          <div className="flex flex-wrap gap-4">
-            {initialPhotos.map((photo, index) => (
-              <div key={index} className="relative w-56">
-                <img
-                  src={`/api/image/download/${photo}`}
-                  alt={`Photo ${index + 1}`}
-                  className="w-56 h-32 object-cover"
-                />
-                <label htmlFor={`alt-${index}`} className="block mt-2">
-                  Alternative Text:
-                  <input
-                    type="text"
-                    id={`alt-${index}`}
-                    value={initialphotoAlts[index]}
-                    onChange={(e) => handleInitialAltTextChange(e, index)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <label htmlFor={`alt-${index}`} className="block mt-2">
-                  Title Text:
-                  <input
-                    type="text"
-                    id={`imgtitle-${index}`}
-                    value={initialImgtitle[index]}
-                    onChange={(e) => handleInitialImgtitleChange(e, index)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <button
-                  onClick={(e) => handleDeleteInitialPhoto(e, photo, index)}
-                  className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 flex justify-center items-center"
-                >
-                  <span className="text-xs">X</span>
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-2">Add New Photos</label>
-          <input
-            type="file"
-            onChange={handleFileChange}
-            multiple
-            accept="image/*"
-            className="p-2 border rounded"
-          />
-          <div className="flex flex-wrap gap-4 mt-4">
-            {photo.map((file, index) => (
-              <div key={index} className="relative w-56">
-                <img
-                  src={URL.createObjectURL(file)}
-                  alt={`New Photo ${index + 1}`}
-                  className="w-56 h-32 object-cover"
-                />
-                <label htmlFor={`imgtitle-new-${index}`} className="block mt-2">
-                  Alternative Text:
-                  <input
-                    type="text"
-                    id={`alt-new-${index}`}
-                    value={photoAlts[index] || ""}
-                    onChange={(e) => handleNewAltTextChange(e, index)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <label htmlFor={`imgtitle-new-${index}`} className="block mt-2">
-                  Title Text:
-                  <input
-                    type="text"
-                    id={`imgtitle-new-${index}`}
-                    value={imgtitle[index] || ""}
-                    onChange={(e) => handleNewImgtitleChange(e, index)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <button
-                  onClick={(e) => handleDeleteNewPhoto(e, index)}
-                  className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 flex justify-center items-center"
-                >
-                  <span className="text-xs">X</span>
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="mb-4">
-          <label htmlFor="video" className="block font-semibold mb-2">
-            Upload Video
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <input
             type="file"
             id="video"
             onChange={handleVideoChange}
             accept="video/*"
-<<<<<<< HEAD
             className="p-2 border rounded w-full"
           />
           <p className="text-sm text-gray-600 mt-1">
@@ -1042,78 +758,28 @@ const GetInTouchCard = () => {
                   title="Delete video"
                 >
                   <span className="text-xs">✕</span>
-=======
-            className="p-2 border rounded"
-          />
-          {(video || initialVideo) && (
-            <div className="mt-4">
-              <label className="block font-semibold mb-2">Current Video</label>
-              <div className="relative w-56">
-                <video
-                  src={video ? URL.createObjectURL(video) : `/api/video/download/${initialVideo}`} // Update this to match your API endpoint for video
-                  controls
-                  className="w-56 h-32 object-cover"
-                />
-                <label htmlFor="videoAlt" className="block mt-2">
-                  Video Alt Text:
-                  <input
-                    type="text"
-                    id="videoAlt"
-                    value={videoAlt || initialVideoAlt}
-                    onChange={(e) => setVideoAlt(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <label htmlFor="videotitle" className="block mt-2">
-                  title Text:
-                  <input
-                    type="text"
-                    id="videotitle"
-                    value={videotitle || initialVideotitle}
-                    onChange={(e) => setVideotitle(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <button
-                  onClick={handleDeleteVideo}
-                  className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 flex justify-center items-center"
-                >
-                  <span className="text-xs">X</span>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                 </button>
               </div>
             </div>
           )}
         </div>
 
-<<<<<<< HEAD
         {/* Status */}
         <div className="mb-6">
           <label htmlFor="status" className="block font-semibold mb-2">
             Status <span className="text-red-500">*</span>
-=======
-
-        <div className="mb-4">
-          <label htmlFor="status" className="block font-semibold mb-2">
-            Status
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <select
             id="status"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-<<<<<<< HEAD
             className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-=======
-            className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
           </select>
         </div>
 
-<<<<<<< HEAD
         {/* Submit Button */}
         <div className="mt-8 text-center">
           <button
@@ -1141,21 +807,3 @@ const GetInTouchCard = () => {
 };
 
 export default GetInTouchCard;
-=======
-        <div className="mt-8 text-center">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-          >
-            Update Detsils
-          </button>
-        </div>
-      </form>
-
-    </div>
-
-  );
-};
-
-export default GetInTouchCard;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

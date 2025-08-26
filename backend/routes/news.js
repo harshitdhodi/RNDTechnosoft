@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-<<<<<<< HEAD
 const { searchNews, updateBlogVisits,getLatestBlogs,getAllNews, insertNews,getNewsFront,getNewsBySlug, getNews, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById,fetchUrlmeta, editUrlmeta, fetchUrlmetaById  } = require('../controller/news');
-=======
-const {updateBlogVisits,getLatestBlogs,getAllNews, insertNews,getNewsFront,getNewsBySlug, getNews, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById,fetchUrlmeta, editUrlmeta, fetchUrlmetaById  } = require('../controller/news');
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const { getCategoryBySlug,getCategoryBlogsBySlug,insertCategory, insertSubCategory, insertSubSubCategory, updateCategory, updateSubCategory, updatesubsubcategory, deletecategory, deletesubcategory, deletesubsubcategory, getAll, getSpecificCategory, getSpecificSubcategory, getSpecificSubSubcategory, fetchCategoryUrlPriorityFreq, editCategoryUrlPriorityFreq, fetchCategoryUrlPriorityFreqById,fetchCategoryUrlmeta, editCategoryUrlmeta, fetchCategoryUrlmetaById  } = require('../controller/newsCategory')
 const { uploadLogo } = require("../middleware/logoUpload")
 
@@ -28,10 +24,7 @@ router.get('/fetchUrlPriorityFreqById', requireAuth, fetchUrlPriorityFreqById)
 router.get('/fetchUrlmeta', fetchUrlmeta)
 router.put('/editUrlmeta', requireAuth, editUrlmeta)
 router.get('/fetchUrlmetaById', requireAuth, fetchUrlmetaById)
-<<<<<<< HEAD
 router.get('/searchNews', requireAuth, searchNews)
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 
 router.post('/insertCategory', requireAuth, uploadLogo, insertCategory)

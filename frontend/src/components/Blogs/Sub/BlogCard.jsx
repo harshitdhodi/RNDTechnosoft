@@ -72,11 +72,7 @@ export default function HowRndHelp() {
             className="relative blog-card border border-lg border-black rounded-xl p-4 sm:p-6 flex flex-col gap-3 items-center bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105"
           >
             <img
-<<<<<<< HEAD
               src={blog.photo ? `/api/image/download/${blog.photo[0]}` : '/placeholder.webp'}
-=======
-              src={`/api/image/download/${blog.photo[0]}`}
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               alt={blog.alt[0]}
               title={blog.imgtitle[0]}
               className="w-full h-48 sm:h-40 lg:h-48 rounded-md object-cover mb-2"

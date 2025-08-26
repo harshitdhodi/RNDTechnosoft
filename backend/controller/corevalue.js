@@ -13,7 +13,6 @@ exports.getAllCorevalue = async (req, res) => {
 };
 
 exports.createCoreValue = async (req, res) => {
-<<<<<<< HEAD
   const { title, description, alt, imgtitle, status } = req.body;
   const photo = req.files['photo'] ? req.files['photo'].map(file => file.filename) : [];
   try {
@@ -23,11 +22,6 @@ exports.createCoreValue = async (req, res) => {
       return res.status(400).json({ message: 'Corevalue with this title already exists' });
     }
 
-=======
-  const { title, description,alt,imgtitle,status } = req.body;
-  const photo = req.files['photo'] ? req.files['photo'].map(file => file.filename) : [];
-  try {
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const newCorevalue = new Corevalue({
       title,
       description,

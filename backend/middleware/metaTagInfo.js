@@ -3,11 +3,7 @@ const fs = require('fs');
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-<<<<<<< HEAD
 const BASE_URL = "https://rndtechnosoft.com/";
-=======
-const BASE_URL = "https://www.rndtechnosoft.com/";
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const API_ENDPOINTS = {
   Service_Category: `${BASE_URL}api/services/getall`,
   Package_Category: `${BASE_URL}api/packages/getAll`,

@@ -1,23 +1,11 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
 import MobileNavbar from "./MobileMenuItems";
 import { FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-<<<<<<< HEAD
 import { useState, useEffect, useRef } from 'react';
 
-=======
-
-// NavItem Component (unchanged)
-import { useState, useEffect, useRef } from 'react';
-
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const NavItem = ({ item, depth = 0, closeMenu }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [closeTimeout, setCloseTimeout] = useState(null);
@@ -57,7 +45,6 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
     setCloseTimeout(timeout);
   };
 
-<<<<<<< HEAD
   const handleClick = (e) => {
     // Prevent default behavior for items with submenus at depth 0
     if (item.subItems && item.subItems.length > 0 && depth === 0) {
@@ -67,14 +54,6 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
     
     closeMenu();
     setIsHovered(false);
-=======
-  const handleClick = () => {
-    closeMenu();
-    setIsHovered(false);
-    if (item.subItems && item.subItems.length > 0 && depth === 0) {
-      return;
-    }
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleTechnologyClick = (slug) => {
@@ -94,14 +73,11 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
     ? item.subItems.slice(Math.ceil(item.subItems.length / 2))
     : [];
 
-<<<<<<< HEAD
   // Determine the link destination
   const linkTo = item.subItems && item.subItems.length > 0 && depth === 0 
     ? "#" 
     : `/${item.slug}`;
 
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   return (
     <li
       className={`relative ${depth === 0 ? "group" : ""} list-none`}
@@ -110,37 +86,19 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
       ref={menuRef}
     >
       <Link
-<<<<<<< HEAD
         to={linkTo}
         className={`flex justify-between items-center w-full ${fontSize} px-4 py-1 text-gray-800 
           ${depth === 0
             ? "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:text-black"
             : "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:text-gray-800"
-=======
-        to={
-          item.subItems && item.subItems.length > 0 && depth === 0
-            ? "#"
-            : `/${item.slug}`
-        }
-        className={`flex justify-between items-center w-full ${fontSize} px-4 py-1 text-gray-800 
-          ${depth === 0
-            ? "bg-white hover:bg-[#333] hover:text-white focus:border-2 focus:border-white focus:bg-[#ffff] focus:text-black"
-            : "bg-white hover:bg-[#333] hover:text-white focus:border-2 focus:border-white focus:bg-[#ffff] focus:text-white"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           }
           whitespace-nowrap text-ellipsis
           transition-colors duration-300 ease-in-out rounded-sm`}
         onClick={handleClick}
       >
-<<<<<<< HEAD
         <span className="flex-1">{item.name}</span>
         {item.subItems && item.subItems.length > 0 && (
           <span className="ml-2 flex-shrink-0">
-=======
-        {item.name}
-        {item.subItems && item.subItems.length > 0 && (
-          <span className="ml-2">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             {depth === 0 ? "" : <FaChevronRight size={12} />}
           </span>
         )}
@@ -148,7 +106,6 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
 
       {item.subItems && item.subItems.length > 0 && (
         <div
-<<<<<<< HEAD
           className={`absolute border border-gray-200
             ${item.id === "technology" ? "-left-52" : ""}
             ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
@@ -163,21 +120,6 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
               {item.subItems.map((category) => (
                 <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg pl-5 py-3 border border-gray-200">
                   <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
-=======
-          className={`absolute border   border-gray-200
-            ${item.id === "technology" ? "-left-52" : ""}
-            ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
-            ${isHovered ? "block bg-white " : "hidden bg-white"}
-            shadow-lg transition-all duration-300 rounded-md ease-in-out
-            ${depth === 0 ? "" : "-mt-1 ml-1"}
-          `}
-        >
-          {item.id === "technology" ? (
-            <div className="grid grid-cols-2 gap-3  p-3 w-[700px]">
-              {item.subItems.map((category) => (
-                <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg pl-5 py-3 border border-gray-200">
-                  <div className="w-12 h-12 flex items-center justify-center">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                     <img
                       src={category.icon || "https://via.placeholder.com/24"}
                       alt={category.name}
@@ -185,13 +127,8 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
                     />
                   </div>
 
-<<<<<<< HEAD
                   <div className="flex-1 min-w-0">
                     <h3 className="text-lg font-medium text-gray-800 mb-1">{category.name}</h3>
-=======
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800">{category.name}</h3>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                     <p className="text-sm text-gray-600 pb-2 leading-relaxed">{category.description}</p>
                     <div className="grid grid-cols-2 gap-4">
                       {category.technologies.map((tech) => (
@@ -205,11 +142,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
                             alt={tech.name}
                             className="w-5 h-5 object-contain flex-shrink-0"
                           />
-<<<<<<< HEAD
                           <span className="text-sm text-gray-700 font-medium truncate">{tech.name}</span>
-=======
-                          <span className="text-sm text-gray-700 font-medium">{tech.name}</span>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                         </div>
                       ))}
                     </div>
@@ -249,14 +182,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
   );
 };
 
-<<<<<<< HEAD
 const Navbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
-=======
-
-// Navbar Component
-const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [navData, setNavData] = useState([]);
   const [technologyMenu, setTechnologyMenu] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -265,7 +191,6 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-<<<<<<< HEAD
     setIsMobileMenuOpen(false);
   }, [location.pathname, setIsMobileMenuOpen]);
 
@@ -273,16 +198,6 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
-=======
-    setIsMenuOpen(false);
-  }, [location.pathname]);
-
-  const closeMenu = () => {
-    setIsMenuOpen(false);
-  };
-
-  // Fetch logo
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   useEffect(() => {
     const fetchHeaderColorLogo = async () => {
       try {
@@ -298,19 +213,11 @@ const Navbar = () => {
     fetchHeaderColorLogo();
   }, []);
 
-<<<<<<< HEAD
-=======
-  // Fetch navigation data
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchNavData();
         if (Array.isArray(response.data)) {
-<<<<<<< HEAD
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           setNavData(response.data);
         } else {
           console.error("Navigation data is not an array:", response);
@@ -322,30 +229,15 @@ const Navbar = () => {
     fetchData();
   }, []);
 
-<<<<<<< HEAD
-=======
-  // Fetch technology menu data
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   useEffect(() => {
     const fetchTechnologyData = async () => {
       try {
         setIsLoading(true);
-<<<<<<< HEAD
         const categoryResponse = await axios.get('/api/techCategory');
         const categories = categoryResponse.data.data;
 
         const technologyResponse = await axios.get('/api/technology');
         const technologies = technologyResponse.data.data;
-=======
-        // Fetch categories
-        const categoryResponse = await axios.get('/api/techCategory');
-        const categories = categoryResponse.data.data;
-
-        // Fetch technologies
-        const technologyResponse = await axios.get('/api/technology');
-        const technologies = technologyResponse.data.data;
-        console.log("Technologies:", technologies);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
         const formattedTechnologyMenu = {
           id: "technology",
@@ -376,18 +268,10 @@ const Navbar = () => {
     fetchTechnologyData();
   }, []);
 
-<<<<<<< HEAD
   const combinedNavItems = [...navData];
   if (technologyMenu) {
     if (combinedNavItems.length >= 2) {
       combinedNavItems.splice(2, 0, technologyMenu);
-=======
-  // Combine navData and technologyMenu, placing technologyMenu at index 2
-  const combinedNavItems = [...navData];
-  if (technologyMenu) {
-    if (combinedNavItems.length >= 2) {
-      combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     } else {
       combinedNavItems.push(technologyMenu);
     }
@@ -442,11 +326,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-<<<<<<< HEAD
       <MobileNavbar isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
-=======
-      <MobileNavbar isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     </div>
   );
 };

@@ -112,11 +112,7 @@ const IndustryInfo = () => {
       
       <button 
         onClick={handleConsultationClick}
-<<<<<<< HEAD
         className="btn-yellow p-3 px-4 rounded flex items-center space-x-2 hover:text-white"
-=======
-        className="btn-yellow rounded flex items-center space-x-2 hover:text-white"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       >
         <span >{buttonText || 'Get a Consultation'}</span>
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

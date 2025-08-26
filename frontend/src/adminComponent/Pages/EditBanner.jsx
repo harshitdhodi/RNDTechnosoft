@@ -53,11 +53,7 @@ const EditPageHeading = () => {
     }
     
     try {
-<<<<<<< HEAD
       await axios.delete(`/api/pageHeading/updateHeading/${pageHeadingId}/photo`, { 
-=======
-      await axios.delete(`/api/pageHeading/${pageHeadingId}/photo`, { 
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         withCredentials: true 
       });
       setCurrentPhoto("");
@@ -76,11 +72,7 @@ const EditPageHeading = () => {
     const fetchPageHeadingData = async () => {
       try {
         setLoading(true);
-<<<<<<< HEAD
         const response = await axios.get(`/api/pageHeading/updateHeading/${pageHeadingId}`, { 
-=======
-        const response = await axios.get(`/api/pageHeading/${pageHeadingId}`, { 
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           withCredentials: true 
         });
         
@@ -140,11 +132,7 @@ const EditPageHeading = () => {
       });
 
       const response = await axios.put(
-<<<<<<< HEAD
         `/api/pageHeading/updateHeading/${pageHeadingId}`, 
-=======
-        `/api/pageHeading/${pageHeadingId}`, 
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         formData,
         {
           headers: {

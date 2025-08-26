@@ -73,11 +73,7 @@ const SubsectionsComponent = ({
     });
 
     try {
-<<<<<<< HEAD
       await axios.zz(
-=======
-      await axios.put(
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         `/api/content/newsubsections/${contentId}`,
         formData,
         {

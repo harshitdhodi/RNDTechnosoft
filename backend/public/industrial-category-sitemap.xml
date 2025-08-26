@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-<<<<<<< HEAD
     <loc>https://www.rndtechnosoft.com/retail</loc>
-=======
-    <loc>https://www.rndtechnosoft.com/travel-marketing</loc>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     <lastmod>2024-10-19T10:13:23.826Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -35,13 +31,8 @@
     <priority>0.8</priority>
   </url>
   <url>
-<<<<<<< HEAD
     <loc>https://www.rndtechnosoft.com/quality-assurance</loc>
     <lastmod>2025-08-02T19:32:28.917Z</lastmod>
-=======
-    <loc>https://www.rndtechnosoft.com/chemical-marketing</loc>
-    <lastmod>2024-09-17T12:04:03.421Z</lastmod>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

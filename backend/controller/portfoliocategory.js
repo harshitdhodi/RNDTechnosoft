@@ -1,9 +1,6 @@
 const PortfolioCategory = require("../model/portfoliocategory");
 const Portfolio= require("../model/portfolio")
-<<<<<<< HEAD
 const Package = require("../model/packages")
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const fs = require("fs");
 const path = require("path");
 
@@ -38,7 +35,6 @@ const insertCategory = async (req, res) => {
   const component = "ProjectSection"; // Hardcoding the component field
 
   try {
-<<<<<<< HEAD
     // Check for duplicate category name
     const existingCategoryByName = await PortfolioCategory.findOne({ category });
     if (existingCategoryByName) {
@@ -49,12 +45,6 @@ const insertCategory = async (req, res) => {
     const existingCategoryBySlug = await PortfolioCategory.findOne({ slug });
     if (existingCategoryBySlug) {
       return res.status(400).json({ message: "Category with this slug already exists" });
-=======
-    const existingCategory = await PortfolioCategory.findOne({ category });
-
-    if (existingCategory) {
-      return res.status(400).json({ message: "Category already exists" });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
 
     const newCategory = new PortfolioCategory({
@@ -79,7 +69,6 @@ const insertCategory = async (req, res) => {
 
     const savedCategory = await newCategory.save();
 
-<<<<<<< HEAD
     res.status(201).json({
       message: "Category created successfully",
       data: savedCategory
@@ -87,11 +76,6 @@ const insertCategory = async (req, res) => {
   } catch (error) {
     console.error("Error creating category:", error);
     res.status(500).json({ message: "Server error", error: error.message });
-=======
-    res.status(201).json(savedCategory);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
 };
 
@@ -123,7 +107,6 @@ const insertSubCategory = async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
 
-<<<<<<< HEAD
     // Check for duplicate subcategory name within this category
     const existingSubCategoryByName = categoryDoc.subCategories.find(
       (subCat) => subCat.category.toLowerCase() === category.toLowerCase()
@@ -147,13 +130,6 @@ const insertSubCategory = async (req, res) => {
     );
     if (slugExists) {
       return res.status(400).json({ message: "Subcategory slug must be unique across all categories" });
-=======
-    const existingSubCategory = categoryDoc.subCategories.find(
-      (subCat) => subCat.category === category
-    );
-    if (existingSubCategory) {
-      return res.status(400).json({ message: "Subcategory already exists" });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
 
     categoryDoc.subCategories.push({
@@ -175,7 +151,6 @@ const insertSubCategory = async (req, res) => {
       priority,
       changeFreq,
     });
-<<<<<<< HEAD
     
     await categoryDoc.save();
 
@@ -186,13 +161,6 @@ const insertSubCategory = async (req, res) => {
   } catch (error) {
     console.error("Error creating subcategory:", error);
     res.status(500).json({ message: "Server error", error: error.message });
-=======
-    await categoryDoc.save();
-
-    res.status(201).json(categoryDoc);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
 };
 
@@ -219,10 +187,6 @@ const insertSubSubCategory = async (req, res) => {
 
   try {
     const categoryDoc = await PortfolioCategory.findById(categoryId);
-<<<<<<< HEAD
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     if (!categoryDoc) {
       return res.status(404).json({ message: "Category not found" });
     }
@@ -232,7 +196,6 @@ const insertSubSubCategory = async (req, res) => {
       return res.status(404).json({ message: "Subcategory not found" });
     }
 
-<<<<<<< HEAD
     // Check for duplicate sub-subcategory name within this subcategory
     const existingSubSubCategoryByName = subCategory.subSubCategory.find(
       (subSubCat) => subSubCat.category.toLowerCase() === category.toLowerCase()
@@ -260,16 +223,6 @@ const insertSubSubCategory = async (req, res) => {
       return res.status(400).json({ message: "Sub-subcategory slug must be unique across all categories" });
     }
 
-=======
-    const existingSubSubCategory = subCategory.subSubCategory.find(
-      (subSubCat) => subSubCat.category === category
-    );
-    if (existingSubSubCategory) {
-      return res
-        .status(400)
-        .json({ message: "Sub-subcategory already exists" });
-    }
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     const component = "SubSubPortfolio"; // Hardcoding the component field
 
     subCategory.subSubCategory.push({
@@ -291,7 +244,6 @@ const insertSubSubCategory = async (req, res) => {
       priority,
       changeFreq,
     });
-<<<<<<< HEAD
     
     await categoryDoc.save();
 
@@ -302,13 +254,6 @@ const insertSubSubCategory = async (req, res) => {
   } catch (error) {
     console.error("Error creating sub-subcategory:", error);
     res.status(500).json({ message: "Server error", error: error.message });
-=======
-    await categoryDoc.save();
-
-    res.status(201).json(categoryDoc);
-  } catch (error) {
-    res.status(500).json({ message: "Server error", error });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
 };
 
@@ -586,7 +531,6 @@ const deletecategory = async (req, res) => {
 };
 
 const deletesubcategory = async (req, res) => {
-<<<<<<< HEAD
   const { categoryId, subCategoryId } = req.query;
 
   console.log("Incoming Request -> categoryId:", categoryId, "subCategoryId:", subCategoryId);
@@ -650,73 +594,15 @@ const deletesubcategory = async (req, res) => {
   } catch (error) {
     console.error("Error in deletesubcategory:", error);
     res.status(500).json({ message: "Server error", error });
-=======
-  const { categoryId, subCategoryId } = req.query; // Get the categoryId and subCategoryId from the query
-
-  try {
-    // Find the category document by slug
-    const categoryDoc = await PortfolioCategory.findOne({ slug: categoryId });
-
-    // If category not found, return 404
-    if (!categoryDoc) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
-
-    // Find the index of the subcategory to delete
-    const subCategoryIndex = categoryDoc.subCategories.findIndex(subCat => subCat._id.toString() === subCategoryId);
-
-    // If subcategory not found, return 404
-    if (subCategoryIndex === -1) {
-      return res.status(404).json({ message: 'Subcategory not found' });
-    }
-
-    // Get the subcategory to delete
-    const subCategory = categoryDoc.subCategories[subCategoryIndex];
-
-    // Check if there are sub-subcategories associated with this subcategory
-    if (subCategory.subSubCategory && subCategory.subSubCategory.length > 0) {
-      return res.status(400).json({ message: 'Subcategory has associated sub-subcategories and cannot be deleted' });
-    }
-
-    // Check if there is a photo and delete it if exists
-    if (subCategory.photo) {
-      const photoPath = path.join(__dirname, '../logos', subCategory.photo);
-      deleteFile(photoPath);
-    } else {
-      console.warn('No photo found for this subcategory');
-    }
-
-    // Remove the subcategory from the category's subCategories array
-    categoryDoc.subCategories.splice(subCategoryIndex, 1);
-
-    // Save the updated category document
-    await categoryDoc.save();
-
-    // Update all services that reference this subcategory, removing the subcategory reference
-    await Package.updateMany(
-      { subcategories: subCategoryId },
-      { $pull: { subcategories: subCategoryId } }
-    );
-
-    res.status(200).json({ message: 'Subcategory deleted successfully and references removed from services' });
-  } catch (error) {
-    console.log(`Error: ${error.message}`);
-    res.status(500).json({ message: 'Server error', error });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
 };
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const deletesubsubcategory = async (req, res) => {
   // Delete sub-subcategory
   const { categoryId, subCategoryId, subSubCategoryId } = req.query;
 
   try {
-<<<<<<< HEAD
     console.log('Delete request params:', { categoryId, subCategoryId, subSubCategoryId });
 
     // Find category document by slug
@@ -726,18 +612,10 @@ const deletesubsubcategory = async (req, res) => {
       return res.status(404).json({ message: 'Category not found' });
     }
     console.log('Category found:', categoryDoc.category);
-=======
-    // Find category document by slug
-    const categoryDoc = await PortfolioCategory.findOne({ slug: categoryId });
-    if (!categoryDoc) {
-      return res.status(404).json({ message: 'Category not found' });
-    }
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
     // Find subcategory by slug within the category
     const subCategory = categoryDoc.subCategories.find(sub => sub.slug === subCategoryId);
     if (!subCategory) {
-<<<<<<< HEAD
       console.log('Subcategory not found with slug:', subCategoryId);
       console.log('Available subcategories:', categoryDoc.subCategories.map(sub => sub.slug));
       return res.status(404).json({ message: 'Subcategory not found' });
@@ -782,27 +660,12 @@ const deletesubsubcategory = async (req, res) => {
 
     // Store the actual ObjectId for Package update
     const subSubCategoryObjectId = subSubCategoryToDelete._id;
-=======
-      return res.status(404).json({ message: 'Subcategory not found' });
-    }
-
-    // Find the index of the subSubCategory to be deleted
-    const subSubCategoryIndex = subCategory.subSubCategory.findIndex(subSubCat => subSubCat._id.toString() === subSubCategoryId);
-    if (subSubCategoryIndex === -1) {
-      return res.status(404).json({ message: 'Sub-subcategory not found' });
-    }
-
-    // Get the photo file path and delete the file
-    const photoPath = path.join(__dirname, '../logos', subCategory.subSubCategory[subSubCategoryIndex].photo);
-    deleteFile(photoPath); // Delete the file associated with the sub-subcategory
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
     // Remove the sub-subcategory from the array
     subCategory.subSubCategory.splice(subSubCategoryIndex, 1);
 
     // Save the updated category document
     await categoryDoc.save();
-<<<<<<< HEAD
     console.log('Category document updated successfully');
 
     // Update the services collection and remove the reference to this sub-subcategory
@@ -826,19 +689,6 @@ const deletesubsubcategory = async (req, res) => {
     console.log(`Error: ${error.message}`);
     console.error('Full error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
-=======
-
-    // Update the services collection and remove the reference to this sub-subcategory
-    await Package.updateMany(
-      { subSubcategories: subSubCategoryId },
-      { $pull: { subSubcategories: subSubCategoryId } }
-    );
-
-    res.status(200).json({ message: 'Sub-subcategory deleted successfully and references removed from services' });
-  } catch (error) {
-    console.log(`Error: ${error.message}`);
-    res.status(500).json({ message: 'Server error', error });
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   }
 };
 

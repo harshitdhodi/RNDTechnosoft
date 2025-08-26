@@ -37,15 +37,12 @@
     <priority>0.95</priority>
   </url>
   <url>
-<<<<<<< HEAD
     <loc>https://www.rndtechnosoft.com/healthcare-new</loc>
     <lastmod>2025-08-04T12:52:36.244Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.90</priority>
   </url>
   <url>
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     <loc>https://www.rndtechnosoft.com/ecommerce</loc>
     <lastmod>2024-11-08T10:22:25.706Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -63,7 +60,6 @@
     <changefreq>weekly</changefreq>
     <priority>0.02</priority>
   </url>
-<<<<<<< HEAD
   <url>
     <loc>https://www.rndtechnosoft.com/healthcare-new</loc>
     <lastmod>2025-08-04T12:53:44.707Z</lastmod>
@@ -94,6 +90,4 @@
     <changefreq>yearly</changefreq>
     <priority>1</priority>
   </url>
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 </urlset>

@@ -6,24 +6,15 @@ import { IoIosArrowDroprightCircle, IoIosArrowDropdownCircle } from "react-icons
 import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 
-<<<<<<< HEAD
 // TechnologyCategory component
 const TechnologyCategory = ({ category, setIsOpen }) => {
   const [isOpen, setIsOpenLocal] = useState(false);
-=======
-const TechnologyCategory = ({ category }) => {
-  const [isOpen, setIsOpen] = useState(false);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   return (
     <li className="list-none border-b border-gray-200">
       <div className="flex justify-between items-center px-4 py-3 bg-[#333]">
         <span className="text-white font-medium">{category.name}</span>
-<<<<<<< HEAD
         <button onClick={() => setIsOpenLocal(!isOpen)}>
-=======
-        <button onClick={() => setIsOpen(!isOpen)}>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           {isOpen ? (
             <IoIosArrowDropdownCircle className="text-white w-6 h-6" />
           ) : (
@@ -45,10 +36,7 @@ const TechnologyCategory = ({ category }) => {
                 <Link
                   to={`/technology/${tech.slug}`}
                   className="block px-6 py-3 text-white hover:bg-gray-600"
-<<<<<<< HEAD
                   onClick={() => setIsOpen(false)}
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                 >
                   {tech.name}
                 </Link>
@@ -61,12 +49,8 @@ const TechnologyCategory = ({ category }) => {
   );
 };
 
-<<<<<<< HEAD
 // MobileNavItem component
 const MobileNavItem = ({ item, depth = 0, setIsOpen }) => {
-=======
-const MobileNavItem = ({ item, depth = 0 }) => {
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
 
   const toggleSubMenu = () => {
@@ -79,14 +63,11 @@ const MobileNavItem = ({ item, depth = 0 }) => {
         <Link 
           to={item.subItems && item.subItems.length > 0 && depth === 0 ? '#' : `/${item.slug}`} 
           className="text-white"
-<<<<<<< HEAD
           onClick={() => {
             if (!item.subItems || item.subItems.length === 0 || depth !== 0) {
               setIsOpen(false);
             }
           }}
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         >
           {item.name}
         </Link>
@@ -109,7 +90,6 @@ const MobileNavItem = ({ item, depth = 0 }) => {
             transition={{ duration: 0.3 }}
             className="bg-[#333] overflow-hidden"
           >
-<<<<<<< HEAD
             {item.id === "technology" ? (
               item.subItems.map((category) => (
                 <TechnologyCategory key={category.id} category={category} setIsOpen={setIsOpen} />
@@ -117,16 +97,6 @@ const MobileNavItem = ({ item, depth = 0 }) => {
             ) : (
               item.subItems.map((subItem) => (
                 <MobileNavItem key={subItem.id} item={subItem} depth={depth + 1} setIsOpen={setIsOpen} />
-=======
-            {/* Special handling for technology menu */}
-            {item.id === "technology" ? (
-              item.subItems.map((category) => (
-                <TechnologyCategory key={category.id} category={category} />
-              ))
-            ) : (
-              item.subItems.map((subItem) => (
-                <MobileNavItem key={subItem.id} item={subItem} depth={depth + 1} />
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               ))
             )}
           </motion.ul>
@@ -136,10 +106,7 @@ const MobileNavItem = ({ item, depth = 0 }) => {
   );
 };
 
-<<<<<<< HEAD
 // MobileNavbar component
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const MobileNavbar = ({ isOpen, setIsOpen }) => {
   const [navData, setNavData] = useState([]);
   const [technologyMenu, setTechnologyMenu] = useState(null);
@@ -179,25 +146,13 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
     fetchData();
   }, []);
 
-<<<<<<< HEAD
-=======
-  // Fetch technology menu data (same as in main Navbar)
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   useEffect(() => {
     const fetchTechnologyData = async () => {
       try {
         setIsLoading(true);
-<<<<<<< HEAD
         const categoryResponse = await axios.get('/api/techCategory');
         const categories = categoryResponse.data.data;
 
-=======
-        // Fetch categories
-        const categoryResponse = await axios.get('/api/techCategory');
-        const categories = categoryResponse.data.data;
-
-        // Fetch technologies
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         const technologyResponse = await axios.get('/api/technology');
         const technologies = technologyResponse.data.data;
 
@@ -230,18 +185,10 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
     fetchTechnologyData();
   }, []);
 
-<<<<<<< HEAD
   const combinedNavItems = [...navData];
   if (technologyMenu) {
     if (combinedNavItems.length >= 2) {
       combinedNavItems.splice(2, 0, technologyMenu);
-=======
-  // Combine navData and technologyMenu, placing technologyMenu at index 2
-  const combinedNavItems = [...navData];
-  if (technologyMenu) {
-    if (combinedNavItems.length >= 2) {
-      combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     } else {
       combinedNavItems.push(technologyMenu);
     }
@@ -252,13 +199,8 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
   };
 
   return (
-<<<<<<< HEAD
     <div className="lg:hidden relative">
       <div className="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center z-50">
-=======
-    <div className="lg:hidden">
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         <NavLink to="/">
           <img 
             src={colorlogo.photo ? `/api/logo/download/${colorlogo.photo}` : ''} 
@@ -273,7 +215,6 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
       </div>
       <AnimatePresence>
         {isOpen && (
-<<<<<<< HEAD
           <>
             {/* Overlay to dim background */}
             <motion.div
@@ -301,23 +242,6 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
               )}
             </motion.ul>
           </>
-=======
-          <motion.ul
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white border-b border-gray-200 overflow-hidden"
-          >
-            {isLoading ? (
-              <li className="px-4 py-3 text-center">Loading...</li>
-            ) : (
-              combinedNavItems.map((link) => (
-                <MobileNavItem key={link.id} item={link} />
-              ))
-            )}
-          </motion.ul>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         )}
       </AnimatePresence>
     </div>

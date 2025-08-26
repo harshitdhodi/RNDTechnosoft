@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
-<<<<<<< HEAD
 import { MdDelete } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -35,19 +34,10 @@ const contactSchema = z.object({
     .refine((file) => !file || file.size <= 5 * 1024 * 1024, "Photo must be less than 5MB"),
 });
 
-=======
-import { Link, useNavigate } from "react-router-dom";
-import { MdDelete } from "react-icons/md";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Address from "../Address";
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const ContactInfoData = () => {
   const [contactInfos, setContactInfos] = useState([]);
   const [heading, setHeading] = useState("");
   const [subheading, setSubheading] = useState("");
-<<<<<<< HEAD
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [existingPhoto, setExistingPhoto] = useState(null);
@@ -58,45 +48,24 @@ const ContactInfoData = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [contactInfoToDelete, setContactInfoToDelete] = useState(null);
   const navigate = useNavigate();
-=======
-  const [photo, setPhoto] = useState(null); // State for uploaded photo
-  const [photoPreview, setPhotoPreview] = useState(null); // State for preview of uploaded photo
-  const [existingPhoto, setExistingPhoto] = useState(null); // State for existing photo from the backend
-  const [imgTitle, setImgTitle] = useState("");
-  const [alt, setAlt] = useState("");
-
-
-  const notify = () => {
-    toast.success("Updated Successfully!");
-  };
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const fetchHeadings = async () => {
     try {
       const response = await axios.get('/api/pageHeading/heading?pageType=contactus', { withCredentials: true });
-<<<<<<< HEAD
       const { heading, subheading, photo, alt, imgTitle } = response.data;
-=======
-      const { heading, subheading, photo,alt,imgTitle } = response.data;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       setHeading(heading || '');
       setSubheading(subheading || '');
       setAlt(alt || '');
       setImgTitle(imgTitle || '');
       setExistingPhoto(photo);
     } catch (error) {
-<<<<<<< HEAD
       console.error("Error fetching headings:", error);
       const statusCode = error.response?.status ? `(${error.response.status})` : '';
       toast.error(`Failed to fetch headings ${statusCode}.`);
-=======
-      console.error(error);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
   const saveHeadings = async () => {
-<<<<<<< HEAD
     setIsLoading(true);
     setErrors({});
 
@@ -121,20 +90,10 @@ const ContactInfoData = () => {
     formData.append("alt", validationResult.data.alt);
     formData.append("imgTitle", validationResult.data.imgTitle);
     if (photo) formData.append("photo", photo);
-=======
-    const formData = new FormData();
-    formData.append("pagetype", 'contactus');
-    formData.append("heading", heading);
-    formData.append("subheading", subheading);
-    formData.append("alt", alt);
-    formData.append("imgTitle", imgTitle);
-    if (photo) formData.append("photo", photo); // Append photo if a new one is uploaded
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
     try {
       await axios.put('/api/pageHeading/updateHeading?pageType=contactus', formData, {
         withCredentials: true,
-<<<<<<< HEAD
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       toast.success("Updated Successfully!");
@@ -223,144 +182,6 @@ const ContactInfoData = () => {
       <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
         <h1 className="text-xl md:text-2xl font-bold text-gray-700 font-serif uppercase">Contact Info</h1>
         <button className="px-4 py-2 mt-3 sm:mt-0 bg-[#021660] text-white rounded hover:bg-red-600 transition duration-300 font-serif text-sm sm:text-base">
-=======
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      notify();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchHeadings();
-  }, []);
-
-  const handleHeadingChange = (e) => setHeading(e.target.value);
-  const handleSubheadingChange = (e) => setSubheading(e.target.value);
-
-  // Handle file change and set preview
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-    setPhotoPreview(URL.createObjectURL(file)); // Generate preview URL for photo
-  };
-
-  // Fetch contact info data with authentication
-  useEffect(() => {
-    axios.get(`/api/contactInfo/getcontactinfo`, { withCredentials: true })
-      .then((response) => {
-        const fetchedContactInfos = response.data.data || response.data;
-        setContactInfos(fetchedContactInfos);
-      })
-      .catch((error) => {
-        if (error.response?.status === 403) {
-          navigate("/login");
-        }
-      });
-  }, []);
-
-  const handleDelete = (contactInfoId) => {
-    if (window.confirm("Are you sure you want to delete this contact info?")) {
-      axios
-        .delete(`/api/contactInfo/deletecontactinfo?id=${contactInfoId}`, {
-          withCredentials: true,
-        })
-        .then((response) => {
-          setContactInfos((prevContactInfos) =>
-            prevContactInfos.filter((contactInfo) => contactInfo._id !== contactInfoId)
-          );
-        })
-        .catch((error) => {
-          if (error.response?.status === 403) {
-            navigate("/login");
-          }
-        });
-    }
-  };
-
-  return (
-    <div className="container mx-auto p-4">
-      <ToastContainer />
-      <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded">
-        <div className="grid md:grid-cols-2 md:gap-2 grid-cols-1">
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Heading</label>
-            <input
-              type="text"
-              value={heading}
-              onChange={handleHeadingChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Sub heading</label>
-            <input
-              type="text"
-              value={subheading}
-              onChange={handleSubheadingChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Photo</label>
-            <input
-              type="file"
-              onChange={handlePhotoChange}
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-            />
-          </div>
-          {/* Preview Section */}
-          <div className="mb-6">
-            {photoPreview ? (
-              <img
-                src={photoPreview}
-                alt="Preview"
-                className="w-32 h-32 object-cover mt-2"
-              />
-            ) : existingPhoto ? (
-              <img
-                src={`/api/logo/download/${existingPhoto}`}
-                alt="Existing photo"
-                className="w-32 h-32 object-cover mt-2"
-              />
-            ) : (
-              <p>No photo uploaded</p>
-            )}
-          </div>
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Image Title</label>
-          <input
-            type="text"
-            value={imgTitle}
-            onChange={(e) => setImgTitle(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-          />
-        </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Alt Text</label>
-          <input
-            type="text"
-            value={alt}
-            onChange={(e) => setAlt(e.target.value)}
-            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-          />
-        </div>
-
-        <button
-          onClick={saveHeadings}
-          className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif"
-        >
-          Save
-        </button>
-      </div>
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold mb-4">Contact Info</h1>
-        <button className="px-4 py-2 mt-3 bg-[#021660] text-white rounded hover:bg-red-600 transition duration-300">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           <Link to={`/contactinfo/createContactinfo`}>Add Contact Info</Link>
         </button>
       </div>
@@ -368,7 +189,6 @@ const ContactInfoData = () => {
         <table className="min-w-full mt-8 bg-white border border-blue-200">
           <thead className="bg-[#021045] text-white">
             <tr>
-<<<<<<< HEAD
               <th className="px-4 py-2 border text-sm sm:text-base">Photo</th>
               <th className="px-4 py-2 border text-sm sm:text-base">Image Title</th>
               <th className="px-4 py-2 border text-sm sm:text-base">Alt Text</th>
@@ -377,41 +197,23 @@ const ContactInfoData = () => {
               <th className="px-4 py-2 border text-sm sm:text-base">Email(s)</th>
               <th className="px-4 py-2 border text-sm sm:text-base">Address</th>
               <th className="px-4 py-2 border text-sm sm:text-base">Actions</th>
-=======
-              <th className="px-4 py-2 border">Photo</th>
-              <th className="px-4 py-2 border">Image Title</th>
-              <th className="px-4 py-2 border">Alt Text</th>
-              <th className="px-4 py-2 border">Title</th>
-              <th className="px-4 py-2 border">Address</th>
-              <th className="px-4 py-2 border">Actions</th>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </tr>
           </thead>
           <tbody>
             {contactInfos.length > 0 ? (
               contactInfos.map((contactInfo) => (
-<<<<<<< HEAD
                 <tr key={contactInfo._id} className="hover:bg-gray-100 transition duration-150">
-=======
-                <tr key={contactInfo._id}>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                   <td className="px-4 py-2 border">
                     {contactInfo.photo ? (
                       <img
                         src={`/api/icon/download/${contactInfo.photo}`}
-<<<<<<< HEAD
                         alt={contactInfo.alt || 'Contact Info Image'}
                         className="w-16 h-16 object-cover rounded"
-=======
-                        alt={contactInfo.alt}
-                        className="w-16 h-16 object-cover"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                       />
                     ) : (
                       "No Image"
                     )}
                   </td>
-<<<<<<< HEAD
                   <td className="px-4 py-2 border break-words">{contactInfo.imgTitle || 'N/A'}</td>
                   <td className="px-4 py-2 border break-words">{contactInfo.alt || 'N/A'}</td>
                   <td className="px-4 py-2 border break-words">{contactInfo.type || 'N/A'}</td>
@@ -446,35 +248,12 @@ const ContactInfoData = () => {
                         <MdDelete title="Delete" />
                       </button>
                     </div>
-=======
-                  <td className="px-4 py-2 border">{contactInfo.imgTitle}</td>
-                  <td className="px-4 py-2 border">{contactInfo.alt}</td>
-                  <td className="px-4 py-2 border">{contactInfo.title}</td>
-                  <td className="px-4 py-2 border">{contactInfo.address}</td>
-                  <td className="px-4 py-2 border w-full flex items-center justify-left space-x-2">
-                    <Link
-                      to={`/contactinfo/editContactinfo/${contactInfo._id}`}
-                      className="bg-blue-500 text-white p-2 rounded flex items-center justify-center"
-                    >
-                      <FaEdit title="Edit" />
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(contactInfo._id)}
-                      className="bg-red-500 text-white p-2 rounded flex items-center justify-center"
-                    >
-                      <MdDelete title="Delete" />
-                    </button>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-<<<<<<< HEAD
                 <td colSpan="8" className="px-4 py-2 border text-center text-sm sm:text-base">
-=======
-                <td colSpan="6" className="px-4 py-2 border text-center">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                   No contact info available
                 </td>
               </tr>
@@ -482,7 +261,6 @@ const ContactInfoData = () => {
           </tbody>
         </table>
       </div>
-<<<<<<< HEAD
       <Modal
         isOpen={isDeleteModalOpen}
         onRequestClose={handleCancelDelete}
@@ -510,15 +288,9 @@ const ContactInfoData = () => {
           </div>
         </div>
       </Modal>
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       <Address />
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default ContactInfoData;
-=======
-export default ContactInfoData;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

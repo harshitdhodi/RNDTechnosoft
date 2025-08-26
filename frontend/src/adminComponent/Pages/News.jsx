@@ -1,10 +1,6 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-<<<<<<< HEAD
 import { FaEdit, FaTrashAlt, FaCheck, FaEye, FaTimes, FaArrowUp, FaArrowDown, FaPlus, FaTimesCircle } from "react-icons/fa";
-=======
-import { FaEdit, FaTrashAlt, FaCheck, FaEye, FaTimes, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
@@ -14,7 +10,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
-<<<<<<< HEAD
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import { z } from "zod";
 import { debounce } from 'lodash';
@@ -33,12 +28,6 @@ const headingSchema = z.object({
     .trim(),
 });
 
-=======
-
-
-Modal.setAppElement('#root');
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const NewsTable = () => {
   const [heading, setHeading] = useState("");
   const [subheading, setSubheading] = useState("");
@@ -48,7 +37,6 @@ const NewsTable = () => {
   const [pageCount, setPageCount] = useState(0);
   const [metaFilter, setMetaFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
-<<<<<<< HEAD
   const [selectedNews, setSelectedNews] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -103,28 +91,6 @@ const NewsTable = () => {
       return true;
     });
   }, [news, metaFilter]);
-=======
-  const [selectedNews, setSelectedNews] = useState(null); // State for the selected banner
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const navigate = useNavigate()
-  const pageSize = 5;
-
-
-  const filteredNews = useMemo(() => {
-    return news.filter((news) => {
-      if (metaFilter === "Meta Available") {
-        return news.metatitle && news.metatitle.length > 0 || news.metadescription && news.metadescription.length > 0;
-      }
-      if (metaFilter === "Meta Unavailable") {
-        return !news.metatitle || news.metatitle.length === 0 || !news.metadescription || news.metadescription.length === 0;
-      }
-      return true;
-    }).filter((news) =>
-      news.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [news, searchTerm, metaFilter]);
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const notify = () => {
     toast.success("Updated Successfully!");
@@ -141,11 +107,7 @@ const NewsTable = () => {
         accessor: "categoryName",
         Cell: ({ row }) => (
           <span
-<<<<<<< HEAD
             className="hover:text-blue-500 cursor-pointer truncate"
-=======
-            className="hover:text-blue-500 cursor-pointer"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             onClick={() => navigate(`/news/editNews/${row.original.slug}`)}
           >
             {row.original.categoryName}
@@ -157,11 +119,7 @@ const NewsTable = () => {
         accessor: "title",
         Cell: ({ row }) => (
           <span
-<<<<<<< HEAD
             className="hover:text-blue-500 text-wrap cursor-pointer truncate"
-=======
-            className="hover:text-blue-500 cursor-pointer"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             onClick={() => navigate(`/news/editNews/${row.original.slug}`)}
           >
             {row.original.title}
@@ -173,11 +131,7 @@ const NewsTable = () => {
         accessor: "photo",
         Cell: ({ value }) => {
           const firstImage = Array.isArray(value) && value.length > 0 ? value[0] : null;
-<<<<<<< HEAD
           return firstImage ? <img src={`/api/image/download/${firstImage}`} alt="News" className="w-20 h-12 sm:w-32 sm:h-20 object-cover rounded" /> : null;
-=======
-          return firstImage ? <img src={`/api/image/download/${firstImage}`} alt="News" className="w-32 h-20 object-cover" /> : null;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         },
         disableSortBy: true,
       },
@@ -186,11 +140,7 @@ const NewsTable = () => {
         accessor: "postedBy",
         Cell: ({ row }) => (
           <span
-<<<<<<< HEAD
             className="hover:text-blue-500 cursor-pointer truncate"
-=======
-            className="hover:text-blue-500 cursor-pointer"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             onClick={() => navigate(`/news/editNews/${row.original.slug}`)}
           >
             {row.original.postedBy}
@@ -202,11 +152,7 @@ const NewsTable = () => {
         accessor: "date",
         Cell: ({ row }) => (
           <span
-<<<<<<< HEAD
             className="hover:text-blue-500 cursor-pointer truncate"
-=======
-            className="hover:text-blue-500 cursor-pointer"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             onClick={() => navigate(`/news/editNews/${row.original.slug}`)}
           >
             {row.original.date}
@@ -218,11 +164,7 @@ const NewsTable = () => {
         accessor: "visits",
         Cell: ({ row }) => (
           <span
-<<<<<<< HEAD
             className="hover:text-blue-500 cursor-pointer truncate"
-=======
-            className="hover:text-blue-500 cursor-pointer"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             onClick={() => navigate(`/news/editNews/${row.original.slug}`)}
           >
             {row.original.visits}
@@ -238,18 +180,13 @@ const NewsTable = () => {
       {
         Header: "Options",
         Cell: ({ row }) => (
-<<<<<<< HEAD
           <div className="flex gap-2 sm:gap-4">
-=======
-          <div className="flex gap-4">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             <button className="text-blue-500 hover:text-blue-700 transition" onClick={() => handleView(row.original)}>
               <FaEye />
             </button>
             <button className="text-blue-500 hover:text-blue-700 transition">
               <Link to={`/news/editNews/${row.original.slug}`}><FaEdit /></Link>
             </button>
-<<<<<<< HEAD
             <button
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => {
@@ -257,9 +194,6 @@ const NewsTable = () => {
                 setIsDeleteModalOpen(true);
               }}
             >
-=======
-            <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteNews(row.original.slug)}>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               <FaTrashAlt />
             </button>
           </div>
@@ -284,26 +218,6 @@ const NewsTable = () => {
     useSortBy
   );
 
-<<<<<<< HEAD
-=======
-  const fetchData = async (pageIndex) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`/api/news/getNews?page=${pageIndex + 1}`, { withCredentials: true });
-      const newsWithIds = response.data.data.map((newsItem, index) => ({
-        ...newsItem,
-        id: pageIndex * pageSize + index + 1
-      }));
-      setNews(newsWithIds);
-      setPageCount(Math.ceil(response.data.total / pageSize));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const handleView = (news) => {
     setSelectedNews(news);
     setIsModalOpen(true);
@@ -314,7 +228,6 @@ const NewsTable = () => {
     setSelectedNews(null);
   };
 
-<<<<<<< HEAD
   const handleDeleteConfirm = async () => {
     if (!newsToDelete) return;
     try {
@@ -359,21 +272,6 @@ const NewsTable = () => {
       debouncedFetchData.cancel();
     };
   }, [pageIndex, searchTerm, pageCount, debouncedFetchData]);
-=======
-  const deleteNews = async (slugs) => {
-    try {
-      const response = await axios.delete(`/api/news/deleteNews?slugs=${slugs}`, { withCredentials: true });
-
-      fetchData();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData(pageIndex);
-  }, [pageIndex]);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const fetchHeadings = async () => {
     try {
@@ -383,17 +281,13 @@ const NewsTable = () => {
       setSubheading(subheading || '');
     } catch (error) {
       console.error(error);
-<<<<<<< HEAD
       const statusCode = error.response?.status ? `(${error.response.status})` : '';
       toast.error(`Failed to fetch headings ${statusCode}.`);
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
   const saveHeadings = async () => {
     try {
-<<<<<<< HEAD
       const validationResult = headingSchema.safeParse({ heading, subheading });
       if (!validationResult.success) {
         const errors = validationResult.error.errors.map(err => err.message).join(", ");
@@ -405,21 +299,12 @@ const NewsTable = () => {
         pagetype: 'news',
         heading: validationResult.data.heading,
         subheading: validationResult.data.subheading,
-=======
-      await axios.put('/api/pageHeading/updateHeading?pageType=blogs', {
-        pagetype: 'news',
-        heading,
-        subheading,
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       }, { withCredentials: true });
       notify();
     } catch (error) {
       console.error(error);
-<<<<<<< HEAD
       const statusCode = error.response?.status ? `(${error.response.status})` : '';
       toast.error(`Failed to update headings ${statusCode}.`);
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -427,30 +312,16 @@ const NewsTable = () => {
     fetchHeadings();
   }, []);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const handleHeadingChange = (e) => setHeading(e.target.value);
   const handleSubheadingChange = (e) => setSubheading(e.target.value);
 
   return (
-<<<<<<< HEAD
     <div className="p-4 sm:p-6 md:p-8 overflow-x-auto">
       <ToastContainer />
       <div className="mb-6 sm:mb-8 border border-gray-200 shadow-lg p-4 sm:p-6 rounded-lg">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-gray-700 font-bold mb-2 uppercase font-serif text-sm sm:text-base">Heading</label>
-=======
-    <div className="p-4 overflow-x-auto">
-      <ToastContainer />
-      <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded ">
-        <div className="grid md:grid-cols-2 md:gap-2 grid-cols-1">
-
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Heading</label>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             <input
               type="text"
               value={heading}
@@ -458,13 +329,8 @@ const NewsTable = () => {
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
             />
           </div>
-<<<<<<< HEAD
           <div>
             <label className="block text-gray-700 font-bold mb-2 uppercase font-serif text-sm sm:text-base">Sub heading</label>
-=======
-          <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Sub heading</label>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             <input
               type="text"
               value={subheading}
@@ -475,28 +341,16 @@ const NewsTable = () => {
         </div>
         <button
           onClick={saveHeadings}
-<<<<<<< HEAD
           className="mt-4 px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-900 transition duration-300 font-serif text-sm sm:text-base"
-=======
-          className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         >
           Save
         </button>
       </div>
-<<<<<<< HEAD
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6">
         <h1 className="text-xl md:text-2xl font-bold text-gray-700 font-serif uppercase">News</h1>
         <div className="flex flex-col sm:flex-row gap-2 mt-2 sm:mt-0">
           <select
             className="px-2 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300 text-sm sm:text-base"
-=======
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">News</h1>
-        <div className="flex gap-2">
-          <select
-            className="px-2 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             value={metaFilter}
             onChange={(e) => setMetaFilter(e.target.value)}
           >
@@ -504,7 +358,6 @@ const NewsTable = () => {
             <option value="Meta Available">Meta Available</option>
             <option value="Meta Unavailable">Meta Unavailable</option>
           </select>
-<<<<<<< HEAD
           <Link to="/news/createNews">
             <button className="px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-900 transition duration-300 font-serif flex items-center gap-2 text-sm sm:text-base">
               <FaPlus size={15} />
@@ -633,101 +486,11 @@ const NewsTable = () => {
         </div>
         <span className="text-sm sm:text-base" aria-live="polite">
           Page <strong>{pageIndex + 1} of {pageCount}</strong>
-=======
-          <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-            <Link to="/news/createNews"><FaPlus size={15} /></Link>
-          </button>
-        </div>
-      </div>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search by title..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-blue-500 transition duration-300"
-        />
-      </div>
-      <h2 className="text-md font-semibold mb-4">Manage News</h2>
-      {loadings ? (
-        <div className="flex justify-center"><UseAnimations animation={loading} size={56} /></div>
-
-      ) : (
-        <>{news.length == 0 ? <div className="flex justify-center items-center"><iframe className="w-96 h-96" src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"></iframe></div>
-          : <table className="w-full mt-4 border-collapse" {...getTableProps()}>
-            <thead className="bg-slate-700 hover:bg-slate-800 text-white">
-              {headerGroups.map((headerGroup) => (
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      className="py-2 px-4 border-b border-gray-300 cursor-pointer uppercase font-serif "
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className="">{column.render("Header")}</span>
-                        {column.canSort && (
-                          <span className="ml-1">
-                            {column.isSorted ? (
-                              column.isSortedDesc ? (
-                                <FaArrowDown />
-                              ) : (
-                                <FaArrowUp />
-                              )
-                            ) : (
-                              <FaArrowDown className="text-gray-400" />
-                            )}
-                          </span>
-                        )}
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
-                prepareRow(row);
-                return (
-                  <tr {...row.getRowProps()} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
-                    {row.cells.map((cell) => (
-                      <td {...cell.getCellProps()} className="py-2 px-4 ">
-                        {cell.render("Cell")}
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        }
-        </>
-
-      )}
-      <div className="mt-4 flex justify-center">
-        <button onClick={() => setPageIndex(0)} disabled={pageIndex === 0} className="mr-2 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition">
-          {"<<"}
-        </button>{" "}
-        <button onClick={() => setPageIndex(pageIndex - 1)} disabled={pageIndex === 0} className="mr-2 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition">
-          {"<"}
-        </button>{" "}
-        <button onClick={() => setPageIndex(pageIndex + 1)} disabled={pageIndex + 1 >= pageCount} className="mr-2 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition">
-          {">"}
-        </button>{" "}
-        <button onClick={() => setPageIndex(pageCount - 1)} disabled={pageIndex + 1 >= pageCount} className="mr-2 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition">
-          {">>"}
-        </button>{" "}
-        <span>
-          Page{" "}
-          <strong>
-            {pageIndex + 1} of {pageCount}
-          </strong>{" "}
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         </span>
       </div>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
-<<<<<<< HEAD
         contentLabel="News Details"
         className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 p-4"
       >
@@ -753,37 +516,10 @@ const NewsTable = () => {
                 <ReactQuill
                   readOnly={true}
                   value={selectedNews.details || ''}
-=======
-        contentLabel="Banner Details"
-        className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50"
-      >
-        <div className="bg-white p-8 rounded shadow-lg w-96 relative">
-        <button onClick={closeModal} className="absolute top-5 right-5 text-gray-500 hover:text-gray-700">
-            <FaTimes size={20} />
-          </button>
-          <h2 className="text-xl font-bold mb-4 font-serif">News</h2>
-          {selectedNews && (
-            <div>
-              <div className="flex mt-2">
-                <p className="mr-2 font-semibold font-serif">Category :</p>
-                <p>{selectedNews.categoryName}</p>
-              </div>
-              <div className="flex mt-2">
-                <p className="mr-2 font-semibold font-serif">title:</p>
-                <p>{selectedNews.title}</p>
-              </div>
-
-              <div className="mt-2">
-                <p className="mr-2 font-semibold font-serif">Description :</p>
-                <ReactQuill
-                  readOnly={true}
-                  value={selectedNews.details}
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                   modules={{ toolbar: false }}
                   theme="bubble"
                   className="quill"
                 />
-<<<<<<< HEAD
               </div>
               <div className="flex flex-col">
                 <p className="font-semibold font-serif">Photos:</p>
@@ -833,36 +569,17 @@ const NewsTable = () => {
               <div className="flex flex-col sm:flex-row sm:items-center">
                 <p className="font-semibold font-serif mr-2">Updated At:</p>
                 <p>{selectedNews.updatedAt ? new Date(selectedNews.updatedAt).toLocaleString() : 'N/A'}</p>
-=======
-                <div className="flex mt-2">
-                  <p className="mr-2 font-semibold font-serif">Posted By :</p>
-                  <p>{selectedNews.postedBy}</p>
-                </div>
-                <div className="flex mt-2">
-                  <p className="mr-2 font-semibold font-serif">Date :</p>
-                  <p>{selectedNews.postedBy}</p>
-                </div>
-                <div className="flex mt-2">
-                  <p className="mr-2 font-semibold font-serif">Visits :</p>
-                  <p>{selectedNews.visits}</p>
-                </div>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               </div>
             </div>
           )}
           <button
             onClick={closeModal}
-<<<<<<< HEAD
             className="mt-6 px-4 py-2 bg-slate-700 text-white rounded-md hover:bg-slate-900 transition duration-300 font-serif text-sm sm:text-base"
-=======
-            className="mt-4 px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             Close
           </button>
         </div>
       </Modal>
-<<<<<<< HEAD
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={handleCancelDelete}
@@ -870,14 +587,8 @@ const NewsTable = () => {
         itemName={newsToDelete?.title || 'news item'}
         itemType="news item"
       />
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default NewsTable;
-=======
-export default NewsTable;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

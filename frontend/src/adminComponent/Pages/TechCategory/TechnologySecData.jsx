@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Edit, Trash2, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -11,114 +10,20 @@ const TechnologyDataTable = () => {
   const [data, setData] = useState([]);
   const [technologies, setTechnologies] = useState([]);
   const [selectedTechnology, setSelectedTechnology] = useState('All');
-=======
-
-const TechnologyDataTable = () => {
-  const [data, setData] = useState([]);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-<<<<<<< HEAD
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const navigate = useNavigate();
 
   // Fetch data and technologies
-=======
-  const navigate = useNavigate();
-
-  // Mock data for demonstration
-  const mockData = [
-    {
-      _id: '1',
-      type: 'hire developer',
-      heading: '<h2>Expert React Developers</h2>',
-      card: [
-        {
-          photo: 'https://via.placeholder.com/300x200',
-          heading: 'Frontend Specialists',
-          subHeading: '<p>Build modern user interfaces</p>',
-          altName: 'Frontend Developer',
-          imgTitle: 'React Expert'
-        },
-        {
-          photo: 'https://via.placeholder.com/300x200',
-          heading: 'Full Stack Engineers',
-          subHeading: '<p>End-to-end development solutions</p>',
-          altName: 'Full Stack Developer',
-          imgTitle: 'MERN Stack Expert'
-        }
-      ],
-      createdAt: '2024-01-15T10:30:00Z'
-    },
-    {
-      _id: '2',
-      type: 'Why Choose',
-      heading: '<h2>Why Choose Our Technology</h2>',
-      card: [
-        {
-          photo: 'https://via.placeholder.com/300x200',
-          heading: 'Scalable Solutions',
-          subHeading: '<p>Built for growth and performance</p>',
-          altName: 'Scalability',
-          imgTitle: 'Scalable Tech'
-        }
-      ],
-      createdAt: '2024-01-10T14:20:00Z'
-    },
-    {
-      _id: '3',
-      type: 'Technology Application',
-      heading: '<h2>Modern Tech Applications</h2>',
-      card: [
-        {
-          photo: 'https://via.placeholder.com/300x200',
-          heading: 'AI Integration',
-          subHeading: '<p>Cutting-edge artificial intelligence</p>',
-          altName: 'AI Technology',
-          imgTitle: 'AI Solutions'
-        },
-        {
-          photo: 'https://via.placeholder.com/300x200',
-          heading: 'Cloud Computing',
-          subHeading: '<p>Reliable cloud infrastructure</p>',
-          altName: 'Cloud Services',
-          imgTitle: 'Cloud Technology'
-        },
-        {
-          photo: 'https://via.placeholder.com/300x200',
-          heading: 'Mobile Development',
-          subHeading: '<p>Cross-platform mobile apps</p>',
-          altName: 'Mobile Apps',
-          imgTitle: 'Mobile Solutions'
-        }
-      ],
-      createdAt: '2024-01-05T09:15:00Z'
-    }
-  ];
-
-  // Calculate pagination
-  const totalItems = data.length;
-  const totalPages = Math.ceil(totalItems / pageSize);
-  const paginatedData = data.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
-  // Simulate API calls
-  useEffect(() => {
-    fetchData();
-  }, []);
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const fetchData = async () => {
     try {
       setLoading(true);
       setError(null);
-<<<<<<< HEAD
       const response = await axios.get('/api/technologySecData', { withCredentials: true });
       const fetchedData = response.data.data || response.data || [];
       setData(fetchedData);
@@ -129,35 +34,11 @@ const TechnologyDataTable = () => {
       setError('Failed to fetch data');
       console.error('Error fetching data:', err);
       toast.error('Failed to fetch technology data');
-=======
-      
-      // Actual API call to fetch data
-      const response = await fetch('/api/technologySecData', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const result = await response.json();
-      setData(result.data || result || []);
-      
-    } catch (err) {
-      setError('Failed to fetch data');
-      console.error('Error fetching data:', err);
-      // Fallback to mock data for demonstration
-      setData(mockData);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     } finally {
       setLoading(false);
     }
   };
 
-<<<<<<< HEAD
   useEffect(() => {
     fetchData();
   }, []);
@@ -197,45 +78,6 @@ const TechnologyDataTable = () => {
       setDeleteLoading(null);
       setIsModalOpen(false);
       setItemToDelete(null);
-=======
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this item?')) {
-      return;
-    }
-
-    try {
-      setDeleteLoading(id);
-      
-      // Actual API call to delete data
-      const response = await fetch(`/api/technologySecData/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      // Remove the deleted item from the state
-      setData(data.filter(item => item._id !== id));
-      
-      // Adjust current page if necessary
-      if (paginatedData.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
-      
-      // Show success message
-      alert('Item deleted successfully!');
-      
-    } catch (err) {
-      setError('Failed to delete item');
-      console.error('Error deleting item:', err);
-      alert('Failed to delete item. Please try again.');
-    } finally {
-      setDeleteLoading(null);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
@@ -247,14 +89,11 @@ const TechnologyDataTable = () => {
     navigate('/manage-tech-sec');
   };
 
-<<<<<<< HEAD
   const handleTechnologyChange = (e) => {
     setSelectedTechnology(e.target.value);
     setCurrentPage(1);
   };
 
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const truncateText = (text, maxLength = 50) => {
     if (!text) return '';
     const strippedText = text.replace(/<[^>]*>/g, '');
@@ -281,7 +120,6 @@ const TechnologyDataTable = () => {
     setCurrentPage(1);
   };
 
-<<<<<<< HEAD
   // Filter data based on selected technology
   const filteredData = selectedTechnology === 'All'
     ? data
@@ -299,26 +137,15 @@ const TechnologyDataTable = () => {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-=======
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading...</div>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto p-6 bg-white shadow-md rounded-lg">
-<<<<<<< HEAD
       <ToastContainer />
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 font-serif">Technology Section Data</h2>
-=======
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Technology Section Data</h2>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         <button
           onClick={handleAdd}
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
@@ -340,7 +167,6 @@ const TechnologyDataTable = () => {
         </div>
       )}
 
-<<<<<<< HEAD
       <div className="mb-4 flex items-center gap-4">
         <label className="text-sm font-medium text-gray-700 font-serif">Filter by Technology:</label>
         <div className="relative w-48">
@@ -365,11 +191,6 @@ const TechnologyDataTable = () => {
       {filteredData.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
           <p className="text-lg font-serif">No data found</p>
-=======
-      {data.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          <p className="text-lg">No data found</p>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           <button
             onClick={handleAdd}
             className="mt-4 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700"
@@ -383,7 +204,6 @@ const TechnologyDataTable = () => {
             <table className="min-w-full bg-white border border-gray-300">
               <thead className="bg-gray-50">
                 <tr>
-<<<<<<< HEAD
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
                     Technology
                   </th>
@@ -400,21 +220,6 @@ const TechnologyDataTable = () => {
                     Created Date
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
-=======
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    Heading
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    Cards Count
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
-                    Created Date
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                     Actions
                   </th>
                 </tr>
@@ -423,25 +228,18 @@ const TechnologyDataTable = () => {
                 {paginatedData.map((item, index) => (
                   <tr key={item._id || index} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
-<<<<<<< HEAD
                       <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 capitalize">
                         {item.technology.imgTitle || 'N/A'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                       <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
                         {item.type || 'N/A'}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-900 max-w-xs">
-<<<<<<< HEAD
                         {truncateText(item.technology.imgTitle)}
-=======
-                        {truncateText(item.heading)}
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -462,11 +260,7 @@ const TechnologyDataTable = () => {
                           <Edit size={16} />
                         </button>
                         <button
-<<<<<<< HEAD
                           onClick={() => openDeleteModal(item)}
-=======
-                          onClick={() => handleDelete(item._id)}
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                           disabled={deleteLoading === item._id}
                           className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-100 transition-colors disabled:opacity-50"
                           title="Delete"
@@ -488,11 +282,7 @@ const TechnologyDataTable = () => {
           {/* Pagination Controls */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-<<<<<<< HEAD
               <span className="text-sm text-gray-700 font-serif">
-=======
-              <span className="text-sm text-gray-700">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
                 Showing {(currentPage - 1) * pageSize + 1} to{' '}
                 {Math.min(currentPage * pageSize, totalItems)} of {totalItems} entries
               </span>
@@ -542,7 +332,6 @@ const TechnologyDataTable = () => {
           </div>
         </div>
       )}
-<<<<<<< HEAD
       <DeleteConfirmationModal
         isOpen={isModalOpen}
         onClose={closeDeleteModal}
@@ -550,8 +339,6 @@ const TechnologyDataTable = () => {
         itemName={itemToDelete?.technology.imgTitle ? truncateText(itemToDelete.technology.imgTitle) : "this item"}
         itemType="Technology Section"
       />
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     </div>
   );
 };

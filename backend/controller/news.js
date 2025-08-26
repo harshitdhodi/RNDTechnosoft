@@ -81,7 +81,6 @@ const getNews = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
 const searchNews = async (req, res) => {
   try {
     let { page = 1, limit = 5, search = '' } = req.query;
@@ -134,8 +133,6 @@ const searchNews = async (req, res) => {
   }
 };
 
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 const getNewsFront = async (req, res) => {
   try {
     // Fetch only active news and sort by date in descending order to get the latest news first
@@ -598,8 +595,4 @@ const getAllNews = async (req, res) => {
 };
 
 
-<<<<<<< HEAD
 module.exports = { searchNews, updateBlogVisits,getAllNews,getNewsFront,getNewsBySlug,insertNews, getNews,getLatestBlogs, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, getCategoryNews, getSubcategoryNews, getSubSubcategoryNews, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById, fetchUrlmeta, editUrlmeta, fetchUrlmetaById };
-=======
-module.exports = { updateBlogVisits,getAllNews,getNewsFront,getNewsBySlug,insertNews, getNews,getLatestBlogs, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, getCategoryNews, getSubcategoryNews, getSubSubcategoryNews, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById, fetchUrlmeta, editUrlmeta, fetchUrlmetaById };
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

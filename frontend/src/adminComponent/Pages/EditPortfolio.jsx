@@ -3,51 +3,30 @@ import axios from 'axios';
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-<<<<<<< HEAD
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 const EditPortfolio = () => {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
   const [details, setDetails] = useState("");
-<<<<<<< HEAD
   const [photo, setPhoto] = useState(null);
   const [photoAlt, setPhotoAlt] = useState("");
   const [imgtitle, setImgtitle] = useState("");
   const [slug, setSlug] = useState("");
-=======
-  const [photo, setPhoto] = useState([]);
-  const [slug, setSlug] = useState("");
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [status, setStatus] = useState("active");
   const [categories, setCategories] = useState([]);
   const [parentCategoryId, setParentCategoryId] = useState("");
   const [subCategoryId, setSubCategoryId] = useState("");
   const [subSubCategoryId, setSubSubCategoryId] = useState("");
-<<<<<<< HEAD
-=======
-  // State for categories, parent, sub, and sub-sub categories with updated naming convention
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [servicecategories, setServiceCategories] = useState([]);
   const [serviceparentCategoryId, setServiceParentCategoryId] = useState("");
   const [servicesubCategoryId, setServiceSubCategoryId] = useState("");
   const [servicesubSubCategoryId, setServiceSubSubCategoryId] = useState("");
-<<<<<<< HEAD
-=======
-
-  // state for industries 
-  // State for categories, parent, sub, and sub-sub categories with updated naming convention
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [industriescategories, setIndustriesCategories] = useState([]);
   const [industriesparentCategoryId, setIndustriesParentCategoryId] = useState("");
   const [industriessubCategoryId, setIndustriesSubCategoryId] = useState("");
   const [industriessubSubCategoryId, setIndustriesSubSubCategoryId] = useState("");
-<<<<<<< HEAD
   const [initialPhoto, setInitialPhoto] = useState(null);
   const [initialPhotoAlt, setInitialPhotoAlt] = useState("");
   const [initialImgtitle, setInitialImgtitle] = useState("");
@@ -143,18 +122,6 @@ const EditPortfolio = () => {
     return '';
   };
 
-=======
-  const { slugs } = useParams();
-  const [initialPhotos, setInitialPhotos] = useState([]);
-  const [photoAlts, setPhotoAlts] = useState([]);
-  const [imgtitle, setImgtitle] = useState([]);
-  const [initialphotoAlts, setInitialPhotoAlts] = useState([])
-  const [initialimgtitle, setInitialImgtitle] = useState([])
-
-
-  const navigate = useNavigate();
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const modules = {
     toolbar: [
       [{ 'font': [] }],
@@ -173,47 +140,33 @@ const EditPortfolio = () => {
       matchVisual: false,
     }
   };
-<<<<<<< HEAD
 
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const fetchServiceCategories = async () => {
     try {
       const response = await axios.get('/api/services/getAll', { withCredentials: true });
       setServiceCategories(response.data);
     } catch (error) {
       console.error(error);
-<<<<<<< HEAD
       toast.error("Failed to fetch service categories");
     }
   };
 
-=======
-    }
-  };
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const fetchIndustriesCategories = async () => {
     try {
       const response = await axios.get('/api/industries/getAll', { withCredentials: true });
       setIndustriesCategories(response.data);
     } catch (error) {
       console.error(error);
-<<<<<<< HEAD
       toast.error("Failed to fetch industries categories");
     }
   };
 
-=======
-    }
-  };
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const fetchCategories = async () => {
     try {
       const response = await axios.get('/api/Portfolio/getAll', { withCredentials: true });
       setCategories(response.data);
     } catch (error) {
       console.error(error);
-<<<<<<< HEAD
       toast.error("Failed to fetch categories");
     }
   };
@@ -299,15 +252,12 @@ const EditPortfolio = () => {
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch portfolio");
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
   useEffect(() => {
     fetchPortfolio();
     fetchCategories();
-<<<<<<< HEAD
     fetchServiceCategories();
     fetchIndustriesCategories();
   }, []);
@@ -357,113 +307,10 @@ const EditPortfolio = () => {
     clearFieldError('alt');
     clearFieldError('imgtitle');
     toast.success("Image removed successfully");
-=======
-    fetchServiceCategories()
-    fetchIndustriesCategories()
-  }, []);
-
-  const fetchPortfolio = async () => {
-    try {
-      const response = await axios.get(`/api/Portfolio/getPortfolioById?slugs=${slugs}`, { withCredentials: true });
-      const Portfolio = response.data.data;
-      setTitle(Portfolio.title);
-      setDetails(Portfolio.details);
-      setInitialPhotos(Portfolio.photo);
-      setLink(Portfolio.link)
-      setStatus(Portfolio.status);
-      setInitialPhotoAlts(Portfolio.alt);
-      setInitialImgtitle(Portfolio.imgtitle);
-
-
-      setSlug(Portfolio.slug);
-
-
-      // Fetch categories
-      try {
-        const categoryResponse = await axios.get(`/api/portfolio/getSpecificCategory?categoryId=${Portfolio.categories}`, { withCredentials: true });
-        const category = categoryResponse.data;
-        setParentCategoryId(category.slug);
-      } catch (error) {
-        console.error('Error fetching parent category:', error);
-      }
-
-      try {
-        const subCategoryResponse = await axios.get(`/api/portfolio/getSpecificSubcategory?categoryId=${Portfolio.categories}&subCategoryId=${Portfolio.subcategories}`, { withCredentials: true });
-        const subCategory = subCategoryResponse.data;
-        setSubCategoryId(subCategory.slug);
-      } catch (error) {
-        console.error('Error fetching subcategory:', error);
-      }
-
-      try {
-        const subSubCategoryResponse = await axios.get(`/api/portfolio/getSpecificSubSubcategory?categoryId=${Portfolio.categories}&subCategoryId=${Portfolio.subcategories}&subSubCategoryId=${Portfolio.subSubcategories}`, { withCredentials: true });
-        const subSubCategory = subSubCategoryResponse.data
-        setSubSubCategoryId(subSubCategory.slug);
-      } catch (error) {
-        console.error('Error fetching sub-subcategory:', error);
-      }
-
-      // // Fetch services
-      try {
-        const serviceCategoryResponse = await axios.get(`/api/services/getSpecificCategory?categoryId=${Portfolio.servicecategories}`, { withCredentials: true });
-        const serviceCategory = serviceCategoryResponse.data;
-        setServiceParentCategoryId(serviceCategory.slug);
-      } catch (error) {
-        console.error('Error fetching service parent category:', error);
-      }
-
-      try {
-        const serviceSubCategoryResponse = await axios.get(`/api/services/getSpecificSubcategory?categoryId=${Portfolio.servicecategories}&subCategoryId=${Portfolio.servicesubcategories}`, { withCredentials: true });
-        const serviceSubCategory = serviceSubCategoryResponse.data;
-        setServiceSubCategoryId(serviceSubCategory.slug);
-      } catch (error) {
-        console.error('Error fetching service subcategory:', error);
-      }
-
-      try {
-        const serviceSubSubCategoryResponse = await axios.get(`/api/services/getSpecificSubSubcategory?categoryId=${Portfolio.servicecategories}&subCategoryId=${Portfolio.servicesubcategories}&subSubCategoryId=${Portfolio.servicesubSubcategories}`, { withCredentials: true });
-        const serviceSubSubCategory = serviceSubSubCategoryResponse.data;
-        setServiceSubSubCategoryId(serviceSubSubCategory.slug);
-      } catch (error) {
-        console.error('Error fetching service sub-subcategory:', error);
-      }
-
-
-      // Fetch services
-      try {
-        const industriesCategoryResponse = await axios.get(`/api/industries/getSpecificCategory?categoryId=${Portfolio.industriescategories}`, { withCredentials: true });
-        const industriesCategory = industriesCategoryResponse.data;
-        setIndustriesParentCategoryId(industriesCategory.slug);
-      } catch (error) {
-        console.error('Error fetching industries parent category:', error);
-      }
-
-      try {
-        const industriesSubCategoryResponse = await axios.get(`/api/industries/getSpecificSubcategory?categoryId=${Portfolio.servicecategories}&subCategoryId=${Portfolio.servicesubcategories}`, { withCredentials: true });
-        const industriesSubCategory = industriesSubCategoryResponse.data;
-        setIndustriesSubCategoryId(industriesSubCategory.slug);
-      } catch (error) {
-        console.error('Error fetching industries subcategory:', error);
-      }
-
-      try {
-        const industriesSubSubCategoryResponse = await axios.get(`/api/industries/getSpecificSubSubcategory?categoryId=${Portfolio.servicecategories}&subCategoryId=${Portfolio.servicesubcategories}&subSubCategoryId=${Portfolio.servicesubSubcategories}`, { withCredentials: true });
-        const industriesSubSubCategory = industriesSubSubCategoryResponse.data;
-        setIndustriesSubSubCategoryId(industriesSubSubCategory.slug);
-      } catch (error) {
-        console.error('Error fetching service sub-subcategory:', error);
-      }
-
-
-    } catch (error) {
-      console.error(error);
-    }
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     
     if (!validateForm()) {
       toast.error("Please fix the validation errors");
@@ -472,20 +319,12 @@ const EditPortfolio = () => {
 
     setIsSubmitting(true);
 
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     try {
       const formData = new FormData();
       formData.append('title', title);
       formData.append('link', link);
       formData.append('details', details);
-<<<<<<< HEAD
       formData.append('slug', slug);
-=======
-
-      formData.append('slug', slug);
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       formData.append('status', status);
       formData.append('categories', parentCategoryId);
       formData.append('subcategories', subCategoryId);
@@ -497,7 +336,6 @@ const EditPortfolio = () => {
       formData.append('industrysubcategories', industriessubCategoryId);
       formData.append('industrysubSubcategories', industriessubSubCategoryId);
 
-<<<<<<< HEAD
       if (photo) {
         formData.append('photo', photo);
         formData.append('alt', photoAlt);
@@ -508,31 +346,12 @@ const EditPortfolio = () => {
       }
 
       await axios.put(`/api/portfolio/updatePortfolio?slugs=${slugs}`, formData, {
-=======
-      // Combine initial and new photo alts into a single array
-      const combinedAlts = [...initialphotoAlts, ...photoAlts];
-      const combinedImgtitle = [...initialimgtitle, ...imgtitle];
-
-      // Append photos and their respective alts to FormData
-      photo.forEach((p) => {
-        formData.append(`photo`, p);
-      });
-
-      combinedAlts.forEach((a) => {
-        formData.append(`alt`, a);
-      })
-      combinedImgtitle.forEach((m) => {
-        formData.append(`imgtitle`, m);
-      })
-      const response = await axios.put(`/api/portfolio/updatePortfolio?slugs=${slugs}`, formData, {
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         headers: {
           'Content-Type': 'multipart/form-data'
         },
         withCredentials: true
       });
 
-<<<<<<< HEAD
       toast.success("Portfolio updated successfully!");
       navigate('/portfolio');
     } catch (error) {
@@ -596,182 +415,13 @@ const EditPortfolio = () => {
       {subSubCategory.category}
     </option>
   );
-=======
-
-      navigate('/portfolio');
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleFileChange = (e) => {
-    const newPhotos = Array.from(e.target.files);
-    setPhoto([...photo, ...newPhotos]);
-  };
-
-  const handleInitialAltTextChange = (e, index) => {
-    const newPhotoAlts = [...initialphotoAlts];
-    newPhotoAlts[index] = e.target.value;
-
-    setInitialPhotoAlts(newPhotoAlts);
-  };
-
-
-  const handleInitialImgtitleChange = (e, index) => {
-    const newImgtitle = [...initialimgtitle];
-    newImgtitle[index] = e.target.value;
-
-    setInitialImgtitle(newImgtitle);
-  };
-  const handleNewAltTextChange = (e, index) => {
-    const newPhotoAlts = [...photoAlts];
-    newPhotoAlts[index] = e.target.value;
-
-    setPhotoAlts(newPhotoAlts);
-  };
-  const handleNewImgtitleChange = (e, index) => {
-    const newImgtitle = [...imgtitle];
-    newImgtitle[index] = e.target.value;
-
-    setImgtitle(newImgtitle);
-  };
-
-
-  useEffect(() => {
-    setSlug(title.replace(/\s+/g, '-')
-      .toLowerCase()
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/--+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '')
-    );
-  }, [title])
-
-  useEffect(() => {
-    setSlug(slug.toLowerCase()
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/--+/g, '-')
-    );
-  }, [slug])
-
-  const handleDeleteInitialPhoto = (e, photoFilename, index) => {
-    e.preventDefault();
-    axios.delete(`/api/Portfolio/${slugs}/image/${photoFilename}/${index}`, { withCredentials: true })
-      .then(response => {
-        const updatedPhotos = initialPhotos.filter(photo => photo !== photoFilename);
-        setInitialPhotos(updatedPhotos);
-        const updatedPhotoAlts = [...initialphotoAlts];
-        updatedPhotoAlts.splice(index, 1);
-        setInitialPhotoAlts(updatedPhotoAlts);
-
-        const updatedImgtitle = [...initialimgtitle];
-        updatedImgtitle.splice(index, 1);
-        setInitialImgtitle(updatedImgtitle);
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  };
-
-  const handleDeleteNewPhoto = (e, index) => {
-    e.preventDefault();
-    const updatedPhotos = [...photo];
-    updatedPhotos.splice(index, 1);
-    setPhoto(updatedPhotos);
-    const updatedPhotoAlts = [...initialphotoAlts];
-    updatedPhotoAlts.splice(index, 1);
-    setInitialPhotoAlts(updatedPhotoAlts);
-
-    const updatedImgtitle = [...initialimgtitle];
-    updatedImgtitle.splice(index, 1);
-    setInitialImgtitle(updatedImgtitle);
-  };
-
-  const renderCategoryOptions = (category) => {
-    return (
-      <option key={category._id} value={category.slug}>
-        {category.category}
-      </option>
-    );
-  };
-
-  const renderSubCategoryOptions = (subCategory) => {
-    return (
-      <option key={subCategory._id} value={subCategory.slug}>
-        {subCategory.category}
-      </option>
-    );
-  };
-
-  const renderSubSubCategoryOptions = (subSubCategory) => {
-    return (
-      <option key={subSubCategory._id} value={subSubCategory.slug}>
-        {subSubCategory.category}
-      </option>
-    );
-  };
-
-  // For Services
-  const renderServiceCategoryOptions = (category) => {
-    return (
-      <option key={category._id} value={category.slug}>
-        {category.category}
-      </option>
-    );
-  };
-
-  const renderServiceSubCategoryOptions = (subCategory) => {
-    return (
-      <option key={subCategory._id} value={subCategory.slug}>
-        {subCategory.category}
-      </option>
-    );
-  };
-
-  const renderServiceSubSubCategoryOptions = (subSubCategory) => {
-    return (
-      <option key={subSubCategory._id} value={subSubCategory.slug}>
-        {subSubCategory.category}
-      </option>
-    );
-  };
-
-
-  // For inddustries
-  const renderIndustriesCategoryOptions = (category) => {
-    return (
-      <option key={category._id} value={category.slug}>
-        {category.category}
-      </option>
-    );
-  };
-
-  const renderIndustriesSubCategoryOptions = (subCategory) => {
-    return (
-      <option key={subCategory._id} value={subCategory.slug}>
-        {subCategory.category}
-      </option>
-    );
-  };
-
-  const renderIndustriesSubSubCategoryOptions = (subSubCategory) => {
-    return (
-      <option key={subSubCategory._id} value={subSubCategory.slug}>
-        {subSubCategory.category}
-      </option>
-    );
-  };
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   const handleParentCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
     setParentCategoryId(selectedCategoryId);
     setSubCategoryId("");
     setSubSubCategoryId("");
-<<<<<<< HEAD
     clearFieldError('parentCategory');
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleSubCategoryChange = (e) => {
@@ -783,23 +433,14 @@ const EditPortfolio = () => {
   const handleServiceParentCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
     setServiceParentCategoryId(selectedCategoryId);
-<<<<<<< HEAD
     setServiceSubCategoryId("");
     setServiceSubSubCategoryId("");
-=======
-    setServiceSubCategoryId(""); // Reset subcategory selection
-    setServiceSubSubCategoryId(""); // Reset sub-subcategory selection
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleServiceSubCategoryChange = (e) => {
     const selectedSubCategoryId = e.target.value;
     setServiceSubCategoryId(selectedSubCategoryId);
-<<<<<<< HEAD
     setServiceSubSubCategoryId("");
-=======
-    setServiceSubSubCategoryId(""); // Reset sub-subcategory selection
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleServiceSubSubCategoryChange = (e) => {
@@ -810,23 +451,14 @@ const EditPortfolio = () => {
   const handleIndustriesParentCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
     setIndustriesParentCategoryId(selectedCategoryId);
-<<<<<<< HEAD
     setIndustriesSubCategoryId("");
     setIndustriesSubSubCategoryId("");
-=======
-    setIndustriesSubCategoryId(""); // Reset subcategory selection
-    setIndustriesSubSubCategoryId(""); // Reset sub-subcategory selection
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleIndustriesSubCategoryChange = (e) => {
     const selectedSubCategoryId = e.target.value;
     setIndustriesSubCategoryId(selectedSubCategoryId);
-<<<<<<< HEAD
     setIndustriesSubSubCategoryId("");
-=======
-    setIndustriesSubSubCategoryId(""); // Reset sub-subcategory selection
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleIndustriesSubSubCategoryChange = (e) => {
@@ -834,12 +466,6 @@ const EditPortfolio = () => {
     setIndustriesSubSubCategoryId(selectedSubSubCategoryId);
   };
 
-<<<<<<< HEAD
-=======
-
-
-  // Render categories safely
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const getSubCategories = (categoryId) => {
     const category = categories.find(category => category.slug === categoryId);
     return category?.subCategories || [];
@@ -851,10 +477,6 @@ const EditPortfolio = () => {
     return subCategory?.subSubCategories || [];
   };
 
-<<<<<<< HEAD
-=======
-  // Render services safely
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const getServiceSubCategories = (categoryId) => {
     const category = servicecategories.find(category => category.slug === categoryId);
     return category?.subCategories || [];
@@ -866,10 +488,6 @@ const EditPortfolio = () => {
     return subCategory?.subSubCategory || [];
   };
 
-<<<<<<< HEAD
-=======
-  // Render services safely
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const getIndustriesSubCategories = (categoryId) => {
     const category = industriescategories.find(category => category.slug === categoryId);
     return category?.subCategories || [];
@@ -881,7 +499,6 @@ const EditPortfolio = () => {
     return subCategory?.subSubCategories || [];
   };
 
-<<<<<<< HEAD
   useEffect(() => {
     setSlug(title.replace(/\s+/g, '-')
       .toLowerCase()
@@ -932,57 +549,33 @@ const EditPortfolio = () => {
       <div className="mb-4">
         <label htmlFor="parentCategory" className="block font-semibold mb-2">
           Parent Category <span className="text-red-500">*</span>
-=======
-  return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Portfolio</h1>
-      <div className="mb-4">
-        <label htmlFor="parentCategory" className="block font-semibold mb-2">
-          Parent Category
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         </label>
         <select
           id="parentCategory"
           value={parentCategoryId}
           onChange={handleParentCategoryChange}
-<<<<<<< HEAD
           className={`w-full p-2 border rounded focus:outline-none focus:border-blue-500 ${
             errors.parentCategory ? 'border-red-500' : ''
           }`}
-=======
-          className="w-full p-2 border rounded focus:outline-none"
-          required
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         >
           <option value="">Select Parent Category</option>
           {categories.map(renderCategoryOptions)}
         </select>
-<<<<<<< HEAD
         {errors.parentCategory && (
           <p className="text-red-500 text-sm mt-1">{errors.parentCategory}</p>
         )}
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       </div>
 
       {getSubCategories(parentCategoryId).length > 0 && (
         <div className="mb-4">
           <label htmlFor="subCategory" className="block font-semibold mb-2">
-<<<<<<< HEAD
             Subcategory (optional)
-=======
-            Subcategory
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <select
             id="subCategory"
             value={subCategoryId}
             onChange={handleSubCategoryChange}
-<<<<<<< HEAD
             className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-            className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="">Select Subcategory</option>
             {getSubCategories(parentCategoryId).map(renderSubCategoryOptions)}
@@ -993,21 +586,13 @@ const EditPortfolio = () => {
       {getSubSubCategories(parentCategoryId, subCategoryId).length > 0 && (
         <div className="mb-4">
           <label htmlFor="subSubCategory" className="block font-semibold mb-2">
-<<<<<<< HEAD
             Sub-Subcategory (optional)
-=======
-            Sub-Subcategory
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <select
             id="subSubCategory"
             value={subSubCategoryId}
             onChange={(e) => setSubSubCategoryId(e.target.value)}
-<<<<<<< HEAD
             className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-            className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="">Select Sub-Subcategory</option>
             {getSubSubCategories(parentCategoryId, subCategoryId).map(renderSubSubCategoryOptions)}
@@ -1023,12 +608,7 @@ const EditPortfolio = () => {
           id="serviceParentCategory"
           value={serviceparentCategoryId}
           onChange={handleServiceParentCategoryChange}
-<<<<<<< HEAD
           className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-          className="w-full p-2 border rounded focus:outline-none"
-          required
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         >
           <option value="">Select Service Parent Category</option>
           {servicecategories.map(renderServiceCategoryOptions)}
@@ -1038,21 +618,13 @@ const EditPortfolio = () => {
       {getServiceSubCategories(serviceparentCategoryId).length > 0 && (
         <div className="mb-4">
           <label htmlFor="serviceSubCategory" className="block font-semibold mb-2">
-<<<<<<< HEAD
             Service Subcategory (optional)
-=======
-            Service Subcategory
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <select
             id="serviceSubCategory"
             value={servicesubCategoryId}
             onChange={handleServiceSubCategoryChange}
-<<<<<<< HEAD
             className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-            className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="">Select Service Subcategory</option>
             {getServiceSubCategories(serviceparentCategoryId).map(renderServiceSubCategoryOptions)}
@@ -1063,31 +635,20 @@ const EditPortfolio = () => {
       {getServiceSubSubCategories(serviceparentCategoryId, servicesubCategoryId).length > 0 && (
         <div className="mb-4">
           <label htmlFor="serviceSubSubCategory" className="block font-semibold mb-2">
-<<<<<<< HEAD
             Service Sub-Subcategory (optional)
-=======
-            Service Sub-Subcategory
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <select
             id="serviceSubSubCategory"
             value={servicesubSubCategoryId}
             onChange={handleServiceSubSubCategoryChange}
-<<<<<<< HEAD
             className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-            className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="">Select Service Sub-Subcategory</option>
             {getServiceSubSubCategories(serviceparentCategoryId, servicesubCategoryId).map(renderServiceSubSubCategoryOptions)}
           </select>
         </div>
       )}
-<<<<<<< HEAD
 
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       <div className="mb-4">
         <label htmlFor="industriesParentCategory" className="block font-semibold mb-2">
           Industries Parent Category
@@ -1096,12 +657,7 @@ const EditPortfolio = () => {
           id="industriesParentCategory"
           value={industriesparentCategoryId}
           onChange={handleIndustriesParentCategoryChange}
-<<<<<<< HEAD
           className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-          className="w-full p-2 border rounded focus:outline-none"
-     
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         >
           <option value="">Select Industries Parent Category</option>
           {industriescategories.map(renderIndustriesCategoryOptions)}
@@ -1111,21 +667,13 @@ const EditPortfolio = () => {
       {getIndustriesSubCategories(industriesparentCategoryId).length > 0 && (
         <div className="mb-4">
           <label htmlFor="industriesSubCategory" className="block font-semibold mb-2">
-<<<<<<< HEAD
             Industries Subcategory (optional)
-=======
-            Industries Subcategory
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <select
             id="industriesSubCategory"
             value={industriessubCategoryId}
             onChange={handleIndustriesSubCategoryChange}
-<<<<<<< HEAD
             className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-            className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="">Select Industries Subcategory</option>
             {getIndustriesSubCategories(industriesparentCategoryId).map(renderIndustriesSubCategoryOptions)}
@@ -1136,21 +684,13 @@ const EditPortfolio = () => {
       {getIndustriesSubSubCategories(industriesparentCategoryId, industriessubCategoryId).length > 0 && (
         <div className="mb-4">
           <label htmlFor="industriesSubSubCategory" className="block font-semibold mb-2">
-<<<<<<< HEAD
             Industries Sub-Subcategory (optional)
-=======
-            Industries Sub-Subcategory
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           </label>
           <select
             id="industriesSubSubCategory"
             value={industriessubSubCategoryId}
             onChange={handleIndustriesSubSubCategoryChange}
-<<<<<<< HEAD
             className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-            className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
           >
             <option value="">Select Industries Sub-Subcategory</option>
             {getIndustriesSubSubCategories(industriesparentCategoryId, industriessubCategoryId).map(renderIndustriesSubSubCategoryOptions)}
@@ -1160,17 +700,12 @@ const EditPortfolio = () => {
 
       <div className="mb-4">
         <label htmlFor="title" className="block font-semibold mb-2">
-<<<<<<< HEAD
           Title <span className="text-red-500">*</span>
-=======
-          Title
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         </label>
         <input
           type="text"
           id="title"
           value={title}
-<<<<<<< HEAD
           onChange={(e) => {
             setTitle(e.target.value);
             clearFieldError('title');
@@ -1185,19 +720,11 @@ const EditPortfolio = () => {
         )}
       </div>
 
-=======
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        />
-      </div>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       <div className="mb-4">
         <label htmlFor="link" className="block font-semibold mb-2">
           Website Link
         </label>
         <input
-<<<<<<< HEAD
           type="url"
           id="link"
           value={link}
@@ -1328,135 +855,17 @@ const EditPortfolio = () => {
       <div className="mb-4">
         <label htmlFor="status" className="block font-semibold mb-2">
           Status <span className="text-red-500">*</span>
-=======
-          type="text"
-          id="link"
-          value={link}
-          onChange={(e) => setLink(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-8">
-        <label htmlFor="details" className="block font-semibold mb-2">
-          Description
-        </label>
-        <ReactQuill
-          value={details}
-          onChange={setDetails}
-          modules={modules} // Include modules for image handling
-          className="quill"
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block font-semibold mb-2">Current Photos</label>
-        <div className="flex flex-wrap gap-4">
-          {initialPhotos.map((photo, index) => (
-            <div key={index} className="relative w-56">
-              <img
-                src={`/api/image/download/${photo}`}
-                alt={`Photo ${index + 1}`}
-                className="w-56 h-32 object-cover"
-              />
-              <label htmlFor={`alt-${index}`} className="block mt-2">
-                Alternative Text:
-                <input
-                  type="text"
-                  id={`alt-${index}`}
-                  value={initialphotoAlts[index]}
-                  onChange={(e) => handleInitialAltTextChange(e, index)}
-                  className="w-full p-2 border rounded focus:outline-none"
-                />
-              </label>
-              <label htmlFor={`imgtitle-${index}`} className="block mt-2">
-                Image Title Text:
-                <input
-                  type="text"
-                  id={`imgtitle-${index}`}
-                  value={initialimgtitle[index]}
-                  onChange={(e) => handleInitialImgtitleChange(e, index)}
-                  className="w-full p-2 border rounded focus:outline-none"
-                />
-              </label>
-              <button
-                onClick={(e) => handleDeleteInitialPhoto(e, photo, index)}
-                className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex justify-center items-center"
-              >
-                <span className="text-xs">X</span>
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="mb-4">
-        <label className="block font-semibold mb-2">Add New Photos</label>
-        <input
-          type="file"
-          onChange={handleFileChange}
-          multiple
-          accept="image/*"
-          className="p-2 border rounded"
-        />
-        <div className="flex flex-wrap gap-4 mt-4">
-          {photo.map((file, index) => (
-            <div key={index} className="relative w-56">
-              <img
-                src={URL.createObjectURL(file)}
-                alt={`New Photo ${index + 1}`}
-                className="w-56 h-32 object-cover"
-              />
-
-              <label htmlFor={`alt-new-${index}`} className="block mt-2">
-                Alternative Text:
-                <input
-                  type="text"
-                  id={`alt-new-${index}`}
-                  value={photoAlts[index] || ""}
-                  onChange={(e) => handleNewAltTextChange(e, index)}
-                  className="w-full p-2 border rounded focus:outline-none"
-                />
-              </label>
-
-              <label htmlFor={`imgtitle-new-${index}`} className="block mt-2">
-                Image Title Text:
-                <input
-                  type="text"
-                  id={`alt-new-${index}`}
-                  value={imgtitle[index] || ""}
-                  onChange={(e) => handleNewImgtitleChange(e, index)}
-                  className="w-full p-2 border rounded focus:outline-none"
-                />
-              </label>
-              <button
-                onClick={(e) => handleDeleteNewPhoto(e, index)}
-                className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex
-                justify-center items-center"
-              >
-                <span className="text-xs">X</span>
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="status" className="block font-semibold mb-2">
-          Status
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         </label>
         <select
           id="status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-<<<<<<< HEAD
           className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-=======
-          className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         >
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
       </div>
-<<<<<<< HEAD
 
       <button 
         type="submit" 
@@ -1472,18 +881,3 @@ const EditPortfolio = () => {
 };
 
 export default EditPortfolio;
-=======
-      <div className="mt-4">
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none"
-        >
-          Save Changes
-        </button>
-      </div>
-    </form>
-  );
-
-}
-export default EditPortfolio;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

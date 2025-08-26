@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-<<<<<<< HEAD
 import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus, FaEye, FaTimes } from "react-icons/fa";
 import { BsArrowReturnRight } from "react-icons/bs";
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,34 +9,16 @@ import "react-toastify/dist/ReactToastify.css";
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 import DeleteConfirmationModal from './DeleteConfirmationModal';
-=======
-import { Edit,  //Edit
- Trash2,  //Trash2
- ArrowUp,  //ArrowUp
- ArrowDown,  //ArrowDown
- Plus  //Plus
-} from 'lucide-react';
-import { BsArrowReturnRight } from "react-icons/bs";
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import UseAnimations from "react-useanimations";
-import loading from "react-useanimations/lib/loading";
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 const CategoryTable = () => {
   const [categories, setCategories] = useState([]);
   const [loadings, setLoading] = useState(true);
-<<<<<<< HEAD
   const [showModal, setShowModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
 
-=======
-  const navigate = useNavigate()
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const columns = useMemo(
     () => [
       {
@@ -48,17 +29,11 @@ const CategoryTable = () => {
         Header: "Category",
         accessor: "category",
         Cell: ({ row }) => (
-<<<<<<< HEAD
           <div
             className="flex items-center gap-2 hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/NewsCategory/editNewsCategory/${row.original._id}`)}
           >
             {row.original.photo && <img src={`/api/logo/download/${row.original.photo}`} alt={row.original.alt} className="w-6 h-6 object-cover rounded" />}
-=======
-          <div className="flex items-center gap-2 hover:text-blue-500 cursor-pointer"
-            onClick={() => navigate(`/NewsCategory/editNewsCategory/${row.original._id}`)}>
-            {row.original.photo && <img src={`/api/logo/download/${row.original.photo}`} alt={row.original.alt} className="w-6 h-6" />}
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             {row.original.category}
           </div>
         ),
@@ -66,7 +41,6 @@ const CategoryTable = () => {
       {
         Header: "Options",
         Cell: ({ row }) => (
-<<<<<<< HEAD
           <div className="flex gap-2 sm:gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition" onClick={() => handleView(row.original, 'category')}>
               <FaEye />
@@ -74,28 +48,16 @@ const CategoryTable = () => {
             <button className="text-blue-500 hover:text-blue-700 transition">
               <Link to={`/NewsCategory/editNewsCategory/${row.original._id}`}>
                 <FaEdit />
-=======
-          <div className="flex gap-4">
-            <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/NewsCategory/editNewsCategory/${row.original._id}`}>
-                <Edit />
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
               </Link>
             </button>
             <button
               className="text-red-500 hover:text-red-700 transition"
-<<<<<<< HEAD
               onClick={() => {
                 setItemToDelete({ id: row.original._id, name: row.original.category, type: 'category' });
                 setShowModal(true);
               }}
             >
               <FaTrashAlt />
-=======
-              onClick={() => deleteCategory({ id: row.original._id })}
-            >
-              <Trash2 />
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
             </button>
           </div>
         ),
@@ -130,10 +92,7 @@ const CategoryTable = () => {
       setCategories(categoriesWithAutoIncrementId);
     } catch (error) {
       console.error(error);
-<<<<<<< HEAD
       toast.error("Failed to fetch categories.");
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     } finally {
       setLoading(false);
     }
@@ -152,7 +111,6 @@ const CategoryTable = () => {
     try {
       await axios.delete(url, { withCredentials: true });
       fetchCategories();
-<<<<<<< HEAD
       toast.success("Category deleted successfully!");
     } catch (error) {
       console.error(error);
@@ -184,19 +142,11 @@ const CategoryTable = () => {
     setSelectedItem(null);
   };
 
-=======
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   useEffect(() => {
     fetchCategories();
   }, []);
 
   return (
-<<<<<<< HEAD
     <div className="p-4 sm:p-6 md:p-8 overflow-x-auto">
       <ToastContainer />
       <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-6">
@@ -207,19 +157,10 @@ const CategoryTable = () => {
             <span className="hidden sm:inline">Add Category</span>
           </button>
         </Link>
-=======
-    <div className="p-4 overflow-x-auto">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Categories</h1>
-        <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
-          <Link to="/NewsCategory/CreateNewsCategory"><Plus size={15} /></Link>
-        </button>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       </div>
       {loadings ? (
         <div className="flex justify-center"><UseAnimations animation={loading} size={56} /></div>
       ) : (
-<<<<<<< HEAD
         <>
           {categories.length === 0 ? (
             <div className="flex justify-center items-center h-64">
@@ -433,116 +374,9 @@ const CategoryTable = () => {
             </div>
           </div>
         </div>
-=======
-        <>{categories.length == 0 ? <div className="flex justify-center items-center"><iframe className="w-96 h-96" src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"></iframe></div>
-          :
-          <table className="w-full mt-4 border-collapse" {...getTableProps()}>
-          <thead className="bg-slate-700 hover:bg-slate-800 text-white">
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    className="py-2 px-4 border-b border-gray-300 cursor-pointer uppercase font-serif"
-                  >
-                    <div className="flex items-center gap-2 ">
-                      <span>{column.render("Header")}</span>
-                      {column.canSort && (
-                        <span className="ml-1">
-                          {column.isSorted ? (
-                            column.isSortedDesc ? (
-                              <ArrowDown />
-                            ) : (
-                              <ArrowUp />
-                            )
-                          ) : (
-                            <ArrowDown className="text-gray-400" />
-                          )}
-                        </span>
-                      )}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
-              return (
-                <React.Fragment key={row.id}>
-                  <tr {...row.getRowProps()} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
-                    {row.cells.map((cell) => (
-                      <td {...cell.getCellProps()} className="py-2 px-4 ">
-                        {cell.render("Cell")}
-                      </td>
-                    ))}
-                  </tr>
-                  {row.original.subCategories && row.original.subCategories.map((subcategory, subIndex) => (
-                    <React.Fragment key={subIndex}>
-                      <tr className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
-                        <td></td>
-                        <td className="py-2 px-8 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/NewsCategory/editNewsCategory/${row.original._id}/${subcategory._id}`)}><BsArrowReturnRight />{subcategory.photo && <img src={`/api/logo/download/${subcategory.photo}`} alt={subcategory.alt} className="w-6 h-6" />}<span>{subcategory.category}</span></td>
-                        <td className="py-2 px-4">
-                          <div className="flex gap-4">
-                            <button className="text-blue-500 hover:text-blue-700 transition">
-                              <Link to={`/NewsCategory/editNewsCategory/${row.original._id}/${subcategory._id}`}>
-                                <Edit />
-                              </Link>
-                            </button>
-                            <button
-                              className="text-red-500 hover:text-red-700 transition"
-                              onClick={() => deleteCategory({
-                                categoryId: row.original._id,
-                                subCategoryId: subcategory._id
-                              })}
-                            >
-                              <Trash2 />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      {subcategory.subSubCategory && subcategory.subSubCategory.map((subSubcategory, subSubIndex) => (
-                        <tr key={subSubIndex} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
-                          <td></td>
-                          <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/NewsCategory/editNewsCategory/${row.original._id}/${subSubcategory._id}`)} ><BsArrowReturnRight />{subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}<span>{subSubcategory.category}</span></td>
-                          <td className="py-2 px-4">
-                            <div className="flex gap-4">
-                              <button className="text-blue-500 hover:text-blue-700 transition">
-                                <Link to={`/NewsCategory/editNewsCategory/${row.original._id}/${subcategory._id}/${subSubcategory._id}`}>
-                                  <Edit />
-                                </Link>
-                              </button>
-                              <button
-                                className="text-red-500 hover:text-red-700 transition"
-                                onClick={() => deleteCategory({
-                                  categoryId: row.original._id,
-                                  subCategoryId: subcategory._id,
-                                  subSubCategoryId: subSubcategory._id
-                                })}
-                              >
-                                <Trash2 />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  ))}
-                </React.Fragment>
-              );
-            })}
-          </tbody>
-        </table>}</>
-       
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       )}
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default CategoryTable;
-=======
-export default CategoryTable;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577

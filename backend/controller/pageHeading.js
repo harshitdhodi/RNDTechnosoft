@@ -55,11 +55,7 @@ const getAllPageHeadings = async (req, res) => {
 
 const updatePageHeading = async (req, res) => {
   const pageType = req.query.pageType;
-<<<<<<< HEAD
   const { heading, subheading, alt, imgTitle } = req.body;
-=======
-  const { heading, subheading,alt,imgTitle } = req.body;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   let photo;
 
   // Check if a new file was uploaded
@@ -69,14 +65,9 @@ const updatePageHeading = async (req, res) => {
 
   try {
     // Find the page heading by pageType
-<<<<<<< HEAD
     console.log("trying to find page heading");
     let pageHeading = await PageHeadings.findOne({ pageType });
     console.log("found");
-=======
-    let pageHeading = await PageHeadings.findOne({ pageType });
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     if (!pageHeading) {
       // If no page heading exists for the given pageType, create a new one
       pageHeading = new PageHeadings({
@@ -87,10 +78,7 @@ const updatePageHeading = async (req, res) => {
         imgTitle,
         photo: photo || '', // Set photo only if it's uploaded
       });
-<<<<<<< HEAD
       console.log("creating new page heading");
-=======
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       await pageHeading.save();
 
       return res.status(201).json({
@@ -222,6 +210,6 @@ const updatePageHeadingById = async (req, res) => {
   } catch (err) {
     console.error("Error updating page heading by ID:", err);
     res.status(500).json({ message: "Error updating page heading" });
-  }
+  } 
 };
 module.exports = { getpageHeading,addPageHeading,updatePageHeadingById,deletePageHeading, updatePageHeading ,getPageHeadingById ,getAllPageHeadings };

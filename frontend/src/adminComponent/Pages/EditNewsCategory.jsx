@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-<<<<<<< HEAD
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -21,17 +20,10 @@ import {
   validateChangeFreq,
   validatePriority,
 } from "../../utiles/validations";
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
 const EditCategory = () => {
   const { categoryId, subCategoryId, subSubCategoryId } = useParams();
   const navigate = useNavigate();
-<<<<<<< HEAD
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   const [category, setCategory] = useState("");
   const [details, setDetails] = useState("");
   const [photo, setPhoto] = useState(null);
@@ -41,7 +33,6 @@ const EditCategory = () => {
   const [metatitle, setMetatitle] = useState("");
   const [metadescription, setMetadescription] = useState("");
   const [metakeywords, setMetakeywords] = useState("");
-<<<<<<< HEAD
   const [metalanguage, setMetalanguage] = useState("");
   const [metacanonical, setMetacanonical] = useState("");
   const [metaschema, setMetaschema] = useState("");
@@ -51,23 +42,10 @@ const EditCategory = () => {
   const [priority, setPriority] = useState("");
   const [status, setStatus] = useState("active");
   const [errors, setErrors] = useState({});
-=======
-  const [metalanguage, setMetalanguage] = useState("")
-  const [metacanonical, setMetacanonical] = useState("")
-  const [metaschema, setMetaschema] = useState("")
-  const [otherMeta, setOthermeta] = useState("")
-  const [url, setUrl] = useState()
-  const [changeFreq, setChangeFreq] = useState()
-  const [priority, setPriority] = useState()
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
 
   useEffect(() => {
     const fetchData = async () => {
       let urls = "";
-<<<<<<< HEAD
-=======
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       if (categoryId && subCategoryId && subSubCategoryId) {
         urls = `/api/news/getSpecificSubSubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${subSubCategoryId}`;
       } else if (categoryId && subCategoryId) {
@@ -78,7 +56,6 @@ const EditCategory = () => {
 
       try {
         const response = await axios.get(urls, { withCredentials: true });
-<<<<<<< HEAD
         const { category, details, photo, alt, slug, metatitle, metadescription, metakeywords, metalanguage, metacanonical, metaschema, otherMeta, changeFreq, priority, status } = response.data;
         setCategory(category || "");
         setDetails(details || "");
@@ -120,38 +97,11 @@ const EditCategory = () => {
         toast.error("Error fetching category data");
       }
     };
-=======
-        const { category,details, photo, alt, slug, metatitle, metadescription, metakeywords, metalanguage, metacanonical, metaschema, otherMeta, changeFreq, priority } = response.data;
-
-        setCategory(category);
-        setDetails(details);
-        setCurrentPhoto(photo);
-        setAltText(alt);
-        setSlug(slug);
-        setMetatitle(metatitle);
-        setMetadescription(metadescription)
-        setMetakeywords(metakeywords);
-        setMetalanguage(metalanguage);
-        setMetacanonical(metacanonical);
-        setMetaschema(metaschema);
-        setOthermeta(otherMeta);
-        setChangeFreq(changeFreq)
-        setPriority(priority)
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     fetchData();
   }, [categoryId, subCategoryId, subSubCategoryId]);
 
   const generateUrl = () => {
-<<<<<<< HEAD
     let baseUrl = "https://krenberry.com";
-=======
-    let baseUrl = "https://rndtechnosoft.com";
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     if (categoryId && !subCategoryId) {
       return `${baseUrl}/${slug}`;
     } else if (categoryId && subCategoryId) {
@@ -161,7 +111,6 @@ const EditCategory = () => {
   };
 
   useEffect(() => {
-<<<<<<< HEAD
     setSlug(
       category
         .replace(/\s+/g, "-")
@@ -193,47 +142,17 @@ const EditCategory = () => {
       photo: validatePhoto(file, currentPhoto),
       altText: file || currentPhoto ? validatePhotoAlt(altText) : "",
     }));
-=======
-    setUrl(generateUrl());
-  }, [slug, categoryId, subCategoryId]);
-
-  useEffect(() => {
-    setSlug(category.replace(/\s+/g, '-')
-      .toLowerCase()
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/--+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '')
-    );
-  }, [category])
-
-  useEffect(() => {
-    setSlug(slug.toLowerCase()
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/--+/g, '-')
-    );
-  }, [slug])
-  
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleDeleteImage = () => {
     setPhoto(null);
-<<<<<<< HEAD
     setCurrentPhoto(null);
     setAltText("");
     setErrors(prev => ({ ...prev, photo: "", altText: "" }));
-=======
-    setAltText("");
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
     const newErrors = {
       category: validateCategory(category),
       details: validateDetails(details),
@@ -278,32 +197,6 @@ const EditCategory = () => {
     formData.append("status", status);
 
     let urls = "";
-=======
-    let urls = "";
-    const formData = new FormData();
-    formData.append("category", category);
-    formData.append("details", details);
-
-    formData.append("alt", altText);
-    formData.append('slug', slug);
-    formData.append('metatitle', metatitle);
-    formData.append('metakeywords', metakeywords);
-    formData.append('metadescription', metadescription);
-    formData.append('metalanguage', metalanguage);
-    formData.append('metacanonical', metacanonical);
-    formData.append('metaschema', metaschema);
-    formData.append('otherMeta', otherMeta);
-    formData.append('url', url);
-    formData.append('changeFreq', changeFreq);
-    formData.append('priority', priority);
-
-    if (photo) {
-      formData.append("photo", photo);
-    } else {
-      formData.append("photo", currentPhoto);
-    }
-
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     if (categoryId && subCategoryId && subSubCategoryId) {
       urls = `/api/news/updatesubsubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${subSubCategoryId}`;
     } else if (categoryId && subCategoryId) {
@@ -315,38 +208,25 @@ const EditCategory = () => {
     try {
       await axios.put(urls, formData, { withCredentials: true });
       navigate("/NewsCategory");
-<<<<<<< HEAD
       toast.success("Category updated successfully!");
     } catch (error) {
       console.error("Error updating data:", error);
       toast.error("Error updating category");
-=======
-    } catch (error) {
-      console.error("Error updating data:", error);
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="p-4">
-<<<<<<< HEAD
       <ToastContainer />
       <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Category</h1>
       <div className="mb-4">
         <label htmlFor="category" className="block font-semibold mb-2">
           Category <span className="text-red-500">*</span>
-=======
-      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Category</h1>
-      <div className="mb-4">
-        <label htmlFor="category" className="block font-semibold mb-2">
-          Category
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         </label>
         <input
           type="text"
           id="category"
           value={category}
-<<<<<<< HEAD
           onChange={(e) => {
             const value = e.target.value;
             setCategory(value);
@@ -373,25 +253,6 @@ const EditCategory = () => {
           maxLength={2000}
         ></textarea>
         {errors.details && <p className="text-red-500 text-sm mt-1">{errors.details}</p>}
-=======
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="details" className="block font-semibold mb-2">
-          Details
-        </label>
-        <input
-          type="text"
-          id="details"
-          value={details}
-          onChange={(e) => setDetails(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        />
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
       </div>
       <div className="mb-8">
         <label htmlFor="photo" className="block font-semibold mb-2">Photo</label>
@@ -400,17 +261,10 @@ const EditCategory = () => {
           name="photo"
           id="photo"
           onChange={handlePhotoChange}
-<<<<<<< HEAD
           className={`border rounded focus:outline-none ${errors.photo ? "border-red-500" : ""}`}
           accept="image/jpeg,image/png,image/gif,image/webp"
         />
         {errors.photo && <p className="text-red-500 text-sm mt-1">{errors.photo}</p>}
-=======
-          className="border rounded focus:outline-none"
-          accept="image/*"
-        />
-       
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         {(photo || currentPhoto) && (
           <div className="mt-2 w-56 relative group">
             <img
@@ -426,7 +280,6 @@ const EditCategory = () => {
               X
             </button>
             <div className="mb-4">
-<<<<<<< HEAD
               <label htmlFor="alt" className="block font-semibold mb-2">Alternative Text</label>
               <input
                 type="text"
@@ -447,30 +300,10 @@ const EditCategory = () => {
       </div>
       <div className="mb-4">
         <label htmlFor="slug" className="block font-semibold mb-2">Slug</label>
-=======
-          <label htmlFor="alt" className="block font-semibold mb-2">Alternative Text</label>
-          <input
-            type="text"
-            id="alt"
-            value={altText}
-            onChange={(e) => setAltText(e.target.value)}
-            className="w-full p-2 border rounded focus:outline-none"
-            required
-          />
-        </div>
-          </div>
-        )}
-      </div>
-      <div className="mb-4 mt-4">
-        <label htmlFor="slug" className="block font-semibold mb-2">
-          Slug
-        </label>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         <input
           type="text"
           id="slug"
           value={slug}
-<<<<<<< HEAD
           onChange={(e) => {
             const value = e.target.value;
             setSlug(value);
@@ -483,21 +316,10 @@ const EditCategory = () => {
       </div>
       <div className="mb-4">
         <label htmlFor="url" className="block font-semibold mb-2">URL</label>
-=======
-          onChange={(e) => setSlug(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4 mt-4">
-        <label htmlFor="url" className="block font-semibold mb-2">
-          URL
-        </label>
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         <input
           type="text"
           id="url"
           value={url}
-<<<<<<< HEAD
           onChange={e => {
             const value = e.target.value;
             setUrl(value);
@@ -629,120 +451,6 @@ const EditCategory = () => {
             setErrors(prev => ({ ...prev, changeFreq: validateChangeFreq(value) }));
           }}
           className={`w-full p-2 border rounded focus:outline-none ${errors.changeFreq ? "border-red-500" : ""}`}
-=======
-          disabled
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Title
-        </label>
-        <textarea
-          id="meta"
-          value={metatitle}
-          onChange={(e) => setMetatitle(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Description
-        </label>
-        <textarea
-          id="meta"
-          value={metadescription}
-          onChange={(e) => setMetadescription(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Keywords
-        </label>
-        <textarea
-          id="meta"
-          value={metakeywords}
-          onChange={(e) => setMetakeywords(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Canonical
-        </label>
-        <textarea
-          id="meta"
-          value={metacanonical}
-          onChange={(e) => setMetacanonical(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Language
-        </label>
-        <textarea
-          id="meta"
-          value={metalanguage}
-          onChange={(e) => setMetalanguage(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Other Meta
-        </label>
-        <textarea
-          id="meta"
-          value={otherMeta}
-          onChange={(e) => setOthermeta(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Schema
-        </label>
-        <textarea
-          id="meta"
-          value={metaschema}
-          onChange={(e) => setMetaschema(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="priority" className="block font-semibold mb-2">
-          Priority
-        </label>
-        <input
-          type="number"
-          id="priority"
-          min={0}
-          max={1}
-          step={0.01}
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="changeFreq" className="block font-semibold mb-2">
-          Change Frequency
-        </label>
-        <select
-          id="changeFreq"
-          value={changeFreq}
-          onChange={(e) => setChangeFreq(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         >
           <option value="">Select Change Frequency</option>
           <option value="always">Always</option>
@@ -752,7 +460,6 @@ const EditCategory = () => {
           <option value="monthly">Monthly</option>
           <option value="yearly">Yearly</option>
         </select>
-<<<<<<< HEAD
         {errors.changeFreq && <p className="text-red-500 text-sm mt-1">{errors.changeFreq}</p>}
       </div>
       <div className="mb-4">
@@ -786,18 +493,10 @@ const EditCategory = () => {
         </select>
       </div>
       <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-=======
-      </div>
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
         Update Category
       </button>
     </form>
   );
 };
 
-<<<<<<< HEAD
 export default EditCategory;
-=======
-export default EditCategory;
->>>>>>> 4ea6693e6f1060660116c7c7a6b95bbdf368b577
