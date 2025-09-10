@@ -74,7 +74,7 @@ export default function Sidebar() {
         { title: "Hero Section", icon: <Flag size={20} />, path: "/homehero" },
         { title: "Animation", icon: <MessageSquare size={20} />, path: "/homeanimation" },
 
-        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        // { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
         { title: "Counter", icon: <Hash size={20} />, path: "/counter" },
         { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
@@ -108,8 +108,8 @@ export default function Sidebar() {
     { title: "Popup Inquiry", icon: <MessagesSquare size={20} />, path: "/popup-inquiry" },
     {
       title: "Services", icon: <Headset size={20} />, submenu: [
-        { title: "Meta Info", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
-        { title: "Services", icon: <Wrench size={20} />, path: "/services" },
+        { title: "Create Service Entry", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
+        { title: "Edit Service Page", icon: <Wrench size={20} />, path: "/services" },
         { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
         { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
         { title: "Why Partner With Us", icon: <Wrench size={20} />, path: "/why-partner-us" },

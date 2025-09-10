@@ -17,7 +17,7 @@ const { uploadLogo } = require('../middleware/logoUpload')
 
 router.get('/', getAllLogos);
 router.post('/', uploadLogo, addLogo);
-router.delete('/:imageName', deleteLogo);
+router.delete('/delete/:imageName', deleteLogo);
 router.get('/download/:filename', downloadLogo);
 router.get('/headercolor', getHeaderColorLogos);
 router.get('/footerwhite', getFooterWhiteLogos);

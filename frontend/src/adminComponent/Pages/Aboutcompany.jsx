@@ -242,7 +242,7 @@ const VisionForm = () => {
       
       if (existingPhoto && !photoPreview) {
         try {
-          await axios.delete(`/api/logo/delete/${existingPhoto}`, { withCredentials: true });
+          await axios.delete(`/api/aboutcompany/image/${existingPhoto}/0`, { withCredentials: true });
           toast.success("Previous heading image deleted successfully!");
         } catch (error) {
           console.error('Error deleting existing heading image:', error);

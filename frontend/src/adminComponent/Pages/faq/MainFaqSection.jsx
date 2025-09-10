@@ -26,6 +26,7 @@ const MainFaqSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFAQ, setSelectedFAQ] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errors, setErrors] = useState({ heading: '', subheading: '' });
   const navigate = useNavigate();
 
   const pageSize = 20;
@@ -81,8 +82,30 @@ const MainFaqSection = () => {
     }
   };
 
+  const validateForm = () => {
+    const newErrors = { heading: '', subheading: '' };
+    let isValid = true;
+
+    if (!heading.trim()) {
+      newErrors.heading = 'Heading is required';
+      isValid = false;
+    }
+    if (!subheading.trim()) {
+      newErrors.subheading = 'Subheading is required';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const saveHeadings = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
     try {
+      setLoading(true);
       await axios.put('/api/pageHeading/updateHeading?pageType=faq', {
         pagetype: 'faq',
         heading,
@@ -90,7 +113,10 @@ const MainFaqSection = () => {
       }, { withCredentials: true });
       notify();
     } catch (error) {
-      console.error(error);
+      console.error('Error saving FAQ headings:', error);
+      toast.error(error.response?.data?.message || 'Failed to save FAQ headings');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -112,6 +138,8 @@ const MainFaqSection = () => {
         setHeading={setHeading}
         setSubheading={setSubheading}
         saveHeadings={saveHeadings}
+        errors={errors}
+        loading={loadings}
       />
       
       <TableHeader navigate={navigate} />

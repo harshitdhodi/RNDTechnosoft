@@ -105,7 +105,7 @@ const CategorySelection = () => {
   return (
     <div className="p-4">
       <ToastContainer />
-      <h2 className="text-lg font-semibold mb-4">Select Service Category</h2>
+      <h2 className="text-lg font-semibold mb-4">Add Category Content</h2>
       <table {...getTableProps()} className="min-w-full bg-white">
         <thead>
           {headerGroups.map((headerGroup) => (

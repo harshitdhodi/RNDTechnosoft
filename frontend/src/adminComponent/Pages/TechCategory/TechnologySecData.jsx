@@ -1,10 +1,98 @@
 import React, { useState, useEffect } from 'react';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2, Plus, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DeleteConfirmationModal from "../DeleteConfirmationModal";
+
+const DetailModal = ({ isOpen, onClose, item }) => {
+  if (!isOpen || !item) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold text-gray-800">
+              {item.technology?.imgTitle || 'N/A'} - {item.type}
+            </h3>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              ✕
+            </button>
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-semibold text-gray-700">Heading:</h4>
+              <div 
+                className="prose max-w-none" 
+                dangerouslySetInnerHTML={{ __html: item.heading || 'N/A' }}
+              />
+            </div>
+
+            {item.subHeading && (
+              <div>
+                <h4 className="font-semibold text-gray-700">Sub Heading:</h4>
+                <div 
+                  className="prose max-w-none" 
+                  dangerouslySetInnerHTML={{ __html: item.subHeading }}
+                />
+              </div>
+            )}
+
+            {item.card?.length > 0 && (
+              <div>
+                <h4 className="font-semibold text-gray-700 mb-2">Cards:</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {item.card.map((card, index) => (
+                    <div key={index} className="border rounded-lg p-4">
+                      {card.photo && (
+                        <div className="mb-2">
+                          <img 
+                            src={`/api/logo/download/${card.photo}`} 
+                            alt={card.altName || 'Card image'} 
+                            className="max-w-full h-auto rounded"
+                          />
+                        </div>
+                      )}
+                      {card.heading && (
+                        <div 
+                          className="prose max-w-none mb-2" 
+                          dangerouslySetInnerHTML={{ __html: card.heading }}
+                        />
+                      )}
+                      {card.subHeading && (
+                        <div 
+                          className="prose max-w-none text-sm text-gray-600"
+                          dangerouslySetInnerHTML={{ __html: card.subHeading }}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="pt-4 border-t">
+              <p className="text-sm text-gray-500">
+                <span className="font-medium">Created:</span> {new Date(item.createdAt).toLocaleDateString()}
+                {item.updatedAt && (
+                  <span className="ml-4">
+                    <span className="font-medium">Last Updated:</span> {new Date(item.updatedAt).toLocaleDateString()}
+                  </span>
+                )}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const TechnologyDataTable = () => {
   const [data, setData] = useState([]);
@@ -17,6 +105,8 @@ const TechnologyDataTable = () => {
   const [pageSize, setPageSize] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const navigate = useNavigate();
 
   // Fetch data and technologies
@@ -27,8 +117,15 @@ const TechnologyDataTable = () => {
       const response = await axios.get('/api/technologySecData', { withCredentials: true });
       const fetchedData = response.data.data || response.data || [];
       setData(fetchedData);
-      // Extract unique technology names
-      const techNames = [...new Set(fetchedData.map(item => item.technology).filter(Boolean))];
+      
+      // Extract unique technology names as strings
+      const techNames = [
+        ...new Set(
+          fetchedData
+            .map(item => item.technology?.imgTitle)
+            .filter(Boolean)
+        )
+      ];
       setTechnologies(techNames);
     } catch (err) {
       setError('Failed to fetch data');
@@ -123,7 +220,7 @@ const TechnologyDataTable = () => {
   // Filter data based on selected technology
   const filteredData = selectedTechnology === 'All'
     ? data
-    : data.filter(item => item.technology.imgTitle === selectedTechnology);
+    : data.filter(item => item.technology?.imgTitle === selectedTechnology);
 
   // Calculate pagination
   const totalItems = filteredData.length;
@@ -132,6 +229,11 @@ const TechnologyDataTable = () => {
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
+
+  const handleViewDetails = (item) => {
+    setSelectedItem(item);
+    setIsDetailModalOpen(true);
+  };
 
   if (loading) {
     return (
@@ -176,8 +278,10 @@ const TechnologyDataTable = () => {
             className="block w-full appearance-none bg-white border border-gray-300 rounded-md py-2 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
           >
             <option value="All">All Technologies</option>
-            {technologies.map((tech, index) => (
-              <option key={index} className="capitalize" value={tech.imgTitle}>{tech.imgTitle}</option>
+            {technologies.map((techName, index) => (
+              <option key={index} value={techName}>
+                {techName}
+              </option>
             ))}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -207,12 +311,15 @@ const TechnologyDataTable = () => {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
                     Technology
                   </th>
+                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
+                    Section
+                  </th> */}
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
                     Type
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
-                    Heading
-                  </th>
+                  {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
+                    Title
+                  </th> */}
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-b font-serif">
                     Cards Count
                   </th>
@@ -229,19 +336,24 @@ const TechnologyDataTable = () => {
                   <tr key={item._id || index} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800 capitalize">
-                        {item.technology.imgTitle || 'N/A'}
+                        {item.technology?.imgTitle || 'N/A'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    {/* <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                        {item.section || 'N/A'}
+                      </span>
+                    </td> */}
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
                         {item.type || 'N/A'}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    {/* <td className="px-6 py-4">
                       <div className="text-sm text-gray-900 max-w-xs">
-                        {truncateText(item.technology.imgTitle)}
+                        {item.title || 'N/A'}
                       </div>
-                    </td>
+                    </td> */}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="text-sm text-gray-900">
                         {item.card ? item.card.length : 0} cards
@@ -252,6 +364,13 @@ const TechnologyDataTable = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => handleViewDetails(item)}
+                          className="text-gray-600 hover:text-gray-900 p-1 rounded hover:bg-gray-100 transition-colors"
+                          title="View Details"
+                        >
+                          <Eye size={16} />
+                        </button>
                         <button
                           onClick={() => handleEdit(item._id)}
                           className="text-blue-600 hover:text-blue-900 p-1 rounded hover:bg-blue-100 transition-colors"
@@ -338,6 +457,11 @@ const TechnologyDataTable = () => {
         onConfirm={handleDelete}
         itemName={itemToDelete?.technology.imgTitle ? truncateText(itemToDelete.technology.imgTitle) : "this item"}
         itemType="Technology Section"
+      />
+      <DetailModal 
+        isOpen={isDetailModalOpen} 
+        onClose={() => setIsDetailModalOpen(false)} 
+        item={selectedItem} 
       />
     </div>
   );

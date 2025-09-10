@@ -4,6 +4,18 @@ const createTechnologySecData = async (req, res) => {
   try {
     const { type, heading, technologyId } = req.body;
 
+    // Check if a section of this type already exists for the selected technology
+    const existingSection = await TechnologySecData.findOne({ 
+      technologyId: technologyId,
+      type: type
+    });
+
+    if (existingSection) {
+      return res.status(400).json({ 
+        error: `A '${type}' section already exists for the selected technology.`
+      });
+    }
+
     const updatedCard = [];
     const maxCards = 10;
 

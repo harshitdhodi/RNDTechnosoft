@@ -143,8 +143,24 @@ const NewServiceForm = () => {
           value={heading}
           onChange={setHeading}
           modules={modules}
-          className="quill"
+          placeholder="Enter heading here..."
+          className="quill-editor"
         />
+        <style jsx global>{`
+          .quill-editor .ql-editor {
+            min-height: 100px;
+            padding-bottom: 1.5rem;
+            padding-top: 0.5rem;
+          }
+          .quill-editor .ql-editor.ql-blank::before {
+            color: #6b7280;
+            font-style: normal;
+            left: 15px;
+            right: 15px;
+            top: 0.75rem;
+            pointer-events: none;
+          }
+        `}</style>
       </div>
 
       {/* Description Field */}
@@ -156,8 +172,24 @@ const NewServiceForm = () => {
           value={description}
           onChange={setDescription}
           modules={modules}
-          className="quill"
+          placeholder="Enter description here..."
+          className="quill-editor"
         />
+        <style jsx global>{`
+          .quill-editor .ql-editor {
+            min-height: 100px;
+            padding-bottom: 1.5rem;
+            padding-top: 0.5rem;
+          }
+          .quill-editor .ql-editor.ql-blank::before {
+            color: #6b7280;
+            font-style: normal;
+            left: 15px;
+            right: 15px;
+            top: 0.75rem;
+            pointer-events: none;
+          }
+        `}</style>
       </div>
 
       {/* Photo Upload Field */}
@@ -288,8 +320,24 @@ const NewServiceForm = () => {
               value={qa.answer}
               onChange={(event) => handleQuestionChange(index, event)}
               modules={modules}
-              className="quill"
+              placeholder="Enter answer here..."
+              className="quill-editor"
             />
+            <style jsx global>{`
+              .quill-editor .ql-editor {
+                min-height: 100px;
+                padding-bottom: 1.5rem;
+                padding-top: 0.5rem;
+              }
+              .quill-editor .ql-editor.ql-blank::before {
+                color: #6b7280;
+                font-style: normal;
+                left: 15px;
+                right: 15px;
+                top: 0.75rem;
+                pointer-events: none;
+              }
+            `}</style>
             {questions.length > 1 && (
               <button
                 type="button"
