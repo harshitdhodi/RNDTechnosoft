@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.rndtechnosoft.com/websites-portfolio</loc>
-    <lastmod>2024-09-28T07:12:56.689Z</lastmod>
-    <changefreq>hourly</changefreq>
-    <priority>1</priority>
-  </url>
-  <url>
-    <loc>https://www.rndtechnosoft.com/web-application</loc>
-    <lastmod>2024-11-08T10:20:59.342Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.rndtechnosoft.com/ecommerce</loc>
-    <lastmod>2024-11-08T10:22:25.706Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.95</priority>
-  </url>
-  <url>
     <loc>https://www.rndtechnosoft.com/custom-software</loc>
     <lastmod>2024-10-09T06:51:31.136Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -29,12 +11,6 @@
     <lastmod>2024-10-19T04:14:42.813Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.95</priority>
-  </url>
-  <url>
-    <loc>https://www.rndtechnosoft.com/ui-ux</loc>
-    <lastmod>2024-10-09T06:52:27.704Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.98</priority>
   </url>
   <url>
     <loc>https://www.rndtechnosoft.com/social-media</loc>
@@ -49,9 +25,69 @@
     <priority>0.95</priority>
   </url>
   <url>
+    <loc>https://www.rndtechnosoft.com/websites-portfolio</loc>
+    <lastmod>2024-09-28T07:12:56.689Z</lastmod>
+    <changefreq>hourly</changefreq>
+    <priority>1</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/web-application</loc>
+    <lastmod>2024-11-08T10:20:59.342Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/healthcare-new</loc>
+    <lastmod>2025-08-04T12:52:36.244Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/ecommerce</loc>
+    <lastmod>2024-11-08T10:22:25.706Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/ui-ux</loc>
+    <lastmod>2024-10-09T06:52:27.704Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
     <loc>https://www.rndtechnosoft.com/mobile-app</loc>
     <lastmod>2025-06-12T07:29:36.543Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.02</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/healthcare-new</loc>
+    <lastmod>2025-08-04T12:53:44.707Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.98</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/customer-focus</loc>
+    <lastmod>2025-08-04T12:54:30.063Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.95</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/new</loc>
+    <lastmod>2025-08-04T12:57:06.281Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/cat-will-all-data</loc>
+    <lastmod>2025-08-04T15:20:35.185Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.90</priority>
+  </url>
+  <url>
+    <loc>https://www.rndtechnosoft.com/cat-will-all</loc>
+    <lastmod>2025-08-04T15:21:55.032Z</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>1</priority>
   </url>
 </urlset>

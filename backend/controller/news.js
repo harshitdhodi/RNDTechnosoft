@@ -81,6 +81,58 @@ const getNews = async (req, res) => {
   }
 };
 
+const searchNews = async (req, res) => {
+  try {
+    let { page = 1, limit = 5, search = '' } = req.query;
+    page = Math.max(1, parseInt(page) || 1); // Ensure page is at least 1
+    limit = Math.min(100, Math.max(1, parseInt(limit) || 5)); // Limit between 1 and 100
+    search = search.trim();
+    const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special regex characters
+
+    const searchQuery = search
+      ? {
+          $or: [
+            { title: { $regex: escapedSearch, $options: 'i' } },
+            { postedBy: { $regex: escapedSearch, $options: 'i' } },
+          ],
+        }
+      : {};
+
+    const count = await News.countDocuments(searchQuery);
+    const news = await News.find(searchQuery)
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const newsWithCategoryName = await Promise.all(news.map(async (newsItem) => {
+      const category = await newsCategory.findOne({ 'slug': newsItem.categories });
+      if (!category) {
+        console.warn(`Category not found for slug: ${newsItem.categories}`);
+      }
+      const categoryName = category ? category.category : 'Uncategorized';
+      return {
+        ...newsItem.toJSON(),
+        categoryName,
+      };
+    }));
+
+    res.status(200).json({
+      data: newsWithCategoryName,
+      total: count,
+      currentPage: page,
+      totalPages: Math.ceil(count / limit),
+      hasNextPage: count > page * limit,
+      hasPrevPage: page > 1,
+    });
+  } catch (error) {
+    console.error("Error searching news:", error);
+    let errorMessage = 'Server error';
+    if (error.name === 'CastError') {
+      errorMessage = 'Invalid query parameter format';
+    }
+    res.status(500).json({ message: errorMessage, error });
+  }
+};
+
 const getNewsFront = async (req, res) => {
   try {
     // Fetch only active news and sort by date in descending order to get the latest news first
@@ -543,4 +595,4 @@ const getAllNews = async (req, res) => {
 };
 
 
-module.exports = { updateBlogVisits,getAllNews,getNewsFront,getNewsBySlug,insertNews, getNews,getLatestBlogs, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, getCategoryNews, getSubcategoryNews, getSubSubcategoryNews, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById, fetchUrlmeta, editUrlmeta, fetchUrlmetaById };
+module.exports = { searchNews, updateBlogVisits,getAllNews,getNewsFront,getNewsBySlug,insertNews, getNews,getLatestBlogs, updateNews, deleteNews, getNewsById, countNews, deletePhotoAndAltText, getCategoryNews, getSubcategoryNews, getSubSubcategoryNews, fetchUrlPriorityFreq, editUrlPriorityFreq, fetchUrlPriorityFreqById, fetchUrlmeta, editUrlmeta, fetchUrlmetaById };

@@ -15,21 +15,32 @@ exports.createHireTalent = async (req, res, next) => {
     }
 
     // Validate input
-    if (!heading || !pageSection || !Array.isArray(card)) {
-      return res.status(400).json({ error: 'Heading, pageSection, and card array are required' });
+    if (!heading || !pageSection || !Array.isArray(card) || card.length === 0) {
+      return res.status(400).json({ error: 'Heading, pageSection, and non-empty card array are required' });
+    }
+
+    // Check for existing record with same pageSection
+    const existingRecord = await HireTalent.findOne({ 
+      pageSection: { $regex: new RegExp(`^${pageSection}$`, 'i') } // case-insensitive
+    });
+
+    if (existingRecord) {
+      return res.status(400).json({ 
+        error: `A record for pageSection "${pageSection}" already exists.` 
+      });
     }
 
     // Map file uploads to corresponding card items
     const updatedCards = card.map((cardItem, index) => {
-      const fileField = `card[${index}][photo]`;
+      const fileField = `card[${index}].photo`;
       const file = req.files && req.files[fileField] && req.files[fileField][0];
       const photo = file ? file.filename : cardItem.photo || '';
 
       return {
         cardInfo: cardItem.cardInfo,
         photo,
-        altImg: cardItem.altImg,
-        imgTitle: cardItem.imgTitle,
+        altImg: cardItem.altImg || '',
+        imgTitle: cardItem.imgTitle || '',
       };
     });
 
@@ -44,8 +55,8 @@ exports.createHireTalent = async (req, res, next) => {
 
     res.status(201).json({ message: 'Hire talent data created', data: newHireTalentData });
   } catch (error) {
-    console.error('Error in createHireTalentData:', error);
-    res.status(500).json({ error: error.message });
+    console.error('Error in createHireTalent:', error);
+    next(error);
   }
 };
 
@@ -71,7 +82,7 @@ exports.getHireTalentById = async (req, res) => {
   }
 };
 
-exports.updateHireTalent = async (req, res) => {
+exports.updateHireTalent = async (req, res, next) => {
   try {
     const { heading, subHeading, pageSection } = req.body;
     let { card } = req.body;
@@ -84,6 +95,20 @@ exports.updateHireTalent = async (req, res) => {
       card = JSON.parse(card);
     }
 
+    // Check for duplicate pageSection in other documents
+    if (pageSection) {
+      const existingRecord = await HireTalent.findOne({ 
+        _id: { $ne: req.params.id }, // exclude current document
+        pageSection: { $regex: new RegExp(`^${pageSection}$`, 'i') } // case-insensitive
+      });
+
+      if (existingRecord) {
+        return res.status(400).json({
+          error: `Another record already exists with pageSection "${pageSection}".`
+        });
+      }
+    }
+
     // Build updates object
     const updates = {};
     if (heading !== undefined) updates.heading = heading;
@@ -92,17 +117,16 @@ exports.updateHireTalent = async (req, res) => {
 
     // Handle card updates if provided
     if (card && Array.isArray(card)) {
-      // Map file uploads to corresponding card items (same logic as create)
       const updatedCards = card.map((cardItem, index) => {
-        const fileField = `card[${index}][photo]`;
+        const fileField = `card[${index}].photo`;
         const file = req.files && req.files[fileField] && req.files[fileField][0];
         const photo = file ? file.filename : cardItem.photo || '';
 
         return {
           cardInfo: cardItem.cardInfo,
           photo,
-          altImg: cardItem.altImg,
-          imgTitle: cardItem.imgTitle,
+          altImg: cardItem.altImg || '',
+          imgTitle: cardItem.imgTitle || '',
         };
       });
 
@@ -111,8 +135,8 @@ exports.updateHireTalent = async (req, res) => {
 
     // Find and update the document
     const updated = await HireTalent.findByIdAndUpdate(
-      req.params.id, 
-      updates, 
+      req.params.id,
+      updates,
       { new: true }
     );
 
@@ -123,7 +147,7 @@ exports.updateHireTalent = async (req, res) => {
     res.status(200).json({ message: 'Hire Talent updated', data: updated });
   } catch (error) {
     console.error('Error in updateHireTalent:', error);
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 

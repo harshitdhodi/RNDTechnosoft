@@ -8,15 +8,24 @@ const EditAddress = () => {
     const [headOfficeAddress, setHeadOfficeAddress] = useState("");
     const [salesOfficeAddress, setSalesOfficeAddress] = useState("");
     const [location, setLocation] = useState("");
+    const [errors, setErrors] = useState({ headOfficeAddress: "", salesOfficeAddress: "", location: "" });
 
     const navigate = useNavigate();
+
+    // Regex for validation
+    const googleMapsShortLinkRegex = /^https:\/\/maps\.app\.goo\.gl\/[a-zA-Z0-9]{6,}$/;
+    const googleMapsEmbedRegex = /^https:\/\/www\.google\.com\/maps\/embed\?pb=/;
 
     useEffect(() => {
         fetchAddress();
     }, []);
 
-    const notify = () => {
-        toast.success("Updated Successfully!");
+    const notify = (message, type = "success") => {
+        if (type === "success") {
+            toast.success(message);
+        } else {
+            toast.error(message);
+        }
     };
 
     const fetchAddress = async () => {
@@ -28,12 +37,56 @@ const EditAddress = () => {
             setSalesOfficeAddress(address.salesOfficeAddress || "");
             setLocation(address.location || "");
         } catch (error) {
-            console.error(error);
+            console.error("Error fetching address:", error);
+            notify("Failed to fetch address data", "error");
+        }
+    };
+
+    // Function to validate URLs
+    const validateUrl = (url, field) => {
+        if (!url) {
+            return `${field} is required`;
+        }
+
+        // Validate Google Maps short links
+        if (url.includes("maps.app.goo.gl")) {
+            if (!googleMapsShortLinkRegex.test(url)) {
+                return `Invalid ${field} URL. Must be a valid Google Maps short link (e.g., https://maps.app.goo.gl/XXXXXX)`;
+            }
+            // Note: Removed fetch-based reachability check for short links due to unreliable redirects
+            return "";
+        } 
+        // Validate Google Maps embed URLs
+        else if (url.includes("google.com/maps/embed")) {
+            if (!googleMapsEmbedRegex.test(url)) {
+                return `Invalid ${field} embed URL. Must be a valid Google Maps embed URL (e.g., https://www.google.com/maps/embed?pb=...)`;
+            }
+            return "";
+        } 
+        // Invalid URL type
+        else {
+            return `Invalid ${field} URL. Must be a valid Google Maps short link or embed URL`;
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validate all fields
+        const headOfficeError = validateUrl(headOfficeAddress, "Head Office Address");
+        const salesOfficeError = validateUrl(salesOfficeAddress, "Sales Office Address");
+        const locationError = validateUrl(location, "Google Location");
+
+        if (headOfficeError || salesOfficeError || locationError) {
+            setErrors({
+                headOfficeAddress: headOfficeError,
+                salesOfficeAddress: salesOfficeError,
+                location: locationError,
+            });
+            notify("Please fix the errors in the form", "error");
+            return;
+        }
+
         try {
             const addressData = {
                 headOfficeAddress,
@@ -42,9 +95,11 @@ const EditAddress = () => {
             };
 
             const response = await axios.put('/api/address/putAddress', addressData, { withCredentials: true });
-            notify();
+            notify("Updated Successfully!");
+            setErrors({ headOfficeAddress: "", salesOfficeAddress: "", location: "" });
         } catch (error) {
-            console.error(error);
+            console.error("Error updating address:", error);
+            notify("Failed to update address", "error");
         }
     };
 
@@ -61,9 +116,12 @@ const EditAddress = () => {
                     id="headOfficeAddress"
                     value={headOfficeAddress}
                     onChange={(e) => setHeadOfficeAddress(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none"
+                    className={`w-full p-2 border rounded focus:outline-none ${errors.headOfficeAddress ? "border-red-500" : ""}`}
                     required
                 />
+                {errors.headOfficeAddress && (
+                    <p className="text-red-500 text-sm mt-1">{errors.headOfficeAddress}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label htmlFor="salesOfficeAddress" className="block font-semibold mb-2">
@@ -74,22 +132,28 @@ const EditAddress = () => {
                     id="salesOfficeAddress"
                     value={salesOfficeAddress}
                     onChange={(e) => setSalesOfficeAddress(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none"
+                    className={`w-full p-2 border rounded focus:outline-none ${errors.salesOfficeAddress ? "border-red-500" : ""}`}
                     required
                 />
+                {errors.salesOfficeAddress && (
+                    <p className="text-red-500 text-sm mt-1">{errors.salesOfficeAddress}</p>
+                )}
             </div>
             <div className="mb-4">
                 <label htmlFor="location" className="block font-semibold mb-2">
-                   Google Location
+                    Google Location
                 </label>
                 <input
                     type="text"
                     id="location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="w-full p-2 border rounded focus:outline-none"
+                    className={`w-full p-2 border rounded focus:outline-none ${errors.location ? "border-red-500" : ""}`}
                     required
                 />
+                {errors.location && (
+                    <p className="text-red-500 text-sm mt-1">{errors.location}</p>
+                )}
             </div>
             <div className="mt-4">
                 <button

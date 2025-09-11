@@ -351,14 +351,14 @@ function App() {
                   <Route path="/edit-navbar-data/:id" element={<EditNavbar />} />
 
                   {/* Case Study  */}
-                  <Route path="/add-case-study" element={<CreateCaseStudy />} />
+                  <Route path="/industry-data/add-case-study" element={<CreateCaseStudy />} />
                   <Route path="/industry-data" element={<IndustrySecDataTable />} />
-                  <Route path="/edit-industry-data/:id" element={<CreateCaseStudy />} />
+                  <Route path="/industry-data/edit-industry-data/:id" element={<CreateCaseStudy />} />
 
                     {/* Hire talent */}
-                  <Route path="/add-hire-talent" element={<CreateHireTelent />} />
+                  <Route path="/hire-talent-table/add-hire-talent" element={<CreateHireTelent />} />
                   <Route path="/hire-talent-table" element={<HireTalentTable />} />
-                  <Route path="/edit-hire-table/:id" element={<CreateHireTelent />} />
+                  <Route path="/hire-talent-table/edit-hire-table/:id" element={<CreateHireTelent />} />
 
                  
                   <Route path="/ServiceCategory/CreateServiceCategory" element={<CreateServiceCategory />} />
@@ -386,7 +386,7 @@ function App() {
                   <Route path="/homeanimation/editHomeanimation/:id" element={<EditHomeanimation />} />
                   <Route path="/portfolio" element={<Portfolio />} /> 
                   <Route path="/portfolio/createPortfolio" element={<CreatePortfolio />} />
-                  <Route path="/portfolio/editPortfolio/:slugs" element={<EditPortfolio />} />
+                  <Route path="/portfolio/:slugs" element={<EditPortfolio />} />
                   <Route path="/NewsCategory" element={<NewsCategory />} />
                   <Route path="/NewsCategory/CreateNewsCategory" element={<CreateNewsCategory />} />
                   <Route path="/NewsCategory/editNewsCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditNewsCategory />} />

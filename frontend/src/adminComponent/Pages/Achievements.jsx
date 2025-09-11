@@ -149,6 +149,9 @@ const AchievementsTable = () => {
 
   return (
     <div className="p-4 overflow-x-auto">
+      <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', borderRadius: '4px', marginBottom: '16px', border: '1px solid #ffeeba' }}>
+        <strong>Warning:</strong> This section is temporarily hidden from the website. We'll bring it back soon!
+      </div>
       <ToastContainer />
       <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded ">
         <div className="grid grid-cols-2 gap-2">

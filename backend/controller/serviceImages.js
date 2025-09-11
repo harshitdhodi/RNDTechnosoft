@@ -31,14 +31,14 @@ exports.getAllImages = async (req, res) => {
         });
       }
   
-      console.log("Query Parameters:", { categoryId, photoType });
+    //   console.log("Query Parameters:", { categoryId, photoType });
   
       // Fetch all ServiceImage documents with populated categoryId
       const allServiceImages = await ServiceImage.find({})
         .populate('categoryId')  // Populate the categoryId field
         .lean();
         
-      console.log("All Service Images:", allServiceImages);
+    //   console.log("All Service Images:", allServiceImages);
   
       // Filter the data in memory
       const filteredImages = allServiceImages.filter(image => {
@@ -56,7 +56,7 @@ exports.getAllImages = async (req, res) => {
         return categoryMatch && photoTypeMatch && headingTypeMatch;
       });
   
-      console.log("Filtered Data:", filteredImages);
+    //   console.log("Filtered Data:", filteredImages);
   
       // Handle case where no matches are found
       if (filteredImages.length === 0) {
@@ -97,7 +97,7 @@ exports.getAllSubImages = async (req, res) => {
             filter.subcategory = { $in: subcategoryId.split(',') }; // Ensure array matching
         }
 
-        console.log("Query Filter:", filter); // Debugging log
+        // console.log("Query Filter:", filter); // Debugging log
 
         // Fetch the images and populate the subcategory field
         const images = await ServiceImage.find(filter)
@@ -110,7 +110,7 @@ exports.getAllSubImages = async (req, res) => {
                 }
             });
 
-        console.log("Fetched Images:", images); // Debugging log
+        // console.log("Fetched Images:", images); // Debugging log
 
         // Format response to include subcategoryName
         const galleryWithNames = images.map(image => ({
@@ -148,7 +148,7 @@ exports.getAllSubSubImages = async (req, res) => {
             filter.subsubcategory = { $in: subsubcategoryId.split(',') }; // Ensure array matching
         }
 
-        console.log("Query Filter:", filter); // Debugging log
+        // console.log("Query Filter:", filter); // Debugging log
 
         // Fetch the images and populate the fields
         const images = await ServiceImage.find(filter)
@@ -165,7 +165,7 @@ exports.getAllSubSubImages = async (req, res) => {
                 select: 'category'
             });
 
-        console.log("Fetched Images:", images); // Debugging log
+        // console.log("Fetched Images:", images); // Debugging log
 
         // Format response to include subcategoryName and subsubcategoryName
         const galleryWithNames = images.map(image => ({
@@ -194,7 +194,7 @@ exports.getAllSubSubImages = async (req, res) => {
 exports.getAllImagesSlug = async (req, res) => {
     try {
         const { slug, photoType } = req.params; // Extract from URL params
-        console.log("Received parameters:", { slug, photoType });
+        // console.log("Received parameters:", { slug, photoType });
 
         // Create filter object based on provided parameters
         const filter = {};
@@ -227,7 +227,7 @@ exports.getAllImagesSlug = async (req, res) => {
 
 exports.addNewImage = async (req, res) => {
     try {
-        console.log(req.body.categoryId);
+        // console.log(req.body.categoryId);
         if (!req.file) {
             return res.status(400).json({ message: 'No image file provided' });
         }
@@ -265,7 +265,7 @@ exports.addNewImage = async (req, res) => {
 
 exports.addNewSubImage = async (req, res) => {
     try {
-        console.log(req.body.subcategoryId);
+        // console.log(req.body.subcategoryId);
         if (!req.file) {
             return res.status(400).json({ message: 'No image file provided' });
         }
@@ -320,7 +320,7 @@ exports.addNewSubImage = async (req, res) => {
 
 exports.addNewSubSubImage = async (req, res) => {
     try {
-        console.log(req.body.subsubcategoryId);
+        // console.log(req.body.subsubcategoryId);
         if (!req.file) {
             return res.status(400).json({ message: 'No image file provided' });
         }
@@ -587,6 +587,7 @@ exports.getGalleryById = async (req, res) => {
             photoType: photoType
         }).populate('categoryId', 'category'); // Populate to get category names
 
+        console.log("Gallery:", gallery); // Debugging log
         // If no gallery is found, return a 404 error
         if (!gallery) {
             return res.status(404).json({ message: 'Gallery not found' });

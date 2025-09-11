@@ -480,6 +480,8 @@ app.use('/api/technology', require('./routes/technology'));
 app.use('/api/technologySecData', require('./routes/technologySecData'));
 app.use('/api/caseStudy', require('./routes/caseStudy'));
 app.use('/api/hire-talent', require('./routes/hire_telent'));
+app.use('/api/subsections', require('./routes/subSection'));
+
 
 // Swagger Setup 
 const swaggerUi = require('swagger-ui-express');

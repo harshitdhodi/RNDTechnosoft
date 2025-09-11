@@ -74,7 +74,7 @@ export default function Sidebar() {
         { title: "Hero Section", icon: <Flag size={20} />, path: "/homehero" },
         { title: "Animation", icon: <MessageSquare size={20} />, path: "/homeanimation" },
 
-        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        // { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
         { title: "Counter", icon: <Hash size={20} />, path: "/counter" },
         { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
@@ -90,11 +90,11 @@ export default function Sidebar() {
     },
     {
       title: "Technology", icon: <GraduationCap size={20} />, submenu: [
-        { title: "Technology Category Table", icon: <MessagesSquare size={20} />, path: "/tech-category" },
-        { title: "Technology Category Form", icon: <MailOpen size={20} />, path: "/add-technology" },
-        { title: "Technologies", icon: <MailOpen size={20} />, path: "/technology" },
-        { title: "Add Technology data", icon: <MailOpen size={20} />, path: "/manage-tech-sec" },
-        { title: "Technology Section data", icon: <MailOpen size={20} />, path: "/tech-sec-data" }
+        { title: "Technology Categories List", icon: <MessagesSquare size={20} />, path: "/tech-category" },
+        { title: "Add Technology Category", icon: <MailOpen size={20} />, path: "/add-technology" },
+        { title: "Technology List & Add Form", icon: <MailOpen size={20} />, path: "/technology" },
+        { title: "Add Technology Content Sections", icon: <MailOpen size={20} />, path: "/manage-tech-sec" },
+        { title: "Technology Sections Data List", icon: <MailOpen size={20} />, path: "/tech-sec-data" }
 
       ]
     },
@@ -108,12 +108,13 @@ export default function Sidebar() {
     { title: "Popup Inquiry", icon: <MessagesSquare size={20} />, path: "/popup-inquiry" },
     {
       title: "Services", icon: <Headset size={20} />, submenu: [
-        { title: "Meta Info", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
-        { title: "Services", icon: <Wrench size={20} />, path: "/services" },
-        { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
-        { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
+        { title: "Create Service Entry", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
+        { title: "Edit Service Page", icon: <Wrench size={20} />, path: "/services" },
+        // { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
+        // { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
         { title: "Why Partner With Us", icon: <Wrench size={20} />, path: "/why-partner-us" },
-        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        // { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
         { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
         { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
       ]
@@ -128,22 +129,21 @@ export default function Sidebar() {
       title: "Industries", icon: <Building2 size={20} />, submenu: [
         { title: "Categories", icon: <LayoutGrid size={20} />, path: "/IndustriesCategory" },
         { title: "Industries", icon: <Wrench size={20} />, path: "/industries" },
-        { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
         { title: "Industry Data", icon: <Wrench size={20} />, path: "/industry-data" },
       ]
     },
-    {
-      title: "Packages", icon: <Package size={20} />, submenu: [
-        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PackageCategory" },
-        { title: "Packages", icon: <Wrench size={20} />, path: "/package" },
-        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
-        { title: "companies", icon: <Wrench size={20} />, path: "/company-category" },
-        { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
-        { title: "Template Card", icon: <Wrench size={20} />, path: "/edit-template-card" },
+    // {
+    //   title: "Packages", icon: <Package size={20} />, submenu: [
+    //     { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PackageCategory" },
+    //     { title: "Packages", icon: <Wrench size={20} />, path: "/package" },
+    //     { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+    //     { title: "companies", icon: <Wrench size={20} />, path: "/company-category" },
+    //     { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
+    //     { title: "Template Card", icon: <Wrench size={20} />, path: "/edit-template-card" },
 
-        { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
-      ]
-    },
+    //     { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
+    //   ]
+    // },
 
     {
       title: "Portfolio", icon: <Image size={20} />, submenu: [
@@ -162,13 +162,13 @@ export default function Sidebar() {
       ]
     },
 
-    {
-      title: "Products", icon: <ShoppingCart size={20} />, submenu: [
-        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ProductCategory" },
-        { title: "Benefits", icon: <ShoppingCart size={20} />, path: "/benefits" },
-        { title: "Products", icon: <ChartColumn size={20} />, path: "/product" },
-      ]
-    },
+    // {
+    //   title: "Products", icon: <ShoppingCart size={20} />, submenu: [
+    //     { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ProductCategory" },
+    //     { title: "Benefits", icon: <ShoppingCart size={20} />, path: "/benefits" },
+    //     { title: "Products", icon: <ChartColumn size={20} />, path: "/product" },
+    //   ]
+    // },
     // { title: "Global Presence", icon: < Globe2 size={20} />, path: "/globalpresence" },
 
     {

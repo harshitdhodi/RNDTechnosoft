@@ -3,48 +3,50 @@ import axios from 'axios';
 import { IoMdClose } from 'react-icons/io';
 import { FaPlay, FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import ReviweHeding from "../WhatWeDo/ReviewHeading";
+import GoogleReviewsGridWidget from "../../components/GoogleReviewGridWidget"
 
 const Gallery = () => {
-    const [fullscreenVideo, setFullscreenVideo] = useState(null);
-    const [reviews, setReviews] = useState([]);
+    // const [fullscreenVideo, setFullscreenVideo] = useState(null);
+    // const [reviews, setReviews] = useState([]);
 
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                const response = await axios.get(`/api/testimonial/getTestimonialsFront`, { withCredentials: true });
-                setReviews(response.data.data);
-            } catch (error) {
-                console.error("Error fetching reviews:", error);
-            }
-        };
-        fetchReviews();
-    }, []);
+    // useEffect(() => {
+    //     const fetchReviews = async () => {
+    //         try {
+    //             const response = await axios.get(`/api/testimonial/getTestimonialsFront`, { withCredentials: true });
+    //             setReviews(response.data.data);
+    //         } catch (error) {
+    //             console.error("Error fetching reviews:", error);
+    //         }
+    //     };
+    //     fetchReviews();
+    // }, []);
 
-    const renderRating = (rating) => {
-        const totalStars = 5;
-        const filledStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 !== 0;
-        const unfilledStars = totalStars - filledStars - (hasHalfStar ? 1 : 0);
+    // const renderRating = (rating) => {
+    //     const totalStars = 5;
+    //     const filledStars = Math.floor(rating);
+    //     const hasHalfStar = rating % 1 !== 0;
+    //     const unfilledStars = totalStars - filledStars - (hasHalfStar ? 1 : 0);
 
-        return (
-            <div className="flex items-center">
-                {[...Array(filledStars)].map((_, i) => (
-                    <FaStar key={`filled-${i}`} className="text-yellow-400 w-4 h-4" />
-                ))}
-                {hasHalfStar && <FaStarHalfAlt className="text-yellow-400 w-4 h-4" />}
-                {[...Array(unfilledStars)].map((_, i) => (
-                    <FaRegStar key={`unfilled-${i}`} className="text-yellow-400 w-4 h-4" />
-                ))}
-            </div>
-        );
-    };
+    //     return (
+    //         <div className="flex items-center">
+    //             {[...Array(filledStars)].map((_, i) => (
+    //                 <FaStar key={`filled-${i}`} className="text-yellow-400 w-4 h-4" />
+    //             ))}
+    //             {hasHalfStar && <FaStarHalfAlt className="text-yellow-400 w-4 h-4" />}
+    //             {[...Array(unfilledStars)].map((_, i) => (
+    //                 <FaRegStar key={`unfilled-${i}`} className="text-yellow-400 w-4 h-4" />
+    //             ))}
+    //         </div>
+    //     );
+    // };
 
     return (
         <div className="bg-gray-100  ">
             <div className="">
                 <ReviweHeding />
+                <GoogleReviewsGridWidget/>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 w-[90%] mx-auto py-16">
+                {/* <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 w-[90%] mx-auto py-16">
                     {reviews.map((item) => (
                         <div key={item._id} className="bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 hover:scale-105">
                             <div className="relative h-[20rem]">
@@ -77,10 +79,10 @@ const Gallery = () => {
                             </div>
                         </div>
                     ))}
-                </div>
+                </div> */}
             </div>
 
-            {fullscreenVideo && (
+            {/* {fullscreenVideo && (
                 <div className="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
                     <div className="relative w-full h-full max-w-4xl max-h-screen p-4">
                         <video
@@ -98,7 +100,7 @@ const Gallery = () => {
                         </button>
                     </div>
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

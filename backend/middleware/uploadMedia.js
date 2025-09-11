@@ -55,14 +55,14 @@ const upload = multer({
             }
         } else if (file.fieldname === 'photo') {
             // Handle photo uploads, including WebM as "photo"
-            const allowedTypes = /jpeg|jpg|png|webp|gif|webm/;
+            const allowedTypes = /jpeg|jpg|png|webp|gif|svg|webm/;
             const mimeType = allowedTypes.test(file.mimetype);
             const extName = allowedTypes.test(path.extname(file.originalname).toLowerCase());
             
             if (mimeType && extName) {
                 return cb(null, true);
             } else {
-                cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, GIF, and WEBM files are allowed.'));
+                cb(new Error('Invalid file type. Only JPEG, PNG, WEBP, GIF, SVG and WEBM files are allowed.'));
             }
         } else {
             cb(new Error('Unexpected field name'));

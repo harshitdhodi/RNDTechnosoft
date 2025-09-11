@@ -352,7 +352,6 @@ const getIndustriesDetailsBySubSubcategory = async (req, res) => {
     const { subsubcategoryId } = req.query; // Get subsubcategoryId from query parameters
     const { page = 1 } = req.query; // Get the current page from query parameters
     const limit = 5; // Number of records per page
-    console.log("hello")
     console.log(subsubcategoryId)
 
     if (!subsubcategoryId) { // Corrected from subcategoryId to subsubcategoryId

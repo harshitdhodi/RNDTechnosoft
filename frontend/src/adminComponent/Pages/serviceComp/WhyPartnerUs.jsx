@@ -92,6 +92,21 @@ const WhyPartnerUs = () => {
     }
   };
 
+  const quillStyles = {
+    '& .ql-editor::before': {
+      color: '#9CA3AF',
+      fontStyle: 'normal',
+      fontSize: '0.875rem',
+      lineHeight: '1.25rem',
+      padding: '1rem',
+    },
+    '& .ql-editor.ql-blank::before': {
+      content: 'attr(data-placeholder)',
+      position: 'absolute',
+      pointerEvents: 'none',
+    },
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -230,7 +245,7 @@ const WhyPartnerUs = () => {
   return (
     <div>
       <form onSubmit={handleSubmit} className="p-4">
-        <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Testimonial</h1>
+        <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Why Partner Us</h1>
         {/* Heading */}
         <div className="mb-4">
           <label htmlFor="heading" className="block font-semibold mb-2">
@@ -241,12 +256,14 @@ const WhyPartnerUs = () => {
             value={heading}
             onChange={setHeading}
             className="bg-white"
-            modules={modules} // Include modules for image handling
-
+            modules={modules}
+            placeholder="Enter heading text here..."
+            style={{ height: '80px',marginBottom: '4rem' }}
+            data-placeholder="Enter heading text here..."
           />
         </div>
         {/* Subheading */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="subheading" className="block font-semibold mb-2">
             Subheading
           </label>
@@ -258,7 +275,7 @@ const WhyPartnerUs = () => {
             modules={modules} // Include modules for image handling
 
           />
-        </div>
+        </div> */}
 
 
         {/* Description */}
@@ -270,8 +287,10 @@ const WhyPartnerUs = () => {
             value={description}
             onChange={setDescription}
             className="bg-white"
-            modules={modules} // Include modules for image handling
-
+            modules={modules}
+            placeholder="Enter description here..."
+            style={{ height: '80px',marginBottom: '4rem' }}
+            data-placeholder="Enter description here..."
           />
         </div>
 
@@ -450,11 +469,11 @@ const WhyPartnerUs = () => {
       />
 
       {/* Questions Component */}
-      <QuestionsComponent
+      {/* <QuestionsComponent
         questions={questions}
         setQuestions={setQuestions}
         contentId={contentId}
-      />
+      /> */}
     </div>
 
   );

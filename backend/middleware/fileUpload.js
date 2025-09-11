@@ -58,10 +58,17 @@ const processLogoImage = async (filePath) => {
       path.dirname(filePath),
       path.basename(filePath, path.extname(filePath)) + '.webp'
     );
-    await sharp(filePath)
+
+    // read into buffer (avoids open file handle issues on Windows)
+    const buffer = await fs.promises.readFile(filePath);
+
+    await sharp(buffer)
       .webp({ quality: 80 })
       .toFile(webpPath);
+
+    // safe to delete after sharp finished
     await fs.promises.unlink(filePath);
+
     return webpPath;
   } catch (err) {
     console.error(`Failed to process image at ${filePath}:`, err);

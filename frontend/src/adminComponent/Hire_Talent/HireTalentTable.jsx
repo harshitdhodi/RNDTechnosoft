@@ -126,7 +126,7 @@ const HireTalentTable = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Hire Talent Management</h1>
         <button
-          onClick={() => navigate('/add-hire-talent')}
+          onClick={() => navigate('/hire-talent-table/add-hire-talent')}
           disabled={loading}
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400"
         >
@@ -165,9 +165,6 @@ const HireTalentTable = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Image
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Heading
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -184,14 +181,6 @@ const HireTalentTable = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {Array.isArray(data) && data.map((item) => (
                   <tr key={item._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <img
-                        src={`/api/logo/download/${item.photo}`}
-                        alt={item.altImg}
-                        title={item.imgTitle}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    </td>
                     <td className="px-6 py-4">
                       <div className="text-sm font-medium text-gray-900">{item.heading}</div>
                     </td>
@@ -206,7 +195,7 @@ const HireTalentTable = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => navigate(`/edit-hire-table/${item._id}`)}
+                          onClick={() => navigate(`/hire-talent-table/edit-hire-table/${item._id}`)}
                           className="text-blue-600 hover:text-blue-900 flex items-center gap-1"
                         >
                           <Eye size={16} />

@@ -6,10 +6,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CategoryTable = () => {
   const [categories, setCategories] = useState([]);
   const [loadings, setLoading] = useState(true);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const navigate = useNavigate();
 
   const columns = useMemo(
@@ -40,7 +44,10 @@ const CategoryTable = () => {
             </button>
             <button
               className="text-red-500 hover:text-red-700 transition"
-              onClick={() => deleteCategory({ id: row.original._id })}
+              onClick={() => {
+                setDeleteTarget({ id: row.original._id, type: 'category', name: row.original.category });
+                setShowConfirm(true);
+              }}
             >
               <Trash2 />
             </button>
@@ -75,16 +82,19 @@ const CategoryTable = () => {
         autoIncrementId: index + 1,
         subCategories: category.subCategories?.map(sub => ({
           ...sub,
-          _id: sub._id || sub.id, // Normalize _id
-        })) || [],
-        subSubCategory: category.subSubCategory?.map(subSub => ({
-          ...subSub,
-          _id: subSub._id || subSub.id, // Normalize _id
+          _id: sub._id || sub.id,
+          subSubCategory: sub.subSubCategory?.map(subSub => ({
+            ...subSub,
+            _id: subSub._id || subSub.id,
+          })) || [],
         })) || [],
       }));
+      
+      console.log("Processed categories:", categoriesWithAutoIncrementId);
       setCategories(categoriesWithAutoIncrementId);
     } catch (error) {
       console.error("Error fetching categories:", error);
+      toast.error("Failed to fetch categories: " + (error.response?.data?.message || error.message));
     } finally {
       setLoading(false);
     }
@@ -92,25 +102,49 @@ const CategoryTable = () => {
 
   const deleteCategory = async ({ id, categoryId, subCategoryId, subSubCategoryId }) => {
     if (!id && !categoryId && !subCategoryId && !subSubCategoryId) {
-      alert("Invalid category ID");
+      toast.error("Invalid category ID");
       return;
     }
+
     let url = '';
+    let deleteType = '';
     if (categoryId && subCategoryId && subSubCategoryId) {
       url = `/api/industries/deletesubsubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${subSubCategoryId}`;
+      deleteType = 'sub-subcategory';
+      console.log("Deleting sub-subcategory:", { categoryId, subCategoryId, subSubCategoryId });
     } else if (categoryId && subCategoryId) {
       url = `/api/industries/deletesubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}`;
+      deleteType = 'subcategory';
+      console.log("Deleting subcategory:", { categoryId, subCategoryId });
     } else {
       url = `/api/industries/deletecategory?id=${id}`;
+      deleteType = 'category';
+      console.log("Deleting category:", { id });
     }
 
     try {
-      await axios.delete(url, { withCredentials: true });
+      const response = await axios.delete(url, { withCredentials: true });
+      console.log("Delete response:", response.data);
+      toast.success(`${deleteType.charAt(0).toUpperCase() + deleteType.slice(1)} deleted successfully!`);
       fetchCategories();
     } catch (error) {
-      console.error("Error deleting category:", error);
-      alert("Failed to delete category");
+      console.error("Error deleting:", error);
+      const errorMessage = error.response?.data?.message || error.message;
+      toast.error(`Failed to delete ${deleteType}: ${errorMessage}`);
     }
+  };
+
+  const handleDeleteConfirm = () => {
+    if (deleteTarget) {
+      deleteCategory(deleteTarget);
+      setShowConfirm(false);
+      setDeleteTarget(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setShowConfirm(false);
+    setDeleteTarget(null);
   };
 
   useEffect(() => {
@@ -119,11 +153,41 @@ const CategoryTable = () => {
 
   return (
     <div className="p-4 overflow-x-auto">
+      <ToastContainer position="top-right" autoClose={3000} />
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full">
+            <h3 className="text-lg font-semibold font-serif mb-4">
+              Confirm Deletion
+            </h3>
+            <p className="text-gray-700 mb-6">
+              Are you sure you want to delete the {deleteTarget?.type} "{deleteTarget?.name}"?
+              This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={handleDeleteCancel}
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirm}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">Categories</h1>
-        <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
-          <Link to="/IndustriesCategory/CreateIndustriesCategory"><Plus size={15} /></Link>
-        </button>
+        <Link to="/IndustriesCategory/CreateIndustriesCategory">
+          <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
+            <Plus size={15} />
+          </button>
+        </Link>
       </div>
       {loadings ? (
         <div className="flex justify-center"><UseAnimations animation={loading} size={56} /></div>
@@ -176,36 +240,77 @@ const CategoryTable = () => {
                           </td>
                         ))}
                       </tr>
-                      {row.original.subCategories && row.original.subCategories.map((subcategory, subIndex) => {
-                        console.log("Subcategory:", subcategory); // Log subcategory for debugging
-                        return (
-                          <React.Fragment key={subIndex}>
-                            <tr className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
+                      {row.original.subCategories && row.original.subCategories.map((subcategory, subIndex) => (
+                        <React.Fragment key={`sub-${subcategory._id || subIndex}`}>
+                          <tr className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
+                            <td></td>
+                            <td className="py-2 px-8 flex gap-2 hover:text-blue-500 cursor-pointer"
+                                onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}`)}>
+                              <BsArrowReturnRight />
+                              {subcategory.photo && <img src={`/api/logo/download/${subcategory.photo}`} alt={subcategory.alt} className="w-6 h-6" />}
+                              <span>{subcategory.category}</span>
+                            </td>
+                            <td className="py-2 px-4">
+                              <div className="flex gap-4">
+                                <button className="text-blue-500 hover:text-blue-700 transition">
+                                  <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}`}>
+                                    <Edit />
+                                  </Link>
+                                </button>
+                                <button
+                                  className="text-red-500 hover:text-red-700 transition"
+                                  onClick={() => {
+                                    if (!subcategory._id) {
+                                      console.error("Subcategory _id is undefined:", subcategory);
+                                      toast.error("Cannot delete: Subcategory ID is missing");
+                                      return;
+                                    }
+                                    setDeleteTarget({
+                                      categoryId: row.original._id,
+                                      subCategoryId: subcategory._id,
+                                      type: 'subcategory',
+                                      name: subcategory.category
+                                    });
+                                    setShowConfirm(true);
+                                  }}
+                                >
+                                  <Trash2 />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                          {subcategory.subSubCategory && subcategory.subSubCategory.map((subSubcategory, subSubIndex) => (
+                            <tr key={`subsub-${subSubcategory._id || subSubIndex}`} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
                               <td></td>
-                              <td className="py-2 px-8 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}`)}>
+                              <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer"
+                                  onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}/${subSubcategory._id}`)}>
                                 <BsArrowReturnRight />
-                                {subcategory.photo && <img src={`/api/logo/download/${subcategory.photo}`} alt={subcategory.alt} className="w-6 h-6" />}
-                                <span>{subcategory.category}</span>
+                                {subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}
+                                <span>{subSubcategory.category}</span>
                               </td>
                               <td className="py-2 px-4">
                                 <div className="flex gap-4">
                                   <button className="text-blue-500 hover:text-blue-700 transition">
-                                    <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}`}>
+                                    <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}/${subSubcategory._id}`}>
                                       <Edit />
                                     </Link>
                                   </button>
                                   <button
                                     className="text-red-500 hover:text-red-700 transition"
                                     onClick={() => {
-                                      if (!subcategory.slug) {
-                                        console.error("Subcategory ID is undefined:", subcategory);
-                                        alert("Cannot delete: Subcategory ID is missing");
+                                      if (!subSubcategory._id) {
+                                        console.error("SubSubcategory _id is undefined:", subSubcategory);
+                                        toast.error("Cannot delete: SubSubcategory ID is missing");
                                         return;
                                       }
-                                      deleteCategory({
+                                      setDeleteTarget({
                                         categoryId: row.original._id,
-                                        subCategoryId: subcategory.slug
+                                        subCategoryId: subcategory._id,
+                                        subSubCategoryId: subSubcategory._id,
+                                        type: 'sub-subcategory',
+                                        name: subSubcategory.category
                                       });
+                                      setShowConfirm(true);
                                     }}
                                   >
                                     <Trash2 />
@@ -213,48 +318,9 @@ const CategoryTable = () => {
                                 </div>
                               </td>
                             </tr>
-                            {subcategory.subSubCategory && subcategory.subSubCategory.map((subSubcategory, subSubIndex) => {
-                              console.log("SubSubcategory:", subSubcategory); // Log sub-subcategory for debugging
-                              return (
-                                <tr key={subSubIndex} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
-                                  <td></td>
-                                  <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}/${subSubcategory._id}`)}>
-                                    <BsArrowReturnRight />
-                                    {subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}
-                                    <span>{subSubcategory.category}</span>
-                                  </td>
-                                  <td className="py-2 px-4">
-                                    <div className="flex gap-4">
-                                      <button className="text-blue-500 hover:text-blue-700 transition">
-                                        <Link to={`/IndustriesCategory/editIndustriesCategory/${row.original._id}/${subcategory.slug}/${subSubcategory._id}`}>
-                                          <Edit />
-                                        </Link>
-                                      </button>
-                                      <button
-                                        className="text-red-500 hover:text-red-700 transition"
-                                        onClick={() => {
-                                          if (!subSubcategory._id) {
-                                            console.error("SubSubcategory ID is undefined:", subSubcategory);
-                                            alert("Cannot delete: SubSubcategory ID is missing");
-                                            return;
-                                          }
-                                          deleteCategory({
-                                            categoryId: row.original._id,
-                                            subCategoryId: subcategory.slug,
-                                            subSubCategoryId: subSubcategory._id
-                                          });
-                                        }}
-                                      >
-                                        <Trash2 />
-                                      </button>
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </React.Fragment>
-                        );
-                      })}
+                          ))}
+                        </React.Fragment>
+                      ))}
                     </React.Fragment>
                   );
                 })}

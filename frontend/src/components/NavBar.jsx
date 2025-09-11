@@ -1,14 +1,10 @@
-
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { fetchNavData } from "../data/navData";
 import MobileNavbar from "./MobileMenuItems";
 import { FaChevronRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// NavItem Component (unchanged)
 import { useState, useEffect, useRef } from 'react';
-
 
 const NavItem = ({ item, depth = 0, closeMenu }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -49,12 +45,15 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
     setCloseTimeout(timeout);
   };
 
-  const handleClick = () => {
-    closeMenu();
-    setIsHovered(false);
+  const handleClick = (e) => {
+    // Prevent default behavior for items with submenus at depth 0
     if (item.subItems && item.subItems.length > 0 && depth === 0) {
+      e.preventDefault();
       return;
     }
+    
+    closeMenu();
+    setIsHovered(false);
   };
 
   const handleTechnologyClick = (slug) => {
@@ -74,6 +73,11 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
     ? item.subItems.slice(Math.ceil(item.subItems.length / 2))
     : [];
 
+  // Determine the link destination
+  const linkTo = item.subItems && item.subItems.length > 0 && depth === 0 
+    ? "#" 
+    : `/${item.slug}`;
+
   return (
     <li
       className={`relative ${depth === 0 ? "group" : ""} list-none`}
@@ -82,23 +86,19 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
       ref={menuRef}
     >
       <Link
-        to={
-          item.subItems && item.subItems.length > 0 && depth === 0
-            ? "#"
-            : `/${item.slug}`
-        }
+        to={linkTo}
         className={`flex justify-between items-center w-full ${fontSize} px-4 py-1 text-gray-800 
           ${depth === 0
-            ? "bg-white hover:bg-[#333] hover:text-white focus:border-2 focus:border-white focus:bg-[#ffff] focus:text-black"
-            : "bg-white hover:bg-[#333] hover:text-white focus:border-2 focus:border-white focus:bg-[#ffff] focus:text-white"
+            ? "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:text-black"
+            : "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:text-gray-800"
           }
           whitespace-nowrap text-ellipsis
           transition-colors duration-300 ease-in-out rounded-sm`}
         onClick={handleClick}
       >
-        {item.name}
+        <span className="flex-1">{item.name}</span>
         {item.subItems && item.subItems.length > 0 && (
-          <span className="ml-2">
+          <span className="ml-2 flex-shrink-0">
             {depth === 0 ? "" : <FaChevronRight size={12} />}
           </span>
         )}
@@ -106,19 +106,20 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
 
       {item.subItems && item.subItems.length > 0 && (
         <div
-          className={`absolute border   border-gray-200
+          className={`absolute border border-gray-200
             ${item.id === "technology" ? "-left-52" : ""}
             ${depth === 0 ? "left-0 top-full mt-2" : "left-full top-0 mt-2"}
-            ${isHovered ? "block bg-white " : "hidden bg-white"}
+            ${isHovered ? "block bg-white" : "hidden bg-white"}
             shadow-lg transition-all duration-300 rounded-md ease-in-out
             ${depth === 0 ? "" : "-mt-1 ml-1"}
+            z-50
           `}
         >
           {item.id === "technology" ? (
-            <div className="grid grid-cols-2 gap-3  p-3 w-[700px]">
+            <div className="grid grid-cols-2 gap-3 p-3 w-[700px]">
               {item.subItems.map((category) => (
                 <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg pl-5 py-3 border border-gray-200">
-                  <div className="w-12 h-12 flex items-center justify-center">
+                  <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
                     <img
                       src={category.icon || "https://via.placeholder.com/24"}
                       alt={category.name}
@@ -126,8 +127,8 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
                     />
                   </div>
 
-                  <div>
-                    <h3 className="text-lg font-medium text-gray-800">{category.name}</h3>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-medium text-gray-800 mb-1">{category.name}</h3>
                     <p className="text-sm text-gray-600 pb-2 leading-relaxed">{category.description}</p>
                     <div className="grid grid-cols-2 gap-4">
                       {category.technologies.map((tech) => (
@@ -141,7 +142,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
                             alt={tech.name}
                             className="w-5 h-5 object-contain flex-shrink-0"
                           />
-                          <span className="text-sm text-gray-700 font-medium">{tech.name}</span>
+                          <span className="text-sm text-gray-700 font-medium truncate">{tech.name}</span>
                         </div>
                       ))}
                     </div>
@@ -181,10 +182,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
   );
 };
 
-
-// Navbar Component
-const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Navbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const [navData, setNavData] = useState([]);
   const [technologyMenu, setTechnologyMenu] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -193,14 +191,13 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location.pathname]);
+    setIsMobileMenuOpen(false);
+  }, [location.pathname, setIsMobileMenuOpen]);
 
   const closeMenu = () => {
-    setIsMenuOpen(false);
+    setIsMobileMenuOpen(false);
   };
 
-  // Fetch logo
   useEffect(() => {
     const fetchHeaderColorLogo = async () => {
       try {
@@ -216,13 +213,11 @@ const Navbar = () => {
     fetchHeaderColorLogo();
   }, []);
 
-  // Fetch navigation data
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchNavData();
         if (Array.isArray(response.data)) {
-
           setNavData(response.data);
         } else {
           console.error("Navigation data is not an array:", response);
@@ -234,19 +229,15 @@ const Navbar = () => {
     fetchData();
   }, []);
 
-  // Fetch technology menu data
   useEffect(() => {
     const fetchTechnologyData = async () => {
       try {
         setIsLoading(true);
-        // Fetch categories
         const categoryResponse = await axios.get('/api/techCategory');
         const categories = categoryResponse.data.data;
 
-        // Fetch technologies
         const technologyResponse = await axios.get('/api/technology');
         const technologies = technologyResponse.data.data;
-        console.log("Technologies:", technologies);
 
         const formattedTechnologyMenu = {
           id: "technology",
@@ -277,11 +268,10 @@ const Navbar = () => {
     fetchTechnologyData();
   }, []);
 
-  // Combine navData and technologyMenu, placing technologyMenu at index 2
   const combinedNavItems = [...navData];
   if (technologyMenu) {
     if (combinedNavItems.length >= 2) {
-      combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
+      combinedNavItems.splice(2, 0, technologyMenu);
     } else {
       combinedNavItems.push(technologyMenu);
     }
@@ -336,7 +326,7 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <MobileNavbar isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
+      <MobileNavbar isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
     </div>
   );
 };

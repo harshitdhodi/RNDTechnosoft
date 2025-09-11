@@ -238,7 +238,7 @@ const ContactUs = () => {
                     ) : item.type === 'Phone No' ? (
                       <>
                         <h3 className="font-bold">{item.title}</h3>
-                      
+                        <a href={`tel:${item.phone1}`} className='hover:text-blue-500 text-sm'>{item.phone1}</a><br />
                         {item.phone2 && <a href={`tel:${item.phone2}`} className='hover:text-blue-500 text-sm'>{item.phone2}</a>}
                       </>
                     ) : item.type === 'Email' ? (

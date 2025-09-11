@@ -6,14 +6,15 @@ import { IoIosArrowDroprightCircle, IoIosArrowDropdownCircle } from "react-icons
 import { AnimatePresence, motion } from 'framer-motion';
 import axios from 'axios';
 
-const TechnologyCategory = ({ category }) => {
-  const [isOpen, setIsOpen] = useState(false);
+// TechnologyCategory component
+const TechnologyCategory = ({ category, setIsOpen }) => {
+  const [isOpen, setIsOpenLocal] = useState(false);
 
   return (
     <li className="list-none border-b border-gray-200">
       <div className="flex justify-between items-center px-4 py-3 bg-[#333]">
         <span className="text-white font-medium">{category.name}</span>
-        <button onClick={() => setIsOpen(!isOpen)}>
+        <button onClick={() => setIsOpenLocal(!isOpen)}>
           {isOpen ? (
             <IoIosArrowDropdownCircle className="text-white w-6 h-6" />
           ) : (
@@ -35,6 +36,7 @@ const TechnologyCategory = ({ category }) => {
                 <Link
                   to={`/technology/${tech.slug}`}
                   className="block px-6 py-3 text-white hover:bg-gray-600"
+                  onClick={() => setIsOpen(false)}
                 >
                   {tech.name}
                 </Link>
@@ -47,7 +49,8 @@ const TechnologyCategory = ({ category }) => {
   );
 };
 
-const MobileNavItem = ({ item, depth = 0 }) => {
+// MobileNavItem component
+const MobileNavItem = ({ item, depth = 0, setIsOpen }) => {
   const [isSubMenuOpen, setIsSubMenuOpen] = useState(false);
 
   const toggleSubMenu = () => {
@@ -60,6 +63,11 @@ const MobileNavItem = ({ item, depth = 0 }) => {
         <Link 
           to={item.subItems && item.subItems.length > 0 && depth === 0 ? '#' : `/${item.slug}`} 
           className="text-white"
+          onClick={() => {
+            if (!item.subItems || item.subItems.length === 0 || depth !== 0) {
+              setIsOpen(false);
+            }
+          }}
         >
           {item.name}
         </Link>
@@ -82,14 +90,13 @@ const MobileNavItem = ({ item, depth = 0 }) => {
             transition={{ duration: 0.3 }}
             className="bg-[#333] overflow-hidden"
           >
-            {/* Special handling for technology menu */}
             {item.id === "technology" ? (
               item.subItems.map((category) => (
-                <TechnologyCategory key={category.id} category={category} />
+                <TechnologyCategory key={category.id} category={category} setIsOpen={setIsOpen} />
               ))
             ) : (
               item.subItems.map((subItem) => (
-                <MobileNavItem key={subItem.id} item={subItem} depth={depth + 1} />
+                <MobileNavItem key={subItem.id} item={subItem} depth={depth + 1} setIsOpen={setIsOpen} />
               ))
             )}
           </motion.ul>
@@ -99,6 +106,7 @@ const MobileNavItem = ({ item, depth = 0 }) => {
   );
 };
 
+// MobileNavbar component
 const MobileNavbar = ({ isOpen, setIsOpen }) => {
   const [navData, setNavData] = useState([]);
   const [technologyMenu, setTechnologyMenu] = useState(null);
@@ -138,16 +146,13 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
     fetchData();
   }, []);
 
-  // Fetch technology menu data (same as in main Navbar)
   useEffect(() => {
     const fetchTechnologyData = async () => {
       try {
         setIsLoading(true);
-        // Fetch categories
         const categoryResponse = await axios.get('/api/techCategory');
         const categories = categoryResponse.data.data;
 
-        // Fetch technologies
         const technologyResponse = await axios.get('/api/technology');
         const technologies = technologyResponse.data.data;
 
@@ -180,11 +185,10 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
     fetchTechnologyData();
   }, []);
 
-  // Combine navData and technologyMenu, placing technologyMenu at index 2
   const combinedNavItems = [...navData];
   if (technologyMenu) {
     if (combinedNavItems.length >= 2) {
-      combinedNavItems.splice(2, 0, technologyMenu); // Insert at index 2
+      combinedNavItems.splice(2, 0, technologyMenu);
     } else {
       combinedNavItems.push(technologyMenu);
     }
@@ -195,8 +199,8 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
   };
 
   return (
-    <div className="lg:hidden">
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center">
+    <div className="lg:hidden relative">
+      <div className="bg-white border-b border-gray-200 px-4 py-3 flex justify-between items-center z-50">
         <NavLink to="/">
           <img 
             src={colorlogo.photo ? `/api/logo/download/${colorlogo.photo}` : ''} 
@@ -211,21 +215,33 @@ const MobileNavbar = ({ isOpen, setIsOpen }) => {
       </div>
       <AnimatePresence>
         {isOpen && (
-          <motion.ul
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="bg-white border-b border-gray-200 overflow-hidden"
-          >
-            {isLoading ? (
-              <li className="px-4 py-3 text-center">Loading...</li>
-            ) : (
-              combinedNavItems.map((link) => (
-                <MobileNavItem key={link.id} item={link} />
-              ))
-            )}
-          </motion.ul>
+          <>
+            {/* Overlay to dim background */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black z-60"
+              onClick={() => setIsOpen(false)}
+            />
+            {/* Mobile menu */}
+            <motion.ul
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-white border-b border-gray-200 overflow-y-auto max-h-[70vh] absolute top-full left-0 right-0 z-70"
+            >
+              {isLoading ? (
+                <li className="px-4 py-3 text-center">Loading...</li>
+              ) : (
+                combinedNavItems.map((link) => (
+                  <MobileNavItem key={link.id} item={link} setIsOpen={setIsOpen} />
+                ))
+              )}
+            </motion.ul>
+          </>
         )}
       </AnimatePresence>
     </div>

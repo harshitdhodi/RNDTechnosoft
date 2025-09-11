@@ -9,7 +9,7 @@ router.post('/createHeading', requireAuth, uploadLogo, addPageHeading);
 router.get('/heading', getpageHeading,);
 router.get('/getAllPageHeadings', requireAuth, getAllPageHeadings);
 router.get('/:id', requireAuth, getPageHeadingById);
-router.put('/:id', requireAuth, uploadLogo, updatePageHeadingById);
+router.put('/updateHeading/:id', requireAuth, uploadLogo, updatePageHeadingById);
 router.put('/updateHeading', requireAuth, uploadLogo, updatePageHeading);
 router.delete('/delete', deletePageHeading,);
 /**
