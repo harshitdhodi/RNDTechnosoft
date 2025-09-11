@@ -149,7 +149,7 @@ const PageContentTable = () => {
     { type: 'webSolution', name: 'Web Solutions' },
     { type: 'homecard1', name: 'Home Card 1' },
     { type: 'bookcall', name: 'Book a Call' },
-    { type: 'whyPartnerus', name: 'Why Partner Us?' },
+    // { type: 'whyPartnerus', name: 'Why Partner Us?' },
     { type: 'globalsolution', name: 'Global Solutions' },
     { type: 'challengesface', name: 'Challenges We Face' },
     // { type: 'howecanhelp', name: 'How We Can Help' },

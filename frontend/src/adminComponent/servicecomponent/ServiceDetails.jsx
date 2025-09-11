@@ -38,7 +38,8 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
             className="hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/services/editService/${row.original._id}`)}
           >
-            {row.original.heading}
+            {/* {row.original.heading} */}
+            <span dangerouslySetInnerHTML={{ __html: row.original.heading }} />
           </span>
         ),
       },
@@ -240,7 +241,9 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
         overlayClassName="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center"
       >
         <div className="flex flex-col gap-4">
-          <h2 className="text-2xl font-bold text-gray-800">{selectedService?.heading}</h2>
+          <h2 className="text-2xl font-bold text-gray-800"
+          dangerouslySetInnerHTML={{ __html: selectedService?.heading }}
+          />
           <div
             className="text-gray-600"
             dangerouslySetInnerHTML={{ __html: selectedService?.description }}
@@ -285,7 +288,7 @@ const ServicesTable = ({ categoryId, subcategoryId, subsubcategoryId }) => {
       <Modal
         isOpen={isDeleteModalOpen}
         onRequestClose={closeDeleteModal}
-        className="bg-white p-6 w-full max-w-7xl max-h-[90vh] rounded-lg shadow-lg overflow-y-auto mx-auto my-10 outline-none"
+        className="bg-white p-6 w-full max-w-xl max-h-[90vh] rounded-lg shadow-lg overflow-y-auto mx-auto my-10 outline-none"
         overlayClassName="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center"
       >
         <div className="flex flex-col gap-4">

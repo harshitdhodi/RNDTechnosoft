@@ -19,14 +19,6 @@ const EditPortfolio = () => {
   const [parentCategoryId, setParentCategoryId] = useState("");
   const [subCategoryId, setSubCategoryId] = useState("");
   const [subSubCategoryId, setSubSubCategoryId] = useState("");
-  const [servicecategories, setServiceCategories] = useState([]);
-  const [serviceparentCategoryId, setServiceParentCategoryId] = useState("");
-  const [servicesubCategoryId, setServiceSubCategoryId] = useState("");
-  const [servicesubSubCategoryId, setServiceSubSubCategoryId] = useState("");
-  const [industriescategories, setIndustriesCategories] = useState([]);
-  const [industriesparentCategoryId, setIndustriesParentCategoryId] = useState("");
-  const [industriessubCategoryId, setIndustriesSubCategoryId] = useState("");
-  const [industriessubSubCategoryId, setIndustriesSubSubCategoryId] = useState("");
   const [initialPhoto, setInitialPhoto] = useState(null);
   const [initialPhotoAlt, setInitialPhotoAlt] = useState("");
   const [initialImgtitle, setInitialImgtitle] = useState("");
@@ -141,26 +133,6 @@ const EditPortfolio = () => {
     }
   };
 
-  const fetchServiceCategories = async () => {
-    try {
-      const response = await axios.get('/api/services/getAll', { withCredentials: true });
-      setServiceCategories(response.data);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to fetch service categories");
-    }
-  };
-
-  const fetchIndustriesCategories = async () => {
-    try {
-      const response = await axios.get('/api/industries/getAll', { withCredentials: true });
-      setIndustriesCategories(response.data);
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to fetch industries categories");
-    }
-  };
-
   const fetchCategories = async () => {
     try {
       const response = await axios.get('/api/Portfolio/getAll', { withCredentials: true });
@@ -207,48 +179,6 @@ const EditPortfolio = () => {
       } catch (error) {
         console.error('Error fetching sub-subcategory:', error);
       }
-
-      try {
-        const serviceCategoryResponse = await axios.get(`/api/services/getSpecificCategory?categoryId=${portfolio.servicecategories}`, { withCredentials: true });
-        setServiceParentCategoryId(serviceCategoryResponse.data.slug);
-      } catch (error) {
-        console.error('Error fetching service parent category:', error);
-      }
-
-      try {
-        const serviceSubCategoryResponse = await axios.get(`/api/services/getSpecificSubcategory?categoryId=${portfolio.servicecategories}&subCategoryId=${portfolio.servicesubcategories}`, { withCredentials: true });
-        setServiceSubCategoryId(serviceSubCategoryResponse.data.slug);
-      } catch (error) {
-        console.error('Error fetching service subcategory:', error);
-      }
-
-      try {
-        const serviceSubSubCategoryResponse = await axios.get(`/api/services/getSpecificSubSubcategory?categoryId=${portfolio.servicecategories}&subCategoryId=${portfolio.servicesubcategories}&subSubCategoryId=${portfolio.servicesubSubcategories}`, { withCredentials: true });
-        setServiceSubSubCategoryId(serviceSubSubCategoryResponse.data.slug);
-      } catch (error) {
-        console.error('Error fetching service sub-subcategory:', error);
-      }
-
-      try {
-        const industriesCategoryResponse = await axios.get(`/api/industries/getSpecificCategory?categoryId=${portfolio.industriescategories}`, { withCredentials: true });
-        setIndustriesParentCategoryId(industriesCategoryResponse.data.slug);
-      } catch (error) {
-        console.error('Error fetching industries parent category:', error);
-      }
-
-      try {
-        const industriesSubCategoryResponse = await axios.get(`/api/industries/getSpecificSubcategory?categoryId=${portfolio.industriescategories}&subCategoryId=${portfolio.industriessubcategories}`, { withCredentials: true });
-        setIndustriesSubCategoryId(industriesSubCategoryResponse.data.slug);
-      } catch (error) {
-        console.error('Error fetching industries subcategory:', error);
-      }
-
-      try {
-        const industriesSubSubCategoryResponse = await axios.get(`/api/industries/getSpecificSubSubcategory?categoryId=${portfolio.industriescategories}&subCategoryId=${portfolio.industriessubcategories}&subSubCategoryId=${portfolio.industriessubSubcategories}`, { withCredentials: true });
-        setIndustriesSubSubCategoryId(industriesSubSubCategoryResponse.data.slug);
-      } catch (error) {
-        console.error('Error fetching industries sub-subcategory:', error);
-      }
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch portfolio");
@@ -258,9 +188,7 @@ const EditPortfolio = () => {
   useEffect(() => {
     fetchPortfolio();
     fetchCategories();
-    fetchServiceCategories();
-    fetchIndustriesCategories();
-  }, []);
+  }, [slugs]);
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
@@ -329,12 +257,6 @@ const EditPortfolio = () => {
       formData.append('categories', parentCategoryId);
       formData.append('subcategories', subCategoryId);
       formData.append('subSubcategories', subSubCategoryId);
-      formData.append('servicecategories', serviceparentCategoryId);
-      formData.append('servicesubcategories', servicesubCategoryId);
-      formData.append('servicesubSubcategories', servicesubSubCategoryId);
-      formData.append('industrycategories', industriesparentCategoryId);
-      formData.append('industrysubcategories', industriessubCategoryId);
-      formData.append('industrysubSubcategories', industriessubSubCategoryId);
 
       if (photo) {
         formData.append('photo', photo);
@@ -380,42 +302,6 @@ const EditPortfolio = () => {
     </option>
   );
 
-  const renderServiceCategoryOptions = (category) => (
-    <option key={category._id} value={category.slug}>
-      {category.category}
-    </option>
-  );
-
-  const renderServiceSubCategoryOptions = (subCategory) => (
-    <option key={subCategory._id} value={subCategory.slug}>
-      {subCategory.category}
-    </option>
-  );
-
-  const renderServiceSubSubCategoryOptions = (subSubCategory) => (
-    <option key={subSubCategory._id} value={subSubCategory.slug}>
-      {subSubCategory.category}
-    </option>
-  );
-
-  const renderIndustriesCategoryOptions = (category) => (
-    <option key={category._id} value={category.slug}>
-      {category.category}
-    </option>
-  );
-
-  const renderIndustriesSubCategoryOptions = (subCategory) => (
-    <option key={subCategory._id} value={subCategory.slug}>
-      {subCategory.category}
-    </option>
-  );
-
-  const renderIndustriesSubSubCategoryOptions = (subSubCategory) => (
-    <option key={subSubCategory._id} value={subSubCategory.slug}>
-      {subSubCategory.category}
-    </option>
-  );
-
   const handleParentCategoryChange = (e) => {
     const selectedCategoryId = e.target.value;
     setParentCategoryId(selectedCategoryId);
@@ -430,42 +316,6 @@ const EditPortfolio = () => {
     setSubSubCategoryId("");
   };
 
-  const handleServiceParentCategoryChange = (e) => {
-    const selectedCategoryId = e.target.value;
-    setServiceParentCategoryId(selectedCategoryId);
-    setServiceSubCategoryId("");
-    setServiceSubSubCategoryId("");
-  };
-
-  const handleServiceSubCategoryChange = (e) => {
-    const selectedSubCategoryId = e.target.value;
-    setServiceSubCategoryId(selectedSubCategoryId);
-    setServiceSubSubCategoryId("");
-  };
-
-  const handleServiceSubSubCategoryChange = (e) => {
-    const selectedSubSubCategoryId = e.target.value;
-    setServiceSubSubCategoryId(selectedSubSubCategoryId);
-  };
-
-  const handleIndustriesParentCategoryChange = (e) => {
-    const selectedCategoryId = e.target.value;
-    setIndustriesParentCategoryId(selectedCategoryId);
-    setIndustriesSubCategoryId("");
-    setIndustriesSubSubCategoryId("");
-  };
-
-  const handleIndustriesSubCategoryChange = (e) => {
-    const selectedSubCategoryId = e.target.value;
-    setIndustriesSubCategoryId(selectedSubCategoryId);
-    setIndustriesSubSubCategoryId("");
-  };
-
-  const handleIndustriesSubSubCategoryChange = (e) => {
-    const selectedSubSubCategoryId = e.target.value;
-    setIndustriesSubSubCategoryId(selectedSubSubCategoryId);
-  };
-
   const getSubCategories = (categoryId) => {
     const category = categories.find(category => category.slug === categoryId);
     return category?.subCategories || [];
@@ -473,28 +323,6 @@ const EditPortfolio = () => {
 
   const getSubSubCategories = (categoryId, subCategoryId) => {
     const category = categories.find(category => category.slug === categoryId);
-    const subCategory = category?.subCategories.find(sub => sub.slug === subCategoryId);
-    return subCategory?.subSubCategories || [];
-  };
-
-  const getServiceSubCategories = (categoryId) => {
-    const category = servicecategories.find(category => category.slug === categoryId);
-    return category?.subCategories || [];
-  };
-
-  const getServiceSubSubCategories = (categoryId, subCategoryId) => {
-    const category = servicecategories.find(category => category.slug === categoryId);
-    const subCategory = category?.subCategories.find(sub => sub.slug === subCategoryId);
-    return subCategory?.subSubCategory || [];
-  };
-
-  const getIndustriesSubCategories = (categoryId) => {
-    const category = industriescategories.find(category => category.slug === categoryId);
-    return category?.subCategories || [];
-  };
-
-  const getIndustriesSubSubCategories = (categoryId, subCategoryId) => {
-    const category = industriescategories.find(category => category.slug === categoryId);
     const subCategory = category?.subCategories.find(sub => sub.slug === subCategoryId);
     return subCategory?.subSubCategories || [];
   };
@@ -596,104 +424,6 @@ const EditPortfolio = () => {
           >
             <option value="">Select Sub-Subcategory</option>
             {getSubSubCategories(parentCategoryId, subCategoryId).map(renderSubSubCategoryOptions)}
-          </select>
-        </div>
-      )}
-
-      <div className="mb-4">
-        <label htmlFor="serviceParentCategory" className="block font-semibold mb-2">
-          Service Parent Category
-        </label>
-        <select
-          id="serviceParentCategory"
-          value={serviceparentCategoryId}
-          onChange={handleServiceParentCategoryChange}
-          className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-        >
-          <option value="">Select Service Parent Category</option>
-          {servicecategories.map(renderServiceCategoryOptions)}
-        </select>
-      </div>
-
-      {getServiceSubCategories(serviceparentCategoryId).length > 0 && (
-        <div className="mb-4">
-          <label htmlFor="serviceSubCategory" className="block font-semibold mb-2">
-            Service Subcategory (optional)
-          </label>
-          <select
-            id="serviceSubCategory"
-            value={servicesubCategoryId}
-            onChange={handleServiceSubCategoryChange}
-            className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-          >
-            <option value="">Select Service Subcategory</option>
-            {getServiceSubCategories(serviceparentCategoryId).map(renderServiceSubCategoryOptions)}
-          </select>
-        </div>
-      )}
-
-      {getServiceSubSubCategories(serviceparentCategoryId, servicesubCategoryId).length > 0 && (
-        <div className="mb-4">
-          <label htmlFor="serviceSubSubCategory" className="block font-semibold mb-2">
-            Service Sub-Subcategory (optional)
-          </label>
-          <select
-            id="serviceSubSubCategory"
-            value={servicesubSubCategoryId}
-            onChange={handleServiceSubSubCategoryChange}
-            className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-          >
-            <option value="">Select Service Sub-Subcategory</option>
-            {getServiceSubSubCategories(serviceparentCategoryId, servicesubCategoryId).map(renderServiceSubSubCategoryOptions)}
-          </select>
-        </div>
-      )}
-
-      <div className="mb-4">
-        <label htmlFor="industriesParentCategory" className="block font-semibold mb-2">
-          Industries Parent Category
-        </label>
-        <select
-          id="industriesParentCategory"
-          value={industriesparentCategoryId}
-          onChange={handleIndustriesParentCategoryChange}
-          className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-        >
-          <option value="">Select Industries Parent Category</option>
-          {industriescategories.map(renderIndustriesCategoryOptions)}
-        </select>
-      </div>
-
-      {getIndustriesSubCategories(industriesparentCategoryId).length > 0 && (
-        <div className="mb-4">
-          <label htmlFor="industriesSubCategory" className="block font-semibold mb-2">
-            Industries Subcategory (optional)
-          </label>
-          <select
-            id="industriesSubCategory"
-            value={industriessubCategoryId}
-            onChange={handleIndustriesSubCategoryChange}
-            className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-          >
-            <option value="">Select Industries Subcategory</option>
-            {getIndustriesSubCategories(industriesparentCategoryId).map(renderIndustriesSubCategoryOptions)}
-          </select>
-        </div>
-      )}
-
-      {getIndustriesSubSubCategories(industriesparentCategoryId, industriessubCategoryId).length > 0 && (
-        <div className="mb-4">
-          <label htmlFor="industriesSubSubCategory" className="block font-semibold mb-2">
-            Industries Sub-Subcategory (optional)
-          </label>
-          <select
-            id="industriesSubSubCategory"
-            value={industriessubSubCategoryId}
-            onChange={handleIndustriesSubSubCategoryChange}
-            className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
-          >
-            <option value="">Select Industries Sub-Subcategory</option>
-            {getIndustriesSubSubCategories(industriesparentCategoryId, industriessubCategoryId).map(renderIndustriesSubSubCategoryOptions)}
           </select>
         </div>
       )}

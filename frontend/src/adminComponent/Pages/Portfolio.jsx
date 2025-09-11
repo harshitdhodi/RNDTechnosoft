@@ -56,7 +56,7 @@ const PortfolioTable = () => {
         Cell: ({ row }) => (
           <span
             className="hover:text-blue-500 cursor-pointer"
-            onClick={() => navigate(`/portfolio/editPortfolio/${row.original.slug || ''}`)}
+            onClick={() => navigate(`/portfolio/${row.original.slug || ''}`)}
           >
             {row.original.categoryName || 'N/A'}
           </span>
@@ -68,7 +68,7 @@ const PortfolioTable = () => {
         Cell: ({ row }) => (
           <span
             className="hover:text-blue-500 cursor-pointer"
-            onClick={() => navigate(`/portfolio/editPortfolio/${row.original.slug || ''}`)}
+            onClick={() => navigate(`/portfolio/${row.original.slug || ''}`)}
           >
             {row.original.title || 'N/A'}
           </span>
@@ -108,7 +108,7 @@ const PortfolioTable = () => {
               <FaEye />
             </button>
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/portfolio/editPortfolio/${row.original.slug || ''}`}>
+              <Link to={`/portfolio/${row.original.slug || ''}`}>
                 <FaEdit />
               </Link>
             </button>

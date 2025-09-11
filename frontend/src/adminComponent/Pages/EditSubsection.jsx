@@ -28,6 +28,9 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
   const [currentPhoto, setCurrentPhoto] = useState(subsection.photo);
   const [altText, setAltText] = useState(subsection.photoAlt);
   const [imgtitle, setImgtitle] = useState(subsection.imgtitle);
+  const [video, setVideo] = useState(null);
+  const [currentVideo, setCurrentVideo] = useState(subsection.video);
+  const [videoAlt, setVideoAlt] = useState(subsection.videoAlt || '');
   
   const [serviceCategories, setServiceCategories] = useState([]);
   const [selectedParentCategory, setSelectedParentCategory] = useState(subsection.serviceparentCategoryId || "");
@@ -39,6 +42,8 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
     setCurrentPhoto(subsection.photo);
     setAltText(subsection.photoAlt);
     setImgtitle(subsection.imgtitle);
+    setCurrentVideo(subsection.video);
+    setVideoAlt(subsection.videoAlt || '');
   }, [subsection]);
 
   useEffect(() => {
@@ -64,6 +69,19 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
     }
   };
 
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setVideo(file);
+    }
+  };
+
+  const handleDeleteVideo = () => {
+    setVideo(null);
+    setCurrentVideo(null);
+    setVideoAlt('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formDataToSend = new FormData();
@@ -73,6 +91,7 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
     formDataToSend.append('description', formData.description);
     formDataToSend.append('photoAlt', altText);
     formDataToSend.append('imgtitle', imgtitle);
+    formDataToSend.append('videoAlt', videoAlt);
     formDataToSend.append('serviceparentCategoryId', selectedParentCategory);
     formDataToSend.append('servicesubCategoryId', selectedSubCategory);
     formDataToSend.append('servicesubSubCategoryId', selectedSubSubCategory);
@@ -81,6 +100,14 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
       formDataToSend.append('photo', photo);
     } else if (currentPhoto) {
       formDataToSend.append('currentPhoto', currentPhoto);
+    }
+
+    if (video) {
+      formDataToSend.append('video', video);
+    } else if (currentVideo) {
+      formDataToSend.append('currentVideo', currentVideo);
+    } else {
+      formDataToSend.append('removeVideo', 'true');
     }
 
     try {
@@ -119,7 +146,7 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
       <h3 className="font-semibold mb-4">Edit Subsection</h3>
 
       {/* Service Categories Section */}
-      <label htmlFor="serviceParentCategory" className="block font-semibold mb-2">Service Parent Category</label>
+      {/* <label htmlFor="serviceParentCategory" className="block font-semibold mb-2">Service Parent Category</label>
       <select
         id="serviceParentCategory"
         value={selectedParentCategory}
@@ -161,7 +188,7 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
             {renderCategoryOptions(getSubSubCategories(selectedParentCategory, selectedSubCategory))}
           </select>
         </>
-      )}
+      )} */}
 
       <label className="block mb-2">Title</label>
       <input
@@ -219,6 +246,79 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
           </div>
         </div>
       )}
+
+      {/* Video Upload Section */}
+      <div className="mt-6">
+        <label className="block font-semibold mb-2">Video (Optional)</label>
+        
+        {/* Current Video Preview */}
+        {currentVideo && !video && (
+          <div className="mb-4 relative group">
+            <video
+              src={`/api/image/download/${currentVideo}`}
+              controls
+              className="w-full max-w-md h-auto max-h-48 object-contain"
+            />
+            <button
+              type="button"
+              onClick={handleDeleteVideo}
+              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              title="Remove video"
+            >
+              ×
+            </button>
+          </div>
+        )}
+
+        {/* New Video Upload */}
+        {!currentVideo || video ? (
+          <>
+            <input
+              type="file"
+              onChange={handleVideoChange}
+              accept="video/*"
+              className="p-2 border rounded mb-2 w-full"
+            />
+            <p className="text-xs text-gray-500 mb-2">
+              Supported formats: MP4, WebM, Ogg. Max size: 50MB
+            </p>
+          </>
+        ) : null}
+
+        {/* Video Preview */}
+        {video && (
+          <div className="mt-2">
+            <label className="block font-semibold mb-2">New Video Preview</label>
+            <video
+              src={URL.createObjectURL(video)}
+              controls
+              className="w-full max-w-md h-auto max-h-48 object-contain"
+            />
+            <button
+              type="button"
+              onClick={() => setVideo(null)}
+              className="mt-2 text-sm text-red-600 hover:text-red-800"
+            >
+              Remove new video
+            </button>
+          </div>
+        )}
+
+        {/* Video Alt Text */}
+        <div className="mt-2">
+          <label className="block font-semibold mb-1">Video Alt Text</label>
+          <input
+            type="text"
+            value={videoAlt}
+            onChange={(e) => setVideoAlt(e.target.value)}
+            placeholder="Describe this video for accessibility"
+            className="p-2 border rounded w-full"
+          />
+          <p className="text-xs text-gray-500 mt-1">
+            Provide a description of the video for screen readers and SEO
+          </p>
+        </div>
+      </div>
 
       <button
         onClick={handleSubmit}

@@ -39,7 +39,7 @@ const CategoryTable = () => {
         Cell: ({ row }) => (
           <div
             className="flex items-center gap-2 hover:text-blue-500 cursor-pointer"
-            onClick={() => navigate(`/PortfolioCategory/editPortfolioCategory/${row.original.slug}`)}
+            onClick={() => navigate(`/PortfolioCategory/${row.original.slug}`)}
           >
             {row.original.photo && (
               <img
@@ -57,7 +57,7 @@ const CategoryTable = () => {
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/PortfolioCategory/editPortfolioCategory/${row.original.slug}`}>
+              <Link to={`/PortfolioCategory/${row.original.slug}`}>
                 <Edit />
               </Link>
             </button>
@@ -220,7 +220,7 @@ const CategoryTable = () => {
                                 className="py-2 px-8 flex gap-2 hover:text-blue-500 cursor-pointer"
                                 onClick={() =>
                                   navigate(
-                                    `/PortfolioCategory/editPortfolioCategory/${row.original.slug}/${subcategory.slug}`
+                                    `/PortfolioCategory/${row.original.slug}/${subcategory.slug}`
                                   )
                                 }
                               >
@@ -238,7 +238,7 @@ const CategoryTable = () => {
                                 <div className="flex gap-4">
                                   <button className="text-blue-500 hover:text-blue-700 transition">
                                     <Link
-                                      to={`/PortfolioCategory/editPortfolioCategory/${row.original.slug}/${subcategory.slug}`}
+                                      to={`/PortfolioCategory/${row.original.slug}/${subcategory.slug}`}
                                     >
                                       <Edit />
                                     </Link>
@@ -268,7 +268,7 @@ const CategoryTable = () => {
                                     className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer"
                                     onClick={() =>
                                       navigate(
-                                        `/PortfolioCategory/editPortfolioCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`
+                                        `/PortfolioCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`
                                       )
                                     }
                                   >
@@ -286,7 +286,7 @@ const CategoryTable = () => {
                                     <div className="flex gap-4">
                                       <button className="text-blue-500 hover:text-blue-700 transition">
                                         <Link
-                                          to={`/PortfolioCategory/editPortfolioCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`}
+                                          to={`/PortfolioCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`}
                                         >
                                           <Edit />
                                         </Link>

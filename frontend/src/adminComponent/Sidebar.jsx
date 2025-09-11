@@ -110,10 +110,10 @@ export default function Sidebar() {
       title: "Services", icon: <Headset size={20} />, submenu: [
         { title: "Create Service Entry", icon: <LayoutGrid size={20} />, path: "/ServiceCategory" },
         { title: "Edit Service Page", icon: <Wrench size={20} />, path: "/services" },
-        { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
-        { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
+        // { title: "Logo Design Types", icon: <Wrench size={20} />, path: "/logotype" },
+        // { title: "We Are Experts", icon: <Wrench size={20} />, path: "/we-are-expert" },
         { title: "Why Partner With Us", icon: <Wrench size={20} />, path: "/why-partner-us" },
-        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+        // { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
         { title: "Card", icon: <Wrench size={20} />, path: "/Card" },
         { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
         { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
@@ -132,18 +132,18 @@ export default function Sidebar() {
         { title: "Industry Data", icon: <Wrench size={20} />, path: "/industry-data" },
       ]
     },
-    {
-      title: "Packages", icon: <Package size={20} />, submenu: [
-        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PackageCategory" },
-        { title: "Packages", icon: <Wrench size={20} />, path: "/package" },
-        { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
-        { title: "companies", icon: <Wrench size={20} />, path: "/company-category" },
-        { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
-        { title: "Template Card", icon: <Wrench size={20} />, path: "/edit-template-card" },
+    // {
+    //   title: "Packages", icon: <Package size={20} />, submenu: [
+    //     { title: "Categories", icon: <LayoutGrid size={20} />, path: "/PackageCategory" },
+    //     { title: "Packages", icon: <Wrench size={20} />, path: "/package" },
+    //     { title: "Testimonials", icon: <MessageSquare size={20} />, path: "/testimonials" },
+    //     { title: "companies", icon: <Wrench size={20} />, path: "/company-category" },
+    //     { title: "Get In Touch", icon: <Wrench size={20} />, path: "/edit-card" },
+    //     { title: "Template Card", icon: <Wrench size={20} />, path: "/edit-template-card" },
 
-        { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
-      ]
-    },
+    //     { title: "FAQ", icon: <MessageSquare size={20} />, path: "/faq" },
+    //   ]
+    // },
 
     {
       title: "Portfolio", icon: <Image size={20} />, submenu: [
@@ -162,13 +162,13 @@ export default function Sidebar() {
       ]
     },
 
-    {
-      title: "Products", icon: <ShoppingCart size={20} />, submenu: [
-        { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ProductCategory" },
-        { title: "Benefits", icon: <ShoppingCart size={20} />, path: "/benefits" },
-        { title: "Products", icon: <ChartColumn size={20} />, path: "/product" },
-      ]
-    },
+    // {
+    //   title: "Products", icon: <ShoppingCart size={20} />, submenu: [
+    //     { title: "Categories", icon: <LayoutGrid size={20} />, path: "/ProductCategory" },
+    //     { title: "Benefits", icon: <ShoppingCart size={20} />, path: "/benefits" },
+    //     { title: "Products", icon: <ChartColumn size={20} />, path: "/product" },
+    //   ]
+    // },
     // { title: "Global Presence", icon: < Globe2 size={20} />, path: "/globalpresence" },
 
     {

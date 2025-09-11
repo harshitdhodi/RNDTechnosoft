@@ -6,6 +6,12 @@ import 'react-quill/dist/quill.snow.css';
 import { toast, ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 
+const CHARACTER_LIMITS = {
+  HEADING: 80,
+  SUBHEADING: 120,
+  DESCRIPTION: 200
+};
+
 const GetInTouchCard = () => {
   const { contentType } = useParams();
   const [photo, setPhoto] = useState([]);
@@ -106,21 +112,61 @@ const GetInTouchCard = () => {
     }
   };
 
+  const placeholderStyle = {
+    '& .ql-editor.ql-blank::before': {
+      paddingBottom: '1rem',
+      color: '#9ca3af',
+      fontStyle: 'normal'
+    }
+  };
+
+  const getRemainingChars = (value, field) => {
+    const maxLength = CHARACTER_LIMITS[field.toUpperCase()] || 0;
+    const length = value ? value.replace(/<[^>]*>?/gm, '').length : 0; // Strip HTML tags for accurate count
+    return {
+      remaining: maxLength - length,
+      isValid: length <= maxLength
+    };
+  };
+
+  const renderCharacterCounter = (value, field) => {
+    const { remaining, isValid } = getRemainingChars(value, field);
+    return (
+      <div className={`text-xs mt-1 ${!isValid ? 'text-red-500' : 'text-gray-500'}`}>
+        {remaining} characters remaining
+      </div>
+    );
+  };
+
   // Validation function
   const validateForm = () => {
     const newErrors = {};
 
-    // Required field validations
+    // Required field validations with character limits
     if (!heading || heading.trim() === '' || heading === '<p><br></p>') {
       newErrors.heading = 'Heading is required';
+    } else {
+      const headingText = heading.replace(/<[^>]*>?/gm, '');
+      if (headingText.length > CHARACTER_LIMITS.HEADING) {
+        newErrors.heading = `Heading must be ${CHARACTER_LIMITS.HEADING} characters or less`;
+      }
     }
 
-    if (!subheading || subheading.trim() === '' || subheading === '<p><br></p>') {
-      newErrors.subheading = 'Subheading is required';
+    // Make subheading optional but still validate length if provided
+    if (subheading && subheading !== '<p><br></p>') {
+      const subheadingText = subheading.replace(/<[^>]*>?/gm, '');
+      if (subheadingText.length > CHARACTER_LIMITS.SUBHEADING) {
+        newErrors.subheading = `Subheading must be ${CHARACTER_LIMITS.SUBHEADING} characters or less`;
+      }
     }
 
     if (!description || description.trim() === '' || description === '<p><br></p>') {
       newErrors.description = 'Description is required';
+    } else {
+      const descriptionText = description.replace(/<[^>]*>?/gm, '');
+      if (descriptionText.length > CHARACTER_LIMITS.DESCRIPTION) {
+        newErrors.description = `Description must be ${CHARACTER_LIMITS.DESCRIPTION} characters or less`;
+      }
     }
 
     // Alt text validation for current photo
@@ -478,6 +524,13 @@ const GetInTouchCard = () => {
     }
   };
 
+  const quillStyles = {
+    height: '150px',
+    marginBottom: '3rem',
+    backgroundColor: 'white',
+    borderRadius: '0.375rem',
+  };
+
   return (
     <div>
       <ToastContainer 
@@ -491,6 +544,18 @@ const GetInTouchCard = () => {
         draggable
         pauseOnHover
       />
+      <style>
+        {`
+          .ql-editor {
+            min-height: 120px;
+          }
+          .ql-editor.ql-blank::before {
+            padding-bottom: 0.1rem;
+            color: #9ca3af;
+            font-style: normal;
+          }
+        `}
+      </style>
       <form onSubmit={handleSubmit} className="p-4">
         <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center mb-6">
           Edit Content
@@ -500,45 +565,59 @@ const GetInTouchCard = () => {
         <div className="mb-4">
           <label htmlFor="heading" className="block font-semibold mb-2">
             Heading <span className="text-red-500">*</span>
+            <span className="text-xs text-gray-500 ml-2">(Max {CHARACTER_LIMITS.HEADING} characters)</span>
           </label>
           <ReactQuill
             value={heading}
             onChange={handleHeadingChange}
             className="bg-white"
+            placeholder="Enter heading"
             modules={modules}
+            style={quillStyles}
           />
+          {renderCharacterCounter(heading, 'heading')}
           {errors.heading && (
             <p className="text-red-500 text-sm mt-1">{errors.heading}</p>
           )}
         </div>
 
         {/* Subheading */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label htmlFor="subheading" className="block font-semibold mb-2">
-            Subheading <span className="text-red-500">*</span>
+            Subheading
+            {subheading && (
+              <span className="text-xs text-gray-500 ml-2">(Max {CHARACTER_LIMITS.SUBHEADING} characters)</span>
+            )}
           </label>
           <ReactQuill
             value={subheading}
             onChange={handleSubheadingChange}
             className="bg-white"
-            modules={modules}
+            placeholder={contentType === 'getintouch' ? "" : "Enter subheading"}
+            modules={contentType === 'getintouch' ? null : modules}
+            style={quillStyles}
           />
+          {renderCharacterCounter(subheading, 'subheading')}
           {errors.subheading && (
             <p className="text-red-500 text-sm mt-1">{errors.subheading}</p>
           )}
-        </div>
+        </div> */}
 
         {/* Description */}
         <div className="mb-8">
           <label htmlFor="description" className="block font-semibold mb-2">
             Description <span className="text-red-500">*</span>
+            <span className="text-xs text-gray-500 ml-2">(Max {CHARACTER_LIMITS.DESCRIPTION} characters)</span>
           </label>
           <ReactQuill
             value={description}
             onChange={handleDescriptionChange}
             className="bg-white"
+            placeholder="Enter description"
             modules={modules}
+            style={quillStyles}
           />
+          {renderCharacterCounter(description, 'description')}
           {errors.description && (
             <p className="text-red-500 text-sm mt-1">{errors.description}</p>
           )}

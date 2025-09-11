@@ -1,38 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Modal from "react-modal";
 import { z } from "zod";
 import Address from "../Address";
 
 Modal.setAppElement('#root');
-
-// Define Zod schema for validation
-const contactSchema = z.object({
-  heading: z.string()
-    .min(1, "Heading is required")
-    .max(100, "Heading must be 100 characters or less")
-    .trim(),
-  subheading: z.string()
-    .min(1, "Subheading is required")
-    .max(200, "Subheading must be 200 characters or less")
-    .trim(),
-  imgTitle: z.string()
-    .min(1, "Image Title is required")
-    .max(100, "Image Title must be 100 characters or less")
-    .trim(),
-  alt: z.string()
-    .min(1, "Alt Text is required")
-    .max(150, "Alt Text must be 150 characters or less")
-    .trim(),
-  photo: z.any()
-    .refine((file) => !file || (file instanceof File && ["image/jpeg", "image/png"].includes(file.type)), "Photo must be a JPEG or PNG")
-    .refine((file) => !file || file.size <= 5 * 1024 * 1024, "Photo must be less than 5MB"),
-});
 
 const ContactInfoData = () => {
   const [contactInfos, setContactInfos] = useState([]);
@@ -49,6 +26,45 @@ const ContactInfoData = () => {
   const [contactInfoToDelete, setContactInfoToDelete] = useState(null);
   const navigate = useNavigate();
 
+  // Define schema inside component to access component state
+  const contactSchema = useMemo(() => z.object({
+    heading: z.string()
+      .min(5, "Heading must be at least 5 characters")
+      .max(100, "Heading must be 100 characters or less")
+      .trim(),
+    subheading: z.string()
+      .min(10, "Subheading must be at least 10 characters")
+      .max(150, "Subheading must be 150 characters or less")
+      .trim(),
+    imgTitle: z.string()
+      .max(80, "Image Title must be 80 characters or less")
+      .trim()
+      .optional(),
+    alt: z.string()
+      .min(1, "Alt Text is required")
+      .max(120, "Alt Text must be 120 characters or less")
+      .trim(),
+    photo: z.any()
+      .refine(file => {
+        if (!file && !existingPhoto) return false; // Photo is required
+        if (!file) return true; // If there's an existing photo, it's okay
+        return ['image/jpeg', 'image/png'].includes(file.type);
+      }, "Photo must be a JPEG or PNG")
+      .refine(file => !file || file.size <= 1 * 1024 * 1024, "Photo must be less than 1MB")
+      .refine(file => {
+        if (!file) return true; // Skip if no new file
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => {
+            const { width, height } = img;
+            resolve(width >= 800 && height >= 400);
+          };
+          img.onerror = () => resolve(false);
+          img.src = URL.createObjectURL(file);
+        });
+      }, "Image must be at least 800x400 pixels"),
+  }), [existingPhoto]); // Add existingPhoto as a dependency
+
   const fetchHeadings = async () => {
     try {
       const response = await axios.get('/api/pageHeading/heading?pageType=contactus', { withCredentials: true });
@@ -61,7 +77,9 @@ const ContactInfoData = () => {
     } catch (error) {
       console.error("Error fetching headings:", error);
       const statusCode = error.response?.status ? `(${error.response.status})` : '';
-      toast.error(`Failed to fetch headings ${statusCode}.`);
+      toast.error(`Failed to fetch headings ${statusCode}.`, {
+        position: "top-center"
+      });
     }
   };
 
@@ -69,39 +87,52 @@ const ContactInfoData = () => {
     setIsLoading(true);
     setErrors({});
 
-    const data = { heading, subheading, imgTitle, alt, photo };
-    const validationResult = contactSchema.safeParse(data);
-
-    if (!validationResult.success) {
-      const fieldErrors = {};
-      validationResult.error.errors.forEach((err) => {
-        fieldErrors[err.path[0]] = err.message;
-      });
-      setErrors(fieldErrors);
-      setIsLoading(false);
-      toast.error("Validation failed. Please check the form.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("pagetype", 'contactus');
-    formData.append("heading", validationResult.data.heading);
-    formData.append("subheading", validationResult.data.subheading);
-    formData.append("alt", validationResult.data.alt);
-    formData.append("imgTitle", validationResult.data.imgTitle);
-    if (photo) formData.append("photo", photo);
-
+    const data = { heading, subheading, imgTitle, alt, photo, existingPhoto };
+    
     try {
-      await axios.put('/api/pageHeading/updateHeading?pageType=contactus', formData, {
+      const validationResult = contactSchema.safeParse(data);
+
+      if (!validationResult.success) {
+        const fieldErrors = {};
+        validationResult.error.errors.forEach((err) => {
+          const field = err.path[0];
+          fieldErrors[field] = err.message;
+          toast.error(`${field.charAt(0).toUpperCase() + field.slice(1)}: ${err.message}`, {
+            position: "top-center"
+          });
+        });
+        setErrors(fieldErrors);
+        setIsLoading(false);
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("pagetype", 'contactus');
+      formData.append("heading", validationResult.data.heading);
+      formData.append("subheading", validationResult.data.subheading);
+      formData.append("alt", validationResult.data.alt);
+      if (imgTitle) formData.append("imgTitle", validationResult.data.imgTitle);
+      if (photo) formData.append("photo", photo);
+
+      const response = await axios.put('/api/pageHeading/updateHeading?pageType=contactus', formData, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      toast.success("Updated Successfully!");
-      fetchHeadings(); // Refresh headings to get updated photo
+
+      if (response.data && response.data.message === 'Error updating page heading') {
+        throw new Error('Failed to update page heading. Please try again.');
+      }
+
+      toast.success("Contact information updated successfully!", {
+        position: "top-center"
+      });
+      fetchHeadings(); // Refresh headings to get updated data
     } catch (error) {
       console.error("Error updating headings:", error);
-      const statusCode = error.response?.status ? `(${error.response.status})` : '';
-      toast.error(`Failed to update headings ${statusCode}.`);
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to update contact information';
+      toast.error(errorMessage, {
+        position: "top-center"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -115,7 +146,9 @@ const ContactInfoData = () => {
     } catch (error) {
       console.error("Error fetching contact infos:", error);
       const statusCode = error.response?.status ? `(${error.response.status})` : '';
-      toast.error(`Failed to fetch contact info ${statusCode}.`);
+      toast.error(`Failed to fetch contact info ${statusCode}.`, {
+        position: "top-center"
+      });
       if (error.response?.status === 403) {
         navigate("/login");
       }
@@ -128,14 +161,18 @@ const ContactInfoData = () => {
       await axios.delete(`/api/contactInfo/deletecontactinfo?id=${contactInfoToDelete._id}`, {
         withCredentials: true,
       });
-      toast.success(`Contact info "${contactInfoToDelete.title}" deleted successfully!`);
+      toast.success(`Contact info "${contactInfoToDelete.title}" deleted successfully!`, {
+        position: "top-center"
+      });
       setContactInfos((prevContactInfos) =>
         prevContactInfos.filter((contactInfo) => contactInfo._id !== contactInfoToDelete._id)
       );
     } catch (error) {
       console.error("Error deleting contact info:", error);
       const statusCode = error.response?.status ? `(${error.response.status})` : '';
-      toast.error(`Failed to delete contact info ${statusCode}.`);
+      toast.error(`Failed to delete contact info ${statusCode}.`, {
+        position: "top-center"
+      });
       if (error.response?.status === 403) {
         navigate("/login");
       }
@@ -151,9 +188,63 @@ const ContactInfoData = () => {
   };
 
   const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-    setPhotoPreview(file ? URL.createObjectURL(file) : null);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset any previous photo errors
+    setErrors(prev => ({
+      ...prev,
+      photo: undefined
+    }));
+
+    // Validate file type
+    if (!['image/jpeg', 'image/png'].includes(file.type)) {
+      setErrors(prev => ({
+        ...prev,
+        photo: 'Only JPEG and PNG files are allowed'
+      }));
+      return;
+    }
+
+    // Validate file size (1MB)
+    if (file.size > 1 * 1024 * 1024) {
+      setErrors(prev => ({
+        ...prev,
+        photo: 'File size must be less than 1MB'
+      }));
+      return;
+    }
+
+    // Create preview URL
+    const previewUrl = URL.createObjectURL(file);
+    
+    // Validate image dimensions
+    const img = new Image();
+    img.onload = () => {
+      const { width, height } = img;
+      if (width < 800 || height < 400) {
+        setErrors(prev => ({
+          ...prev,
+          photo: 'Image must be at least 800x400 pixels'
+        }));
+        URL.revokeObjectURL(previewUrl); // Clean up the object URL
+        return;
+      }
+      
+      // If all validations pass, update state
+      setPhoto(file);
+      setPhotoPreview(previewUrl);
+    };
+    
+    img.onerror = () => {
+      setErrors(prev => ({
+        ...prev,
+        photo: 'Failed to load image'
+      }));
+      URL.revokeObjectURL(previewUrl); // Clean up the object URL
+    };
+    
+    img.src = previewUrl;
   };
 
   useEffect(() => {
@@ -163,31 +254,189 @@ const ContactInfoData = () => {
       if (photoPreview) URL.revokeObjectURL(photoPreview); // Cleanup preview URL
     };
   }, [navigate]);
-
+ 
   return (
     <div className="container mx-auto p-4 sm:p-6 md:p-8">
-      <ToastContainer />
+      <ToastContainer 
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        style={{
+          zIndex: 9999,
+          marginTop: '4rem',
+        }}
+      />
       <div className="mb-8 border border-gray-200 shadow-lg p-4 sm:p-6 rounded-lg">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* ...form fields unchanged... */}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">Contact Information</h2>
+          <p className="text-gray-600">Manage your contact details and information displayed on the website</p>
         </div>
-        <button
-          onClick={saveHeadings}
-          disabled={isLoading}
-          className={`px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif text-sm sm:text-base ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-        >
-          {isLoading ? 'Saving...' : 'Save'}
-        </button>
+        
+        {/* Heading and Subheading Form */}
+        <div className="bg-gray-50 p-6 rounded-lg mb-6">
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Page Headings</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="heading" className="block text-sm font-medium text-gray-700 mb-1">
+                Main Heading <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 ml-2">(5-100 characters)</span>
+              </label>
+              <input
+                type="text"
+                id="heading"
+                value={heading}
+                onChange={(e) => setHeading(e.target.value)}
+                className={`w-full px-3 py-2 border ${errors.heading ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#324154]`}
+                placeholder="Enter main heading"
+              />
+              {errors.heading && (
+                <p className="mt-1 text-sm text-red-600">{errors.heading}</p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="subheading" className="block text-sm font-medium text-gray-700 mb-1">
+                Subheading <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 ml-2">(10-150 characters)</span>
+              </label>
+              <input
+                type="text"
+                id="subheading"
+                value={subheading}
+                onChange={(e) => setSubheading(e.target.value)}
+                className={`w-full px-3 py-2 border ${errors.subheading ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#324154]`}
+                placeholder="Enter subheading"
+              />
+              {errors.subheading && (
+                <p className="mt-1 text-sm text-red-600">{errors.subheading}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="imgTitle" className="block text-sm font-medium text-gray-700 mb-1">
+                Image Title
+                <span className="text-xs text-gray-500 ml-2">(Optional, max 80 characters)</span>
+              </label>
+              <input
+                type="text"
+                id="imgTitle"
+                value={imgTitle}
+                onChange={(e) => setImgTitle(e.target.value)}
+                className={`w-full px-3 py-2 border ${errors.imgTitle ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#324154]`}
+                placeholder="Enter image title"
+              />
+              {errors.imgTitle && (
+                <p className="mt-1 text-sm text-red-600">{errors.imgTitle}</p>
+              )}
+            </div>
+            <div>
+              <label htmlFor="alt" className="block text-sm font-medium text-gray-700 mb-1">
+                Alt Text <span className="text-red-500">*</span>
+                <span className="text-xs text-gray-500 ml-2">(Max 120 characters)</span>
+              </label>
+              <input
+                type="text"
+                id="alt"
+                value={alt}
+                onChange={(e) => setAlt(e.target.value)}
+                className={`w-full px-3 py-2 border ${errors.alt ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#324154]`}
+                placeholder="Enter alt text for the image"
+              />
+              {errors.alt && (
+                <p className="mt-1 text-sm text-red-600">{errors.alt}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Image <span className="text-red-500">*</span>
+              <span className="text-xs text-gray-500 ml-2">(JPEG/PNG, max 1MB, min 800×400px)</span>
+            </label>
+            <div className="mt-1 flex items-center">
+              <label
+                htmlFor="photo"
+                className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#324154]"
+              >
+                Choose File
+                <input
+                  id="photo"
+                  name="photo"
+                  type="file"
+                  className="sr-only"
+                  onChange={handlePhotoChange}
+                  accept="image/jpeg, image/png"
+                />
+              </label>
+              <span className="ml-2 text-sm text-gray-500">
+                {photo ? photo.name : 'No file chosen'}
+              </span>
+            </div>
+            {photoPreview && (
+              <div className="mt-2">
+                <img
+                  src={photoPreview}
+                  alt="Preview"
+                  className="h-40 w-auto object-cover rounded"
+                />
+              </div>
+            )}
+            {existingPhoto && !photo && (
+              <div className="mt-2">
+                <p className="text-sm text-gray-600">Current Image:</p>
+                <img
+                  src={`/api/logo/download/${existingPhoto}`}
+                  alt={alt || 'Current'}
+                  className="h-40 w-auto object-cover rounded mt-1"
+                />
+              </div>
+            )}
+            {errors.photo && (
+              <p className="mt-1 text-sm text-red-600">{errors.photo}</p>
+            )}
+          </div>
+
+          <div className="mt-6 flex justify-start">
+            <button
+              type="button"
+              onClick={saveHeadings}
+              disabled={isLoading}
+              className={`inline-flex items-center px-4 py-2 border border-transparent text-md font-medium rounded-sm shadow-sm text-white ${isLoading ? 'bg-[#324154]' : 'bg-[#324154] hover:bg-[#324154]'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#324154]`}
+            >
+              {isLoading ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Saving...
+                </>
+              ) : (
+                'Save Changes'
+              )}
+            </button>
+          </div>
+        </div>
+
+        
       </div>
       <div className="flex flex-col sm:flex-row items-center justify-between mb-4">
         <h1 className="text-xl md:text-2xl font-bold text-gray-700 font-serif uppercase">Contact Info</h1>
-        <button className="px-4 py-2 mt-3 sm:mt-0 bg-[#021660] text-white rounded hover:bg-red-600 transition duration-300 font-serif text-sm sm:text-base">
+        <button className="px-4 py-2 mt-3 sm:mt-0 bg-[#334155] text-white rounded hover:bg-red-600 transition duration-300 font-serif text-sm sm:text-base">
           <Link to={`/contactinfo/createContactinfo`}>Add Contact Info</Link>
         </button>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full mt-8 bg-white border border-blue-200">
-          <thead className="bg-[#021045] text-white">
+          <thead className="bg-[#334155] text-white">
             <tr>
               <th className="px-4 py-2 border text-sm sm:text-base">Photo</th>
               <th className="px-4 py-2 border text-sm sm:text-base">Image Title</th>

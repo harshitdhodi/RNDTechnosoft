@@ -3,10 +3,48 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash } from "react-icons/fa";
 
+const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message, confirmText = "Delete", cancelText = "Cancel" }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+        {title && (
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            {title}
+          </h3>
+        )}
+        <p className="text-gray-700 mb-6">{message}</p>
+        <div className="flex justify-end space-x-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {cancelText}
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+          >
+            {confirmText}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const IndustrySecDataTable = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({
+    isOpen: false,
+    itemId: null,
+    itemName: ''
+  });
   const navigate = useNavigate();
 
   // Fetch all IndustrySecData entries
@@ -28,24 +66,33 @@ const IndustrySecDataTable = () => {
     fetchData();
   }, []);
 
-  // Handle delete
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this entry?")) {
-      try {
-        await axios.delete(`/api/caseStudy/${id}`);
-        setData(data.filter((item) => item._id !== id));
-        setError(null);
-        alert("Entry deleted successfully");
-      } catch (err) {
-        console.error("Error deleting entry:", err.response || err.message);
-        setError(`Failed to delete entry: ${err.response?.data?.message || err.message}`);
-      }
+  // Handle delete confirmation
+  const confirmDelete = (id, name = 'this item') => {
+    setDeleteModal({
+      isOpen: true,
+      itemId: id,
+      itemName: name
+    });
+  };
+
+  // Handle actual delete
+  const handleDelete = async () => {
+    const { itemId } = deleteModal;
+    try {
+      await axios.delete(`/api/caseStudy/${itemId}`);
+      setData(data.filter((item) => item._id !== itemId));
+      setError(null);
+      setDeleteModal({ isOpen: false, itemId: null, itemName: '' });
+    } catch (err) {
+      console.error("Error deleting entry:", err.response || err.message);
+      setError(`Failed to delete entry: ${err.response?.data?.message || err.message}`);
+      setDeleteModal({ isOpen: false, itemId: null, itemName: '' });
     }
   };
 
   // Handle edit
   const handleEdit = (id) => {
-    navigate(`/edit-industry-data/${id}`);
+    navigate(`/industry-data/edit-industry-data/${id}`);
   };
 
   // Format card titles for display
@@ -60,7 +107,7 @@ const IndustrySecDataTable = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Industry Section Data</h1>
         <button
-          onClick={() => navigate("/add-case-study")}
+          onClick={() => navigate("/industry-data/add-case-study")}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition disabled:bg-blue-300"
           disabled={isLoading}
         >
@@ -147,7 +194,10 @@ const IndustrySecDataTable = () => {
                           <FaEdit className="h-5 w-5" />
                         </button>
                         <button
-                          onClick={() => handleDelete(item._id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            confirmDelete(item._id, item.heading || 'this item');
+                          }}
                           className="text-red-600 hover:text-red-800 transition"
                           title="Delete"
                         >
@@ -162,8 +212,17 @@ const IndustrySecDataTable = () => {
           </table>
         </div>
       )}
+      <ConfirmationModal
+        isOpen={deleteModal.isOpen}
+        onClose={() => setDeleteModal({ ...deleteModal, isOpen: false })}
+        onConfirm={handleDelete}
+        title="Confirm Deletion"
+        message={`Are you sure you want to delete ${deleteModal.itemName}? This action cannot be undone.`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
     </div>
   );
 };
 
-export default IndustrySecDataTable;  
+export default IndustrySecDataTable;

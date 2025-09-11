@@ -80,6 +80,44 @@ const NewServiceForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate required fields
+    if (!heading.trim()) {
+      toast.error("Please enter a heading");
+      return;
+    }
+    
+    if (!description.trim() || description === "<p><br></p>") {
+      toast.error("Please enter a description");
+      return;
+    }
+    
+    if (photos.length === 0) {
+      toast.error("Please upload at least one photo");
+      return;
+    }
+    
+    // Validate photo alts and titles
+    const hasEmptyAlt = photoAlts.some(alt => !alt.trim());
+    const hasEmptyTitle = imgtitle.some(title => !title.trim());
+    
+    if (hasEmptyAlt) {
+      toast.error("Please enter alt text for all photos");
+      return;
+    }
+    
+    if (hasEmptyTitle) {
+      toast.error("Please enter a title for all photos");
+      return;
+    }
+    
+    // Validate questions
+    const hasEmptyQuestion = questions.some(q => !q.question.trim() || !q.answer.trim());
+    if (hasEmptyQuestion) {
+      toast.error("Please fill in all question and answer fields");
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append("heading", heading); // Use heading as the name field
@@ -128,260 +166,262 @@ const NewServiceForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <ToastContainer />
-      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">
-        Add Service
-      </h1>
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-6">Create New Service Detail</h1>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Heading <span className="text-red-500">*</span>
+          </label>
+          <ReactQuill
+            value={heading}
+            onChange={setHeading}
+            modules={modules}
+            placeholder="Enter heading here..."
+            className="quill-editor"
+            required
+          />
+          <style jsx global>{`
+            .quill-editor .ql-editor {
+              min-height: 100px;
+              padding-bottom: 1.5rem;
+              padding-top: 0.5rem;
+            }
+            .quill-editor .ql-editor.ql-blank::before {
+              color: #6b7280;
+              font-style: normal;
+              left: 15px;
+              right: 15px;
+              top: 0.75rem;
+              pointer-events: none;
+            }
+          `}</style>
+        </div>
 
-      {/* Heading Field */}
-      <div className="mb-4">
-        <label htmlFor="heading" className="block font-semibold mb-2">
-          Heading
-        </label>
-        <ReactQuill
-          value={heading}
-          onChange={setHeading}
-          modules={modules}
-          placeholder="Enter heading here..."
-          className="quill-editor"
-        />
-        <style jsx global>{`
-          .quill-editor .ql-editor {
-            min-height: 100px;
-            padding-bottom: 1.5rem;
-            padding-top: 0.5rem;
-          }
-          .quill-editor .ql-editor.ql-blank::before {
-            color: #6b7280;
-            font-style: normal;
-            left: 15px;
-            right: 15px;
-            top: 0.75rem;
-            pointer-events: none;
-          }
-        `}</style>
-      </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Description <span className="text-red-500">*</span>
+          </label>
+          <ReactQuill
+            value={description}
+            onChange={setDescription}
+            modules={modules}
+            placeholder="Enter description here..."
+            className="quill-editor"
+            required
+          />
+          <style jsx global>{`
+            .quill-editor .ql-editor {
+              min-height: 100px;
+              padding-bottom: 1.5rem;
+              padding-top: 0.5rem;
+            }
+            .quill-editor .ql-editor.ql-blank::before {
+              color: #6b7280;
+              font-style: normal;
+              left: 15px;
+              right: 15px;
+              top: 0.75rem;
+              pointer-events: none;
+            }
+          `}</style>
+        </div>
 
-      {/* Description Field */}
-      <div className="mb-8">
-        <label htmlFor="description" className="block font-semibold mb-2">
-          Description
-        </label>
-        <ReactQuill
-          value={description}
-          onChange={setDescription}
-          modules={modules}
-          placeholder="Enter description here..."
-          className="quill-editor"
-        />
-        <style jsx global>{`
-          .quill-editor .ql-editor {
-            min-height: 100px;
-            padding-bottom: 1.5rem;
-            padding-top: 0.5rem;
-          }
-          .quill-editor .ql-editor.ql-blank::before {
-            color: #6b7280;
-            font-style: normal;
-            left: 15px;
-            right: 15px;
-            top: 0.75rem;
-            pointer-events: none;
-          }
-        `}</style>
-      </div>
-
-      {/* Photo Upload Field */}
-      <div className="mt-12">
-        <label htmlFor="photo" className="block font-semibold mb-2">
-          Photos
-        </label>
-        <input
-          type="file"
-          name="photo"
-          id="photo"
-          multiple
-          onChange={handlePhotoChange}
-          className="border rounded focus:outline-none"
-          accept="image/*"
-        />
-        {photos.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-4">
-            {photos.map((photo, index) => (
-              <div
-                key={index}
-                className="relative group flex flex-col items-center w-56"
-              >
-                <div className="relative w-56">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Photos (Max 5) <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handlePhotoChange}
+            className="mt-1 block w-full"
+            required={photos.length === 0}
+          />
+          {photos.length > 0 && (
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {photos.map((photo, index) => (
+                <div key={index} className="border rounded p-2">
                   <img
                     src={URL.createObjectURL(photo)}
-                    alt={`Service ${index + 1}`}
-                    className="w-56 h-32 object-cover"
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-32 object-cover rounded"
                   />
-                  <button
-                    onClick={() => handleDeleteImage(index)}
-                    className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex items-center justify-center hover:bg-red-600 focus:outline-none"
-                  >
-                    X
-                  </button>
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      placeholder="Image Title"
+                      value={imgtitle[index] || ""}
+                      onChange={(e) => {
+                        const newTitles = [...imgtitle];
+                        newTitles[index] = e.target.value;
+                        setImgtitle(newTitles);
+                      }}
+                      className="w-full p-1 border rounded mt-1"
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Alt Text"
+                      value={photoAlts[index] || ""}
+                      onChange={(e) => {
+                        const newAlts = [...photoAlts];
+                        newAlts[index] = e.target.value;
+                        setPhotoAlts(newAlts);
+                      }}
+                      className="w-full p-1 border rounded mt-1"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteImage(index)}
+                      className="mt-1 text-red-500 text-sm"
+                    >
+                      Remove
+                    </button>
+                  </div>
                 </div>
-                <label className="block mt-2">
-                  Alternative Text:
-                  <input
-                    type="text"
-                    value={photoAlts[index]}
-                    onChange={(e) => {
-                      const newPhotoAlts = [...photoAlts];
-                      newPhotoAlts[index] = e.target.value;
-                      setPhotoAlts(newPhotoAlts);
-                    }}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-                <label className="block mt-2">
-                  Image title Text:
-                  <input
-                    type="text"
-                    value={imgtitle[index]}
-                    onChange={(e) => {
-                      const newImgtitles = [...imgtitle];
-                      newImgtitles[index] = e.target.value;
-                      setImgtitle(newImgtitles);
-                    }}
-                    className="w-full p-2 border rounded focus:outline-none"
-                  />
-                </label>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+              ))}
+            </div>
+          )}
+        </div>
 
-      {/* Video Upload Field */}
-      <div className="mt-4">
-        <label htmlFor="video" className="block font-semibold mb-2">
-          Video
-        </label>
-        <input
-          type="file"
-          id="video"
-          onChange={handleVideoChange}
-          className="border rounded focus:outline-none"
-          accept="video/*"
-        />
-        {video && (
-          <div className="mt-4">
-            <label htmlFor="videoAlt" className="block font-semibold mb-2">
-              Video Alt Text
-            </label>
-            <input
-              type="text"
-              id="videoAlt"
-              value={altVideo}
-              onChange={(e) => setVideoAlt(e.target.value)}
-              className="w-full p-2 border rounded focus:outline-none"
-              required
-            />
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Video
+          </label>
+          <input
+            type="file"
+            id="video"
+            onChange={handleVideoChange}
+            className="mt-1 block w-full"
+            accept="video/*"
+          />
+          {video && (
             <div className="mt-4">
-              <label htmlFor="videotitle" className="block font-semibold mb-2">
-                Video title Text
+              <label htmlFor="videoAlt" className="block font-semibold mb-2">
+                Video Alt Text
               </label>
               <input
                 type="text"
-                id="videotitle"
-                value={videotitle}
-                onChange={(e) => setVideotitle(e.target.value)}
+                id="videoAlt"
+                value={altVideo}
+                onChange={(e) => setVideoAlt(e.target.value)}
                 className="w-full p-2 border rounded focus:outline-none"
                 required
               />
+              <div className="mt-4">
+                <label htmlFor="videotitle" className="block font-semibold mb-2">
+                  Video title Text
+                </label>
+                <input
+                  type="text"
+                  id="videotitle"
+                  value={videotitle}
+                  onChange={(e) => setVideotitle(e.target.value)}
+                  className="w-full p-2 border rounded focus:outline-none"
+                  required
+                />
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* Questions Section */}
-      <div className="mt-8">
-        <h3 className="text-lg font-semibold mb-4">Questions and Answers</h3>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            FAQ Section <span className="text-red-500">*</span>
+          </label>
+          {questions.map((q, index) => (
+            <div key={index} className="mb-4 p-4 border rounded">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="font-medium">Question {index + 1}</h3>
+                {questions.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveQuestion(index)}
+                    className="text-red-500 text-sm"
+                  >
+                    Remove
+                  </button>
+                )}
+              </div>
+              <input
+                type="text"
+                name="question"
+                placeholder="Enter question"
+                value={q.question}
+                onChange={(e) => handleQuestionChange(index, e)}
+                className="w-full p-2 border rounded mb-2"
+                required
+              />
+              <ReactQuill
+                value={q.answer}
+                onChange={(event) => handleQuestionChange(index, event)}
+                modules={modules}
+                placeholder="Enter answer here..."
+                className="quill-editor"
+              />
+              <style jsx global>{`
+                .quill-editor .ql-editor {
+                  min-height: 100px;
+                  padding-bottom: 1.5rem;
+                  padding-top: 0.5rem;
+                }
+                .quill-editor .ql-editor.ql-blank::before {
+                  color: #6b7280;
+                  font-style: normal;
+                  left: 15px;
+                  right: 15px;
+                  top: 0.75rem;
+                  pointer-events: none;
+                }
+              `}</style>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={handleAddQuestion}
+            className="mt-2 text-white bg-[#324154] border border-gray-300 rounded p-2 text-sm"
+          >
+            + Add Another Question
+          </button>
+        </div>
 
-        {questions.map((qa, index) => (
-          <div key={index} className="mb-4">
-            <label className="block mb-1 font-medium">Question</label>
-            <input
-              type="text"
-              name="question"
-              value={qa.question}
-              onChange={(event) => handleQuestionChange(index, event)}
-              className="w-full p-2 border rounded focus:outline-none mb-2"
-            />
-            <label className="block mb-1 font-medium">Answer</label>
-
-            <ReactQuill
-              value={qa.answer}
-              onChange={(event) => handleQuestionChange(index, event)}
-              modules={modules}
-              placeholder="Enter answer here..."
-              className="quill-editor"
-            />
-            <style jsx global>{`
-              .quill-editor .ql-editor {
-                min-height: 100px;
-                padding-bottom: 1.5rem;
-                padding-top: 0.5rem;
-              }
-              .quill-editor .ql-editor.ql-blank::before {
-                color: #6b7280;
-                font-style: normal;
-                left: 15px;
-                right: 15px;
-                top: 0.75rem;
-                pointer-events: none;
-              }
-            `}</style>
-            {questions.length > 1 && (
-              <button
-                type="button"
-                className="mt-2 text-red-600"
-                onClick={() => handleRemoveQuestion(index)}
-              >
-                Remove
-              </button>
-            )}
-          </div>
-        ))}
-        <button
-          type="button"
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-          onClick={handleAddQuestion}
-        >
-          Add Another Question
-        </button>
-      </div>
-
-      {/* Status Toggle */}
-      <div className="mt-8">
-        <label htmlFor="status" className="inline-flex items-center">
+        <div className="flex  items-center gap-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Status <span className="text-red-500">*</span>
+          </label>
           <input
             type="checkbox"
             id="status"
             checked={status}
             onChange={(e) => setStatus(e.target.checked)}
-            className="form-checkbox h-5 w-5 text-blue-600"
+            className="h-4 w-4 text-[#324154] focus:ring-[#324154] border-gray-300 rounded"
           />
-          <span className="ml-2 font-medium">Active</span>
-        </label>
-      </div>
+          <label htmlFor="status" className="ml-2 block text-sm text-gray-700">
+            Active
+          </label>
+        </div>
 
-      {/* Submit Button */}
-      <div className="mt-8">
-        <button
-          type="submit"
-          className="bg-green-500 text-white px-4 py-2 rounded"
-        >
-          Create Service
-        </button>
-      </div>
-    </form>
+        <div className="flex justify-start space-x-4">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#324154]"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#324154] hover:bg-[#324154] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#324154]"
+          >
+            Save Service
+          </button>
+        </div>
+      </form>
+      <ToastContainer position="bottom-right" autoClose={3000} />
+    </div>
   );
 };
 

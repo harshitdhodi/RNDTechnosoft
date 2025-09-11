@@ -35,6 +35,8 @@ const SubsectionsComponent = ({
     description: "",
     photoAlt: "",
     imgtitle: "",
+    video: null,
+    videoAlt: "",
     serviceparentCategoryId: "",
     servicesubCategoryId: "",
     servicesubSubCategoryId: ""
@@ -73,7 +75,7 @@ const SubsectionsComponent = ({
     });
 
     try {
-      await axios.zz(
+      await axios.put(  
         `/api/content/newsubsections/${contentId}`,
         formData,
         {
@@ -89,6 +91,8 @@ const SubsectionsComponent = ({
         description: "",
         photoAlt: "",
         imgtitle: "",
+        video: null,
+        videoAlt: "",
         serviceparentCategoryId: "",
         servicesubCategoryId: "",
         servicesubSubCategoryId: ""
@@ -105,6 +109,13 @@ const SubsectionsComponent = ({
   };
 
   const handleDeleteSubsection = async (index) => {
+    // Show confirmation dialog
+    const confirmDelete = window.confirm("Are you sure you want to delete this subsection? This action cannot be undone.");
+    
+    if (!confirmDelete) {
+      return; // User cancelled the deletion
+    }
+    
     try {
       await axios.delete(`/api/content/subsections/${contentId}/${index}`, {
         withCredentials: true,
@@ -113,6 +124,7 @@ const SubsectionsComponent = ({
       setSubsections(updatedSubsections);
     } catch (error) {
       console.error("Error deleting subsection:", error);
+      alert("Failed to delete the subsection. Please try again.");
     }
   };
 
@@ -142,6 +154,13 @@ const SubsectionsComponent = ({
     const file = e.target.files[0];
     if (file) {
       setNewSubsection(prev => ({ ...prev, photo: file }));
+    }
+  };
+
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNewSubsection(prev => ({ ...prev, video: file }));
     }
   };
 
@@ -183,7 +202,7 @@ const SubsectionsComponent = ({
           <div className="mb-4">
             <h3 className="font-semibold mb-2">Add New Subsection</h3>
 
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label htmlFor="serviceParentCategory" className="block font-semibold mb-2">
                 Service Parent Category
               </label>
@@ -197,7 +216,7 @@ const SubsectionsComponent = ({
                 <option value="">Select Service Parent Category</option>
                 {renderCategoryOptions(serviceCategories)}
               </select>
-            </div>
+            </div> */}
 
             {newSubsection.serviceparentCategoryId && (
               <div className="mb-4">
@@ -252,6 +271,39 @@ const SubsectionsComponent = ({
               className="p-2 border rounded mb-2"
             />
 
+            {/* Video Upload */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-2">Upload Video (Optional)</label>
+              <input
+                type="file"
+                onChange={handleVideoChange}
+                accept="video/*"
+                className="p-2 border rounded mb-2 w-full"
+              />
+              <p className="text-xs text-gray-500 mb-2">Supported formats: MP4, WebM, Ogg. Max size: 50MB</p>
+              
+              {newSubsection.video && (
+                <div className="mt-2">
+                  <label className="block font-semibold mb-2">Video Preview</label>
+                  <video
+                    src={URL.createObjectURL(newSubsection.video)}
+                    controls
+                    className="w-full max-w-md h-auto max-h-48 object-contain"
+                  />
+                  <div className="mt-2">
+                    <label className="block font-semibold mb-1">Video Alt Text</label>
+                    <input
+                      type="text"
+                      value={newSubsection.videoAlt}
+                      onChange={(e) => handleSubsectionChange('videoAlt', e.target.value)}
+                      placeholder="Describe this video for accessibility"
+                      className="p-2 border rounded w-full"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
             <label className="block mb-2">Title</label>
             <input
               type="text"
@@ -264,8 +316,8 @@ const SubsectionsComponent = ({
             <ReactQuill
               value={newSubsection.description}
               onChange={(value) => handleSubsectionChange('description', value)}
-              className="border border-gray-300 rounded mb-2"
               modules={modules}
+              style={{ height: '80px',marginBottom: '4rem' }}
             />
 
             <label className="block mb-2">Photo Alt Text</label>
@@ -299,19 +351,31 @@ const SubsectionsComponent = ({
                   <h4 className="font-semibold mb-2 text-center">{sub.title}</h4>
 
                   {sub.photo && (
-                    sub.photo.endsWith(".webm") ? (
+                    sub.photo.endsWith(".webm") || sub.photo.endsWith(".mp4") || sub.photo.endsWith(".ogg") ? (
                       <video
                         src={`/api/image/download/${sub.photo}`}
                         controls
-                        className="w-32 h-32 object-cover mb-2"
+                        className="w-full h-48 object-contain mb-2"
                       />
                     ) : (
                       <img
                         src={`/api/image/download/${sub.photo}`}
                         alt={sub.photoAlt}
-                        className="w-32 h-32 object-cover mb-2"
+                        className="w-full h-48 object-cover mb-2"
                       />
                     )
+                  )}
+                  {sub.video && (
+                    <div className="w-full mt-2">
+                      <video
+                        src={`/api/image/download/${sub.video}`}
+                        controls
+                        className="w-full h-48 object-contain"
+                      />
+                      {sub.videoAlt && (
+                        <p className="text-xs text-gray-600 mt-1">Alt: {sub.videoAlt}</p>
+                      )}
+                    </div>
                   )}
 
                   <div className="flex gap-2 mt-2">

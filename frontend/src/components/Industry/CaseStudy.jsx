@@ -24,7 +24,7 @@ const CaseStudy = () => {
         const casestudiesData = data.find(
           (item) => item.type === "case-studies"
         ) || null;
-
+console.log(casestudiesData)
         setCaseStudyData(casestudiesData);
       } catch (err) {
         console.error("Error fetching case study:", err.response || err.message);
@@ -45,9 +45,11 @@ const CaseStudy = () => {
  <>
   {/* Section Header */}
   <div className="max-w-6xl mx-auto text-center py-6 px-4">
-    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-      Case Studies
-    </h2>
+    {caseStudyData && (
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        Case Studies
+      </h2>
+    )}
   </div>
 
   {/* Case Study Section */}
@@ -87,9 +89,9 @@ const CaseStudy = () => {
     )}
 
     {/* Case Study Cards */}
-    {!isLoading && caseStudyData && (
+    {!isLoading && !error && (
       <div className="space-y-12">
-        {caseStudyData.card && caseStudyData.card.length > 0 ? (
+        {caseStudyData?.card?.length > 0 ? (
           caseStudyData.card.map((card, index) => (
             <div
               key={index}
@@ -127,8 +129,28 @@ const CaseStudy = () => {
             </div>
           ))
         ) : (
-          <div className="text-center text-gray-500 py-6 text-sm md:text-base">
-            No case study cards available.
+          <div className="text-center py-12">
+            <div className="mx-auto w-24 h-24 text-gray-400 mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No Case Studies Available
+            </h3>
+            <p className="text-gray-500 max-w-md mx-auto">
+              We're currently working on adding new case studies. Please check back later for updates!
+            </p>
           </div>
         )}
       </div>

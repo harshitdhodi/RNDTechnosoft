@@ -52,7 +52,7 @@ const TrustedSection = ({ homecard1, homecard2 }) => {
               </div>
               {firstCard.photo?.[0] && (
                 <img
-                  src={firstCard.photo[0]}
+                  src={`/api/image/download/${firstCard.photo?.[0]}`}
                   alt={firstCard.photoAlt?.[0] || "company logos"}
                   loading="lazy"
                   className="w-32 sm:w-40 md:w-48 h-auto sm:absolute sm:top-0 sm:right-0 sm:-translate-y-4 sm:translate-x-4"

@@ -32,28 +32,32 @@ const contentSchema = z.object({
     .refine(val => val.trim() !== '', "Heading cannot be empty or only spaces"),
   subheading: z.string()
     .max(300, "Subheading must not exceed 300 characters")
-    .refine(val => val.trim() !== '', "Subheading cannot be only spaces")
+    .refine(val => !val || val.trim() !== '', "Subheading cannot be only spaces")
     .optional(),
   description: z.string()
     .max(5000, "Description must not exceed 5000 characters")
-    .refine(val => val.trim() !== '', "Description cannot be only spaces")
+    .refine(val => !val || val.trim() !== '', "Description cannot be only spaces")
     .optional(),
   videoAlt: z.string()
     .max(200, "Video alt text must not exceed 200 characters")
-    .refine(val => val.trim() !== '', "Video alt text cannot be only spaces")
-    .optional(),
+    .refine(val => !val || val.trim() !== '', "Video alt text cannot be only spaces")
+    .optional()
+    .nullable(),
   videotitle: z.string()
     .max(200, "Video title must not exceed 200 characters")
-    .refine(val => val.trim() !== '', "Video title cannot be only spaces")
-    .optional(),
+    .refine(val => !val || val.trim() !== '', "Video title cannot be only spaces")
+    .optional()
+    .nullable(),
   photoAlt: z.string()
     .max(200, "Photo alt text must not exceed 200 characters")
-    .refine(val => val.trim() !== '', "Photo alt text cannot be only spaces")
-    .optional(),
+    .refine(val => !val || val.trim() !== '', "Photo alt text cannot be only spaces")
+    .optional()
+    .nullable(),
   imgtitle: z.string()
     .max(200, "Image title must not exceed 200 characters")
-    .refine(val => val.trim() !== '', "Image title cannot be only spaces")
-    .optional(),
+    .refine(val => !val || val.trim() !== '', "Image title cannot be only spaces")
+    .optional()
+    .nullable(),
   status: z.boolean()
 });
 
@@ -94,7 +98,7 @@ const EditExtraPage = () => {
   const [description, setDescription] = useState("");
   const [questions, setQuestions] = useState([{ question: "", answer: "" }]);
   const [subsections, setSubsections] = useState([
-    { photo: "", photoAlt: "", title: "", description: "" },
+    { photo: "", photoAlt: "", title: "", description: "", video: "", videoAlt: "" },
   ]);
   const [status, setStatus] = useState(false);
   const [contentId, setContentId] = useState("");
@@ -159,7 +163,7 @@ const EditExtraPage = () => {
       setSubsections(
         content.subsections?.length > 0
           ? content.subsections
-          : [{ photo: "", photoAlt: "", title: "", description: "" }]
+          : [{ photo: "", photoAlt: "", title: "", description: "", video: "", videoAlt: "" }]
       );
       setContentId(content._id || "");
     } catch (error) {
@@ -221,7 +225,13 @@ const EditExtraPage = () => {
     e.preventDefault();
     
     if (!validateForm()) {
-      toast.error("Please fix the validation errors");
+      // Show first error message if there are any validation errors
+      const firstError = Object.values(errors)[0];
+      if (firstError) {
+        toast.error(firstError);
+      } else {
+        toast.error("Please fill in all required fields correctly");
+      }
       return;
     }
 
@@ -411,7 +421,7 @@ const EditExtraPage = () => {
                 placeholder="Enter your heading here..."
                 className="bg-white"
                 modules={modules}
-                style={{ height: '80px' }}
+                style={{ height: '100px', marginBottom: '4.5rem' }}
               />
               <p className="text-sm text-gray-500 mt-2">
                 Characters: {headingCount}/200
@@ -434,7 +444,7 @@ const EditExtraPage = () => {
                 placeholder="Enter your subheading here..."
                 className="bg-white"
                 modules={modules}
-                style={{ height: '80px' }}
+                style={{ height: '100px', marginBottom: '4.5rem' }}
               />
               <p className="text-sm text-gray-500 mt-2">
                 Characters: {subheadingCount}/300
@@ -457,10 +467,10 @@ const EditExtraPage = () => {
                 placeholder="Enter your detailed description here..."
                 className="bg-white"
                 modules={modules}
-                style={{ height: '160px' }}
+                style={{ height: '100px', marginBottom: '4.5rem' }}
               />
               <p className="text-sm text-gray-500 mt-2">
-                Characters: {descriptionCount}/5000
+                Characters: {descriptionCount}/500
               </p>
             </div>
             {errors.description && (
@@ -484,7 +494,7 @@ const EditExtraPage = () => {
                   <div className="space-y-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-600 mb-1">
-                        Alternative Text:
+                        Alt Text
                       </label>
                       <input
                         type="text"
@@ -499,7 +509,7 @@ const EditExtraPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-600 mb-1">
-                        Title Text:
+                        Image Title
                       </label>
                       <input
                         type="text"
@@ -508,9 +518,6 @@ const EditExtraPage = () => {
                         placeholder="Enter image title"
                         className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
-                      {errors.imgtitle && (
-                        <p className="text-red-500 text-sm mt-2">{errors.imgtitle}</p>
-                      )}
                     </div>
                   </div>
 
@@ -526,74 +533,72 @@ const EditExtraPage = () => {
             </div>
           )}
 
-          {/* Add New Photo */}
-          {(!initialPhotos || initialPhotos.length === 0) && (
-            <div className="mb-6">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Add Photo
-              </label>
-              <input
-                type="file"
-                onChange={handleFileChange}
-                accept="image/*"
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <p className="text-sm text-gray-500 mt-1">
-                Maximum file size: 5MB. Supported formats: JPEG, JPG, PNG, WebP
-              </p>
-              
-              {photo.length > 0 && (
-                <div className="max-w-md mt-4">
-                  <div className="relative bg-white border rounded-lg shadow-sm p-4">
-                    <img
-                      src={URL.createObjectURL(photo[0])}
-                      alt={photoAlts[0] || "New Photo"}
-                      className="w-full h-48 object-cover rounded-md mb-3"
-                    />
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Alternative Text:
-                        </label>
-                        <input
-                          type="text"
-                          value={photoAlts[0] || ""}
-                          onChange={(e) => handleNewAltTextChange(e, 0)}
-                          placeholder="Describe this image for accessibility"
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                        {errors.photoAlt && (
-                          <p className="text-red-500 text-sm mt-2">{errors.photoAlt}</p>
-                        )}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-600 mb-1">
-                          Title Text:
-                        </label>
-                        <input
-                          type="text"
-                          value={imgtitle[0] || ""}
-                          onChange={(e) => handleNewImgtitleChange(e, 0)}
-                          placeholder="Enter image title"
-                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
-                        {errors.imgtitle && (
-                          <p className="text-red-500 text-sm mt-2">{errors.imgtitle}</p>
-                        )}
-                      </div>
+          {/* Add/Update Photo */}
+          <div className="mb-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              {initialPhotos && initialPhotos.length > 0 ? 'Update Photo' : 'Add Photo'}
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-md file:border-0
+                file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-blue-700
+                hover:file:bg-blue-100"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              Maximum file size: 5MB. Supported formats: JPEG, JPG, PNG, WebP
+            </p>
+            
+            {photo.length > 0 && (
+              <div className="max-w-md mt-4">
+                <div className="relative bg-white border rounded-lg shadow-sm p-4">
+                  <img
+                    src={URL.createObjectURL(photo[0])}
+                    alt={photoAlts[0] || "New Photo"}
+                    className="w-full h-48 object-cover rounded-md mb-3"
+                  />
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600 mb-1">
+                        Alt Text
+                      </label>
+                      <input
+                        type="text"
+                        value={photoAlts[0] || ""}
+                        onChange={(e) => handleNewAltTextChange(e, 0)}
+                        placeholder="Describe this image for accessibility"
+                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
                     </div>
-                    <button
-                      type="button"
-                      onClick={(e) => handleDeleteNewPhoto(e, 0)}
-                      className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex justify-center items-center transition-colors"
-                    >
-                      ×
-                    </button>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-600 mb-1">
+                        Image Title
+                      </label>
+                      <input
+                        type="text"
+                        value={imgtitle[0] || ""}
+                        onChange={(e) => handleNewImgtitleChange(e, 0)}
+                        placeholder="Enter image title"
+                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={(e) => handleDeleteNewPhoto(e, 0)}
+                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex justify-center items-center transition-colors"
+                  >
+                    ×
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
 
           {/* Video Upload */}
           <div className="mb-6">
@@ -684,11 +689,11 @@ const EditExtraPage = () => {
           </div>
 
           {/* Submit Button */}
-          <div className="text-center">
+          <div className="text-center flex justify-start">
             <button
               type="submit"
               disabled={loading}
-              className={`px-8 py-3 rounded-md font-semibold text-white transition-colors ${
+              className={`px-8 py-3 my-8 rounded-md font-semibold text-white transition-colors ${
                 loading 
                   ? 'bg-gray-400 cursor-not-allowed' 
                   : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
@@ -731,6 +736,7 @@ const EditExtraPage = () => {
                 subsections={subsections}
                 setSubsections={setSubsections}
                 contentId={contentId}
+                contentType={contentType}
               />
             ) : (
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
