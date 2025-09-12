@@ -10,7 +10,7 @@ const ValuesSection = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`/api/corevalue/getCorevalue`, {
+                const response = await axios.get(`/api/corevalue/getActiveCorevalues`, {
                     withCredentials: true,
                 });
                 console.log(response.data.data)

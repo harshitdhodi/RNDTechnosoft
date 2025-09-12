@@ -5,8 +5,9 @@ const corevalueController = require('../controller/corevalue');
 const {uploadPhoto} = require('../middleware/fileUpload')
 const { requireAuth } = require('../middleware/authmiddleware');
 
-router.post('/createCoreValue',requireAuth,uploadPhoto, corevalueController.createCoreValue);
+router.post('/createCoreValue',uploadPhoto, corevalueController.createCoreValue);
 router.get('/getCorevalue', corevalueController.getAllCorevalue);
+router.get('/getActiveCorevalues', corevalueController.getActiveCorevalues);
 router.get('/getCorevalueById',requireAuth, corevalueController.getCorevalueById);
 router.put('/updateCorevalue', requireAuth,uploadPhoto,corevalueController.updateCorevalue);
 router.delete('/:id/image/:imageFilename/:index',requireAuth,corevalueController.deletePhotoAndAltText );

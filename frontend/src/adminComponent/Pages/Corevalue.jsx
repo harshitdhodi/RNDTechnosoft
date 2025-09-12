@@ -34,7 +34,7 @@ const CorevalueTable = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(5);
-  const [showActiveOnly, setShowActiveOnly] = useState(true);
+  const [showActiveOnly, setShowActiveOnly] = useState(false);
   const navigate = useNavigate();
 
   const filteredCorevalues = useMemo(() => {
@@ -42,12 +42,9 @@ const CorevalueTable = () => {
       const matchesSearch = searchTerm 
         ? corevalue.title?.toLowerCase().includes(searchTerm.toLowerCase())
         : true;
-      const matchesStatus = showActiveOnly 
-        ? corevalue.status === 'active' 
-        : true;
-      return matchesSearch && matchesStatus;
+      return matchesSearch;
     });
-  }, [corevalues, searchTerm, showActiveOnly]);
+  }, [corevalues, searchTerm]);
 
   const paginatedCoreValues = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -79,7 +76,7 @@ const CorevalueTable = () => {
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, showActiveOnly]);
+  }, [searchTerm]);
 
   const handleDeleteClick = async (item) => {
     const confirmDelete = window.confirm(`Are you sure you want to delete "${item.title}"?`);

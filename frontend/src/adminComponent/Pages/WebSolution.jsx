@@ -432,52 +432,55 @@ const EditExtraPage = () => {
             )}
           </div>
 
-          {/* Subheading */}
-          <div className="mb-6">
-            <label htmlFor="subheading" className="block text-sm font-semibold text-gray-700 mb-2">
-              Subheading
-            </label>
-            <div className="min-h-[120px]">
-              <ReactQuill
-                value={subheading}
-                onChange={setSubheading}
-                placeholder="Enter your subheading here..."
-                className="bg-white"
-                modules={modules}
-                style={{ height: '100px', marginBottom: '4.5rem' }}
-              />
-              <p className="text-sm text-gray-500 mt-2">
-                Characters: {subheadingCount}/300
-              </p>
+          {/* Subheading - Hide for 'everyplan' type */}
+          {contentType !== 'everyplan' && (
+            <div className="mb-6">
+              <label htmlFor="subheading" className="block text-sm font-semibold text-gray-700 mb-2">
+                Subheading
+              </label>
+              <div className="min-h-[120px]">
+                <ReactQuill
+                  value={subheading}
+                  onChange={setSubheading}
+                  placeholder="Enter your subheading here..."
+                  className="bg-white"
+                  modules={modules}
+                  style={{ height: '100px', marginBottom: '4.5rem' }}
+                />
+                <p className="text-sm text-gray-500 mt-2">
+                  Characters: {subheadingCount}/300
+                </p>
+              </div>
+              {errors.subheading && (
+                <p className="text-red-500 text-sm mt-2">{errors.subheading}</p>
+              )}
             </div>
-            {errors.subheading && (
-              <p className="text-red-500 text-sm mt-2">{errors.subheading}</p>
-            )}
-          </div>
+          )}
 
-          {/* Description */}
-          <div className="mb-8">
-            <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
-              Description
-            </label>
-            <div className="min-h-[200px]">
-              <ReactQuill
-                value={description}
-                onChange={setDescription}
-                placeholder="Enter your detailed description here..."
-                className="bg-white"
-                modules={modules}
-                style={{ height: '100px', marginBottom: '4.5rem' }}
-              />
-              <p className="text-sm text-gray-500 mt-2">
-                Characters: {descriptionCount}/500
-              </p>
+          {/* Description - Hide for 'everyplan' type */}
+          {contentType !== 'everyplan' && (
+            <div className="mb-8">
+              <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
+                Description
+              </label>
+              <div className="min-h-[200px]">
+                <ReactQuill
+                  value={description}
+                  onChange={setDescription}
+                  placeholder="Enter your detailed description here..."
+                  className="bg-white"
+                  modules={modules}
+                  style={{ height: '100px', marginBottom: '4.5rem' }}
+                />
+                <p className="text-sm text-gray-500 mt-2">
+                  Characters: {descriptionCount}/500
+                </p>
+              </div>
+              {errors.description && (
+                <p className="text-red-500 text-sm mt-2">{errors.description}</p>
+              )}
             </div>
-            {errors.description && (
-              <p className="text-red-500 text-sm mt-2">{errors.description}</p>
-            )}
-          </div>
-
+          )}
           {/* Current Photos */}
           {initialPhotos && initialPhotos.length > 0 && (
             <div className="mb-6">
@@ -533,14 +536,15 @@ const EditExtraPage = () => {
             </div>
           )}
 
-          {/* Add/Update Photo */}
+          {/* Add/Update Photo - Update label for 'everyplan' type */}
           <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-              {initialPhotos && initialPhotos.length > 0 ? 'Update Photo' : 'Add Photo'}
+              {contentType === 'everyplan' ? 'Add Photo/Webm file' : 
+               (initialPhotos && initialPhotos.length > 0 ? 'Update Photo' : 'Add Photo')}
             </label>
             <input
               type="file"
-              accept="image/*"
+              accept={contentType === 'everyplan' ? 'image/*,.webm' : 'image/*'}
               onChange={handleFileChange}
               className="block w-full text-sm text-gray-500
                 file:mr-4 file:py-2 file:px-4
@@ -550,7 +554,9 @@ const EditExtraPage = () => {
                 hover:file:bg-blue-100"
             />
             <p className="mt-1 text-xs text-gray-500">
-              Maximum file size: 5MB. Supported formats: JPEG, JPG, PNG, WebP
+              {contentType === 'everyplan' 
+                ? 'Maximum file size: 5MB. Supported formats: JPEG, JPG, PNG, WebP, WebM' 
+                : 'Maximum file size: 5MB. Supported formats: JPEG, JPG, PNG, WebP'}
             </p>
             
             {photo.length > 0 && (
@@ -600,77 +606,74 @@ const EditExtraPage = () => {
             )}
           </div>
 
-          {/* Video Upload */}
-          <div className="mb-6">
-            <label htmlFor="video" className="block text-sm font-semibold text-gray-700 mb-2">
-              Upload Video
-            </label>
-            <input
-              type="file"
-              id="video"
-              onChange={handleVideoChange}
-              accept="video/*"
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <p className="text-sm text-gray-500 mt-1">
-              Maximum file size: 100MB. Supported formats: MP4, AVI, MOV, WMV, WebM
-            </p>
-            
-            {(video || initialVideo) && (
-              <div className="mt-4 bg-white border rounded-lg shadow-sm p-4 max-w-md">
-                <label className="block text-sm font-semibold text-gray-700 mb-3">
-                  Current Video
-                </label>
-                <div className="relative">
-                  <video
-                    src={video ? URL.createObjectURL(video) : `/api/video/download/${initialVideo}`}
-                    controls
-                    className="w-full h-64 object-cover rounded-md"
-                  />
-                  <div className="mt-4 space-y-3">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">
-                        Video Alt Text:
-                      </label>
-                      <input
-                        type="text"
-                        value={videoAlt || initialVideoAlt}
-                        onChange={(e) => setVideoAlt(e.target.value)}
-                        placeholder="Describe this video for accessibility"
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                      {errors.videoAlt && (
-                        <p className="text-red-500 text-sm mt-2">{errors.videoAlt}</p>
-                      )}
+          {/* Video Upload - Hide for 'everyplan' type */}
+          {/* {contentType !== 'everyplan' && (
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {initialVideo ? 'Update Video' : 'Add Video'}
+              </label>
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleVideoChange}
+                className="block w-full text-sm text-gray-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-md file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-blue-50 file:text-blue-700
+                  hover:file:bg-blue-100"
+              />
+              <p className="mt-1 text-xs text-gray-500">
+                Maximum file size: 100MB. Supported formats: MP4, AVI, MOV, WMV, WebM
+              </p>
+              
+              {(video || initialVideo) && (
+                <div className="mt-4 max-w-md">
+                  <div className="relative bg-white border rounded-lg shadow-sm p-4">
+                    <video 
+                      src={video ? URL.createObjectURL(video) : `/api/video/download/${initialVideo}`}
+                      controls 
+                      className="w-full rounded-md mb-3"
+                    />
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">
+                          Video Alt Text
+                        </label>
+                        <input
+                          type="text"
+                          value={videoAlt || initialVideoAlt || ''}
+                          onChange={(e) => setVideoAlt(e.target.value)}
+                          placeholder="Describe this video for accessibility"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600 mb-1">
+                          Video Title
+                        </label>
+                        <input
+                          type="text"
+                          value={videotitle || initialVideotitle || ''}
+                          onChange={(e) => setVideotitle(e.target.value)}
+                          placeholder="Enter video title"
+                          className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-600 mb-1">
-                        Video Title:
-                      </label>
-                      <input
-                        type="text"
-                        value={videotitle || initialVideotitle}
-                        onChange={(e) => setVideotitle(e.target.value)}
-                        placeholder="Enter video title"
-                        className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                      {errors.videotitle && (
-                        <p className="text-red-500 text-sm mt-2">{errors.videotitle}</p>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleDeleteVideo}
-                    className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex justify-center items-center transition-colors"
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
 
+                    <button
+                      type="button"
+                      onClick={handleDeleteVideo}
+                      className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex justify-center items-center transition-colors"
+                    >
+                      ×
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )} */}
           {/* Status */}
           <div className="mb- 8">
             <label htmlFor="status" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -715,79 +718,83 @@ const EditExtraPage = () => {
         </form>
 
         {/* Subsections Component */}
-        <div className="mt-8">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-700">Subsections</h2>
-              {!getContentTypeInfo().hasSubsections && (
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={enableSubsections}
-                    onChange={(e) => setEnableSubsections(e.target.checked)}
-                    className="form-checkbox h-5 w-5 text-blue-600"
-                  />
-                  <span className="text-sm text-gray-700">Enable Subsections</span>
-                </label>
-              )}
-            </div>
-            {(getContentTypeInfo().hasSubsections || enableSubsections) ? (
-              <SubsectionsComponent
-                subsections={subsections}
-                setSubsections={setSubsections}
-                contentId={contentId}
-                contentType={contentType}
-              />
-            ) : (
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-                <div className="flex">
-                  <div className="ml-3">
-                    <p className="text-sm text-yellow-800">
-                      <strong>Note:</strong> Subsection editing is not available for this content type ({getContentTypeInfo().name}). Enable the toggle to add subsections.
-                    </p>
+        {!['premiumtemplates', 'homecard2','homecard1'].includes(contentType) && (
+          <div className="mt-8">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-700">Subsections</h2>
+                {!getContentTypeInfo().hasSubsections && (
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={enableSubsections}
+                      onChange={(e) => setEnableSubsections(e.target.checked)}
+                      className="form-checkbox h-5 w-5 text-blue-600"
+                    />
+                    <span className="text-sm text-gray-700">Enable Subsections</span>
+                  </label>
+                )}
+              </div>
+              {(getContentTypeInfo().hasSubsections || enableSubsections) ? (
+                <SubsectionsComponent
+                  subsections={subsections}
+                  setSubsections={setSubsections}
+                  contentId={contentId}
+                  contentType={contentType}
+                />
+              ) : (
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                  <div className="flex">
+                    <div className="ml-3">
+                      <p className="text-sm text-yellow-800">
+                        <strong>Note:</strong> Subsection editing is not available for this content type ({getContentTypeInfo().name}). Enable the toggle to add subsections.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Questions Component */}
-        <div className="mt-8">
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold text-gray-700">Questions</h2>
-              {!getContentTypeInfo().hasQuestions && (
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={enableQuestions}
-                    onChange={(e) => setEnableQuestions(e.target.checked)}
-                    className="form-checkbox h-5 w-5 text-blue-600"
-                  />
-                  <span className="text-sm text-gray-700">Enable Questions</span>
-                </label>
-              )}
-            </div>
-            {(getContentTypeInfo().hasQuestions || enableQuestions) ? (
-              <QuestionsComponent
-                questions={questions}
-                setQuestions={setQuestions}
-                contentId={contentId}
-              />
-            ) : (
-              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
-                <div className="flex">
-                  <div className="ml-3">
-                    <p className="text-sm text-yellow-800">
-                      <strong>Note:</strong> Question editing is not available for this content type ({getContentTypeInfo().name}). Enable the toggle to add questions.
-                    </p>
+        {!['everyplan', 'premiumtemplates', 'homecard2','homecard1'].includes(contentType) && (
+          <div className="mt-8">
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-700">Questions</h2>
+                {!getContentTypeInfo().hasQuestions && (
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={enableQuestions}
+                      onChange={(e) => setEnableQuestions(e.target.checked)}
+                      className="form-checkbox h-5 w-5 text-blue-600"
+                    />
+                    <span className="text-sm text-gray-700">Enable Questions</span>
+                  </label>
+                )}
+              </div>
+              {(getContentTypeInfo().hasQuestions || enableQuestions) ? (
+                <QuestionsComponent
+                  questions={questions}
+                  setQuestions={setQuestions}
+                  contentId={contentId}
+                />
+              ) : (
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                  <div className="flex">
+                    <div className="ml-3">
+                      <p className="text-sm text-yellow-800">
+                        <strong>Note:</strong> Question editing is not available for this content type ({getContentTypeInfo().name}). Enable the toggle to add questions.
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

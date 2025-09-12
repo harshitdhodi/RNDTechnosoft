@@ -149,19 +149,32 @@ const NewCoreValueForm = () => {
 
     try {
       const formData = new FormData();
-      formData.append('title', title);
+      formData.append('title', title.trim());
       formData.append('description', description);
       formData.append('photo', photo);
       formData.append('alt', photoAlt);
       formData.append('imgtitle', imgtitle);
       formData.append('status', status);
 
-      await axios.post('/api/corevalue/createCoreValue', formData, {
+      const response = await axios.post('/api/corevalue/createCoreValue', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         withCredentials: true
       });
+
+      if (response.data && response.data.success === false) {
+        // Handle server-side validation errors
+        if (response.data.message && response.data.message.includes('already exists')) {
+          setErrors(prev => ({
+            ...prev,
+            title: response.data.message
+          }));
+          toast.error("Please fix the validation errors");
+          return;
+        }
+        throw new Error(response.data.message || 'Failed to add core value');
+      }
 
       toast.success("Core Value added successfully!");
       setTitle("");
@@ -173,8 +186,22 @@ const NewCoreValueForm = () => {
       setErrors({});
       navigate('/CoreValue');
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to add core value");
+      console.error('Error:', error);
+      if (error.response && error.response.data) {
+        // Handle other server-side errors
+        const errorMessage = error.response.data.message || 'Failed to add core value';
+        if (error.response.status === 400 && errorMessage.includes('already exists')) {
+          setErrors(prev => ({
+            ...prev,
+            title: errorMessage
+          }));
+          toast.error("Please fix the validation errors");
+        } else {
+          toast.error(errorMessage);
+        }
+      } else {
+        toast.error(error.message || 'Failed to add core value');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -263,6 +290,7 @@ const NewCoreValueForm = () => {
           }}
           modules={modules}
           className={`quill ${errors.description ? 'border-red-500' : ''}`}
+          style={{ height: '100px', marginBottom: '4.3rem' }}
         />
         {getCharacterCountDisplay(description, 'description')}
         {errors.description && (
@@ -271,9 +299,10 @@ const NewCoreValueForm = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="photo" className="block font-semibold mb-2">
+        <label htmlFor="photo" className="block font-semibold ">
           Photo (Max 1 image, 5MB) <span className="text-red-500">*</span>
         </label>
+        <p className="text-sm text-gray-500 mt-1 mb-2">The image size should be 317 × 310 pixels, and the appearance should be circular.</p>
         <input
           type="file"
           name="photo"
@@ -282,9 +311,7 @@ const NewCoreValueForm = () => {
           className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
           accept="image/*"
         />
-        <p className="text-sm text-gray-500 mt-1">
-          Accepted formats: JPG, PNG, GIF, WEBP. Maximum 1 image, 5MB.
-        </p>
+       
         
         {photo && (
           <div className="mt-4">

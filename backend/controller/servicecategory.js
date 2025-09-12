@@ -506,7 +506,7 @@ const deletesubcategory = async (req, res) => {
     }
 
     const subCategoryIndex = categoryDoc.subCategories.findIndex(
-      (subCat) => subCat._id.toString() === subCategoryId
+      (subCat) => subCat.slug === subCategoryId
     );
     if (subCategoryIndex === -1) {
       return res.status(404).json({ message: "Subcategory not found" });
@@ -557,13 +557,13 @@ const deletesubsubcategory = async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
 
-    const subCategory = categoryDoc.subCategories.id(subCategoryId);
+    const subCategory = categoryDoc.subCategories.find(subCat => subCat.slug === subCategoryId);
     if (!subCategory) {
       return res.status(404).json({ message: "Subcategory not found" });
     }
 
     const subSubCategoryIndex = subCategory.subSubCategory.findIndex(
-      (subSubCat) => subSubCat._id.toString() === subSubCategoryId
+      (subSubCat) => subSubCat.slug === subSubCategoryId
     );
     if (subSubCategoryIndex === -1) {
       return res.status(404).json({ message: "Sub-subcategory not found" });

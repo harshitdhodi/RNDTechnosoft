@@ -26,10 +26,10 @@ const EditServicePage = () => {
         <h2 className="text-lg font-semibold">Latest Projects Section</h2>
         <LatestProjects categoryId={categoryId} />
       </div> */}
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <h2 className="text-lg font-semibold">Companies Section</h2>
         <Companies categoryId={categoryId} />
-      </div>
+      </div> */}
       {/* <div className="mt-6">
         <h2 className="text-lg font-semibold"> Packages Section</h2>
         <Packages categoryId={categoryId} />
@@ -38,10 +38,10 @@ const EditServicePage = () => {
         <h2 className="text-lg font-semibold">Design Process Section</h2>
         <DesignProcess categoryId={categoryId} />
       </div>
-      <div className="mt-6">
+      {/* <div className="mt-6">
         <h2 className="text-lg font-semibold">Testimonial Section</h2>
         <TestimonialsTable categoryId={categoryId} />
-      </div>
+      </div> */}
     </div>
   );
 };
