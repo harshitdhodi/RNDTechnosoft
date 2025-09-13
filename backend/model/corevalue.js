@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const corevalueSchema = new mongoose.Schema({
     title: {
         type: String,
-      
+        unique: true,
     },
     description: {
         type: String,

@@ -1,4 +1,3 @@
-
 const Corevalue = require('../model/corevalue');
 const path=require('path')
 const fs=require('fs')
@@ -13,13 +12,23 @@ exports.getAllCorevalue = async (req, res) => {
 };
 
 exports.createCoreValue = async (req, res) => {
-  const { title, description, alt, imgtitle, status } = req.body;
+  let { title, description, alt, imgtitle, status } = req.body;
   const photo = req.files['photo'] ? req.files['photo'].map(file => file.filename) : [];
+  
   try {
-    // Check for duplicate title
-    const existingCorevalue = await Corevalue.findOne({ title });
+    // Trim whitespace from title
+    title = title.trim();
+    
+    // Check for duplicate title (case-insensitive and trimmed)
+    const existingCorevalue = await Corevalue.findOne({ 
+      title: { $regex: new RegExp(`^\\s*${title}\\s*$`, 'i') }
+    });
+    
     if (existingCorevalue) {
-      return res.status(400).json({ message: 'Corevalue with this title already exists' });
+      return res.status(400).json({ 
+        success: false,
+        message: 'A core value with this title already exists. Please choose a different title.'
+      });
     }
 
     const newCorevalue = new Corevalue({
@@ -28,13 +37,32 @@ exports.createCoreValue = async (req, res) => {
       photo,
       alt,
       imgtitle,
-      status
+      status: status || 'active'
     });
 
     const savedCorevalue = await newCorevalue.save();
-    res.status(201).json(savedCorevalue);
+    
+    res.status(201).json({
+      success: true,
+      message: 'Core value created successfully',
+      data: savedCorevalue
+    });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    // Handle duplicate key error (in case of race condition)
+    if (err.code === 11000 || err.code === 11001) {
+      return res.status(400).json({
+        success: false,
+        message: 'A core value with this title already exists. Please try again with a different title.'
+      });
+    }
+    
+    // Handle other errors
+    console.error('Error creating core value:', err);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create core value',
+      error: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
+    });
   }
 };
 
@@ -52,9 +80,7 @@ exports.updateCorevalue = async (req, res) => {
   
       // Process new uploaded photos and their alt texts
       if (req.files && req.files['photo'] && req.files['photo'].length > 0) {
-        const newPhotoPaths = req.files['photo'].map(file => file.filename); // Using filename to get the stored file names
-        updateFields.photo = [...existingCorevalue.photo, ...newPhotoPaths];
-    
+        updateFields.photo = req.files['photo'].map(file => file.filename);
       } else {
         updateFields.photo = existingCorevalue.photo; 
       }
@@ -146,3 +172,12 @@ exports.updateCorevalue = async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   };
+
+  exports.getActiveCorevalues = async (req, res) => {
+    try {
+        const activeCorevalues = await Corevalue.find({ status: 'active' });
+        res.status(200).json({ data: activeCorevalues });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

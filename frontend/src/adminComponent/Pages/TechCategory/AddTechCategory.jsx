@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Upload, Save, AlertCircle, CheckCircle2, X } from 'lucide-react';
 import axios from 'axios';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AddTechCategoryForm = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +21,7 @@ const AddTechCategoryForm = () => {
   const [errors, setErrors] = useState({});
 
   // Handle input changes
-  const handleInputChange = (e) => {
+  const handleInputChange = (e) => { 
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -85,17 +87,21 @@ const AddTechCategoryForm = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  if (!validateForm()) {
-    return;
-  }
+    // Validate form
+    const newErrors = {};
+    if (!formData.heading.trim()) newErrors.heading = 'Heading is required';
+    if (!formData.subheading.trim()) newErrors.subheading = 'Subheading is required';
+    if (!selectedFile) newErrors.photo = 'Photo is required';
 
-  setIsSubmitting(true);
-  setSubmitStatus(null);
-  navigate("/tech-category")
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setIsSubmitting(false);
+      return;
+    }
 
-  try {
     const formPayload = new FormData();
     formPayload.append('heading', formData.heading);
     formPayload.append('subheading', formData.subheading);
@@ -105,30 +111,57 @@ const AddTechCategoryForm = () => {
       formPayload.append('photo', selectedFile);
     }
 
-    await axios.post('/api/techCategory', formPayload, {
-      headers: { 'Content-Type': 'multipart/form-data' }
-    });
+    try {
+      await axios.post('/api/techCategory', formPayload, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true
+      });
 
-    setSubmitStatus('success');
-    setFormData({
-      heading: '',
-      subheading: '',
-      photo: '',
-      alt: '',
-      imgTitle: ''
-    });
-    setSelectedFile(null);
-    setPreviewUrl('');
-  } catch (error) {
-    console.error('Error submitting form:', error);
-    setSubmitStatus('error');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      setSubmitStatus('success');
+      // Only clear form on successful submission
+      setFormData({
+        heading: '',
+        subheading: '',
+        photo: '',
+        alt: '',
+        imgTitle: ''
+      });
+      setSelectedFile(null);
+      setPreviewUrl('');
+      
+      // Optional: Redirect after successful submission (uncomment if needed)
+      // navigate('/tech-category');
+      
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+      const errorMessage = error.response?.data?.message || 'Failed to add tech category. Please try again.';
+      toast.error(errorMessage, {
+        position: 'top-right',
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen  py-12 px-4">
+    <div className="min-h-screen py-12 px-4">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div className="max-w-5xl mx-auto">
         <div className="">
           {/* Header */}

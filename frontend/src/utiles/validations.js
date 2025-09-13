@@ -134,9 +134,9 @@ export const validatePhotoTitle = (value) => {
 
 export const validateCategory = (value) => {
   if (!value.trim()) return "Category is required";
-  if (!/^[a-zA-Z0-9\s]+$/.test(value)) return "Category can only contain letters, numbers, and spaces";
+  if (!/^[a-zA-Z0-9\s\/,"'.&+()\-]+$/.test(value)) return "Category contains invalid characters";
   if (value.trim().length < 2) return "Category must be at least 2 characters long";
-  if (value.trim().length > 50) return "Category cannot exceed 50 characters";
+  if (value.trim().length > 100) return "Category cannot exceed 100 characters";
   return "";
 };
 

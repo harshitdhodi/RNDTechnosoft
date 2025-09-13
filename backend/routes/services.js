@@ -25,8 +25,6 @@ router.get('/fetchUrlPriorityFreqById',requireAuth,fetchUrlPriorityFreqById)
 router.get('/fetchUrlmeta', requireAuth, fetchUrlmeta)
 router.put('/editUrlmeta', requireAuth, editUrlmeta)
 router.get('/fetchUrlmetaById', requireAuth, fetchUrlmetaById)
-
-
 router.post('/insertCategory',requireAuth,uploadLogo,insertCategory)
 router.get('/getActiveCategories',getActiveCategories)
 router.post('/insertSubCategory',requireAuth,uploadLogo,insertSubCategory)

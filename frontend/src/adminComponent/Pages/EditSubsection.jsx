@@ -24,13 +24,10 @@ const modules = {
 
 const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionUpdated, index }) => {
   const [formData, setFormData] = useState(subsection);
-  const [photo, setPhoto] = useState(null);
-  const [currentPhoto, setCurrentPhoto] = useState(subsection.photo);
-  const [altText, setAltText] = useState(subsection.photoAlt);
-  const [imgtitle, setImgtitle] = useState(subsection.imgtitle);
-  const [video, setVideo] = useState(null);
-  const [currentVideo, setCurrentVideo] = useState(subsection.video);
-  const [videoAlt, setVideoAlt] = useState(subsection.videoAlt || '');
+  const [media, setMedia] = useState(null);
+  const [currentMedia, setCurrentMedia] = useState(subsection.photo);
+  const [altText, setAltText] = useState(subsection.photoAlt || '');
+  const [imgtitle, setImgtitle] = useState(subsection.imgtitle || '');
   
   const [serviceCategories, setServiceCategories] = useState([]);
   const [selectedParentCategory, setSelectedParentCategory] = useState(subsection.serviceparentCategoryId || "");
@@ -39,11 +36,9 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
 
   useEffect(() => {
     setFormData(subsection);
-    setCurrentPhoto(subsection.photo);
-    setAltText(subsection.photoAlt);
-    setImgtitle(subsection.imgtitle);
-    setCurrentVideo(subsection.video);
-    setVideoAlt(subsection.videoAlt || '');
+    setCurrentMedia(subsection.photo);
+    setAltText(subsection.photoAlt || '');
+    setImgtitle(subsection.imgtitle || '');
   }, [subsection]);
 
   useEffect(() => {
@@ -62,24 +57,16 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileChange = (e) => {
+  const handleMediaChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setPhoto(file);
+      setMedia(file);
     }
   };
 
-  const handleVideoChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setVideo(file);
-    }
-  };
-
-  const handleDeleteVideo = () => {
-    setVideo(null);
-    setCurrentVideo(null);
-    setVideoAlt('');
+  const handleRemoveMedia = () => {
+    setMedia(null);
+    setCurrentMedia(null);
   };
 
   const handleSubmit = async (e) => {
@@ -91,31 +78,31 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
     formDataToSend.append('description', formData.description);
     formDataToSend.append('photoAlt', altText);
     formDataToSend.append('imgtitle', imgtitle);
-    formDataToSend.append('videoAlt', videoAlt);
     formDataToSend.append('serviceparentCategoryId', selectedParentCategory);
     formDataToSend.append('servicesubCategoryId', selectedSubCategory);
     formDataToSend.append('servicesubSubCategoryId', selectedSubSubCategory);
     
-    if (photo) {
-      formDataToSend.append('photo', photo);
-    } else if (currentPhoto) {
-      formDataToSend.append('currentPhoto', currentPhoto);
-    }
-
-    if (video) {
-      formDataToSend.append('video', video);
-    } else if (currentVideo) {
-      formDataToSend.append('currentVideo', currentVideo);
+    if (media) {
+      formDataToSend.append('photo', media);
+    } else if (currentMedia) {
+      formDataToSend.append('currentPhoto', currentMedia);
     } else {
-      formDataToSend.append('removeVideo', 'true');
+      formDataToSend.append('removePhoto', 'true');
     }
-
+  
     try {
-      await axios.put(`/api/content/subsections/${contentId}/${index}`, formDataToSend, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
-      });
-      onSubsectionUpdated();
+      const response = await axios.put(
+        `/api/content/subsections/${contentId}/${index}`,
+        formDataToSend,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        }
+      );
+  
+      // Call the parent's update function with the updated data
+      onSubsectionUpdated(response.data); // Make sure this is the updated subsection data
+      window.location.reload();
       console.log("Subsection updated successfully");
     } catch (error) {
       console.error("Error updating subsection:", error);
@@ -141,197 +128,153 @@ const EditSubsectionForm = ({ subsection, contentId, onEditCancel, onSubsectionU
     return subCategory?.subSubCategories || [];
   };
 
+  const isVideoFile = (filename) => {
+    return filename && (filename.endsWith('.webm') || filename.endsWith('.mp4') || filename.endsWith('.ogg'));
+  };
+
   return (
-    <div className="mb-4">
-      <h3 className="font-semibold mb-4">Edit Subsection</h3>
-
-      {/* Service Categories Section */}
-      {/* <label htmlFor="serviceParentCategory" className="block font-semibold mb-2">Service Parent Category</label>
-      <select
-        id="serviceParentCategory"
-        value={selectedParentCategory}
-        onChange={(e) => setSelectedParentCategory(e.target.value)}
-        className="w-full p-2 border rounded focus:outline-none mb-2"
-        required
-      >
-        <option value="">Select Service Parent Category</option>
-        {renderCategoryOptions(serviceCategories)}
-      </select>
-
-      {selectedParentCategory && (
-        <>
-          <label htmlFor="serviceSubCategory" className="block font-semibold mb-2">Service Subcategory</label>
-          <select
-            id="serviceSubCategory"
-            value={selectedSubCategory}
-            onChange={(e) => setSelectedSubCategory(e.target.value)}
-            className="w-full p-2 border rounded focus:outline-none mb-2"
-            required
-          >
-            <option value="">Select Subcategory</option>
-            {renderCategoryOptions(getSubCategories(selectedParentCategory))}
-          </select>
-        </>
-      )}
-
-      {selectedSubCategory && (
-        <>
-          <label htmlFor="serviceSubSubCategory" className="block font-semibold mb-2">Service Sub-Subcategory</label>
-          <select
-            id="serviceSubSubCategory"
-            value={selectedSubSubCategory}
-            onChange={(e) => setSelectedSubSubCategory(e.target.value)}
-            className="w-full p-2 border rounded focus:outline-none mb-2"
-            required
-          >
-            <option value="">Select Sub-Subcategory</option>
-            {renderCategoryOptions(getSubSubCategories(selectedParentCategory, selectedSubCategory))}
-          </select>
-        </>
-      )} */}
-
-      <label className="block mb-2">Title</label>
-      <input
-        type="text"
-        value={formData.title}
-        onChange={(e) => handleChange('title', e.target.value)}
-        className="p-2 border rounded mb-2"
-      />
-
-      <label className="block mb-2">Description</label>
-      <ReactQuill
-        value={formData.description}
-        onChange={(value) => handleChange('description', value)}
-        className="border border-gray-300 rounded"
-        modules={modules}
-      />
-
-      <label className="block mb-2">Upload New Photo</label>
-      <input
-        type="file"
-        onChange={handleFileChange}
-        accept="image/*"
-        className="p-2 border rounded mb-2"
-      />
-
-      {(photo || currentPhoto) && (
-        <div className="mt-2 w-56 relative group">
-          <img
-            src={photo ? URL.createObjectURL(photo) : `/api/image/download/${currentPhoto}`}
-            alt={altText}
-            className="h-32 w-56 object-cover"
-          />
-
-          <div className="mb-4">
-            <label htmlFor="alt" className="block font-semibold mb-2">Alternative Text</label>
-            <input
-              type="text"
-              id="alt"
-              value={altText}
-              onChange={(e) => setAltText(e.target.value)}
-              className="w-56 p-2 border rounded focus:outline-none"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="imgtitle" className="block font-semibold mb-2">Title Text</label>
-            <input
-              type="text"
-              id="imgtitle"
-              value={imgtitle}
-              onChange={(e) => setImgtitle(e.target.value)}
-              className="w-56 p-2 border rounded focus:outline-none"
-              required
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Video Upload Section */}
-      <div className="mt-6">
-        <label className="block font-semibold mb-2">Video (Optional)</label>
-        
-        {/* Current Video Preview */}
-        {currentVideo && !video && (
-          <div className="mb-4 relative group">
-            <video
-              src={`/api/image/download/${currentVideo}`}
-              controls
-              className="w-full max-w-md h-auto max-h-48 object-contain"
-            />
-            <button
-              type="button"
-              onClick={handleDeleteVideo}
-              className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-              title="Remove video"
-            >
-              ×
-            </button>
-          </div>
-        )}
-
-        {/* New Video Upload */}
-        {!currentVideo || video ? (
-          <>
-            <input
-              type="file"
-              onChange={handleVideoChange}
-              accept="video/*"
-              className="p-2 border rounded mb-2 w-full"
-            />
-            <p className="text-xs text-gray-500 mb-2">
-              Supported formats: MP4, WebM, Ogg. Max size: 50MB
-            </p>
-          </>
-        ) : null}
-
-        {/* Video Preview */}
-        {video && (
-          <div className="mt-2">
-            <label className="block font-semibold mb-2">New Video Preview</label>
-            <video
-              src={URL.createObjectURL(video)}
-              controls
-              className="w-full max-w-md h-auto max-h-48 object-contain"
-            />
-            <button
-              type="button"
-              onClick={() => setVideo(null)}
-              className="mt-2 text-sm text-red-600 hover:text-red-800"
-            >
-              Remove new video
-            </button>
-          </div>
-        )}
-
-        {/* Video Alt Text */}
-        <div className="mt-2">
-          <label className="block font-semibold mb-1">Video Alt Text</label>
+    <div className="mb-4 p-4 border rounded-lg bg-gray-50">
+      <h3 className="text-xl font-semibold mb-4 text-gray-800">Edit Subsection</h3>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
           <input
             type="text"
-            value={videoAlt}
-            onChange={(e) => setVideoAlt(e.target.value)}
-            placeholder="Describe this video for accessibility"
-            className="p-2 border rounded w-full"
+            value={formData.title}
+            onChange={(e) => handleChange('title', e.target.value)}
+            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            required
           />
-          <p className="text-xs text-gray-500 mt-1">
-            Provide a description of the video for screen readers and SEO
-          </p>
         </div>
-      </div>
 
-      <button
-        onClick={handleSubmit}
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-      >
-        Save
-      </button>
-      <button
-        onClick={onEditCancel}
-        className="bg-gray-500 text-white px-4 py-2 rounded mt-4 ml-2"
-      >
-        Cancel
-      </button>
+     
+
+        {/* Media Upload */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Media (Image or WebM Video)
+          </label>
+          <div className="flex items-center gap-2">
+            <label className="cursor-pointer bg-white text-blue-600 hover:bg-blue-50 px-4 py-2 rounded border border-blue-200">
+              Choose File
+              <input
+                type="file"
+                onChange={handleMediaChange}
+                accept="image/*,.webm"
+                className="hidden"
+              />
+            </label>
+            <span className="text-sm text-gray-500">
+              {media ? media.name : currentMedia ? 'Current file selected' : 'No file chosen'}
+            </span>
+            {(media || currentMedia) && (
+              <button
+                type="button"
+                onClick={handleRemoveMedia}
+                className="text-red-500 hover:text-red-700 text-sm"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <p className="text-xs text-gray-500">
+            Supported formats: JPG, PNG, WebP, WebM. Max size: 50MB
+          </p>
+
+          {/* Media Preview */}
+          {(media || currentMedia) && (
+            <div className="mt-3">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Preview
+              </label>
+              <div className="bg-white p-3 rounded border">
+                {media ? (
+                  isVideoFile(media.name) ? (
+                    <video
+                      src={URL.createObjectURL(media)}
+                      controls
+                      className="max-w-full h-auto max-h-48 mx-auto"
+                    />
+                  ) : (
+                    <img
+                      src={URL.createObjectURL(media)}
+                      alt="Preview"
+                      className="max-w-full h-auto max-h-48 mx-auto"
+                    />
+                  )
+                ) : currentMedia ? (
+                  isVideoFile(currentMedia) ? (
+                    <video
+                      src={`/api/image/download/${currentMedia}`}
+                      controls
+                      className="max-w-full h-auto max-h-48 mx-auto"
+                    />
+                  ) : (
+                    <img
+                      src={`/api/image/download/${currentMedia}`}
+                      alt={altText || 'Current media'}
+                      className="max-w-full h-auto max-h-48 mx-auto"
+                    />
+                  )
+                ) : null}
+              </div>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Alt Text (for accessibility)
+          </label>
+          <input
+            type="text"
+            value={altText}
+            onChange={(e) => setAltText(e.target.value)}
+            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Describe this media for accessibility"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Image Title
+          </label>
+          <input
+            type="text"
+            value={imgtitle}
+            onChange={(e) => setImgtitle(e.target.value)}
+            className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter image title"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <div className="min-h-[120px]">
+            <ReactQuill
+              value={formData.description}
+              onChange={(value) => handleChange('description', value)}
+              modules={modules}
+              style={{ height: '50px', marginBottom: '4rem' }}
+            />
+          </div>
+        </div>
+        <div className="flex justify-end space-x-3 pt-4 border-t">
+          <button
+            type="button"
+            onClick={onEditCancel}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

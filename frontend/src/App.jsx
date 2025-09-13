@@ -295,7 +295,7 @@ function App() {
                 <Route path="/collabration" element={<Collabration />} />
                 <Route path="/contact" element={<GetInTouch />} />
                 <Route path="/technology/:slug" element={<TechnologyPage />} />
-
+                <Route path="/popup" element={<Popup />} />
                 <Route path="/technologies" element={<TechnologyPage />} />
                 <Route path="/industry" element={<MainIndustry />} />
                 <Route path="/industries/:slug" element={<MainIndustry />} />
@@ -354,7 +354,6 @@ function App() {
                   <Route path="/industry-data/add-case-study" element={<CreateCaseStudy />} />
                   <Route path="/industry-data" element={<IndustrySecDataTable />} />
                   <Route path="/industry-data/edit-industry-data/:id" element={<CreateCaseStudy />} />
-
                     {/* Hire talent */}
                   <Route path="/hire-talent-table/add-hire-talent" element={<CreateHireTelent />} />
                   <Route path="/hire-talent-table" element={<HireTalentTable />} />
@@ -377,7 +376,7 @@ function App() {
                   <Route path="/industries" element={<Industries />} />
                   <Route path="/PortfolioCategory" element={<PortfolioCategory />} />
                   <Route path="/PortfolioCategory/CreatePortfolioCategory" element={<CreatePortfolioCategory />} />
-                  <Route path="/PortfolioCategory/editPortfolioCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditPortfolioCategory />} />
+                  <Route path="/PortfolioCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditPortfolioCategory />} />
                   <Route path="/news" element={<News />} />
                   <Route path="/news/createNews" element={<CreateNews />} />
                   <Route path="/news/editNews/:slugs" element={<EditNews />} />

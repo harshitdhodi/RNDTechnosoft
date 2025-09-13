@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NewCategoryForm = () => {
   const [category, setCategory] = useState("");
@@ -141,7 +143,19 @@ const NewCategoryForm = () => {
       }
 
       const response = await axios.post(urls, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
         withCredentials: true,
+      });
+
+      toast.success("Category created successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
       });
 
       setCategory("");
@@ -166,9 +180,20 @@ const NewCategoryForm = () => {
       setUrl("");
       setPriority("");
       setChangeFreq("");
-      navigate("/ServiceCategory");
+      setTimeout(() => {
+        navigate("/ServiceCategory");
+      }, 1500);
     } catch (error) {
-      console.error(error);
+      console.error("Error creating category:", error);
+      const errorMessage = error.response?.data?.message || "Failed to create category. Please try again.";
+      toast.error(errorMessage, {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -208,298 +233,310 @@ const NewCategoryForm = () => {
   const subCategories = findSubCategories(categories, parentCategoryId);
 
   return (
-    <form onSubmit={handleSubmit} className="p-4">
-      <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">
-        Add Category
-      </h1>
-      <div className="mb-4">
-        <label htmlFor="parentCategory" className="block font-semibold mb-2">
-          Parent Category
-        </label>
-        <select
-          id="parentCategory"
-          value={parentCategoryId}
-          onChange={handleParentCategoryChange}
-          className="w-full p-2 border rounded focus:outline-none"
-        >
-          <option value="">Select Parent Category</option>
-          {categories.map(renderCategoryOptions)}
-        </select>
-      </div>
-      {subCategories.length > 0 && (
+    <div className="p-4">
+      <ToastContainer />
+      <h1 className="text-2xl font-bold mb-6">Create New Category</h1>
+      <form onSubmit={handleSubmit} className="p-4">
+        <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">
+          Add Category
+        </h1>
         <div className="mb-4">
-          <label htmlFor="subCategory" className="block font-semibold mb-2">
-            Subcategory (optional)
+          <label htmlFor="parentCategory" className="block font-semibold mb-2">
+            Parent Category
           </label>
           <select
-            id="subCategory"
-            value={subCategoryId}
-            onChange={handleSubCategoryChange}
+            id="parentCategory"
+            value={parentCategoryId}
+            onChange={handleParentCategoryChange}
             className="w-full p-2 border rounded focus:outline-none"
           >
-            <option value="">Select Subcategory</option>
-            {subCategories.map((subCategory) => (
-              <option key={subCategory._id} value={subCategory._id}>
-                {subCategory.category}
-              </option>
-            ))}
+            <option value="">Select Parent Category</option>
+            {categories.map(renderCategoryOptions)}
           </select>
         </div>
-      )}
-      <div className="mb-4">
-        <label htmlFor="title" className="block font-semibold mb-2">
-          Category
-        </label>
-        <input
-          type="text"
-          id="title"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          required
-        />
-      </div>
-      <div className="mb-6">
-        <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
-          Description
-        </label>
-        <ReactQuill
-          value={description}
-          onChange={setDescription} // Directly update heading
-          modules={modules}
-          className="quill"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="tag" className="block font-semibold mb-2">
-          Tag
-        </label>
-        <input
-          id="tag"
-          value={tag}
-          onChange={(e) => setTag(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        ></input>
-      </div>
-      <div className="mb-8">
-        <label htmlFor="photo" className="block font-semibold mb-2">
-          Photo
-        </label>
-        <input
-          type="file"
-          name="photo"
-          id="photo"
-          onChange={handlePhotoChange}
-          className="border rounded focus:outline-none"
-          accept="image/*"
-        />
-
-        {photo && (
-          <div className="mt-2 relative group w-56">
-            <img
-              src={URL.createObjectURL(photo)}
-              alt="Gallery"
-              className="h-32 w-56 object-cover"
-            />
-            <button
-              type="button"
-              onClick={handleDeleteImage}
-              className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex items-center justify-center hover:bg-red-600 focus:outline-none"
+        {subCategories.length > 0 && (
+          <div className="mb-4">
+            <label htmlFor="subCategory" className="block font-semibold mb-2">
+              Subcategory (optional)
+            </label>
+            <select
+              id="subCategory"
+              value={subCategoryId}
+              onChange={handleSubCategoryChange}
+              className="w-full p-2 border rounded focus:outline-none"
             >
-              X
-            </button>
-            <div className="mb-4">
-              <label htmlFor="alt" className="block font-semibold mb-2">
-                Alternative Text
-              </label>
-              <input
-                type="text"
-                id="alt"
-                value={altText}
-                onChange={(e) => setAltText(e.target.value)}
-                className="w-full p-2 border rounded focus:outline-none"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label htmlFor="imgtitle" className="block font-semibold mb-2">
-                Image Title Text
-              </label>
-              <input
-                type="text"
-                id="imgtitle"
-                value={imgtitle}
-                onChange={(e) => setImgtitle(e.target.value)}
-                className="w-full p-2 border rounded focus:outline-none"
-                required
-              />
-            </div>
+              <option value="">Select Subcategory</option>
+              {subCategories.map((subCategory) => (
+                <option key={subCategory._id} value={subCategory._id}>
+                  {subCategory.category}
+                </option>
+              ))}
+            </select>
           </div>
         )}
-      </div>
-      <div className="mb-4 mt-4">
-        <label htmlFor="slug" className="block font-semibold mb-2">
-          Slug
-        </label>
-        <input
-          type="text"
-          id="slug"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4 mt-4">
-        <label htmlFor="url" className="block font-semibold mb-2">
-          URL
-        </label>
-        <input
-          type="text"
-          id="url"
-          value={url}
-          disabled
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Title
-        </label>
-        <textarea
-          id="meta"
-          value={metatitle}
-          onChange={(e) => setMetatitle(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Description
-        </label>
-        <textarea
-          id="meta"
-          value={metadescription}
-          onChange={(e) => setMetadescription(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Keywords
-        </label>
-        <textarea
-          id="meta"
-          value={metakeywords}
-          onChange={(e) => setMetakeywords(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Canonical
-        </label>
-        <textarea
-          id="meta"
-          value={metacanonical}
-          onChange={(e) => setMetacanonical(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Meta Language
-        </label>
-        <textarea
-          id="meta"
-          value={metalanguage}
-          onChange={(e) => setMetalanguage(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Other Meta
-        </label>
-        <textarea
-          id="meta"
-          value={otherMeta}
-          onChange={(e) => setOthermeta(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="meta" className="block font-semibold mb-2">
-          Schema
-        </label>
-        <textarea
-          id="meta"
-          value={metaschema}
-          onChange={(e) => setMetaschema(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-          rows="3"
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="priority" className="block font-semibold mb-2">
-          Priority
-        </label>
-        <input
-          type="number"
-          id="priority"
-          min={0}
-          max={1}
-          step={0.01}
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        />
-      </div>
-      <div className="mb-4">
-        <label htmlFor="changeFreq" className="block font-semibold mb-2">
-          Change Frequency
-        </label>
-        <select
-          id="changeFreq"
-          value={changeFreq}
-          onChange={(e) => setChangeFreq(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
+        <div className="mb-4">
+          <label htmlFor="title" className="block font-semibold mb-2">
+            Category <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            maxLength={30}
+            minLength={3}
+            required
+          />
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
+            Description
+          </label>
+          <ReactQuill
+            value={description}
+            onChange={setDescription} // Directly update heading
+            modules={modules}
+            className="quill"
+            maxLength={500}
+            minLength={10}
+      
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="tag" className="block font-semibold mb-2">
+            Tag
+          </label>
+          <input
+            id="tag"
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            maxLength={30}
+            minLength={3}
+            
+          ></input>
+        </div>
+        <div className="mb-8">
+          <label htmlFor="photo" className="block font-semibold mb-2">
+            Photo
+          </label>
+          <input
+            type="file"
+            name="photo"
+            id="photo"
+            onChange={handlePhotoChange}
+            className="border rounded focus:outline-none"
+            accept="image/*"
+          />
+
+          {photo && (
+            <div className="mt-2 relative group w-56">
+              <img
+                src={URL.createObjectURL(photo)}
+                alt="Gallery"
+                className="h-32 w-56 object-cover"
+              />
+              <button
+                type="button"
+                onClick={handleDeleteImage}
+                className="absolute top-4 right-2 bg-red-500 text-white rounded-md p-1 size-6 flex items-center justify-center hover:bg-red-600 focus:outline-none"
+              >
+                X
+              </button>
+              <div className="mb-4">
+                <label htmlFor="alt" className="block font-semibold mb-2">
+                  Alternative Text
+                </label>
+                <input
+                  type="text"
+                  id="alt"
+                  value={altText}
+                  onChange={(e) => setAltText(e.target.value)}
+                  className="w-full p-2 border rounded focus:outline-none"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="imgtitle" className="block font-semibold mb-2">
+                  Image Title Text
+                </label>
+                <input
+                  type="text"
+                  id="imgtitle"
+                  value={imgtitle}
+                  onChange={(e) => setImgtitle(e.target.value)}
+                  className="w-full p-2 border rounded focus:outline-none"
+                  required
+                />
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="mb-4 mt-4">
+          <label htmlFor="slug" className="block font-semibold mb-2">
+            Slug
+          </label>
+          <input
+            type="text"
+            id="slug"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+          />
+        </div>
+        <div className="mb-4 mt-4">
+          <label htmlFor="url" className="block font-semibold mb-2">
+            URL
+          </label>
+          <input
+            type="text"
+            id="url"
+            value={url}
+            disabled
+            className="w-full p-2 border rounded focus:outline-none"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="meta" className="block font-semibold mb-2">
+            Meta Title
+          </label>
+          <textarea
+            id="meta"
+            value={metatitle}
+            onChange={(e) => setMetatitle(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="meta" className="block font-semibold mb-2">
+            Meta Description
+          </label>
+          <textarea
+            id="meta"
+            value={metadescription}
+            onChange={(e) => setMetadescription(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="meta" className="block font-semibold mb-2">
+            Meta Keywords
+          </label>
+          <textarea
+            id="meta"
+            value={metakeywords}
+            onChange={(e) => setMetakeywords(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="meta" className="block font-semibold mb-2">
+            Meta Canonical
+          </label>
+          <textarea
+            id="meta"
+            value={metacanonical}
+            onChange={(e) => setMetacanonical(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="meta" className="block font-semibold mb-2">
+            Meta Language
+          </label>
+          <textarea
+            id="meta"
+            value={metalanguage}
+            onChange={(e) => setMetalanguage(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="meta" className="block font-semibold mb-2">
+            Other Meta
+          </label>
+          <textarea
+            id="meta"
+            value={otherMeta}
+            onChange={(e) => setOthermeta(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="meta" className="block font-semibold mb-2">
+            Schema
+          </label>
+          <textarea
+            id="meta"
+            value={metaschema}
+            onChange={(e) => setMetaschema(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+            rows="3"
+          ></textarea>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="priority" className="block font-semibold mb-2">
+            Priority
+          </label>
+          <input
+            type="number"
+            id="priority"
+            min={0}
+            max={1}
+            step={0.01}
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="changeFreq" className="block font-semibold mb-2">
+            Change Frequency
+          </label>
+          <select
+            id="changeFreq"
+            value={changeFreq}
+            onChange={(e) => setChangeFreq(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+          >
+            <option value="">Select Change Frequency</option>
+            <option value="always">Always</option>
+            <option value="hourly">Hourly</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label htmlFor="status" className="block font-semibold mb-2">
+            Status
+          </label>
+          <select
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full p-2 border rounded focus:outline-none"
+          >
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 rounded"
         >
-          <option value="">Select Change Frequency</option>
-          <option value="always">Always</option>
-          <option value="hourly">Hourly</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-          <option value="yearly">Yearly</option>
-        </select>
-      </div>
-      <div className="mb-4">
-        <label htmlFor="status" className="block font-semibold mb-2">
-          Status
-        </label>
-        <select
-          id="status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          className="w-full p-2 border rounded focus:outline-none"
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
-      </div>
-      <button
-        type="submit"
-        className="bg-blue-500 text-white py-2 px-4 rounded"
-      >
-        Add Category
-      </button>
-    </form>
+          Add Category
+        </button>
+      </form>
+    </div>
   );
 };
 

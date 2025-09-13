@@ -19,6 +19,10 @@ const DesignProcess = ({ categoryId }) => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
+  const [errors, setErrors] = useState({
+    heading: '',
+    subheading: ''
+  });
 
   const navigate = useNavigate();
 
@@ -162,6 +166,29 @@ const DesignProcess = ({ categoryId }) => {
 
   // Save updated headings
   const saveHeadings = async () => {
+    // Reset previous errors
+    const newErrors = {
+      heading: '',
+      subheading: ''
+    };
+
+    // Validate fields
+    let isValid = true;
+    if (!heading.trim()) {
+      newErrors.heading = 'Heading cannot be empty';
+      isValid = false;
+    }
+    if (!subheading.trim()) {
+      newErrors.subheading = 'Subheading cannot be empty';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    
+    if (!isValid) {
+      return; // Don't proceed if validation fails
+    }
+
     try {
       await axios.put('/api/pageHeading/updateHeading?pageType=designProcess', {
         pagetype: 'package',
@@ -170,8 +197,9 @@ const DesignProcess = ({ categoryId }) => {
       }, { withCredentials: true });
       notify("Headings updated successfully!");
     } catch (error) {
-      console.log(error);
-      notify("Failed to update headings.");
+      console.error('Update error:', error);
+      const errorMessage = error.response?.data?.message || 'Failed to update headings';
+      notify(errorMessage, 'error');
     }
   };
 
@@ -233,30 +261,51 @@ const DesignProcess = ({ categoryId }) => {
       </div>
 
       <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded">
-        <div className="grid md:grid-cols-2 md:gap-2 grid-cols-1">
+        <div className="grid md:grid-cols-2 md:gap-4 grid-cols-1">
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Heading</label>
+            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
+              Heading {errors.heading && <span className="text-red-500 text-sm font-normal">({errors.heading})</span>}
+            </label>
             <input
               type="text"
               value={heading}
-              onChange={(e) => setHeading(e.target.value)}
+              onChange={(e) => {
+                setHeading(e.target.value);
+                if (errors.heading) {
+                  setErrors(prev => ({ ...prev, heading: '' }));
+                }
+              }}
               placeholder="Enter page heading"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-sky-500"
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
+                errors.heading ? 'border-red-500' : 'focus:border-sky-500'
+              }`}
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">Subheading</label>
+            <label className="block text-gray-700 font-bold mb-2 uppercase font-serif">
+              Subheading {errors.subheading && <span className="text-red-500 text-sm font-normal">({errors.subheading})</span>}
+            </label>
             <input
               type="text"
               value={subheading}
-              onChange={(e) => setSubheading(e.target.value)}
+              onChange={(e) => {
+                setSubheading(e.target.value);
+                if (errors.subheading) {
+                  setErrors(prev => ({ ...prev, subheading: '' }));
+                }
+              }}
               placeholder="Enter page subheading"
-              className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-sky-500"
+              className={`w-full px-4 py-2 border rounded-md focus:outline-none ${
+                errors.subheading ? 'border-red-500' : 'focus:border-sky-500'
+              }`}
             />
           </div>
         </div>
-        <button onClick={saveHeadings} className="px-6 py-2 bg-gray-700 text-white rounded hover:bg-gray-900 transition duration-300 uppercase font-serif">
-          Save Heading
+        <button 
+          onClick={saveHeadings} 
+          className="px-6 py-2 bg-gray-700 text-white rounded hover:bg-gray-900 transition duration-300 uppercase font-serif"
+        >
+          Save 
         </button>
       </div>
 

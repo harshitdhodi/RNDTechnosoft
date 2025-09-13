@@ -309,9 +309,12 @@ const EditCoreValue = () => {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="photo" className="block font-semibold mb-2">
+        <label htmlFor="photo" className="block font-semibold">
           Photo (Max 1 image, 5MB) <span className="text-red-500">*</span>
         </label>
+        <p className="text-sm text-gray-500 mb-2">
+        The image size should be 317 × 310 pixels, and the appearance should be circular.
+        </p>
         <input
           type="file"
           name="photo"
@@ -320,9 +323,6 @@ const EditCoreValue = () => {
           className="w-full p-2 border rounded focus:outline-none focus:border-blue-500"
           accept="image/*"
         />
-        <p className="text-sm text-gray-500 mt-1">
-          Accepted formats: JPG, PNG, GIF, WEBP. Maximum 1 image, 5MB.
-        </p>
         
         {(photo || initialPhoto) && (
           <div className="mt-4">

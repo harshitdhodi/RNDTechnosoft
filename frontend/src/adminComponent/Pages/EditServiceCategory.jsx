@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactQuill from "react-quill";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import "react-quill/dist/quill.snow.css";
 
 const EditCategory = () => {
@@ -167,19 +169,88 @@ const EditCategory = () => {
     }
 
     try {
-      await axios.put(urls, formData, { withCredentials: true });
-      navigate("/ServiceCategory");
+      const response = await axios.put(urls, formData, { withCredentials: true });
+      toast.success("Service updated successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setTimeout(() => {
+        navigate("/ServiceCategory");
+      }, 1500);
     } catch (error) {
       console.error("Error updating data:", error);
+      toast.error(error.response?.data?.message || "Failed to update service. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    }
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this service?")) {
+      try {
+        let deleteUrl = "";
+        if (categoryId && subCategoryId && subSubCategoryId) {
+          deleteUrl = `/api/services/deleteSubSubCategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${subSubCategoryId}`;
+        } else if (categoryId && subCategoryId) {
+          deleteUrl = `/api/services/deleteSubCategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}`;
+        } else if (categoryId) {
+          deleteUrl = `/api/services/deleteCategory?categoryId=${categoryId}`;
+        }
+
+        await axios.delete(deleteUrl, { withCredentials: true });
+        
+        toast.success("Service deleted successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        
+        setTimeout(() => {
+          navigate("/ServiceCategory");
+        }, 1500);
+      } catch (error) {
+        console.error("Error deleting service:", error);
+        toast.error(error.response?.data?.message || "Failed to delete service. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+      }
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="p-4">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <h1 className="text-xl font-bold font-serif text-gray-700 uppercase text-center">Edit Category</h1>
       <div className="mb-4">
         <label htmlFor="category" className="block font-semibold mb-2">
-          Category
+          Category <span className="text-red-500">*</span>
         </label>
         <input
           type="text"
@@ -418,9 +489,21 @@ const EditCategory = () => {
           <option value="inactive">Inactive</option>
         </select>
       </div>
-      <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-        Update Category
-      </button>
+      <div className="flex justify-between mt-6">
+        {/* <button
+          type="button"
+          onClick={handleDelete}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition duration-300"
+        >
+          Delete Service
+        </button> */}
+        <button
+          type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300"
+        >
+          Save Changes
+        </button>
+      </div>
     </form>
   );
 };
