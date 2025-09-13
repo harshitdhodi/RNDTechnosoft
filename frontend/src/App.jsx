@@ -377,7 +377,7 @@ function App() {
                   <Route path="/industries" element={<Industries />} />
                   <Route path="/PortfolioCategory" element={<PortfolioCategory />} />
                   <Route path="/PortfolioCategory/CreatePortfolioCategory" element={<CreatePortfolioCategory />} />
-                  <Route path="/PortfolioCategory/editPortfolioCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditPortfolioCategory />} />
+                  <Route path="/PortfolioCategory/:categoryId/:subCategoryId?/:subSubCategoryId?" element={<EditPortfolioCategory />} />
                   <Route path="/news" element={<News />} />
                   <Route path="/news/createNews" element={<CreateNews />} />
                   <Route path="/news/editNews/:slugs" element={<EditNews />} />

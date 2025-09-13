@@ -320,14 +320,14 @@ const HireTalentForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div className="max-w-7xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <ToastContainer position="top-right" autoClose={3000} />
       <h1 className="text-2xl font-bold mb-4 font-serif">
         {isEditMode ? 'Edit Hire Talent' : 'Hire Talent Form'}
       </h1>
       {error && <div className="text-red-500 mb-4 p-3 bg-red-50 rounded-md">{error}</div>}
       {success && <div className="text-green-500 mb-4 p-3 bg-green-50 rounded-md">{success}</div>}
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 lg:w-1/2">
         <div>
           <label className="block text-sm font-medium text-gray-700 font-serif">
             Heading <span className="text-red-500">*</span>
