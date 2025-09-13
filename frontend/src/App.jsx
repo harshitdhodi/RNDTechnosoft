@@ -354,7 +354,6 @@ function App() {
                   <Route path="/industry-data/add-case-study" element={<CreateCaseStudy />} />
                   <Route path="/industry-data" element={<IndustrySecDataTable />} />
                   <Route path="/industry-data/edit-industry-data/:id" element={<CreateCaseStudy />} />
-
                     {/* Hire talent */}
                   <Route path="/hire-talent-table/add-hire-talent" element={<CreateHireTelent />} />
                   <Route path="/hire-talent-table" element={<HireTalentTable />} />
