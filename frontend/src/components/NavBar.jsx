@@ -89,8 +89,8 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
         to={linkTo}
         className={`flex justify-between items-center w-full ${fontSize} px-4 py-1 text-gray-800 
           ${depth === 0
-            ? "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:text-black"
-            : "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white focus:text-gray-800"
+            ? "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:bg-white focus:text-black"
+            : "bg-white hover:bg-[#333] hover:text-white focus:outline-none focus:ring-2 focus:bg-white focus:text-gray-800"
           }
           whitespace-nowrap text-ellipsis
           transition-colors duration-300 ease-in-out rounded-sm`}
@@ -295,7 +295,7 @@ const Navbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
                   sm:h-10 
                   md:h-12 
                   lg:h-14 lg:w-[35%] 
-                  xl:h-20 xl:w-[60%]
+                  xl:h-24 xl:w-[90%]
                   2xl:h-12
                   max-w-full
                   object-contain

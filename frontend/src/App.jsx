@@ -295,7 +295,7 @@ function App() {
                 <Route path="/collabration" element={<Collabration />} />
                 <Route path="/contact" element={<GetInTouch />} />
                 <Route path="/technology/:slug" element={<TechnologyPage />} />
-
+                <Route path="/popup" element={<Popup />} />
                 <Route path="/technologies" element={<TechnologyPage />} />
                 <Route path="/industry" element={<MainIndustry />} />
                 <Route path="/industries/:slug" element={<MainIndustry />} />
