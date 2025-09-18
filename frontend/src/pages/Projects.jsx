@@ -13,7 +13,7 @@ export default function Projects() {
    {/* <Marquee/> */}
    <ProjectsSection/>
    {/* <Review/> */}
-   <PremiumTemplatesSection/>
+   <PremiumTemplatesSection/> 
    <GlobalSolution/>
    </div>
   )

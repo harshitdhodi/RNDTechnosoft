@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-// import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import JobApplicationModal from '../HireTelent/JobApplicationmodal'; // Import the modal component
+import { X } from 'lucide-react';
 
 export default function TechBanner({ serviceGridRef, pageType }) {
   const [heading, setHeading] = useState("");
@@ -9,9 +9,22 @@ export default function TechBanner({ serviceGridRef, pageType }) {
   const [photo, setPhoto] = useState(null);
   const [alt, setAlt] = useState("");
   const [imgTitle, setImgTitle] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  // const location = useLocation();
-  // const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobileNo, setMobileNo] = useState("");
+  const [message, setMessage] = useState("");
+  const [resume, setResume] = useState(null);
+  const [linkedin, setLinkedin] = useState("");
+  const [clientIp, setClientIp] = useState("");
+  const [utmParams, setUtmParams] = useState({});
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { slug } = useParams();
+
+  const handleFileChange = (e) => {
+    setResume(e.target.files[0]);
+  };
 
   useEffect(() => {
     const fetchHeadings = async () => {
@@ -30,21 +43,81 @@ export default function TechBanner({ serviceGridRef, pageType }) {
       }
     };
 
+    const fetchClientIp = async () => {
+      try {
+        const response = await axios.get("https://api.ipify.org?format=json");
+        setClientIp(response.data.ip);
+      } catch (error) {
+        console.error("Error fetching IP address", error);
+      }
+    };
+
     fetchHeadings();
+    fetchClientIp();
+
+    const params = new URLSearchParams(window.location.search);
+    setUtmParams({
+      utm_source: params.get("utm_source") || "",
+      utm_medium: params.get("utm_medium") || "",
+      utm_campaign: params.get("utm_campaign") || "",
+      utm_id: params.get("utm_id") || "",
+      gclid: params.get("gclid") || "",
+      gcid_source: params.get("gcid_source") || "",
+      utm_content: params.get("utm_content") || "",
+      utm_term: params.get("utm_term") || "",
+    });
   }, [pageType]);
 
-  // const scrollToServices = () => {
-  //   if (serviceGridRef.current) {
-  //     serviceGridRef.current.scrollIntoView({ behavior: 'smooth' });
-  //   }
-  // };
-
   const handleOpenModal = () => {
-    setIsModalOpen(true); // Open the modal
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('mobileNo', mobileNo);
+      formData.append('message', message);
+      formData.append('linkedin', linkedin);
+      formData.append('path', slug || window.location.pathname);
+      formData.append('jobTitle', 'General Application');
+      formData.append('ipaddress', clientIp);
+      formData.append('resume', resume);
+      
+      // Append UTM parameters
+      Object.entries(utmParams).forEach(([key, value]) => {
+        if (value) formData.append(key, value);
+      });
+
+      await axios.post(
+        "/api/careerInquiries/createCareerInquiry",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      navigate("/thankyou");
+      handleCloseModal();
+      // Reset form
+      setName("");
+      setEmail("");
+      setMobileNo("");
+      setMessage("");
+      setResume(null);
+      setLinkedin("");
+    } catch (err) {
+      console.error("Failed to submit application", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -78,17 +151,100 @@ export default function TechBanner({ serviceGridRef, pageType }) {
             onClick={handleOpenModal}
             className="btn-yellow"
           >
-            Hire Talent
+             {slug ? slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : 'Developer'}
           </button>
         </div>
-  </div>
+      </div>
 
-  <JobApplicationModal
-    isOpen={isModalOpen}
-    onClose={handleCloseModal}
-    job={{ jobtitle: "General Application" }}
-  />
-</div>
-
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-8 max-w-lg w-full relative">
+            <button className="absolute top-3 right-3" onClick={handleCloseModal}>
+              <X size={24} />
+            </button>
+            <h2 className="text-2xl font-semibold mb-4">
+              Apply for {slug ? slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : 'Position'}
+            </h2>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Name <span className="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="John Doe"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Phone Number <span className="text-red-500">*</span></label>
+                <input
+                  type="text"
+                  name="mobileNo"
+                  value={mobileNo}
+                  placeholder="1234567890"
+                  onChange={(e) => setMobileNo(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Email <span className="text-red-500">*</span></label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="name@gmail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">LinkedIn Profile</label>
+                <input
+                  type="url"
+                  name="linkedin"
+                  value={linkedin}
+                  onChange={(e) => setLinkedin(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                  placeholder="https://linkedin.com/in/your-profile"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Upload Resume <span className="text-red-500">*</span></label>
+                <input
+                  type="file"
+                  name="resume"
+                  onChange={handleFileChange}
+                  className="w-full"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1">Message <span className="text-red-500">*</span></label>
+                <textarea
+                  name="message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  className="w-full p-2 border rounded-lg"
+                />
+              </div>
+              <button
+                type="submit"
+                className={`bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg w-full ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={loading}
+              >
+                {loading ? "Submitting..." : "Submit Application"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

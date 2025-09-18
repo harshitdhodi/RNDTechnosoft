@@ -134,7 +134,7 @@ async function sendToExternalAPI(newInquiry) {
     console.log('Attempting to send data to external API...');
     
     // Verify API credentials are configured
-    const apiKey = process.env.EXTERNAL_API_KEY || "8029760E3747D130";
+    const apiKey = process.env.EXTERNAL_API_KEY || "A78A8BC90C6F6235";
     const apiId = process.env.EXTERNAL_API_ID || "MW1V"; // Make this configurable
     
     console.log('Using API_ID:', apiId); // Debug log
@@ -147,23 +147,44 @@ async function sendToExternalAPI(newInquiry) {
       phone: newInquiry.mobileNo,
       linkedin: newInquiry.linkedin || '',
       subject: "Career Inquiry",
-      message: newInquiry.message
+      message: newInquiry.message,
+      source: 'career-portal',
+      ip_address: newInquiry.ipaddress || ''
     };
 
-    console.log('External API payload:', JSON.stringify(payload, null, 2));
+    console.log('External API request:', {
+      url: 'https://leads.rndtechnosoft.com/api/contactform/message',
+      method: 'POST',
+      payload
+    });
 
     const externalApiResponse = await axios.post(
       'https://leads.rndtechnosoft.com/api/contactform/message', 
       payload,
       {
-        timeout: 10000, // 10 second timeout
+        timeout: 15000, // Increased timeout to 15 seconds
         headers: {
           'Content-Type': 'application/json',
-          'User-Agent': 'RND-Career-Portal/1.0'
+          'Accept': 'application/json',
+          'User-Agent': 'RND-Career-Portal/1.0',
+          'X-Request-Source': 'career-portal'
+        },
+        validateStatus: function (status) {
+          return status >= 200 && status < 500; // Handle all 2xx and 4xx responses
         }
       }
     );
     
+    console.log('External API response:', {
+      status: externalApiResponse.status,
+      statusText: externalApiResponse.statusText,
+      data: externalApiResponse.data
+    });
+
+    if (externalApiResponse.status !== 200) {
+      throw new Error(`External API returned status ${externalApiResponse.status}: ${externalApiResponse.statusText}`);
+    }
+
     console.log('✓ External API call successful:', externalApiResponse.data);
     return externalApiResponse.data;
 

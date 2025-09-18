@@ -420,6 +420,8 @@ app.use('/api/password', require('./routes/forgotpassword'));
 app.use('/api/email', require('./routes/email'));
 app.use('/api/logo', require('./routes/logo'));
 app.use('/api/backup', require('./routes/backup'));
+app.use('/api/catalogue', require('./routes/catalogueInquiry')); 
+app.use('/api/download', require('./routes/portfolioRoutes')); 
 app.use('/api/aboutusPoints', require('./routes/aboutuspoints'));
 app.use('/api/achievements', require('./routes/achievements'));
 app.use('/api/counter', require('./routes/counter'));

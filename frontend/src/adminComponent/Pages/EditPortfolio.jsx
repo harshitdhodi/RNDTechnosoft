@@ -201,14 +201,14 @@ const EditPortfolio = () => {
       return;
     }
 
-    if (photo || initialPhoto) {
-      const shouldReplace = window.confirm("An image already exists. Do you want to replace it with the new image?");
-      if (!shouldReplace) {
-        e.target.value = '';
-        return;
-      }
-      handleDeletePhoto();
-    }
+    // if (photo || initialPhoto) {
+    //   const shouldReplace = window.confirm("An image already exists. Do you want to replace it with the new image?");
+    //   if (!shouldReplace) {
+    //     e.target.value = '';
+    //     return;
+    //   }
+    //   handleDeletePhoto();
+    // }
 
     setPhoto(file);
     setPhotoAlt("");
