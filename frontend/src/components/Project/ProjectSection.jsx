@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, createRef } from "react";
 import axios from "axios";
 import gsap from "gsap";
 import { IoMdClose, IoMdFunnel, IoMdEye } from "react-icons/io";
@@ -57,47 +57,57 @@ const ProjectsSection = () => {
       } else {
         response = await axios.get(`/api/Portfolio/getSubcategoryPortfolio?subcategoryId=${selectedCategory.slug}`);
       }
-      setPortfolios(response.data);
+      
+      const portfolioData = response.data;
+      setPortfolios(portfolioData);
+      
+      // Initialize refs array properly
+      imageRefs.current = portfolioData.map(() => createRef());
+      
       setLoading(false);
 
-      // Reset the image refs array to match the new portfolios length
-      imageRefs.current = Array(response.data.length).fill().map((_, i) => imageRefs.current[i] || createRef());
-
-      // GSAP animation to fade out and in images
-      gsap.to(imageRefs.current, {
-        scale: 0,
-        opacity: 0,
-        duration: 0,
-        onComplete: () => {
-          gsap.to(imageRefs.current, {
-            scale: 1,
-            opacity: 1,
-            duration: 0.5,
-            stagger: 0.1,
-          });
-        },
-      });
+      // Animate in new images after a small delay to ensure DOM is updated
+      setTimeout(() => {
+        if (imageRefs.current.length > 0) {
+          gsap.fromTo(imageRefs.current.map(ref => ref.current).filter(Boolean), 
+            { scale: 0, opacity: 0 },
+            { 
+              scale: 1, 
+              opacity: 1, 
+              duration: 0.5, 
+              stagger: 0.1 
+            }
+          );
+        }
+      }, 50);
+      
     } catch (error) {
       console.error("Error fetching portfolios:", error);
       setLoading(false);
     }
   };
 
-  const createRef = () => React.createRef();
-
   const handleCategoryClick = (category) => {
     if (selectedCategory?.slug === category.slug) return;
 
-    // GSAP animation to scale down images before changing category
-    gsap.to(imageRefs.current, {
-      scale: 0,
-      opacity: 0,
-      duration: 0.5,
-      onComplete: () => {
-        setSelectedCategory(category);
-        setIsFilterOpen(false); // Close the filter on category change
-      },
-    });
+    // Animate out current images if they exist
+    const currentImages = imageRefs.current.map(ref => ref.current).filter(Boolean);
+    
+    if (currentImages.length > 0) {
+      gsap.to(currentImages, {
+        scale: 0,
+        opacity: 0,
+        duration: 0.3,
+        onComplete: () => {
+          setSelectedCategory(category);
+          setIsFilterOpen(false);
+        },
+      });
+    } else {
+      // If no current images, just update immediately
+      setSelectedCategory(category);
+      setIsFilterOpen(false);
+    }
   };
 
   const handleImageClick = (image) => {
@@ -198,7 +208,7 @@ const ProjectsSection = () => {
 
       {/* Projects grid */}
       {!loading && selectedCategory && (
-        <div className="w-full ">
+        <div className="w-full">
           {portfolios.length === 0 ? (
             <div className="text-center py-20">
               <p className="text-gray-500 text-lg">No projects found in this category</p>
@@ -206,21 +216,23 @@ const ProjectsSection = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6">
               {portfolios.map((item, index) =>
-                item.photo[0] ? (
+                item.photo && item.photo[0] ? (
                   <div 
-                    key={index} 
-                    className="relative h-[280px] sm:h-[280px] rounded-lg overflow-hidden shadow-md border border-gray-200"
-                    ref={el => imageRefs.current[index] = el}
+                    key={`${selectedCategory.slug}-${index}`} 
+                    className="relative h-[280px] sm:h-[280px] rounded-lg overflow-hidden shadow-md border border-gray-200 group"
+                    ref={imageRefs.current[index]}
                   >
                     <img
                       src={`/api/image/download/${item.photo[0]}`}
                       alt={item.alt || "Project Image"}
-                      className="w-full h-full object-fill transition-transform duration-300 hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 hover:opacity-100 transition-opacity duration-300 bg-black/50">
-                      <h3 className="text-white text-lg font-semibold mb-2">{item.imgtitle[0]}</h3>
+                    <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/50">
+                      <h3 className="text-white text-lg font-semibold mb-2">
+                        {item.imgtitle && item.imgtitle[0] ? item.imgtitle[0] : 'Untitled'}
+                      </h3>
                       <div className="flex space-x-2">
                         <button
                           onClick={() => handleImageClick(item.photo[1] ? item.photo[1] : item.photo[0])}
@@ -254,20 +266,28 @@ const ProjectsSection = () => {
 
       {/* Fullscreen Image Viewer */}
       {fullscreenImage && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 z-50  overflow-auto">
-         <div className="flex items-start justify-center  h-full">
-           <img
-            src={`/api/image/download/${fullscreenImage}`}
-            alt="Fullscreen view"
-            className="w-1/2 h-auto object-cover"
-          />
-          <button
-            className="absolute top-4 right-4 text-white text-3xl md:text-4xl p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75"
-            onClick={closeFullscreen}
-          >
-            <IoMdClose />
-          </button>
-         </div>
+        <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4 overflow-auto">
+          <div className="relative max-w-full max-h-full">
+            <div className="max-w-[90vw] max-h-[90vh] overflow-auto">
+              <img
+                src={`/api/image/download/${fullscreenImage}`}
+                alt="Fullscreen view"
+                className="max-w-none"
+                style={{
+                  maxWidth: '100%',
+                  height: 'auto',
+                  display: 'block',
+                  margin: '0 auto'
+                }}
+              />
+            </div>
+            <button
+              className="fixed top-4 right-4 text-white text-3xl md:text-4xl p-2 bg-black bg-opacity-50 rounded-full hover:bg-opacity-75 transition-colors z-10"
+              onClick={closeFullscreen}
+            >
+              <IoMdClose />
+            </button>
+          </div>
         </div>
       )}
     </div>

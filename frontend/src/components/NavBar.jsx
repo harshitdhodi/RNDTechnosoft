@@ -116,7 +116,7 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
           `}
         >
           {item.id === "technology" ? (
-            <div className="grid grid-cols-2 gap-3 p-3 w-[700px]">
+            <div className="grid grid-cols-2 gap-3 p-3 w-[900px]">
               {item.subItems.map((category) => (
                 <div key={category.id} className="bg-gray-50 flex gap-5 rounded-lg pl-5 py-3 border border-gray-200">
                   <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
@@ -126,7 +126,6 @@ const NavItem = ({ item, depth = 0, closeMenu }) => {
                       className={`${category.size === 'large' ? 'w-10 h-10' : 'w-6 h-6'} object-contain mb-2`}
                     />
                   </div>
-
                   <div className="flex-1 min-w-0">
                     <h3 className="text-lg font-medium text-gray-800 mb-1">{category.name}</h3>
                     <p className="text-sm text-gray-600 pb-2 leading-relaxed">{category.description}</p>

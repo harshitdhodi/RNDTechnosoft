@@ -171,14 +171,15 @@ const updatePortfolio = async (req, res) => {
 
     // Process new uploaded photos
     if (req.files && req.files['photo'] && req.files['photo'].length > 0) {
-      // Extract filenames of the uploaded photos
-      const newPhotoPaths = req.files['photo'].map(file => file.filename);
-
-      // Avoid duplicating photos by merging and ensuring uniqueness
-      const updatedPhotos = [
-        ...new Set([...existingPortfolio.photo, ...newPhotoPaths])
-      ];
-      updateFields.photo = updatedPhotos; // Add the updated photo list to updateFields
+      // If there are existing photos, append new ones
+      if (existingPortfolio.photo && existingPortfolio.photo.length > 0) {
+        const newPhotoPaths = req.files['photo'].map(file => file.filename);
+        updateFields.photo = [...existingPortfolio.photo, ...newPhotoPaths];
+      } 
+      // If no existing photos, use the new ones
+      else {
+        updateFields.photo = req.files['photo'].map(file => file.filename);
+      }
     } else {
       updateFields.photo = existingPortfolio.photo; // Keep existing photos if no new photos are uploaded
     }

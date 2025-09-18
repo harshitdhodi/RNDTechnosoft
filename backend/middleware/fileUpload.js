@@ -40,7 +40,7 @@ const storage = multer.diskStorage({
     cb(null, fileName);
   }
 });
-
+ 
 const upload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 }, // Max 50MB
@@ -49,30 +49,57 @@ const upload = multer({
   }
 });
 
-const processLogoImage = async (filePath) => {
-  try {
-    if (path.extname(filePath).toLowerCase() === '.webp') {
-      return filePath;
+// Track files that need cleanup
+const filesToCleanup = new Set();
+
+// Schedule cleanup every 5 minutes
+setInterval(() => {
+  if (filesToCleanup.size === 0) return;
+  
+  const now = Date.now();
+  const maxAge = 5 * 60 * 1000; // 5 minutes
+  
+  filesToCleanup.forEach(({ path, timestamp }) => {
+    if (now - timestamp > maxAge) {
+      fs.unlink(path, (err) => {
+        if (!err || err.code === 'ENOENT') {
+          filesToCleanup.delete(path);
+        }
+      });
     }
-    const webpPath = path.join(
-      path.dirname(filePath),
-      path.basename(filePath, path.extname(filePath)) + '.webp'
-    );
+  });
+}, 5 * 60 * 1000); // Run every 5 minutes
 
-    // read into buffer (avoids open file handle issues on Windows)
-    const buffer = await fs.promises.readFile(filePath);
+const processLogoImage = async (filePath) => {
+  const ext = path.extname(filePath).toLowerCase();
+  if (ext === '.webp') {
+    return filePath;
+  }
 
-    await sharp(buffer)
-      .webp({ quality: 80 })
+  const webpPath = filePath.replace(/\.[^/.]+$/, '.webp');
+  
+  try {
+    await sharp(filePath)
+      .resize(5000, 5000, {
+        fit: 'inside',
+        withoutEnlargement: true
+      })
+      .webp({ 
+        quality: 80,
+        effort: 6
+      })
       .toFile(webpPath);
 
-    // safe to delete after sharp finished
-    await fs.promises.unlink(filePath);
+    // Schedule file for cleanup instead of deleting immediately
+    filesToCleanup.add({
+      path: filePath,
+      timestamp: Date.now()
+    });
 
     return webpPath;
-  } catch (err) {
-    console.error(`Failed to process image at ${filePath}:`, err);
-    throw new Error(`Failed to process image: ${err.message}`);
+  } catch (error) {
+    console.error(`Error processing image at ${filePath}:`, error);
+    return filePath;
   }
 };
 
@@ -87,28 +114,50 @@ const uploadPhoto = (req, res, next) => {
       return res.status(400).send({ error: err.message });
     }
 
+    if (!req.files || !req.files['photo']) {
+      return next();
+    }
+
     try {
-      if (req.files && req.files['photo']) {
-        for (const photo of req.files['photo']) {
-          const tempPath = path.join(tempDir, photo.filename);
+      await Promise.all(req.files['photo'].map(async (photo) => {
+        const tempPath = path.join(tempDir, photo.filename);
+        if (!fs.existsSync(tempPath)) {
+          throw new Error(`Temporary file not found: ${photo.filename}`);
+        }
+
+        try {
+          const newPath = await processLogoImage(tempPath);
           const finalPath = path.join(
             photoDir,
             path.basename(photo.filename, path.extname(photo.filename)) + '.webp'
           );
 
-          if (fs.existsSync(tempPath)) {
-            const newPath = await processLogoImage(tempPath);
-            await fs.promises.rename(newPath, finalPath); // Move file to final location
-            photo.filename = path.basename(finalPath); // Update filename in req.files
-          } else {
-            throw new Error(`Temporary file not found: ${photo.filename}`);
+          // Ensure the target directory exists
+          await fs.promises.mkdir(path.dirname(finalPath), { recursive: true });
+          
+          // Use copy instead of rename
+          await fs.promises.copyFile(newPath, finalPath);
+          photo.filename = path.basename(finalPath);
+          
+          // Schedule the processed file for cleanup
+          if (newPath !== tempPath) {
+            filesToCleanup.add({
+              path: newPath,
+              timestamp: Date.now()
+            });
           }
+        } catch (processError) {
+          console.error('Error processing file:', processError);
+          throw processError;
         }
-      }
+      }));
       next();
-    } catch (moveErr) {
-      console.error('Error moving photo:', moveErr);
-      return res.status(500).send({ error: `Error moving photo: ${moveErr.message}` });
+    } catch (error) {
+      console.error('Error in upload middleware:', error);
+      res.status(500).send({ 
+        error: 'Error processing uploaded files',
+        details: error.message 
+      });
     }
   });
 };
