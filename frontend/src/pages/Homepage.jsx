@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+ import React, { useEffect, useRef } from 'react';
 import { useGetCombinedDataQuery } from '../redux/slices/homepageSlice';
 import HeroSection from '../components/HeroSection';
 import Marquee from '../components/Marquee';
