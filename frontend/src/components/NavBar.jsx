@@ -294,7 +294,7 @@ const Navbar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
                   sm:h-10 
                   md:h-12 
                   lg:h-14 lg:w-[35%] 
-                  xl:h-24 xl:w-[90%]
+                  xl:h-16 xl:w-[99%]
                   2xl:h-12
                   max-w-full
                   object-contain
