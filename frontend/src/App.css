@@ -1,4 +1,6 @@
-
+*{
+  font-family: sans-serif !important;
+}
 .App {
   text-align: center;
 }
@@ -20,10 +22,10 @@ a:focus {
   opacity: 1;
   visibility: visible;
 }
-@font-face {
+/* @font-face {
   font-family: 'Poppins';
   font-display: swap;
-}
+} */
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {

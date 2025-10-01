@@ -33,7 +33,7 @@ export default function WhatYouGet({ everyPlan }) {
                 <li key={index} className="flex flex-col items-center text-center">
                   {plan.photo ? (
                     <video
-                      src={plan.photo}
+                      src={`/api/image/download/${plan.photo}`}
                       muted
                       autoPlay
                       loop
