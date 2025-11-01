@@ -10,7 +10,23 @@
   <link rel="preconnect" href="https://embed.tawk.to" crossorigin>
   <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
   <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-
+<!-- Meta Pixel Code -->
+<script>
+function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '824683016805292');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=824683016805292&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
   <!-- Load critical CSS -->
   <!-- <link rel="stylesheet" href="https://embed.tawk.to/_s/v4/app/6826b3762c6/css/max-widget.css" media="print" onload="this.media='all'" /> -->
   <title>RND Technosoft</title>
@@ -29,7 +45,8 @@
 <link rel="stylesheet" href="/assets/main-DdwcwtZ8-1744602663188.css" media="print" onload="this.media='all'" /><link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
 
 <body>
-  <div id="root"></div>
+  <div id="root"></div>
+
     <script>
     // Function to load scripts after page load
     function loadDeferredScripts() {
