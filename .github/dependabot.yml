@@ -1,0 +1,25 @@
+version: 2
+updates:
+  # Example for npm/yarn (if you have package.json in root)
+  - package-ecosystem: "npm"
+    directory: "/"  # Location of package manifest
+    schedule:
+      interval: "daily"  # Or "weekly", "monthly"
+
+  # Example for pip (Python)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Example for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Example for Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
