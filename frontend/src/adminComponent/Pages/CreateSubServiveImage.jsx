@@ -13,9 +13,6 @@ const NewGalleryForm = () => {
     const [images, setImages] = useState(null);
     const navigate = useNavigate();
 
-
-  
-
     const handlePhotoChange = (e) => {
         const file = e.target.files[0]; // Get the first selected file
         setImages(file);

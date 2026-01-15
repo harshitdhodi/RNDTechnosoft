@@ -7,7 +7,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from 'react-modal';
 import UseAnimations from "react-useanimations";
-import loading from "react-useanimations/lib/loading";
+import loadingAnimation from "react-useanimations/lib/loading";
 
 Modal.setAppElement('#root');
 
@@ -35,9 +35,8 @@ const ServicesTable = ({ categoryId, subcategoryId }) => {
           <span
             className="hover:text-blue-500 cursor-pointer"
             onClick={() => navigate(`/services/editService/${row.original._id}`)}
-          >
-            {row.original.heading}
-          </span>
+            dangerouslySetInnerHTML={{ __html: row.original.heading }}
+          />
         ),
       },
       {
@@ -161,7 +160,7 @@ const ServicesTable = ({ categoryId, subcategoryId }) => {
         />
       </div>
       {loading ? (
-        <UseAnimations animation={loading} />
+        <UseAnimations animation={loadingAnimation} />
       ) : (
         <table {...getTableProps()} className="min-w-full border-collapse border border-gray-300">
           <thead>
@@ -194,7 +193,9 @@ const ServicesTable = ({ categoryId, subcategoryId }) => {
 
       {/* Modal for viewing service details */}
       <Modal isOpen={isModalOpen} onRequestClose={closeModal}>
-        <h2 className="text-xl font-bold">{selectedService?.heading}</h2>
+        <h2 className="text-xl font-bold">
+          <span dangerouslySetInnerHTML={{ __html: selectedService?.heading }} />
+        </h2>
         <div dangerouslySetInnerHTML={{ __html: selectedService?.description }} />
         <h3 className="font-bold mt-4">Questions</h3>
         <ul>

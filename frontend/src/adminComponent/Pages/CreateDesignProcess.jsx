@@ -92,7 +92,6 @@ const DesignProcessForm = () => {
           value={subheading}
           onChange={(e) => setSubheading(e.target.value)}
           className="w-full p-2 border rounded focus:outline-none"
-          required
         />
       </div>
       

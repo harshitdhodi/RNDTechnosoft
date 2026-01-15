@@ -1,6 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { Edit,  //Edit
+  Trash2,  //Trash2
+  ArrowUp,  //ArrowUp
+  ArrowDown,  //ArrowDown
+  Plus  //Plus
+ } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
@@ -57,10 +62,10 @@ const AchievementsTable = () => {
         Cell: ({ row }) => (
           <div className="flex  gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/certificates/editcertificates/${row.original._id}`}><FaEdit /></Link>
+              <Link to={`/certificates/editcertificates/${row.original._id}`}><Edit /></Link>
             </button>
             <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteAchievement(row.original._id)}>
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -144,6 +149,9 @@ const AchievementsTable = () => {
 
   return (
     <div className="p-4 overflow-x-auto">
+      <div style={{ background: '#fff3cd', color: '#856404', padding: '10px', borderRadius: '4px', marginBottom: '16px', border: '1px solid #ffeeba' }}>
+        <strong>Warning:</strong> This section is temporarily hidden from the website. We'll bring it back soon!
+      </div>
       <ToastContainer />
       <div className="mb-8 border border-gray-200 shadow-lg p-4 rounded ">
         <div className="grid grid-cols-2 gap-2">
@@ -176,7 +184,7 @@ const AchievementsTable = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Certificates</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-          <Link to="/certificates/createcertificates"><FaPlus size={15} /></Link>
+          <Link to="/certificates/createcertificates"><Plus size={15} /></Link>
         </button>
       </div>
       <div className="mb-4">
@@ -208,12 +216,12 @@ const AchievementsTable = () => {
                           <span className="ml-1">
                             {column.isSorted ? (
                               column.isSortedDesc ? (
-                                <FaArrowDown />
+                                <ArrowDown />
                               ) : (
-                                <FaArrowUp />
+                                <ArrowUp />
                               )
                             ) : (
-                              <FaArrowDown className="text-gray-400" />
+                              <ArrowDown className="text-gray-400" />
                             )}
                           </span>
                         )}

@@ -18,7 +18,7 @@ export default function () {
             const response = await axios.get(`/api/heroSection/front/${slug}`, { withCredentials: true });
             const heroData = response.data;
             setHeroSection(heroData);
-    
+     
             // Simulate loading delay of 2 seconds
             setTimeout(() => {
               setIsLoading(false); // Set loading to false after 2 seconds
@@ -33,8 +33,8 @@ export default function () {
       }, [location]);
 
   return (
-    <div className="bg-[#333333] my-16 flex flex-col items-center justify-center text-center  p-6 ">
-      <p className="text-white text-base md:text-lg lg:text-xl xl:text-2xl ">
+    <div className="bg-[#333333] flex flex-col items-center  justify-center text-center  py-6 ">
+      <p className="text-white text-base md:text-lg lg:text-xl max-w-[85rem] xl:text-2xl ">
         {heroSection.subheading || "We create user-centric digital experiences"}
       </p>
     </div>

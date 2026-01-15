@@ -4,6 +4,7 @@ const fs = require('fs');
 
 // Update service detail by ID and ensure categoryId is considered
 const ServiceCategory = require('../model/serviceCategory'); // Import the ServiceCategory model
+const { default: mongoose } = require('mongoose');
 
 const getServiceDetailsByslug = async (req, res) => {
   const { slug } = req.params; // Get slug from query parameters
@@ -260,109 +261,176 @@ const insertSubSubServiceDetail = async (req, res) => {
 
 // Get all service details by category with pagination
 const getServiceDetailsByCategory = async (req, res) => {
+  try {
+    const { categoryId } = req.query;
+    const { page = 1 } = req.query;
+    const limit = 5;
+
+    // Validate categoryId
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      return res.status(400).json({ message: 'Invalid category ID format' });
+    }
+
+    // Create query conditions for both formats
+    const queryConditions = [
+      { 'category.$oid': categoryId, headingType: 'main' },
+      { category: new mongoose.Types.ObjectId(categoryId), headingType: 'main' }
+    ];
+
+    // Count total documents matching either condition
+    const count = await ServiceDetails.countDocuments({ $or: queryConditions });
+
+    // Find service details with pagination, trying both ID formats
+    const serviceDetails = await ServiceDetails.find({ $or: queryConditions })
+      .populate('category')
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    if (serviceDetails.length === 0) {
+      return res.status(200).json({
+        data: [],
+        total: 0,
+        currentPage: parseInt(page),
+        hasNextPage: false,
+        message: 'No service details found for this category'
+      });
+    }
+
+    res.status(200).json({
+      data: serviceDetails,
+      total: count,
+      currentPage: parseInt(page),
+      hasNextPage: count > page * limit
+    });
+  } catch (error) {
+    console.error("Error retrieving service details:", error);
+    let errorMessage = 'Error fetching service details';
+    
+    if (error.name === 'CastError') {
+      errorMessage = 'Invalid query parameter format';
+    }
+    
+    res.status(500).json({ 
+      message: errorMessage,
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+  // Get all service details by subcategory with pagination
+  const getServiceDetailsBySubcategory = async (req, res) => {
     try {
-      const { categoryId } = req.query; // Get categoryId from query parameters
-      const { page = 1 } = req.query; // Get the current page from query parameters
-      const limit = 5; // Number of records per page
+      const { subcategoryId, page = 1 } = req.query;
+      const limit = 5;
   
-      // Count the documents based on the category reference
-      const count = await ServiceDetails.countDocuments({ category: categoryId }); 
+      // Validate subcategoryId
+      if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
+        return res.status(400).json({ message: 'Invalid subcategory ID format' });
+      }
   
-      // Find service details by category reference with pagination
-      const serviceDetails = await ServiceDetails.find({ category: categoryId,headingType: 'main' })
-        .populate('category') // Populate category field if needed
+      // Create query conditions for both formats
+      const queryConditions = [
+        { 'subcategory.$oid': subcategoryId, headingType: 'sub' },
+        { subcategory: new mongoose.Types.ObjectId(subcategoryId), headingType: 'sub' }
+      ];
+  
+      // Count total documents matching either condition
+      const count = await ServiceDetails.countDocuments({ $or: queryConditions });
+  
+      // Find service details with pagination, trying both ID formats
+      const serviceDetails = await ServiceDetails.find({ $or: queryConditions })
+        .populate('category')
         .skip((page - 1) * limit)
         .limit(limit);
+  
+      if (serviceDetails.length === 0) {
+        return res.status(200).json({
+          data: [],
+          total: 0,
+          currentPage: parseInt(page),
+          hasNextPage: false,
+          message: 'No service details found for this subcategory'
+        });
+      }
   
       res.status(200).json({
         data: serviceDetails,
         total: count,
-        currentPage: page,
+        currentPage: parseInt(page),
         hasNextPage: count > page * limit
       });
     } catch (error) {
       console.error("Error retrieving service details:", error);
       let errorMessage = 'Error fetching service details';
+      
       if (error.name === 'CastError') {
         errorMessage = 'Invalid query parameter format';
       }
-      res.status(500).json({ message: errorMessage });
+      
+      res.status(500).json({ 
+        message: errorMessage,
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
   };
   
 
-  // Get all service details by subcategory with pagination
-const getServiceDetailsBySubcategory = async (req, res) => {
-  try {
-    const { subcategoryId } = req.query; // Get subcategoryId from query parameters
-    const { page = 1 } = req.query; // Get the current page from query parameters
-    const limit = 5; // Number of records per page
-
-    if (!subcategoryId) {
-      return res.status(400).json({ message: 'Subcategory ID is required' });
+  const getServiceDetailsBySubSubcategory = async (req, res) => {
+    try {
+      const { subsubcategoryId, page = 1 } = req.query;
+      const limit = 5;
+  
+      // Validate subsubcategoryId
+      if (!mongoose.Types.ObjectId.isValid(subsubcategoryId)) {
+        return res.status(400).json({ message: 'Invalid subsubcategory ID format' });
+      }
+  
+      // Create query conditions for both formats
+      const queryConditions = [
+        { 'subsubcategory.$oid': subsubcategoryId, headingType: 'subsub' },
+        { subsubcategory: new mongoose.Types.ObjectId(subsubcategoryId), headingType: 'subsub' }
+      ];
+  
+      // Count total documents matching either condition
+      const count = await ServiceDetails.countDocuments({ $or: queryConditions });
+  
+      // Find service details with pagination, trying both ID formats
+      const serviceDetails = await ServiceDetails.find({ $or: queryConditions })
+        .populate('category')
+        .skip((page - 1) * limit)
+        .limit(limit);
+  
+      if (serviceDetails.length === 0) {
+        return res.status(200).json({
+          data: [],
+          total: 0,
+          currentPage: parseInt(page),
+          hasNextPage: false,
+          message: 'No service details found for this subsubcategory'
+        });
+      }
+  
+      res.status(200).json({
+        data: serviceDetails,
+        total: count,
+        currentPage: parseInt(page),
+        hasNextPage: count > page * limit
+      });
+    } catch (error) {
+      console.error("Error retrieving service details:", error);
+      let errorMessage = 'Error fetching service details';
+      
+      if (error.name === 'CastError') {
+        errorMessage = 'Invalid query parameter format';
+      }
+      
+      res.status(500).json({ 
+        message: errorMessage,
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      });
     }
-
-    // Count the documents based on the subcategory reference
-    const count = await ServiceDetails.countDocuments({ subcategory: subcategoryId, headingType: 'sub' });
-
-    // Find service details by subcategory reference with pagination
-    const serviceDetails = await ServiceDetails.find({ subcategory: subcategoryId, headingType: 'sub' })
-      .populate('category') // Populate category field if needed
-      .skip((page - 1) * limit)
-      .limit(limit);
-
-    res.status(200).json({
-      data: serviceDetails,
-      total: count,
-      currentPage: page,
-      hasNextPage: count > page * limit
-    });
-  } catch (error) {
-    console.error("Error retrieving service details:", error);
-    let errorMessage = 'Error fetching service details';
-    if (error.name === 'CastError') {
-      errorMessage = 'Invalid query parameter format';
-    }
-    res.status(500).json({ message: errorMessage });
-  }
-};
-
-const getServiceDetailsBySubSubcategory = async (req, res) => {
-  try {
-    const { subsubcategoryId } = req.query; // Get subsubcategoryId from query parameters
-    const { page = 1 } = req.query; // Get the current page from query parameters
-    const limit = 5; // Number of records per page
-    console.log("hello")
-    console.log(subsubcategoryId)
-
-    if (!subsubcategoryId) { // Corrected from subcategoryId to subsubcategoryId
-      return res.status(400).json({ message: 'Subsubcategory ID is required' });
-    }
-
-    // Count the documents based on the subsubcategory reference
-    const count = await ServiceDetails.countDocuments({ subsubcategory: subsubcategoryId, headingType: 'subsub' });
-
-    // Find service details by subsubcategory reference with pagination
-    const serviceDetails = await ServiceDetails.find({ subsubcategory: subsubcategoryId, headingType: 'subsub' })
-      .populate('category') // Populate category field if needed
-      .skip((page - 1) * limit)
-      .limit(limit);
-
-    res.status(200).json({
-      data: serviceDetails,
-      total: count,
-      currentPage: page,
-      hasNextPage: count > page * limit
-    });
-  } catch (error) {
-    console.error("Error retrieving service details:", error);
-    let errorMessage = 'Error fetching service details';
-    if (error.name === 'CastError') {
-      errorMessage = 'Invalid query parameter format';
-    }
-    res.status(500).json({ message: errorMessage });
-  }
-};
+  };
+  
 
 // Update service detail by ID and ensure categoryId is considered
 const updateServiceDetail = async (req, res) => {
@@ -562,8 +630,7 @@ const updateSubServiceDetail = async (req, res) => {
     console.error("Error updating service detail:", error);
     res.status(500).json({ message: 'Server error', error });
   }
-};
-
+}; 
 
 
 // Update service detail by ID and ensure sub-subcategoryId is considered
@@ -626,18 +693,32 @@ const updateSubSubServiceDetail = async (req, res) => {
       updateFields.video = existingServiceDetail.video;
     }
 
-       // Parse questions from strings to objects if questions are provided
+      // Handle question parsing robustly
 if (updateFields.questions) {
-  // Ensure updateFields.questions is an array
-  if (Array.isArray(updateFields.questions)) {
-    updateFields.questions = updateFields.questions.map(question => JSON.parse(question));
-  } else {
-    // Handle case where it's not an array (perhaps log the error, or ignore)
-    console.error('Questions is not an array:', updateFields.questions);
+  try {
+    if (typeof updateFields.questions === 'string') {
+      // Single object as a string
+      updateFields.questions = [JSON.parse(updateFields.questions)];
+    } else if (Array.isArray(updateFields.questions)) {
+      // Array of strings or objects
+      updateFields.questions = updateFields.questions.map((item) =>
+        typeof item === 'string' ? JSON.parse(item) : item
+      );
+    } else if (typeof updateFields.questions === 'object') {
+      // Single object directly (not string)
+      updateFields.questions = [updateFields.questions];
+    } else {
+      console.warn("Unsupported format for questions:", updateFields.questions);
+      updateFields.questions = existingServiceDetail.questions;
+    }
+  } catch (err) {
+    console.error("Failed to parse questions:", err);
+    updateFields.questions = existingServiceDetail.questions;
   }
 } else {
   updateFields.questions = existingServiceDetail.questions;
 }
+
 
     // Handle alt text updates
     if (!updateFields.alt) {

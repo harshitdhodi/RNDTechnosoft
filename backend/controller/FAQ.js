@@ -26,18 +26,18 @@ const insertFAQ = async (req, res) => {
 
 const getFAQ = async (req, res) => {
   try {
-    const { page = 1 } = req.query;
-    const limit = 5;
-    const count = await FAQ.countDocuments();
+    // const { page = 1 } = req.query;
+    // const limit = 20;
+    // const count = await FAQ.countDocuments();
     const faq = await FAQ.find()
-      .skip((page - 1) * limit) // Skip records for previous pages
-      .limit(limit);
+      // .skip((page - 1) * limit) // Skip records for previous pages
+      // .limit(limit);
 
     res.status(200).json({
       data: faq,
-      total: count,
-      currentPage: page,
-      hasNextPage: count > page * limit
+      // total: count,
+      // currentPage: page,
+      // hasNextPage: count > page * limit
     });
   } catch (error) {
 
@@ -140,6 +140,7 @@ const getFAQBySlug = async (req, res) => {
     if (slug) {
       // 1. If slug matches serviceparentCategoryId or industryparentCategoryId, return FAQs where both subCategoryId and subSubCategoryId are empty
       const faqsWithParentMatch = await FAQ.find({
+        status: "active",
         $or: [
           { serviceparentCategoryId: slug, servicesubCategoryId: '', servicesubSubCategoryId: '' },
           { industryparentCategoryId: slug, industrysubCategoryId: '', industrysubSubCategoryId: '' }
@@ -152,6 +153,7 @@ const getFAQBySlug = async (req, res) => {
 
       // 2. If slug matches servicesubCategoryId or industrysubCategoryId, return FAQs where subSubCategoryId is empty
       const faqsWithSubCategoryMatch = await FAQ.find({
+        status: "active",
         $or: [
           { servicesubCategoryId: slug, servicesubSubCategoryId: '' },
           { industrysubCategoryId: slug, industrysubSubCategoryId: '' }
@@ -164,6 +166,7 @@ const getFAQBySlug = async (req, res) => {
 
       // 3. If slug matches servicesubSubCategoryId or industrysubSubCategoryId, return all FAQs where both serviceparentCategoryId and servicesubCategoryId are not empty
       const faqsWithSubSubCategoryMatch = await FAQ.find({
+        status: "active",
         $or: [
           { servicesubSubCategoryId: slug, serviceparentCategoryId: { $ne: '' }, servicesubCategoryId: { $ne: '' } },
           { industrysubSubCategoryId: slug, industryparentCategoryId: { $ne: '' }, industrysubCategoryId: { $ne: '' } }
@@ -175,12 +178,13 @@ const getFAQBySlug = async (req, res) => {
       }
 
       // If no matching FAQs are found, return a message
-      return res.status(404).json({ message: 'No FAQs found matching the given slug.' });
+      return res.status(404).json({ message: 'No active FAQs found matching the given slug.' });
 
     } else {
-      // If no slug is provided, return FAQs where all three fields are empty
+      // If no slug is provided, return FAQs where all three fields are empty and status is active
       const faqsWithAllEmptyFields = await FAQ.find({
-        serviceparentCategoryId:'',
+        status: "active",
+        serviceparentCategoryId: '',
         servicesubCategoryId: '',
         servicesubSubCategoryId: '',
         industryparentCategoryId: '',
@@ -195,10 +199,6 @@ const getFAQBySlug = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
-
-
-
 
 
 

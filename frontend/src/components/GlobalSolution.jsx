@@ -1,53 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
-const GlobalSolution = () => {
-  const [globalSolution, setGlobalSolution] = useState(null);
+// Utility to extract inner HTML of <h2> tag and preserve styling
+const parseHeadingHtml = (html) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  const h2 = div.querySelector("h2");
+  if (h2) {
+    // Return the inner HTML of the <h2> tag (includes <span>, <strong>, etc.)
+    return h2.innerHTML;
+  }
+  // Fallback: return plain text if no <h2> tag is found
+  return div.textContent || div.innerText || "";
+};
 
-  useEffect(() => {
-    const fetchGlobalSolution = async () => {
-      try {
-        const response = await axios.get(`/api/content/types/globalsolution`, { withCredentials: true });
-        const solutionData = response.data[0];
+const GlobalSolution = ({ globalData }) => {
+  if (!globalData || globalData.length === 0) return null;
 
-        if (solutionData) {
-          const subsections = solutionData.subsections;
+  const globalSolution = globalData[0]; // Assuming there's only one global solution entry
 
-          // Fetch images for each language in the subsections
-          const languagesWithImages = await Promise.all(
-            subsections.map(async (language) => {
-              try {
-                const imageResponse = await axios.get(
-                  `/api/image/download/${language.photo}`,
-                  { responseType: 'blob' }
-                );
-                const imageUrl = URL.createObjectURL(imageResponse.data);
-                return { ...language, imageUrl };
-              } catch (error) {
-                console.error("Error fetching image:", error);
-                return { ...language, imageUrl: null };
-              }
-            })
-          );
-
-          // Set the state with the fetched and processed data
-          setGlobalSolution({
-            ...solutionData,
-            subsections: languagesWithImages
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching global solution data:", error);
-      }
-    };
-
-    fetchGlobalSolution();
-  }, []);
-
-  if (!globalSolution) return null; 
+  // Extract inner HTML of the heading (e.g., <span> and <strong> tags)
+  const headingContent = parseHeadingHtml(globalSolution.heading);
 
   return (
-    <section className="relative bg-[#333] overflow-hidden mt-5 ">
+    <section className="relative bg-[#333] overflow-hidden pb-16 mt-5">
       {/* Shape Divider */}
       <div className="absolute inset-x-0 top-0 py-0">
         <svg
@@ -65,24 +40,26 @@ const GlobalSolution = () => {
 
       {/* Content Section */}
       <div className="relative sm:pt-32 pt-24">
-        <div className="container mx-auto py-12 sm:px-4 px-2 w-full sm:w-[67%]">
-          <div className="text-center">
-            <h2 className="sm:text-5xl text-3xl font-semibold mb-4 font-serif text-white">
-              <span dangerouslySetInnerHTML={{ __html: globalSolution.heading }} />
-            </h2>
-            <p className="sm:text-lg text-base mb-8 text-white font-inter sm:pt-10 pt-7">
+        <div className="container mx-auto  sm:px-4 px-2 w-full sm:w-[67%]">
+          <div className="text-center xl:mt-8">
+            <h2
+              className="sm:text-5xl text-3xl font-semibold mb-4 font-serif text-white ql-align-center"
+              dangerouslySetInnerHTML={{ __html: headingContent }}
+            />
+            <p className="sm:text-lg text-base mb-8 text-white font-inter  pt-7">
               <span dangerouslySetInnerHTML={{ __html: globalSolution.description }} />
             </p>
           </div>
 
-          <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:mt-32 mt-24">
-            {globalSolution.subsections.map((language, index) => (
+          <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 sm:mt-16 mt-24">
+            {globalSolution.subsections?.map((language, index) => (
               <div key={index} className="text-center space-y-6">
-                {language.imageUrl ? (
+                {language.photo ? (
                   <img
                     loading="lazy"
+                    fetchPriority="high"
                     decoding="async"
-                    src={language.imageUrl}
+                    src={language.photo}
                     alt={language.photoAlt}
                     title={language.imgtitle}
                     className="md:w-28 md:h-28 w-24 h-24 mx-auto mb-2"

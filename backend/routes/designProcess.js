@@ -18,7 +18,7 @@ router.post('/insertSubDesignProcess', requireAuth,  uploadImage, designProcessC
 router.post('/insertSubSubDesignProcess', requireAuth,  uploadImage, designProcessController.insertSubSubDesignProcess);
 
 // Route to get all design processes with pagination
-router.get('/category', requireAuth, designProcessController.getDesignProcesses);
+router.get('/category',requireAuth,  designProcessController.getDesignProcesses);
 
 // Route to get all design processes with pagination
 router.get('/sub/category', requireAuth, designProcessController.getSubDesignProcesses);
@@ -33,7 +33,7 @@ router.put('/updateDesignProcess', requireAuth, uploadImage, designProcessContro
 router.delete('/deleteDesignProcess', requireAuth, designProcessController.deleteDesignProcess); // ID is passed as a query parameter
 
 // Route to get a design process by ID
-router.get('/getDesignProcessById', requireAuth, designProcessController.getDesignProcessById);
+router.get('/getDesignProcessById',  designProcessController.getDesignProcessById);
 
 // Route to count total design processes
 router.get('/countDesignProcesses', requireAuth, designProcessController.countDesignProcesses);

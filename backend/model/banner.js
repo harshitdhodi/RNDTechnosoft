@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const BannerSchema = new Schema({
   section: { type: String},
   title: { type: String},
-  photo: [{ type: String}],
+  photo: [{ type: String}], 
   alt: [{ type: String, default: '' }],
   imgtitle:[{ type: String, default: '' }],
   details: { type: String},

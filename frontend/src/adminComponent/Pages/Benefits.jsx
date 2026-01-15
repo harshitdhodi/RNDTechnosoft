@@ -1,6 +1,11 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { Edit,  //Edit
+  Trash2,  //Trash2
+  ArrowUp,  //ArrowUp
+  ArrowDown,  //ArrowDown
+  Plus  //Plus
+ } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast, ToastContainer } from "react-toastify";
@@ -69,10 +74,10 @@ const BenefitsTable = () => {
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/benefits/editBenefits/${row.original._id}`}><FaEdit /></Link>
+              <Link to={`/benefits/editBenefits/${row.original._id}`}><Edit /></Link>
             </button>
             <button className="text-red-500 hover:text-red-700 transition" onClick={() => deleteBenefit(row.original._id)}>
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -132,7 +137,7 @@ const BenefitsTable = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Benefits</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300 font-serif">
-          <Link to="/benefits/createBenefits"><FaPlus size={15} /></Link>
+          <Link to="/benefits/createBenefits"><Plus size={15} /></Link>
         </button>
       </div>
       <div className="mb-4">
@@ -165,12 +170,12 @@ const BenefitsTable = () => {
                           <span className="ml-1">
                             {column.isSorted ? (
                               column.isSortedDesc ? (
-                                <FaArrowDown />
+                                <ArrowDown />
                               ) : (
-                                <FaArrowUp />
+                                <ArrowUp />
                               )
                             ) : (
-                              <FaArrowDown className="text-gray-400" />
+                              <ArrowDown className="text-gray-400" />
                             )}
                           </span>
                         )}

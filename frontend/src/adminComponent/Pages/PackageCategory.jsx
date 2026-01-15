@@ -1,17 +1,21 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus } from "react-icons/fa";
+import { Edit,  //Edit
+ Trash2,  //Trash2
+ ArrowUp,  //ArrowUp
+ ArrowDown,  //ArrowDown
+ Plus  //Plus
+} from 'lucide-react';
 import { BsArrowReturnRight } from "react-icons/bs";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UseAnimations from "react-useanimations";
 import loading from "react-useanimations/lib/loading";
 
-
-const CategoryTable = () => {
+const PackageCategoryTable = () => {
   const [categories, setCategories] = useState([]);
   const [loadings, setLoading] = useState(true);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const columns = useMemo(
     () => [
@@ -31,19 +35,30 @@ const CategoryTable = () => {
         ),
       },
       {
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ row }) => (
+          <input
+            type="checkbox"
+            checked={row.original.status === "active"}
+            onChange={() => handleStatusChange(row.original.slug, row.original.status)}
+          />
+        ),
+      },
+      {
         Header: "Options",
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition">
               <Link to={`/PackageCategory/editPackageCategory/${row.original.slug}`}>
-                <FaEdit />
+                <Edit />
               </Link>
             </button>
             <button
               className="text-red-500 hover:text-red-700 transition"
               onClick={() => deleteCategory({ id: row.original.slug })}
             >
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -101,6 +116,26 @@ const CategoryTable = () => {
     }
   };
 
+  const handleStatusChange = async (slug, currentStatus, categoryId, subCategoryId) => {
+    const newStatus = currentStatus === "active" ? "inactive" : "active";
+    let url = '';
+
+    if (categoryId && subCategoryId) {
+      url = `/api/packages/updatesubsubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${slug}`;
+    } else if (categoryId) {
+      url = `/api/packages/updateSubCategory?categoryId=${categoryId}&subCategoryId=${slug}`;
+    } else {
+      url = `/api/packages/updateCategory?categoryId=${slug}`;
+    }
+
+    try {
+      await axios.put(url, { status: newStatus }, { withCredentials: true });
+      fetchCategories();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -108,15 +143,15 @@ const CategoryTable = () => {
   return (
     <div className="p-4 overflow-x-auto">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold  text-gray-700 font-serif uppercase">Categories</h1>
+        <h1 className="text-xl font-bold text-gray-700 font-serif uppercase">Package Categories</h1>
         <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
-          <Link to="/PackageCategory/CreatePackageCategory"><FaPlus size={15} /></Link>
+          <Link to="/PackageCategory/CreatePackageCategory"><Plus size={15} /></Link>
         </button>
       </div>
       {loadings ? (
         <div className="flex justify-center"><UseAnimations animation={loading} size={56} /></div>
       ) : (
-        <>{categories.length == 0 ? <div className="flex justify-center items-center"><iframe className="w-96 h-96" src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"></iframe></div>
+        <>{categories.length === 0 ? <div className="flex justify-center items-center"><iframe className="w-96 h-96" src="https://lottie.host/embed/1ce6d411-765d-4361-93ca-55d98fefb13b/AonqR3e5vB.json"></iframe></div>
           : <table className="w-full mt-4 border-collapse" {...getTableProps()}>
             <thead className="bg-slate-700 hover:bg-slate-800 text-white">
               {headerGroups.map((headerGroup) => (
@@ -126,18 +161,18 @@ const CategoryTable = () => {
                       {...column.getHeaderProps(column.getSortByToggleProps())}
                       className="py-2 px-4 border-b border-gray-300 cursor-pointer uppercase font-serif"
                     >
-                      <div className="flex items-center gap-2 ">
+                      <div className="flex items-center gap-2">
                         <span>{column.render("Header")}</span>
                         {column.canSort && (
                           <span className="ml-1">
                             {column.isSorted ? (
                               column.isSortedDesc ? (
-                                <FaArrowDown />
+                                <ArrowDown />
                               ) : (
-                                <FaArrowUp />
+                                <ArrowUp />
                               )
                             ) : (
-                              <FaArrowDown className="text-gray-400" />
+                              <ArrowDown className="text-gray-400" />
                             )}
                           </span>
                         )}
@@ -152,23 +187,30 @@ const CategoryTable = () => {
                 prepareRow(row);
                 return (
                   <React.Fragment key={row.id}>
-                    <tr {...row.getRowProps()} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
+                    <tr {...row.getRowProps()} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
                       {row.cells.map((cell) => (
-                        <td {...cell.getCellProps()} className="py-2 px-4 ">
+                        <td {...cell.getCellProps()} className="py-2 px-4">
                           {cell.render("Cell")}
                         </td>
                       ))}
                     </tr>
                     {row.original.subCategories && row.original.subCategories.map((subcategory, subIndex) => (
                       <React.Fragment key={subIndex}>
-                        <tr className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
+                        <tr className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
                           <td></td>
                           <td className="py-2 px-8 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/PackageCategory/editPackageCategory/${row.original.slug}/${subcategory.slug}`)}><BsArrowReturnRight />{subcategory.photo && <img src={`/api/logo/download/${subcategory.photo}`} alt={subcategory.alt} className="w-6 h-6" />}<span>{subcategory.category}</span></td>
+                          <td className="py-2 px-4">
+                            <input
+                              type="checkbox"
+                              checked={subcategory.status === "active"}
+                              onChange={() => handleStatusChange(subcategory.slug, subcategory.status, row.original.slug)}
+                            />
+                          </td>
                           <td className="py-2 px-4">
                             <div className="flex gap-4">
                               <button className="text-blue-500 hover:text-blue-700 transition">
                                 <Link to={`/PackageCategory/editPackageCategory/${row.original.slug}/${subcategory.slug}`}>
-                                  <FaEdit />
+                                  <Edit />
                                 </Link>
                               </button>
                               <button
@@ -178,20 +220,27 @@ const CategoryTable = () => {
                                   subCategoryId: subcategory.slug
                                 })}
                               >
-                                <FaTrashAlt />
+                                <Trash2 />
                               </button>
                             </div>
                           </td>
                         </tr>
                         {subcategory.subSubCategory && subcategory.subSubCategory.map((subSubcategory, subSubIndex) => (
-                          <tr key={subSubIndex} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150 ">
+                          <tr key={subSubIndex} className="border-b border-gray-300 hover:bg-gray-100 transition duration-150">
                             <td></td>
-                            <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/PackageCategory/editPackageCategory/${row.original.slug}/${subSubcategory.slug}`)} ><BsArrowReturnRight />{subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}<span>{subSubcategory.category}</span></td>
+                            <td className="py-2 px-12 flex gap-2 hover:text-blue-500 cursor-pointer" onClick={() => navigate(`/PackageCategory/editPackageCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`)}><BsArrowReturnRight />{subSubcategory.photo && <img alt={subSubcategory.alt} src={`/api/logo/download/${subSubcategory.photo}`} className="w-6 h-6" />}<span>{subSubcategory.category}</span></td>
+                            <td className="py-2 px-4">
+                              <input
+                                type="checkbox"
+                                checked={subSubcategory.status === "active"}
+                                onChange={() => handleStatusChange(subSubcategory.slug, subSubcategory.status, row.original.slug, subcategory.slug)}
+                              />
+                            </td>
                             <td className="py-2 px-4">
                               <div className="flex gap-4">
                                 <button className="text-blue-500 hover:text-blue-700 transition">
                                   <Link to={`/PackageCategory/editPackageCategory/${row.original.slug}/${subcategory.slug}/${subSubcategory.slug}`}>
-                                    <FaEdit />
+                                    <Edit />
                                   </Link>
                                 </button>
                                 <button
@@ -202,7 +251,7 @@ const CategoryTable = () => {
                                     subSubCategoryId: subSubcategory.slug
                                   })}
                                 >
-                                  <FaTrashAlt />
+                                  <Trash2 />
                                 </button>
                               </div>
                             </td>
@@ -223,4 +272,4 @@ const CategoryTable = () => {
   );
 };
 
-export default CategoryTable;
+export default PackageCategoryTable;

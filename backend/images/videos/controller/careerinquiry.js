@@ -20,6 +20,9 @@ exports.CreateCareerInquiry = async (req, res) => {
       resume: req.files['resume'] ? req.files['resume'][0].filename : null
     });
 
+    const jobtitle = req.body.jobTitle;
+    console.log("job title", jobtitle);
+
     await newInquiry.save();
 
     // HTML Email Template
@@ -85,7 +88,7 @@ exports.CreateCareerInquiry = async (req, res) => {
             <p>${newInquiry.message}</p>
         </div>
       </body>
-      </html>
+      </html> 
       `;
 
     // Resume file from Multer
@@ -94,7 +97,8 @@ exports.CreateCareerInquiry = async (req, res) => {
     const mailOptions = {
       from: newInquiry.email,
       to: process.env.EMAIL_USER,
-      subject: 'New Career Inquiry',
+        cc: process.env.OWNER_EMAIL,
+      subject: `New ${jobtitle} Inquiry`,
       html: emailHTML,
       attachments: [
         {

@@ -19,7 +19,7 @@ const { uploadMedia } = require('../middleware/uploadMedia');
 router.post('/content/:id/questions', addQuestions);
 
 router.post('/:contentType', requireAuth, uploadMedia, insertContent); // Insert new content
-router.get('/', requireAuth, getAllContent); // Get all contents
+router.get('/',  getAllContent); // Get all contents
 router.get('/getToolsByServiceSlug', getToolsByServiceSlug); 
 router.put('/toggleStatus', requireAuth, toggleStatus);
 router.get('/type/:contentType', requireAuth, getContentTypeByType); // Get contents by content type

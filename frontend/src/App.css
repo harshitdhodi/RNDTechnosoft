@@ -1,3 +1,6 @@
+*{
+  font-family: sans-serif !important;
+}
 .App {
   text-align: center;
 }
@@ -6,6 +9,23 @@
   height: 40vmin;
   pointer-events: none;
 }
+.hidden-content {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+}
+
+a:focus {
+  outline: none !important;
+}
+.visible-content {
+  opacity: 1;
+  visibility: visible;
+}
+/* @font-face {
+  font-family: 'Poppins';
+  font-display: swap;
+} */
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -24,10 +44,6 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,4 +52,11 @@
     transform: rotate(360deg);
   }
 }
+
+.custom-quill .ql-container {
+  min-height: 200px; /* Set desired minimum height */
+  max-height: 400px; /* Optional, for scrollability */
+  overflow-y: auto;  /* Enables scrolling if max-height is reached */
+}
+
 

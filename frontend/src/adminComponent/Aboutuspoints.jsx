@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTable, useSortBy } from "react-table";
-import { FaEdit, FaTrashAlt, FaArrowUp, FaArrowDown, FaPlus, FaCheck, FaTimes } from "react-icons/fa";
+import { Pencil, Trash2, ArrowUp, ArrowDown, Plus, Check, X } from "lucide-react";
+
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import UseAnimations from "react-useanimations";
@@ -51,7 +52,7 @@ const AboutUsPoints = () => {
       {
         Header: "Status",
         accessor: "status",
-        Cell: ({ value }) => value === "active" ? <FaCheck className="text-green-500" /> : <FaTimes className="text-red-500" />,
+        Cell: ({ value }) => value === "active" ? <Check className="text-green-500" /> : <X className="text-red-500" />,
         disableSortBy: true,
       },
       {
@@ -59,10 +60,10 @@ const AboutUsPoints = () => {
         Cell: ({ row }) => (
           <div className="flex gap-4">
             <button className="text-blue-500 hover:text-blue-700 transition">
-              <Link to={`/pageContent/editPoints/${row.original._id}`}><FaEdit /></Link>
+              <Link to={`/pageContent/editPoints/${row.original._id}`}><Pencil /></Link>
             </button>
             <button className="text-red-500 hover:text-red-700 transition" onClick={() => deletePoint(row.original._id)}>
-              <FaTrashAlt />
+              <Trash2 />
             </button>
           </div>
         ),
@@ -122,7 +123,7 @@ const AboutUsPoints = () => {
         <div className="flex gap-2 md:flex-row flex-col md:mt-0 mt-4">
           <div className="flex items-center gap-2">
             <button className="px-4 py-2 bg-slate-700 text-white rounded hover:bg-slate-900 transition duration-300">
-              <Link to="/pageContent/createPoints"><FaPlus size={15} /></Link>
+              <Link to="/pageContent/createPoints"><Plus size={15} /></Link>
             </button>
           </div>
 
@@ -147,7 +148,7 @@ const AboutUsPoints = () => {
           <thead className="bg-slate-700 hover:bg-slate-800 text-white">
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
+                {headerGroup.headers.map((column) => ( 
                   <th
                     {...column.getHeaderProps(column.getSortByToggleProps())}
                     className="py-2 px-4 border-b border-gray-300 cursor-pointer uppercase font-serif"
@@ -158,12 +159,12 @@ const AboutUsPoints = () => {
                         <span className="ml-1">
                           {column.isSorted ? (
                             column.isSortedDesc ? (
-                              <FaArrowDown />
+                              <ArrowDown />
                             ) : (
-                              <FaArrowUp />
+                              <ArrowUp />
                             )
                           ) : (
-                            <FaArrowDown className="text-gray-400" />
+                            <ArrowDown className="text-gray-400" />
                           )}
                         </span>
                       )}

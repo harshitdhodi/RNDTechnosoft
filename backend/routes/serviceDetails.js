@@ -25,12 +25,12 @@ router.post('/insertSubServiceDetail', requireAuth, uploadMedia, insertSubServic
 router.post('/insertSubSubServiceDetail', requireAuth, uploadMedia, insertSubSubServiceDetail);
 
 
-router.get('/getServiceDetails', requireAuth, getServiceDetailsByCategory);
+router.get('/getServiceDetails',requireAuth,  getServiceDetailsByCategory);
 router.get('/getSubServiceDetails', requireAuth, getServiceDetailsBySubcategory);
 router.get('/getSubSubServiceDetails', requireAuth, getServiceDetailsBySubSubcategory);
 
-router.put('/updateServiceDetail', requireAuth, uploadMedia, updateServiceDetail);
-router.put('/updateSubServiceDetail', requireAuth, uploadMedia, updateSubServiceDetail);
+router.put('/updateServiceDetail',  uploadMedia, updateServiceDetail);
+router.put('/updateSubServiceDetail',  uploadMedia, updateSubServiceDetail);
 router.put('/updateSubSubServiceDetail', requireAuth, uploadMedia, updateSubSubServiceDetail);
 
 router.delete('/deleteServiceDetail', requireAuth, deleteServiceDetail);

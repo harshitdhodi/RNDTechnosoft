@@ -196,12 +196,11 @@ console.log(id)
 
 const getAllPackages = async (req, res) => {
   try {
-    const { page = 1, packageCategoryId, serviceCategoryId } = req.query; // Get category filters from query
-    const limit = 20;
+    const { packageCategoryId, serviceCategoryId } = req.query; // Get category filters from query
 
     // Build query object dynamically based on provided filters
     let filter = {};
-    
+
     if (packageCategoryId) {
       // Match by category slug instead of _id
       filter.categories = packageCategoryId; // Assuming `categories` is a slug, not ObjectId
@@ -212,42 +211,39 @@ const getAllPackages = async (req, res) => {
       filter.servicecategories = serviceCategoryId; // Assuming `servicecategories` is a slug, not ObjectId
     }
 
-    const count = await Package.countDocuments(filter); // Count based on the filter
-
-    // Find packages based on filters with pagination
-    const packages = await Package.find(filter)
-      .skip((page - 1) * limit)
-      .limit(limit);
+    // Find all packages based on filters (No pagination)
+    const packages = await Package.find(filter);
 
     // Map over each package to find and append both category and service category names
-    const packagesWithCategoryNames = await Promise.all(packages.map(async (pkg) => {
-      // Fetch the corresponding package category using the slug
-      const packageCategory = await PackageCategory.findOne({ slug: pkg.categories });
-      const packageCategoryName = packageCategory ? packageCategory.category : 'Uncategorized';
+    const packagesWithCategoryNames = await Promise.all(
+      packages.map(async (pkg) => {
+        // Fetch the corresponding package category using the slug
+        const packageCategory = await PackageCategory.findOne({ slug: pkg.categories });
+        const packageCategoryName = packageCategory ? packageCategory.category : 'Uncategorized';
 
-      // Fetch the corresponding service category using the slug
-      const serviceCategory = await ServiceCategory.findOne({ slug: pkg.servicecategories });
-      const serviceCategoryName = serviceCategory ? serviceCategory.category : 'Uncategorized';
+        // Fetch the corresponding service category using the slug
+        const serviceCategory = await ServiceCategory.findOne({ slug: pkg.servicecategories });
+        const serviceCategoryName = serviceCategory ? serviceCategory.category : 'Uncategorized';
 
-      // Return package with both category and service category names
-      return {
-        ...pkg.toJSON(),
-        packageCategoryName,
-        serviceCategoryName
-      };
-    }));
+        // Return package with both category and service category names
+        return {
+          ...pkg.toJSON(),
+          packageCategoryName,
+          serviceCategoryName,
+        };
+      })
+    );
 
     res.status(200).json({
       data: packagesWithCategoryNames,
-      total: count,
-      currentPage: parseInt(page),
-      hasNextPage: count > page * limit
+      total: packages.length,
     });
   } catch (error) {
     console.error("Error retrieving packages:", error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 
 const getAllnormalPackagesSlug = async (req, res) => {
@@ -451,6 +447,7 @@ const getAllnormalPackagesSlug = async (req, res) => {
   }
 };
 
+
 const getAllhourlyPackagesSlug = async (req, res) => {
   try {
     const { slug } = req.params;
@@ -652,6 +649,7 @@ const getAllhourlyPackagesSlug = async (req, res) => {
   }
 };
 
+
 const getStandardPackage = async (req, res) => {
   try {
     // Helper function to format package data
@@ -707,8 +705,6 @@ const getStandardPackage = async (req, res) => {
     });
   }
 };
-
-
 
 
 const getPackagesBySlug = async (req, res) => {
@@ -787,10 +783,7 @@ const getPackagesBySlug = async (req, res) => {
   }
 };
 
-
-
-
-
+  
 const getAllPackagesFront = async (req, res) => {
   try {
     // Fetch all categories
@@ -848,7 +841,67 @@ const getAllPackagesFront = async (req, res) => {
   }
 };
 
+const getPackagesByCategoryOrSubcategory = async (req, res) => {
+  try {
+    const { slug } = req.query;
 
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        message: 'Slug is required'
+      });
+    }
+
+    // Find packages that belong to the given category or subcategory
+    const packages = await Package.find({
+      $or: [
+        { categories: slug },
+        { subcategories: slug }
+      ]
+    });
+
+    if (!packages || packages.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: 'No packages found for the given category or subcategory'
+      });
+    }
+
+    // Format the packages
+    const formattedPackages = packages.map(pkg => ({
+      _id: pkg._id,
+      title: pkg.title,
+      status: pkg.status,
+      categories: pkg.categories,
+      subcategories: pkg.subcategories,
+      subSubcategories: pkg.subSubcategories,
+      servicecategories: pkg.servicecategories,
+      servicesubcategories: pkg.servicesubcategories,
+      servicesubSubcategories: pkg.servicesubSubcategories,
+      description: pkg.description,
+      price: pkg.price,
+      whatIsTheir: pkg.whatIsTheir,
+      whatIsNotTheir: pkg.whatIsNotTheir,
+      slug: pkg.slug,
+      createdAt: pkg.createdAt,
+      updatedAt: pkg.updatedAt
+    }));
+
+    return res.status(200).json({
+      success: true,
+      count: formattedPackages.length,
+      packages: formattedPackages
+    });
+
+  } catch (error) {
+    console.error('Error retrieving packages by category or subcategory:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
 
 
 
@@ -991,5 +1044,6 @@ module.exports = {
   getCategoryPackages,
   getSubcategoryPackages,
   getSubSubcategoryPackages,
+  getPackagesByCategoryOrSubcategory,
   getAllnormalPackagesSlug,getAllhourlyPackagesSlug,getAllPackagesFront,getCategoryHeadingBySlug,getPackagesBySlug
 };

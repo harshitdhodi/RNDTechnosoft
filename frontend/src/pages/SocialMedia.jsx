@@ -18,7 +18,7 @@ export default function SocialMedia() {
       <HeroSection />
       <LatestProduct/>
       <CraftRight />
-      <CraftLeft/>
+      {/* <CraftLeft/> */}
       <IndustryServiceSlider/>
       <Companies/>
       <Tagline/>

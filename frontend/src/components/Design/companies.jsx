@@ -9,12 +9,11 @@ const Companies = ({ serviceSlug }) => {
     const fetchData = async () => {
       try {
         const photoType = "company"; 
-
         const response = await axios.get(
           `/api/serviceImages/front/${serviceSlug}/${photoType}`,
           { withCredentials: true }
         );
-        
+        console.log("Company data:", response.data); // Debugging line
         // Check if the response has data
         if (response.data) {
           setCompanies(response.data);
@@ -45,14 +44,14 @@ const Companies = ({ serviceSlug }) => {
   }
 
   return (
-    <div className="mb-10">
-      <div className="py-6 lg:pt-20 pt-5 px-4 mt-20 ">
+    <div className="my-16">
+      <div className=" px-4 ">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl text-black font-medium text-center font-serif">
           Companies using this{" "}
           <span className="text-[#f3ca0d]">service</span>
         </h1>
       </div>
-      <div className="py-6 mx-4 sm:mx-8 lg:mx-16 mt-8">
+      <div className="px-6  sm:mx-8 lg:my-5">
         <div className="flex flex-wrap gap-8 justify-center items-center">
           {companies.map((company, index) => (
             <img

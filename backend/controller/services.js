@@ -5,6 +5,7 @@ const XLSX = require('xlsx');
 const fs = require('fs');
 const path = require('path');
 const ImportedFile = require("../model/importedFiles");
+const serviceCategory = require("../model/serviceCategory");
 
 const insertService = async (req, res) => {
   try {
@@ -246,7 +247,8 @@ const getSubSubcategoryServices = async (req, res) => {
 
 const countServices = async (req, res) => {
   try {
-    const count = await Service.countDocuments();
+     const count = await serviceCategory.countDocuments({status: 'active'}); // Count active service categoriesa
+console.log(count)
     res.status(200).json({ total: count });
   } catch (error) {
     console.error(error);

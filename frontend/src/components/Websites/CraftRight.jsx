@@ -67,16 +67,16 @@ export default function CraftRight() {
   const faqData = service.questions || [];
 
   return (
-    <div className="flex flex-col items-center mt-20">
+    <div className="flex xl:flex-col items-center mt-20">
       <div className="flex flex-col lg:flex-row gap-10 px-5 lg:px-28 w-full">
         {/* Text Content for Large Screens */}
-        <div className="w-full lg:w-1/2 px-4 flex flex-col justify-center order-1">
+        <div className="w-full lg:w-[60%] px-4 flex flex-col justify-center order-1">
           {/* Render the heading only if service and heading are available */}
-          <div className="max-w-full overflow-hidden">
+          <div className="max-w-full  overflow-hidden">
             {service.heading ? (
               <div
                 dangerouslySetInnerHTML={{ __html: service.heading }}
-                className="text-4xl font-bold pb-6 break-words"
+                className="text-4xl font-bold pb-4 break-words"
               />
             ) : (
               <h2 className="text-4xl font-bold pb-6">Default Heading</h2>
@@ -121,8 +121,8 @@ export default function CraftRight() {
         </div>
 
         {/* Video or Photo Content */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center order-2">
-          <div className="relative rounded-2xl border-[3px] m-10 overflow-hidden group transition-all duration-300">
+        <div className="w-full lg:w-[40%] flex items-center  justify-center order-2">
+          <div className="relative rounded-2xl border-[3px] overflow-hidden group transition-all duration-300 mx-4 my-4">
             {videoUrl ? (
               <video 
                 src={videoUrl}
@@ -130,14 +130,14 @@ export default function CraftRight() {
                 autoPlay
                 muted
                 loop
-                className="w-[450px] h-[450px] rounded-2xl transition-all duration-300"
+                className="sm:w-[450px] sm:h-[450px] rounded-2xl transition-all duration-300"
               />
             ) : (
               service.photo && service.photo.length > 0 && (
                 <img
                   src={`/api/image/download/${service.photo[0]}`} // Display the first photo if video isn't available
                   alt="Service Image"
-                  className="w-[450px] h-[450px] object-cover rounded-2xl"
+                  className="w-[750px] h-[450px] sm:object-contain lg:object-fill md:object-fill md:h-auto rounded-2xl"
                 />
               )
             )}

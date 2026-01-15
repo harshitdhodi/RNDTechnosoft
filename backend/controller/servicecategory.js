@@ -290,71 +290,66 @@ const updateCategory = async (req, res) => {
 };
 
 const updateSubCategory = async (req, res) => {
+  // Get IDs from query params
   const { categoryId, subCategoryId } = req.query;
 
-  const {
-    category,
-    tag,
-    description,
-    alt,
-    status,
-    imgtitle,
-    slug,
-    metatitle,
-    metadescription,
-    metakeywords,
-    metacanonical,
-    metalanguage,
-    metaschema,
-    otherMeta,
-    url,
-    priority,
-    changeFreq,
-  } = req.body;
+  // Prepare update object with only provided fields
+  const updateData = {};
 
-  let photo = req.body.photo;
+  // List of fields to check from req.body
+  const fields = [
+    'category',
+    'tag',
+    'description',
+    'status',
+    'alt',
+    'imgtitle',
+    'slug',
+    'metatitle',
+    'metadescription',
+    'metakeywords',
+    'metacanonical',
+    'metalanguage',
+    'metaschema',
+    'otherMeta',
+    'url',
+    'priority',
+    'changeFreq',
+  ];
 
+  // Add only defined fields from req.body to updateData
+  fields.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      updateData[`subCategories.$.${field}`] = req.body[field];
+    }
+  });
+
+  // Add photo if uploaded
   if (req.file) {
-    photo = req.file.filename; // Use uploaded file's filename
+    updateData['subCategories.$.photo'] = req.file.filename;
   }
 
   try {
-    const categoryDoc = await ServiceCategory.findOne({ slug: categoryId });
-    if (!categoryDoc) {
-      return res.status(404).json({ message: "Category not found" });
+    // Validate that at least one field is provided to update
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({ message: 'No valid fields provided for update' });
     }
 
-    const subCategory = categoryDoc.subCategories.find(sub => sub.slug === subCategoryId);
-    if (!subCategory) {
-      return res.status(404).json({ message: "Subcategory not found" });
+    // Update the subcategory
+    const updatedCategory = await ServiceCategory.findOneAndUpdate(
+      { slug: categoryId, 'subCategories.slug': subCategoryId },
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCategory) {
+      return res.status(404).json({ message: 'Category or subcategory not found' });
     }
 
-    // Update subcategory fields
-    subCategory.category = category || subCategory.category;
-    subCategory.tag = tag || subCategory.tag;
-    subCategory.description = description || subCategory.description;
-    subCategory.status = status || subCategory.status;
-    subCategory.photo = photo || subCategory.photo; // Only update if provided
-    subCategory.alt = alt || subCategory.alt;
-    subCategory.imgtitle = imgtitle || subCategory.imgtitle;
-    subCategory.slug = slug || subCategory.slug;
-    subCategory.metatitle = metatitle || subCategory.metatitle;
-    subCategory.metadescription = metadescription || subCategory.metadescription;
-    subCategory.metakeywords = metakeywords || subCategory.metakeywords;
-    subCategory.metacanonical = metacanonical || subCategory.metacanonical;
-    subCategory.metalanguage = metalanguage || subCategory.metalanguage;
-    subCategory.metaschema = metaschema || subCategory.metaschema;
-    subCategory.otherMeta = otherMeta || subCategory.otherMeta;
-    subCategory.url = url || subCategory.url;
-    subCategory.priority = priority || subCategory.priority;
-    subCategory.changeFreq = changeFreq || subCategory.changeFreq;
-
-    await categoryDoc.save();
-
-    res.status(200).json(categoryDoc);
+    res.status(200).json(updatedCategory);
   } catch (error) {
-    console.error("Error updating subcategory:", error);
-    res.status(500).json({ message: "Server error", error });
+    console.error('Error updating subcategory:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -397,30 +392,30 @@ const updatesubsubcategory = async (req, res) => {
       return res.status(404).json({ message: "Subcategory not found" });
     }
 
-    const subSubCategory = subCategory.subSubCategories.find(subSubCat => subSubCat.slug === subSubCategoryId);
-    if (!subSubCategory) {
+    const subSubCategories = subCategory.subSubCategory.find(subSubCat => subSubCat.slug === subSubCategoryId);
+    if (!subSubCategories) {
       return res.status(404).json({ message: "Sub-subcategory not found" });
     }
 
     // Update fields of the sub-subcategory
-    subSubCategory.category = category || subSubCategory.category;
-    subSubCategory.tag = tag || subSubCategory.tag;
-    subSubCategory.description = description || subSubCategory.description;
-    subSubCategory.status = status || subSubCategory.status;
-    subSubCategory.photo = photo || subSubCategory.photo;
-    subSubCategory.alt = alt || subSubCategory.alt;
-    subSubCategory.imgtitle = imgtitle || subSubCategory.imgtitle;
-    subSubCategory.slug = slug || subSubCategory.slug;
-    subSubCategory.metatitle = metatitle || subSubCategory.metatitle;
-    subSubCategory.metadescription = metadescription || subSubCategory.metadescription;
-    subSubCategory.metakeywords = metakeywords || subSubCategory.metakeywords;
-    subSubCategory.metacanonical = metacanonical || subSubCategory.metacanonical;
-    subSubCategory.metalanguage = metalanguage || subSubCategory.metalanguage;
-    subSubCategory.metaschema = metaschema || subSubCategory.metaschema;
-    subSubCategory.otherMeta = otherMeta || subSubCategory.otherMeta;
-    subSubCategory.url = url || subSubCategory.url;
-    subSubCategory.priority = priority || subSubCategory.priority;
-    subSubCategory.changeFreq = changeFreq || subSubCategory.changeFreq;
+    subSubCategories.category = category || subSubCategories.category;
+    subSubCategories.tag = tag || subSubCategories.tag;
+    subSubCategories.description = description || subSubCategories.description;
+    subSubCategories.status = status || subSubCategories.status;
+    subSubCategories.photo = photo || subSubCategories.photo;
+    subSubCategories.alt = alt || subSubCategories.alt;
+    subSubCategories.imgtitle = imgtitle || subSubCategories.imgtitle;
+    subSubCategories.slug = slug || subSubCategories.slug;
+    subSubCategories.metatitle = metatitle || subSubCategories.metatitle;
+    subSubCategories.metadescription = metadescription || subSubCategories.metadescription;
+    subSubCategories.metakeywords = metakeywords || subSubCategories.metakeywords;
+    subSubCategories.metacanonical = metacanonical || subSubCategories.metacanonical;
+    subSubCategories.metalanguage = metalanguage || subSubCategories.metalanguage;
+    subSubCategories.metaschema = metaschema || subSubCategories.metaschema;
+    subSubCategories.otherMeta = otherMeta || subSubCategories.otherMeta;
+    subSubCategories.url = url || subSubCategories.url;
+    subSubCategories.priority = !isNaN(priority) ? Number(priority) : subSubCategories.priority;
+    subSubCategories.changeFreq = changeFreq || subSubCategories.changeFreq;
 
     await categoryDoc.save(); // Save the updated document
     res.status(200).json(categoryDoc); // Return the updated category document
@@ -430,6 +425,25 @@ const updatesubsubcategory = async (req, res) => {
   }
 };
 
+const getActiveCategories = async (req, res) => {
+  try {
+    // Fetch active categories
+    const categories = await ServiceCategory.find({ status: "active" });
+
+    // Send the active categories in the response
+    res.status(200).json({
+      data: categories,
+      total: categories.length,
+    });
+  } catch (error) {
+    console.error("Error retrieving active categories:", error);
+    let errorMessage = 'Server error';
+    if (error.name === 'CastError') {
+      errorMessage = 'Invalid query parameter format';
+    }
+    res.status(500).json({ message: errorMessage, error });
+  }
+};
 
 const deletecategory = async (req, res) => {
   const { id } = req.query;
@@ -492,7 +506,7 @@ const deletesubcategory = async (req, res) => {
     }
 
     const subCategoryIndex = categoryDoc.subCategories.findIndex(
-      (subCat) => subCat._id.toString() === subCategoryId
+      (subCat) => subCat.slug === subCategoryId
     );
     if (subCategoryIndex === -1) {
       return res.status(404).json({ message: "Subcategory not found" });
@@ -543,13 +557,13 @@ const deletesubsubcategory = async (req, res) => {
       return res.status(404).json({ message: "Category not found" });
     }
 
-    const subCategory = categoryDoc.subCategories.id(subCategoryId);
+    const subCategory = categoryDoc.subCategories.find(subCat => subCat.slug === subCategoryId);
     if (!subCategory) {
       return res.status(404).json({ message: "Subcategory not found" });
     }
 
     const subSubCategoryIndex = subCategory.subSubCategory.findIndex(
-      (subSubCat) => subSubCat._id.toString() === subSubCategoryId
+      (subSubCat) => subSubCat.slug === subSubCategoryId
     );
     if (subSubCategoryIndex === -1) {
       return res.status(404).json({ message: "Sub-subcategory not found" });
@@ -579,22 +593,60 @@ const deletesubsubcategory = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const categories = await ServiceCategory.find();
+    const categories = await ServiceCategory.find().lean();
+    
+    // Transform the data to convert ObjectId format
+    const transformedCategories = categories.map(category => {
+      // Convert main category ID
+      if (category._id && category._id.$oid) {
+        category._id = category._id.$oid;
+      }
+      
+      // Convert subcategory IDs
+      if (category.subCategories && Array.isArray(category.subCategories)) {
+        category.subCategories = category.subCategories.map(subCat => {
+          if (subCat._id && subCat._id.$oid) {
+            subCat._id = subCat._id.$oid;
+          }
+          
+          // Convert subsubcategory IDs
+          if (subCat.subSubCategory && Array.isArray(subCat.subSubCategory)) {
+            subCat.subSubCategory = subCat.subSubCategory.map(subSubCat => {
+              if (subSubCat._id && subSubCat._id.$oid) {
+                subSubCat._id = subSubCat._id.$oid;
+              }
+              return subSubCat;
+            });
+          }
+          
+          return subCat;
+        });
+      }
+      
+      return category;
+    });
 
-    res.status(200).json(categories);
+    res.status(200).json(transformedCategories);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
 const getSpecificCategory = async (req, res) => {
   try {
     const { categoryId } = req.query;
-    const categories = await ServiceCategory.findOne({ slug: categoryId });
+    
+    // Disable caching for this response
+    res.setHeader('Cache-Control', 'no-store, max-age=0');
+    
+    const categories = await ServiceCategory.findOne({ slug: categoryId })
+      .lean() // Get plain JS object
+      .setOptions({ overwrite: true }); // Bypass any mongoose cache
 
     if (!categories) {
       return res.status(404).json({ message: "Category not found" });
     }
+    
     res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
@@ -1024,8 +1076,13 @@ const fetchCategoryUrlmetaById = async (req, res) => {
 const getCategory = async (req, res) => {
   try {
     const categories = await ServiceCategory.find().select(
-      "category description photo alt imgtitle slug tag"
+      "category description photo alt imgtitle slug tag status"
     );
+
+    // Set cache-control headers to prevent caching
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
 
     res.status(200).json(categories);
   } catch (error) {
@@ -1069,6 +1126,7 @@ const getServicesBySlug = async (req, res) => {
 module.exports = {
   getServicesBySlug,
   getCategory,
+  getActiveCategories,
   insertCategory,
   insertSubCategory,
   insertSubSubCategory,

@@ -1,6 +1,8 @@
 const CareerInquiry = require("../model/herosectioninquiry");
 const path = require("path");
 const nodemailer = require("nodemailer");
+const { default: axios } = require("axios");
+
 
 const transporter = nodemailer.createTransport({
   service: "Gmail",
@@ -20,8 +22,7 @@ exports.CreateCareerInquiry = async (req, res) => {
       service: req.body.service,
       budget: req.body.budget,
     });
-
-    await newInquiry.save();
+    console.log("newInquiry", newInquiry);
 
     const logoImageUrl = "https://rndtechnosoft.com/api/logo/download/rndlogo.png";
     const logoStyle = "width: 100px; height: auto;";
@@ -86,34 +87,46 @@ exports.CreateCareerInquiry = async (req, res) => {
             <p><span class="field">Email:</span> ${newInquiry.email}</p>
             <p><span class="field">Phone:</span> ${newInquiry.phone}</p>
             <p><span class="field">City:</span> ${newInquiry.city}</p>
-            <p><span class="field">Serive:</span> ${newInquiry.service}</p>
+            <p><span class="field">Service:</span> ${newInquiry.service}</p>
             <p><span class="field">Budget:</span> ${newInquiry.budget}</p>
         </div>
       </body>
       </html>
       `;
 
-    // Resume file from Multer
     const mailOptions = {
       from: newInquiry.email,
-      replyTo:newInquiry.email,
+      replyTo: newInquiry.email,
       to: process.env.EMAIL_USER,
       subject: "New Inquiry",
       html: emailHTML,
     };
 
-
-
     // Send email
     await transporter.sendMail(mailOptions);
+    await newInquiry.save();
+ // Send data to external API
+ try {
+  await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
+    API_KEY: "A78A8BC90C6F6235",
+    API_ID: "MW1V",
+    name: newInquiry.name,
+    email: newInquiry.email,
+    phone: newInquiry.mobileNo,
+    subject: "Career Inquiry",
+    message: newInquiry.message
+  });
+} catch (externalError) {
+  console.error('Failed to send data to external DB:', externalError.message);
+  // Optional: log more details or notify internally
+}
 
     // Respond to the client
-    res.status(201).json({ success: true, data: newInquiry ,message:"Your message has been sent successfully! We will get back to you soon."});
+    res.status(201).json({ success: true, data: newInquiry, message: "Your message has been sent successfully! We will get back to you soon." });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
 };
-
 // Get counts and data based on field presence
 exports.getCountsAndData = async (req, res) => {
   try {

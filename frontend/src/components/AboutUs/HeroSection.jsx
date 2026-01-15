@@ -5,7 +5,7 @@ import { IoStarSharp, IoStarHalfSharp, IoStarOutline } from 'react-icons/io5';
 
 
 
-export default function HeroSection({ serviceGridRef }) {
+export default function HeroSection({ serviceGridRef, pageType }) {
   const [heading, setHeading] = useState("");
   const [subHeading, setsubHeading] = useState(null);
   const [photo, setPhoto] = useState(null)
@@ -16,7 +16,7 @@ export default function HeroSection({ serviceGridRef }) {
   useEffect(() => {
     const fetchHeadings = async () => {
       try {
-        const response = await axios.get('/api/pageHeading/heading?pageType=aboutcompany', { withCredentials: true });
+        const response = await axios.get(`/api/pageHeading/heading?pageType=${pageType}`, { withCredentials: true });
         const { heading, subheading, photo, alt, imgTitle } = response.data;
         setHeading(heading || '');
         setsubHeading(subheading || '')
@@ -42,9 +42,13 @@ export default function HeroSection({ serviceGridRef }) {
   return (
     <div className="relative">
       <img src={`/api/logo/download/${photo}`} alt={alt} title={imgTitle} className="w-full h-[55vh] object-cover" />
-      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8 pt-16 md:pt-32">
+      <div className="absolute   inset-0 bg-black bg-opacity-50 flex items-center justify-center flex-col gap-8 pt-16 md:pt-32">
         <h1 className="text-white text-4xl md:text-7xl font-serif capitalize">{heading}</h1>
-        <p className="text-xl md:text-2xl text-white text-center">{subHeading}</p>
+        <p
+          dangerouslySetInnerHTML={{ __html: subHeading }}
+          className="text-md"
+         style={{  fontSize: '24px', color: 'white' }}
+        />
       </div>
     </div>
   );

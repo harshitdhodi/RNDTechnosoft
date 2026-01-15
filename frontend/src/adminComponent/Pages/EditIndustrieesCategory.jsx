@@ -132,9 +132,9 @@ useEffect(() => {
     }
 
     if (categoryId && subCategoryId && subSubCategoryId) {
-      urls = `/api/industries/updatesubsubcategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}&subSubCategoryId=${subSubCategoryId}`;
+      urls = `/api/industries/updatesubsubcategory?categoryId=${categoryId}&subCategorySlug=${subCategoryId}&subSubCategoryId=${subSubCategoryId}`;
     } else if (categoryId && subCategoryId) {
-      urls = `/api/industries/updateSubCategory?categoryId=${categoryId}&subCategoryId=${subCategoryId}`;
+      urls = `/api/industries/updateSubCategory?categoryId=${categoryId}&subCategorySlug=${subCategoryId}`;
     } else if (categoryId) {
       urls = `/api/industries/updateCategory?categoryId=${categoryId}`;
     }

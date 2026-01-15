@@ -1,128 +1,366 @@
 const CareerInquiry = require('../model/carrerinquiry');
 const path = require('path')
 const nodemailer = require('nodemailer');
+const { default: axios } = require('axios');
 
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  host: 'smtp.gmail.com', // Gmail SMTP server
+  port: 587, // Port
+  secure: false, // Use `true` for 465, `false` for other ports
   auth: {
     user: process.env.EMAIL_HR,
-    pass: process.env.EMAIL_HRPASS
+    pass: process.env.HR_PASS
   }
 });
 
 exports.CreateCareerInquiry = async (req, res) => {
   try {
+    console.log('Request body:', req.body);
+    console.log('Request files:', req.files);
+    
+    // Step 1: Save to database
     const newInquiry = new CareerInquiry({
       name: req.body.name,
       email: req.body.email,
       mobileNo: req.body.mobileNo,
+      linkedin: req.body.linkedin || '',
       message: req.body.message,
-      resume: req.files['resume'] ? req.files['resume'][0].filename : null
+      resume: req.files && req.files['resume'] ? req.files['resume'][0].filename : null,
+      path: req.body.path
     });
 
+    console.log('Attempting to save inquiry to database...');
     await newInquiry.save();
+    console.log('✓ Inquiry saved to database successfully');
 
-    // HTML Email Template
-    const emailHTML = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>New Inquiry</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 0;
-                padding: 0;
-            }
-            .container {
-                width: 100%;
-                padding: 20px;
-                background-color: #ffffff;
-                border-radius: 10px; 
-                max-width: 500px;
-                margin: 20px auto;
-                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            }
-            h2 {
-                color: #333;
-                font-size: 24px;
-                margin-bottom: 20px;
-                text-align: center; /* Center the heading */
-            }
-            p {
-                font-size: 16px;
-                color: #555;
-                line-height: 1.6;
-            }
-            .field {
-                font-weight: bold;
-                color: #333;
-            }
-            .footer {
-                margin-top: 20px;
-                font-size: 12px;
-                color: #aaa;
-                text-align: center;
-            }
-            .centered-text {
-                text-align: center; /* Center text */
-                margin: 20px 0; /* Add margin above and below */
-                font-size: 20px; /* Adjust font size as needed */
-                color: #333; /* Text color */
-            }
-                 .logo {
-            display: block;
-            margin: 0 auto 20px;
-            width: 120px; 
-            height: auto; 
-            object-fit: contain; /* Ensures aspect ratio is maintained */
-        }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-            <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
-            <p class="centered-text">New Career Inquiry!!</p>
-            <p><span class="field">Name:</span> ${newInquiry.name}</p>
-            <p><span class="field">Email:</span> ${newInquiry.email}</p>
-            <p><span class="field">Phone:</span> ${newInquiry.mobileNo}</p>
-            <p>${newInquiry.message}</p>
-        </div>
-      </body>
-      </html>
-      `;
+    // Send immediate response to client first
+    res.status(201).json({ 
+      success: true, 
+      message: 'Inquiry submitted successfully',
+      data: {
+        id: newInquiry._id,
+        name: newInquiry.name,
+        email: newInquiry.email
+      }
+    });
 
-    // Resume file from Multer
-    const resumeFile = req.files['resume'] ? req.files['resume'][0] : null;
+    // Process email and external API asynchronously (non-blocking)
+    processInquiryAsync(req, newInquiry);
 
-    const mailOptions = {
-      from: newInquiry.email,
-      to: process.env.EMAIL_HR,
-      replyTo: newInquiry.email,
-      subject: 'New Career Inquiry',
-      html: emailHTML,
-      attachments: [
-        {
-          filename: resumeFile.originalname, // Use original file name
-          path: resumeFile.path, // File path (in case of disk storage)
-          contentType: resumeFile.mimetype // MIME type of the file
-        }
-      ]
-    };
-
-    console.log(mailOptions)
-
-    // Send email
-    await transporter.sendMail(mailOptions);
-
-    // Respond to the client
-    res.status(201).json({ success: true, data: newInquiry });
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message });
+    console.error('✗ Main error in CreateCareerInquiry:', error);
+    console.error('Error stack:', error.stack);
+    
+    res.status(400).json({ 
+      success: false, 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
+
+// Async function to handle email and external API calls
+async function processInquiryAsync(req, newInquiry) {
+  const jobTitle = req.body.jobTitle || 'Career Inquiry';
+  console.log('JobTitle:', jobTitle);
+
+  // Process email and external API in parallel
+  const emailPromise = sendEmail(req, newInquiry, jobTitle);
+  const externalApiPromise = sendToExternalAPI(newInquiry);
+
+  // Execute both operations in parallel
+  const [emailResult, apiResult] = await Promise.allSettled([emailPromise, externalApiPromise]);
+
+  // Log results
+  if (emailResult.status === 'fulfilled') {
+    console.log('✓ Email processing completed');
+  } else {
+    console.error('✗ Email processing failed:', emailResult.reason);
+  }
+
+  if (apiResult.status === 'fulfilled') {
+    console.log('✓ External API processing completed');
+  } else {
+    console.error('✗ External API processing failed:', apiResult.reason);
+  }
+}
+
+// Optimized email sending function
+async function sendEmail(req, newInquiry, jobTitle) {
+  try {
+    // HTML Email Template (moved to separate function for better readability)
+    const emailHTML = generateEmailTemplate(newInquiry, jobTitle);
+
+    const resumeFile = req.files && req.files['resume'] ? req.files['resume'][0] : null;
+    console.log('Resume file:', resumeFile ? resumeFile.filename : 'No resume file');
+
+    // Check if EMAIL_HR is configured
+    if (!process.env.EMAIL_HR) {
+      throw new Error('EMAIL_HR environment variable is not configured');
+    }
+
+    const mailOptions = {
+      from: process.env.EMAIL_FROM || newInquiry.email, // Use configured sender email
+      to: process.env.EMAIL_HR,
+      replyTo: newInquiry.email,
+      subject: `${jobTitle} - ${newInquiry.name}`,
+      html: emailHTML
+    };
+
+    // Add attachment only if resume file exists
+    if (resumeFile) {
+      mailOptions.attachments = [{
+        filename: resumeFile.originalname,
+        path: resumeFile.path,
+        contentType: resumeFile.mimetype
+      }];
+      console.log('✓ Resume attachment added to email');
+    }
+
+    console.log('Attempting to send email...');
+    const emailResult = await transporter.sendMail(mailOptions);
+    console.log('✓ Email sent successfully:', emailResult.messageId);
+    return emailResult;
+
+  } catch (emailError) {
+    console.error('✗ Email sending failed:', emailError);
+    throw emailError;
+  }
+}
+
+// External API call function with improved error handling
+async function sendToExternalAPI(newInquiry) {
+  try {
+    console.log('Attempting to send data to external API...');
+    
+    // Verify API credentials are configured
+    const apiKey = process.env.EXTERNAL_API_KEY || "A78A8BC90C6F6235";
+    const apiId = process.env.EXTERNAL_API_ID || "MW1V"; // Make this configurable
+    
+    console.log('Using API_ID:', apiId); // Debug log
+    
+    const payload = {
+      API_KEY: apiKey,
+      API_ID: apiId,
+      name: newInquiry.name,
+      email: newInquiry.email,
+      phone: newInquiry.mobileNo,
+      linkedin: newInquiry.linkedin || '',
+      subject: "Career Inquiry",
+      message: newInquiry.message,
+      source: 'career-portal',
+      ip_address: newInquiry.ipaddress || ''
+    };
+
+    console.log('External API request:', {
+      url: 'https://leads.rndtechnosoft.com/api/contactform/message',
+      method: 'POST',
+      payload
+    });
+
+    const externalApiResponse = await axios.post(
+      'https://leads.rndtechnosoft.com/api/contactform/message', 
+      payload,
+      {
+        timeout: 15000, // Increased timeout to 15 seconds
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'User-Agent': 'RND-Career-Portal/1.0',
+          'X-Request-Source': 'career-portal'
+        },
+        validateStatus: function (status) {
+          return status >= 200 && status < 500; // Handle all 2xx and 4xx responses
+        }
+      }
+    );
+    
+    console.log('External API response:', {
+      status: externalApiResponse.status,
+      statusText: externalApiResponse.statusText,
+      data: externalApiResponse.data
+    });
+
+    if (externalApiResponse.status !== 200) {
+      throw new Error(`External API returned status ${externalApiResponse.status}: ${externalApiResponse.statusText}`);
+    }
+
+    console.log('✓ External API call successful:', externalApiResponse.data);
+    return externalApiResponse.data;
+
+  } catch (externalError) {
+    console.error('✗ Failed to send data to external DB:', externalError.message);
+    if (externalError.response) {
+      console.error('External API Error Status:', externalError.response.status);
+      console.error('External API Error Details:', externalError.response.data);
+    }
+    throw externalError;
+  }
+}
+
+// Email template generator function
+function generateEmailTemplate(inquiry, jobTitle) {
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>New Career Inquiry</title>
+      <style>
+          body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #f5f5f5;
+          }
+          .container {
+              width: 100%;
+              padding: 30px;
+              background-color: #ffffff;
+              border-radius: 12px; 
+              max-width: 600px;
+              margin: 30px auto;
+              box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+          }
+          .header {
+              text-align: center;
+              margin-bottom: 30px;
+              padding-bottom: 20px;
+              border-bottom: 2px solid #f0f0f0;
+          }
+          .logo {
+              width: 120px; 
+              height: auto; 
+              object-fit: contain;
+              margin-bottom: 20px;
+          }
+          .title {
+              font-size: 24px;
+              color: #2c3e50;
+              margin: 0;
+              font-weight: 600;
+          }
+          .subtitle {
+              font-size: 16px;
+              color: #7f8c8d;
+              margin: 5px 0 0 0;
+          }
+          .content {
+              padding: 20px 0;
+          }
+          .field-row {
+              margin: 15px 0;
+              padding: 12px;
+              background-color: #f8f9fa;
+              border-radius: 6px;
+              border-left: 4px solid #3498db;
+          }
+          .field-label {
+              font-weight: 600;
+              color: #2c3e50;
+              display: block;
+              margin-bottom: 5px;
+              font-size: 14px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+          }
+          .field-value {
+              color: #34495e;
+              font-size: 16px;
+              line-height: 1.5;
+              word-break: break-word;
+          }
+          .message-field {
+              background-color: #fff;
+              border: 1px solid #e1e5e9;
+              padding: 15px;
+              border-radius: 6px;
+              margin-top: 10px;
+          }
+          .footer {
+              margin-top: 30px;
+              padding-top: 20px;
+              border-top: 1px solid #ecf0f1;
+              font-size: 12px;
+              color: #95a5a6;
+              text-align: center;
+          }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+          <div class="header">
+              <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
+              <h1 class="title">New ${jobTitle} Application</h1>
+              <p class="subtitle">Career Portal Submission</p>
+          </div>
+          
+          <div class="content">
+              <div class="field-row">
+                  <span class="field-label">Applicant Name</span>
+                  <div class="field-value">${inquiry.name}</div>
+              </div>
+              
+              <div class="field-row">
+                  <span class="field-label">Email Address</span>
+                  <div class="field-value">${inquiry.email}</div>
+              </div>
+              
+              <div class="field-row">
+                  <span class="field-label">Phone Number</span>
+                  <div class="field-value">${inquiry.mobileNo}</div>
+              </div>
+              
+              ${inquiry.linkedin ? `
+              <div class="field-row">
+                  <span class="field-label">LinkedIn Profile</span>
+                  <div class="field-value"><a href="${inquiry.linkedin}" target="_blank">${inquiry.linkedin}</a></div>
+              </div>
+              ` : ''}
+              
+              <div class="field-row">
+                  <span class="field-label">Application Path</span>
+                  <div class="field-value">${inquiry.path || 'Not specified'}</div>
+              </div>
+              
+              <div class="field-row">
+                  <span class="field-label">Message</span>
+                  <div class="message-field">${inquiry.message}</div>
+              </div>
+          </div>
+          
+          <div class="footer">
+              <p>This email was generated automatically by the RND Technosoft Career Portal.</p>
+              <p>Application submitted on: ${new Date().toLocaleString()}</p>
+          </div>
+      </div>
+    </body>
+    </html>
+  `;
+}
+
+// Optional: Add email configuration optimization
+function configureEmailTransporter() {
+  // Make sure your transporter is configured with connection pooling
+  const nodemailer = require('nodemailer');
+  
+  return nodemailer.createTransporter({
+    // Your email service configuration
+    service: 'gmail', // or your email service
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    },
+    // Performance optimizations
+    pool: true, // Enable connection pooling
+    maxConnections: 5, // Limit concurrent connections
+    maxMessages: 100, // Messages per connection
+    rateLimit: 14, // Max emails per second
+    debug: process.env.NODE_ENV === 'development',
+    logger: process.env.NODE_ENV === 'development'
+  });
+}
 
 
 // Get counts and data based on field presence
@@ -154,7 +392,7 @@ exports.getCountsAndData = async (req, res) => {
 
     const dataWithFields = await CareerInquiry.find({
       $or: [
-        { utm_source: { $exists: true, $ne: '' } },
+        { utm_source: { $exists: true, $ne: '' } }, 
         { utm_medium: { $exists: true, $ne: '' } },
         { utm_campaign: { $exists: true, $ne: '' } },
         { utm_id: { $exists: true, $ne: '' } },

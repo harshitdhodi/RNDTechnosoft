@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
-// import * as AllIcons from "react-icons/fa";
-// import { IconContext } from "react-icons";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-// const iconComponents = Object.entries(AllIcons).map(([key, value]) => ({
-//     name: key,
-//     icon: value,
-// }));
 
 const modules = {
     toolbar: [

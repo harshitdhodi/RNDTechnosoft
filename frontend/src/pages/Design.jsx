@@ -16,8 +16,6 @@ import PremiumTemplatesSection from '../components/PrimiumTemplateSection'
 
 import { useState } from 'react'
 
-
-
 export default function Design() {
 
   const [serviceSlug, setServiceSlug] = useState('');
@@ -33,8 +31,8 @@ console.log(serviceSlug)
         <BookAcall/>
         <PremiumTemplatesSection/>
         <FAQ serviceSlug={serviceSlug}/>
-    <LatestBlog serviceSlug={serviceSlug}/>
-        <GlobalSolution />
+        <LatestBlog serviceSlug={serviceSlug}/>
+        {/* <GlobalSolution /> */}
         
         {/* {/* <CraftRight/>
         <CraftLeft/> */}

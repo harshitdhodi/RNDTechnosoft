@@ -71,7 +71,7 @@ const FAQ = ({serviceSlug}) => {
   }
 
   return (
-    <div className="max-w-4xl sm:w-[63%] md:w-[63%] mx-auto p-4 sm:p-6 lg:max-w-4xl xl:max-w-4xl">
+    <div className="max-w-4xl sm:w-[63%] my-16 md:w-[63%] mx-auto px-4 sm:px-6 lg:max-w-4xl xl:max-w-4xl">
       <h2 className="text-3xl sm:text-4xl lg:text-5xl  text-center  font-serif">
         {heading}
       </h2>

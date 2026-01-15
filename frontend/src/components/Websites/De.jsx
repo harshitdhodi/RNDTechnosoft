@@ -14,6 +14,7 @@ export default function HowRndHelp() {
   const [subheading, setSubheading] = useState("");
   const [services, setServices] = useState([]);
   const location = useLocation();
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -111,16 +112,16 @@ export default function HowRndHelp() {
   }, [services]);
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="px-4 md:px-8 relative md:-top-9">
       <div
         ref={containerRef}
         className="flex flex-col items-center mt-12 md:mt-24 space-y-6"
       >
-        <div className="text-center">
+        <div className="text-justify xl:text-center xl:max-w-5xl lg:max-w-6xl lg:px-8 mx-auto">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif mb-4">
             {heading}
           </h2>
-          <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-700 xl:max-w-3xl  mx-auto">
            {subheading}
           </p>
         </div>
@@ -128,15 +129,17 @@ export default function HowRndHelp() {
       <div className="relative">
         <div
           ref={fadeInContainerRef}
-          className="flex flex-col items-center space-y-6 mt-12 pb-20"
+          className="flex flex-col items-center space-y-6 mt-12 "
         >
-          <div className="absolute inset-0  flex-col lg:left-10 xl:left-40  justify-items-start hidden lg:flex">
-            <div className="w-1 bg-gray-300 progress-line" />
+          {/* Responsive Progress Line Container */}
+          <div className="absolute inset-0 flex-col lg:hidden justify-items-start hidden xl:flex lg:left-6 xl:left-10 2xl:left-28">
+            {/* Responsive Progress Line */}
+            <div className="w-0.5 lg:w-1 xl:w-1.5  bg-gray-300 progress-line" />
+            
+            {/* Responsive Progress Numbers */}
             {services.map((_, index) => {
-              // Define top and bottom margin percentage (e.g., 10% space at top and bottom)
               const marginTop = 10;
               const marginBottom = 90;
-              // Calculate the percentage for even spacing with margins
               const topPosition = `${
                 marginTop +
                 (index / (services.length - 1)) * (marginBottom - marginTop)
@@ -145,7 +148,11 @@ export default function HowRndHelp() {
               return (
                 <div
                   key={index}
-                  className="absolute top-1/2  -left-4  transform -translate-y-1/2 bg-[#f3ca0d] text-white text-lg font-medium rounded-full w-10 h-10 flex items-center justify-center"
+                  className="absolute top-1/2 transform -translate-y-1/2  bg-[#f3ca0d] text-white font-medium rounded-full flex items-center justify-center
+                           -left-4 w-6 h-6 text-xs
+                           lg:-left-6 lg:w-8 lg:h-8 lg:text-sm
+                           xl:-left-4 xl:w-10 xl:h-10 xl:text-base 
+                           2xl:-left-4 2xl:w-10 2xl:h-10 2xl:text-lg"
                   style={{ top: topPosition }}
                   id={`progress-number-${index}`}
                 >
@@ -155,16 +162,22 @@ export default function HowRndHelp() {
             })}
           </div>
 
-          {services.map((service, index) => (
+          {/* Service Cards with Responsive Positioning and Increased Width */}
+      <div className="xl:pl-24  ">
+            {services.map((service, index) => (
             <div
               key={service._id}
-              className="fade-in border border-lg border-black rounded-xl p-6 flex flex-col md:flex-row items-center space-x-0 md:space-x-6 bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105 max-w-3xl mx-auto relative"
+              className="fade-in border border-lg rounded-xl p-6  flex flex-col md:flex-row items-center space-x-0 md:space-x-6 bg-white shadow-lg transition-transform duration-300 hover:shadow-xl hover:scale-105 relative
+                         max-w-full sm:max-w-xl mb-10 md:max-w-2xl
+                         lg:max-w-4xl 
+                         xl:max-w-5xl xl:ml-20 
+                         2xl:max-w-5xl 2xl:ml-48"
             >
               <img
                 src={`/api/designProcess/download/${service.image}`}
                 alt={service.alt}
                 title={service.imgtitle}
-                className="w-full h-52 md:w-52 md:h-52 rounded-md object-cover mb-4 md:mb-0"
+                className="w-full h-52 md:w-52 md:h-52  rounded-md object-cover mb-4 md:mb-0"
               />
               <div className="flex flex-col w-full">
                 <div className="flex justify-between items-center mb-4">
@@ -172,7 +185,6 @@ export default function HowRndHelp() {
                     {service.title}
                   </h3>
                   <span className="bg-[#f3ca0d] text-black text-xs font-medium px-3 py-1 rounded-full flex-shrink-0">
-                    {" "}
                     Step {index + 1}
                   </span>
                 </div>
@@ -185,6 +197,7 @@ export default function HowRndHelp() {
               </div>
             </div>
           ))}
+      </div>
         </div>
       </div>
     </div>
