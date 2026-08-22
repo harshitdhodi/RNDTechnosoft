@@ -118,7 +118,7 @@ function generateEmailTemplate(inquiry) {
     <body>
       <div class="container">
           <div class="header">
-              <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
+              <img class="logo" src="https://www.rndtechnosoft.com/api/logo/download/photo_1743486518383.webp" alt="RND Technosoft Logo">
               <h1 class="title">New Catalogue Request</h1>
               <p class="subtitle">Catalogue Portal Submission</p>
           </div>

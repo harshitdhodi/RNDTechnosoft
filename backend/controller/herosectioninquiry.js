@@ -17,7 +17,7 @@ exports.CreateCareerInquiry = async (req, res) => {
 
     await newInquiry.save();
 
-    const logoImageUrl = "https://rndtechnosoft.com/api/logo/download/rndlogo.png";
+    const logoImageUrl = "https://www.rndtechnosoft.com/api/logo/download/photo_1743486518383.webp";
     const logoStyle = "width: 100px; height: auto;";
 
     // HTML Email Template

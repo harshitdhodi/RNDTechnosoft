@@ -62,7 +62,7 @@ const generateThankYouTemplate = ({
   formType = 'Inquiry',
   inquiryDetails = {},
 }) => {
-  const logoUrl = 'https://rndtechnosoft.com/api/logo/download/rndlogo.png';
+  const logoUrl = 'https://www.rndtechnosoft.com/api/logo/download/rndlogo.png';
   const whatsappNumber = '919510152350';
   const whatsappDisplay = '+91 9510152350';
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Hi RND Technosoft Team, I recently submitted an inquiry on your website.')}`;
@@ -127,14 +127,14 @@ const generateThankYouTemplate = ({
             display: inline-block;
             background: #ffffff;
             border-radius: 10px;
-            padding: 10px 16px;
+            padding: 10px 18px;
             margin-bottom: 16px;
             position: relative;
             z-index: 1;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
         }
         .logo {
-            width: 150px;
+            width: 160px;
             height: auto;
             display: block;
         }

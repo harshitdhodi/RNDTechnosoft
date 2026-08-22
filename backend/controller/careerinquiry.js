@@ -301,7 +301,7 @@ function generateEmailTemplate(inquiry, jobTitle) {
     <body>
       <div class="container">
           <div class="header">
-              <img class="logo" src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo">
+              <img class="logo" src="https://www.rndtechnosoft.com/api/logo/download/photo_1743486518383.webp" alt="RND Technosoft Logo">
               <h1 class="title">New ${jobTitle} Application</h1>
               <p class="subtitle">Career Portal Submission</p>
           </div>

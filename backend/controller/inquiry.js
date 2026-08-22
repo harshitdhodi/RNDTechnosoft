@@ -8,7 +8,7 @@ const postInquiry = async (req, res) => {
     const newInquiry = new Inquiry(inquiryData);
     const savedInquiry = await newInquiry.save();
 
-    const logoImageUrl = "https://rndtechnosoft.com/api/logo/download/rndlogo.png";
+    const logoImageUrl = "https://www.rndtechnosoft.com/api/logo/download/photo_1743486518383.webp";
     const logoStyle = "width: 100px; height: auto;";
 
     const emailHTML = `
@@ -56,7 +56,7 @@ const postInquiry = async (req, res) => {
       </head>
       <body>
           <div class="container">
-              <img src="${logoImageUrl}" style="${logoStyle}" alt="RND Technosoft Logo"/>
+              <div style="display: inline-block; background: #111111; border-radius: 10px; padding: 10px 18px; border: 1px solid #ffd333; margin-bottom: 12px; text-align: center;"><img src="${logoImageUrl}" style="width: 150px; height: auto; display: block;" alt="RND Technosoft Logo"/></div>
               <h2>New Inquiry</h2>
               <p><span class="field">First Name:</span> ${newInquiry.firstname || newInquiry.name || ''}</p>
               <p><span class="field">Last Name:</span> ${newInquiry.lastname || ''}</p>

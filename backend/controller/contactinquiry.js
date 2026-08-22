@@ -207,14 +207,14 @@ function generateContactEmailTemplate(inquiry) {
             display: inline-block;
             background: #ffffff;
             border-radius: 10px;
-            padding: 10px 16px;
+            padding: 10px 18px;
             margin-bottom: 16px;
             position: relative;
             z-index: 1;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
         }
         .logo {
-            width: 150px;
+            width: 160px;
             height: auto;
             display: block;
         }
@@ -379,7 +379,7 @@ function generateContactEmailTemplate(inquiry) {
         <!-- Header Section -->
         <div class="header">
             <div class="logo-wrap">
-                <img src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" class="logo" alt="RND Technosoft Logo">
+                <img src="https://www.rndtechnosoft.com/api/logo/download/rndlogo.png" class="logo" alt="RND Technosoft Logo">
             </div>
             <h2>🔔 New Contact Inquiry</h2>
             <p class="sub-text">A potential client has reached out through your website</p>

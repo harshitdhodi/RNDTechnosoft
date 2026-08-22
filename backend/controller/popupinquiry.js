@@ -22,7 +22,7 @@ const createPopupInquiry = async (req, res) => {
       subject: "New Inquiry Received (Popup Form)",
       html: `
                 <div style="text-align: center;">
-                    <img src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo" style="width: 150px; height: auto;"/>
+                    <img src="https://www.rndtechnosoft.com/api/logo/download/photo_1743486518383.webp" alt="RND Technosoft Logo" style="width: 150px; height: auto;"/>
                     <h2>A new inquiry has been submitted</h2>
                     <p><strong>Name:</strong> ${newInquiry.name}</p>
                     <p><strong>Email:</strong> ${newInquiry.email}</p>
