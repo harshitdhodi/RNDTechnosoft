@@ -1,15 +1,6 @@
 const { default: axios } = require("axios");
 const Inquiry = require("../model/inquiry");
-const nodemailer = require('nodemailer');
-
-
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const { sendThankYouEmail, sendMailWithFallback } = require('../utils/emailService');
 
 const postInquiry = async (req, res) => {
   try {
@@ -67,14 +58,14 @@ const postInquiry = async (req, res) => {
           <div class="container">
               <img src="${logoImageUrl}" style="${logoStyle}" alt="RND Technosoft Logo"/>
               <h2>New Inquiry</h2>
-              <p><span class="field">First Name:</span> ${newInquiry.firstname}</p>
-              <p><span class="field">Last Name:</span> ${newInquiry.lastname}</p>
+              <p><span class="field">First Name:</span> ${newInquiry.firstname || newInquiry.name || ''}</p>
+              <p><span class="field">Last Name:</span> ${newInquiry.lastname || ''}</p>
               <p><span class="field">Email:</span> ${newInquiry.email}</p>
-              <p><span class="field">Mobile No:</span> ${newInquiry.mobileNo}</p>
-              <p><span class="field">Company Size:</span> ${newInquiry.companysize}</p>
-              <p><span class="field">Active User:</span> ${newInquiry.activeuser}</p>
-              <p><span class="field">Topic:</span> ${newInquiry.topic}</p>
-              <p><span class="field">Message:</span> ${newInquiry.message}</p>
+              <p><span class="field">Mobile No:</span> ${newInquiry.mobileNo || newInquiry.phone || ''}</p>
+              <p><span class="field">Company Size:</span> ${newInquiry.companysize || 'N/A'}</p>
+              <p><span class="field">Active User:</span> ${newInquiry.activeuser || 'N/A'}</p>
+              <p><span class="field">Topic:</span> ${newInquiry.topic || 'General Inquiry'}</p>
+              <p><span class="field">Message:</span> ${newInquiry.message || ''}</p>
               <div class="footer">
                   <p>This is an automated email. Please do not reply.</p>
               </div>
@@ -83,56 +74,53 @@ const postInquiry = async (req, res) => {
       </html>
     `;
 
+    const adminRecipient = process.env.EMAIL_USER || process.env.BDM_EMAIL || 'bdm@rndtechnosoft.com';
+    const ccRecipient = (process.env.OWNER_EMAIL && process.env.OWNER_EMAIL !== adminRecipient) ? process.env.OWNER_EMAIL : undefined;
+
     const adminEmailOptions = {
-      from: savedInquiry.email,
-      to: process.env.EMAIL_USER,
-      cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
+      from: `"RND Technosoft Inquiry" <${adminRecipient}>`,
+      to: adminRecipient,
+      cc: ccRecipient,
       replyTo: savedInquiry.email,
       subject: 'New Inquiry Submitted',
       html: emailHTML
     };
 
-    const userEmailOptions = {
-      from: process.env.EMAIL_USER,
-      to: savedInquiry.email,
-      subject: 'Thank You for Your Inquiry',
-      html: `
-        <html>
-        <body>
-          <div style="text-align: center; padding: 20px;">
-            <img src="${logoImageUrl}" style="${logoStyle}" alt="RND Technosoft Logo"/>
-            <h2>Thank You for Your Inquiry</h2>
-            <p>Dear ${inquiryData.firstname || 'Valued Customer'},</p>
-            <p>Thank you for reaching out. We have received your inquiry and will get back to you soon.</p>
-            <p>Best regards,</p>
-            <p>RND Technosoft</p>
-             <div class="footer">
-                  <p>This is an automated email. Please do not reply.</p>
-              </div>
-          </div>
-        </body>
-        </html>
-      `,
-    };
+    // Send admin email & thank you email safely
+    try {
+      await sendMailWithFallback(adminEmailOptions);
+    } catch (adminMailError) {
+      console.error('Failed to send admin inquiry notification email:', adminMailError.message);
+    }
 
-    await transporter.sendMail(adminEmailOptions);
-    await transporter.sendMail(userEmailOptions);
+    const clientName = `${inquiryData.firstname || ''} ${inquiryData.lastname || ''}`.trim() || inquiryData.name || 'Valued Customer';
+
+    await sendThankYouEmail({
+      to: savedInquiry.email,
+      name: clientName,
+      subject: 'Thank You for Your Inquiry - RND Technosoft',
+      formType: 'General Inquiry',
+      inquiryDetails: {
+        'Topic': savedInquiry.topic || 'General Inquiry',
+        'Mobile': savedInquiry.mobileNo || savedInquiry.phone || 'N/A',
+        'Message': savedInquiry.message || ''
+      }
+    });
 
     // Send data to external API
     try {
       await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
         API_KEY: "A78A8BC90C6F6235",
         API_ID: "MW1V",
-        name: newInquiry.name,
+        name: clientName,
         email: newInquiry.email,
         phone: newInquiry.mobileNo,
-        subject: "Career Inquiry",
+        subject: "General Inquiry",
         message: newInquiry.message,
-        path:newInquiry.path,
+        path: newInquiry.path,
       });
     } catch (externalError) {
       console.error('Failed to send data to external DB:', externalError.message);
-      // Optional: log more details or notify internally
     }
 
     res.status(201).json({

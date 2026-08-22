@@ -1,6 +1,8 @@
 // controllers/jobApplicationController.js
 const JobApplication = require('../model/jobApplication');
 const path = require('path');
+const { sendThankYouEmail, getTransporter } = require('../utils/emailService');
+
 // Create a new job application
 exports.createJobApplication = async (req, res) => {
     try {
@@ -20,12 +22,52 @@ exports.createJobApplication = async (req, res) => {
       jobApplicationData.policeRecord = jobApplicationData.policeRecord === 'Yes'; // Convert "Yes"/"No" to true/false
   
       // Convert totalExperience to number
-      const experienceYears = jobApplicationData.totalExperience.match(/\d+/); // Extract numeric value
-      jobApplicationData.totalExperience = experienceYears ? parseInt(experienceYears[0]) : 0; // If a number is found, convert to an integer
+      if (typeof jobApplicationData.totalExperience === 'string') {
+        const experienceYears = jobApplicationData.totalExperience.match(/\d+/); // Extract numeric value
+        jobApplicationData.totalExperience = experienceYears ? parseInt(experienceYears[0]) : 0;
+      }
   
       // Create the new job application document
       const jobApplication = new JobApplication(jobApplicationData);
       await jobApplication.save();
+
+      // Send HR notification & Candidate Thank You email asynchronously
+      if (jobApplication.email) {
+        sendThankYouEmail({
+          to: jobApplication.email,
+          name: jobApplication.fullName || jobApplication.name || 'Applicant',
+          subject: 'Application Received - RND Technosoft',
+          formType: 'Job Application',
+          inquiryDetails: {
+            'Applicant Name': jobApplication.fullName || jobApplication.name,
+            'Email': jobApplication.email,
+            'Phone': jobApplication.phone || jobApplication.mobileNo || 'N/A',
+            'Position / Role': jobApplication.appliedPosition || 'N/A'
+          },
+          useHrAccount: true
+        });
+
+        if (process.env.EMAIL_HR) {
+          try {
+            const hrTransporter = getTransporter('hr');
+            await hrTransporter.sendMail({
+              from: `"RND Technosoft HR" <${process.env.EMAIL_HR}>`,
+              to: process.env.EMAIL_HR,
+              replyTo: jobApplication.email,
+              subject: `New Job Application: ${jobApplication.fullName || jobApplication.name || 'Applicant'}`,
+              html: `
+                <h2>New Job Application Received</h2>
+                <p><strong>Name:</strong> ${jobApplication.fullName || jobApplication.name}</p>
+                <p><strong>Email:</strong> ${jobApplication.email}</p>
+                <p><strong>Phone:</strong> ${jobApplication.phone || jobApplication.mobileNo}</p>
+                <p><strong>Position:</strong> ${jobApplication.appliedPosition || 'N/A'}</p>
+              `
+            });
+          } catch (hrErr) {
+            console.error('Failed to send HR job application email:', hrErr.message);
+          }
+        }
+      }
   
       res.status(201).json({ message: 'Job application created successfully', jobApplication });
     } catch (err) {

@@ -1,18 +1,6 @@
 const { default: axios } = require('axios');
 const ContactInquiry = require('../model/contactinquiry');
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Gmail SMTP server
-    port: 587, // Port
-    secure: false, // Use `true` for 465, `false` for other ports
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
-
+const { sendThankYouEmail, sendMailWithFallback } = require('../utils/emailService');
 
 exports.createInquiry = async (req, res) => {
   try {
@@ -49,18 +37,37 @@ exports.createInquiry = async (req, res) => {
 
 // Async function to handle email and external API calls
 async function processContactInquiryAsync(inquiry) {
-  // Process email and external API in parallel
+  // Process admin email, thank you email, and external API in parallel
   const emailPromise = sendContactEmail(inquiry);
+  const thankYouPromise = sendThankYouEmail({
+    to: inquiry.email,
+    name: inquiry.name,
+    subject: 'Thank You for Contacting RND Technosoft',
+    formType: 'Contact Inquiry',
+    inquiryDetails: {
+      'Name': inquiry.name,
+      'Email': inquiry.email,
+      'Phone': inquiry.phone,
+      'Subject': inquiry.subject,
+      'Message': inquiry.message
+    }
+  });
   const externalApiPromise = sendContactToExternalAPI(inquiry);
 
-  // Execute both operations in parallel
-  const [emailResult, apiResult] = await Promise.allSettled([emailPromise, externalApiPromise]);
+  // Execute all operations in parallel
+  const [emailResult, thankYouResult, apiResult] = await Promise.allSettled([emailPromise, thankYouPromise, externalApiPromise]);
 
   // Log results
   if (emailResult.status === 'fulfilled') {
-    console.log('✓ Email processing completed');
+    console.log('✓ Admin email processing completed');
   } else {
-    console.error('✗ Email processing failed:', emailResult.reason);
+    console.error('✗ Admin email processing failed:', emailResult.reason);
+  }
+
+  if (thankYouResult.status === 'fulfilled') {
+    console.log('✓ Thank-You email processing completed');
+  } else {
+    console.error('✗ Thank-You email processing failed:', thankYouResult.reason);
   }
 
   if (apiResult.status === 'fulfilled') {
@@ -70,54 +77,37 @@ async function processContactInquiryAsync(inquiry) {
   }
 }
 
-// Email sending function with proper error handling
+// Email sending function with proper error handling and fallback
 async function sendContactEmail(inquiry) {
   try {
-    // Verify email configuration
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_APP_PASSWORD) {
-      throw new Error('Email configuration missing. Please set EMAIL_USER and EMAIL_APP_PASSWORD environment variables.');
+    const adminRecipient = process.env.EMAIL_USER || process.env.BDM_EMAIL || 'bdm@rndtechnosoft.com';
+    const emailPass = process.env.EMAIL_PASS || process.env.BDM_PASS || process.env.OWNER_PASS;
+
+    if (!adminRecipient || !emailPass) {
+      throw new Error('Email configuration missing in environment variables.');
     }
 
     // HTML Email Template
     const emailHTML = generateContactEmailTemplate(inquiry);
 
+    const ccRecipient = (process.env.OWNER_EMAIL && process.env.OWNER_EMAIL !== adminRecipient) ? process.env.OWNER_EMAIL : undefined;
+
     const mailOptions = {
-      from: `"RND Technosoft Contact Form" <${process.env.EMAIL_USER}>`, // Use your email as sender
-      to: process.env.EMAIL_USER,
-      cc: process.env.OWNER_EMAIL || undefined,
+      from: `"RND Technosoft Contact Form" <${adminRecipient}>`,
+      to: adminRecipient,
+      cc: ccRecipient,
       replyTo: inquiry.email, // Client can reply directly to inquirer
       subject: `New Contact Inquiry: ${inquiry.subject}`,
       html: emailHTML
     };
 
     console.log('Attempting to send contact email...');
-    console.log('Email config check:', {
-      from: mailOptions.from,
-      to: mailOptions.to,
-      cc: mailOptions.cc,
-      hasAuth: !!process.env.EMAIL_APP_PASSWORD
-    });
-
-    // Verify transporter configuration before sending
-    await transporter.verify();
-    console.log('✓ Email transporter verified');
-
-    const emailResult = await transporter.sendMail(mailOptions);
+    const emailResult = await sendMailWithFallback(mailOptions, 'user');
     console.log('✓ Contact email sent successfully:', emailResult.messageId);
     return emailResult;
 
   } catch (emailError) {
-    console.error('✗ Contact email sending failed:', emailError);
-    
-    // Specific error handling for common Gmail issues
-    if (emailError.message.includes('Invalid login')) {
-      console.error('Gmail Authentication Error: Please use App Password instead of regular password');
-      console.error('Steps to fix:');
-      console.error('1. Enable 2-Factor Authentication on your Gmail account');
-      console.error('2. Generate an App Password for this application');
-      console.error('3. Use the App Password in EMAIL_APP_PASSWORD environment variable');
-    }
-    
+    console.error('✗ Contact email sending failed:', emailError.message);
     throw emailError;
   }
 }
@@ -172,276 +162,303 @@ async function sendContactToExternalAPI(inquiry) {
 // Enhanced email template generator
 function generateContactEmailTemplate(inquiry) {
   return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>New Contact Inquiry</title>
-        <style>
-            body {
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-                margin: 0;
-                padding: 0;
-                background-color: #f8f9fa;
-                line-height: 1.6;
-            }
-            .container {
-                width: 100%;
-                max-width: 650px;
-                margin: 30px auto;
-                background-color: #ffffff;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                border: 1px solid #e9ecef;
-            }
-            .header {
-                background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-                color: white;
-                padding: 30px;
-                text-align: center;
-                position: relative;
-            }
-            .header::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-                opacity: 0.3;
-            }
-            .logo {
-                width: 100px;
-                height: auto;
-                margin-bottom: 15px;
-                border-radius: 8px;
-                background: rgba(255, 255, 255, 0.1);
-                padding: 10px;
-                position: relative;
-                z-index: 1;
-            }
-            .header h2 {
-                margin: 0;
-                font-size: 28px;
-                font-weight: 600;
-                position: relative;
-                z-index: 1;
-            }
-            .header .sub-text {
-                margin: 8px 0 0 0;
-                font-size: 16px;
-                opacity: 0.9;
-                position: relative;
-                z-index: 1;
-            }
-            .content {
-                padding: 40px 30px;
-            }
-            .info-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-                margin-bottom: 30px;
-            }
-            .info-item {
-                background: #f8f9fa;
-                padding: 20px;
-                border-radius: 8px;
-                border-left: 4px solid #007bff;
-                transition: transform 0.2s ease;
-            }
-            .info-item:hover {
-                transform: translateY(-2px);
-            }
-            .info-label {
-                font-size: 12px;
-                font-weight: 600;
-                color: #6c757d;
-                text-transform: uppercase;
-                letter-spacing: 0.5px;
-                margin-bottom: 8px;
-                display: block;
-            }
-            .info-value {
-                font-size: 16px;
-                color: #212529;
-                font-weight: 500;
-                word-break: break-word;
-            }
-            .message-section {
-                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-                padding: 25px;
-                border-radius: 10px;
-                border: 1px solid #dee2e6;
-                margin-top: 20px;
-            }
-            .message-label {
-                font-size: 14px;
-                font-weight: 600;
-                color: #495057;
-                margin-bottom: 12px;
-                display: block;
-            }
-            .message-content {
-                color: #212529;
-                font-size: 15px;
-                line-height: 1.7;
-                white-space: pre-wrap;
-                background: white;
-                padding: 20px;
-                border-radius: 6px;
-                border: 1px solid #dee2e6;
-            }
-            .metadata {
-                margin-top: 30px;
-                padding: 20px;
-                background: #f1f3f4;
-                border-radius: 8px;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-            .metadata-item {
-                font-size: 13px;
-                color: #6c757d;
-            }
-            .metadata-label {
-                font-weight: 600;
-                display: block;
-                margin-bottom: 4px;
-            }
-            .footer {
-                background: #343a40;
-                color: #adb5bd;
-                padding: 25px 30px;
-                text-align: center;
-                font-size: 13px;
-            }
-            .footer-logo {
-                font-weight: 600;
-                color: #ffffff;
-                margin-bottom: 8px;
-            }
-            .action-buttons {
-                text-align: center;
-                margin: 25px 0;
-            }
-            .btn {
-                display: inline-block;
-                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-                color: white;
-                padding: 12px 25px;
-                text-decoration: none;
-                border-radius: 25px;
-                font-weight: 600;
-                font-size: 14px;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
-            }
-            .btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-            }
-            @media (max-width: 600px) {
-                .info-grid {
-                    grid-template-columns: 1fr;
-                }
-                .metadata {
-                    grid-template-columns: 1fr;
-                }
-                .container {
-                    margin: 10px;
-                    border-radius: 8px;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <!-- Header Section -->
-            <div class="header">
+   <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Contact Inquiry</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f2;
+            line-height: 1.6;
+        }
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+            border: 1px solid #1a1a1a;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            background: linear-gradient(135deg, #3a3a3a 0%, #1c1c1c 55%, #0d0d0d 100%);
+            color: #ffffff;
+            padding: 34px 30px;
+            text-align: center;
+            position: relative;
+            border-bottom: 4px solid #ffd333;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.05)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.6;
+        }
+        .logo-wrap {
+            display: inline-block;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 10px 16px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+        .logo {
+            width: 150px;
+            height: auto;
+            display: block;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.3px;
+            color: #ffffff;
+        }
+        .header .sub-text {
+            margin: 8px 0 0 0;
+            font-size: 15px;
+            color: #ffd333;
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+
+        /* ===== Content ===== */
+        .content {
+            padding: 40px 30px;
+            background-color: #ffffff;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+        .info-item {
+            background: #fafafa;
+            padding: 18px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #ffd333;
+            border-top: 1px solid #ececec;
+            border-right: 1px solid #ececec;
+            border-bottom: 1px solid #ececec;
+            transition: transform 0.2s ease;
+        }
+        .info-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #8a8a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .info-value {
+            font-size: 16px;
+            color: #111111;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        /* ===== Message Section ===== */
+        .message-section {
+            background: #111111;
+            padding: 26px;
+            border-radius: 10px;
+            margin-top: 22px;
+        }
+        .message-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ffd333;
+            margin-bottom: 12px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .message-content {
+            color: #f0f0f0;
+            font-size: 15px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            background: #1c1c1c;
+            padding: 20px;
+            border-radius: 6px;
+            border: 1px solid #2e2e2e;
+        }
+
+        /* ===== Action Button ===== */
+        .action-buttons {
+            text-align: center;
+            margin: 28px 0 8px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: #ffd333;
+            color: #111111;
+            padding: 13px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 4px 14px rgba(255, 211, 51, 0.45);
+            border: 2px solid #111111;
+        }
+
+        /* ===== Metadata ===== */
+        .metadata {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fafafa;
+            border: 1px solid #ececec;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .metadata-item {
+            font-size: 13px;
+            color: #555555;
+        }
+        .metadata-label {
+            font-weight: 700;
+            color: #111111;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .priority-badge {
+            display: inline-block;
+            background: #ffd333;
+            color: #111111;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        /* ===== Footer ===== */
+        .footer {
+            background: #111111;
+            color: #bdbdbd;
+            padding: 26px 30px;
+            text-align: center;
+            font-size: 13px;
+            border-top: 3px solid #ffd333;
+        }
+        .footer-logo {
+            font-weight: 700;
+            color: #ffd333;
+            font-size: 15px;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .metadata { grid-template-columns: 1fr; }
+            .container { margin: 10px; border-radius: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo-wrap">
                 <img src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" class="logo" alt="RND Technosoft Logo">
-                <h2>🔔 New Contact Inquiry</h2>
-                <p class="sub-text">A potential client has reached out through your website</p>
             </div>
+            <h2>🔔 New Contact Inquiry</h2>
+            <p class="sub-text">A potential client has reached out through your website</p>
+        </div>
 
-            <!-- Content Section -->
-            <div class="content">
-                <!-- Contact Information Grid -->
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Full Name</span>
-                        <div class="info-value">${inquiry.name}</div>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email Address</span>
-                        <div class="info-value">${inquiry.email}</div>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Phone Number</span>
-                        <div class="info-value">${inquiry.phone}</div>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Subject</span>
-                        <div class="info-value">${inquiry.subject}</div>
-                    </div>
+        <!-- Content Section -->
+        <div class="content">
+            <!-- Contact Information Grid -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Full Name</span>
+                    <div class="info-value">${inquiry.name}</div>
                 </div>
-
-                <!-- Message Section -->
-                <div class="message-section">
-                    <span class="message-label">📝 Message Details</span>
-                    <div class="message-content">${inquiry.message}</div>
+                <div class="info-item">
+                    <span class="info-label">Email Address</span>
+                    <div class="info-value">${inquiry.email}</div>
                 </div>
-
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <a href="mailto:${inquiry.email}?subject=Re: ${encodeURIComponent(inquiry.subject)}" class="btn">
-                        📧 Reply to Client
-                    </a>
+                <div class="info-item">
+                    <span class="info-label">Phone Number</span>
+                    <div class="info-value">${inquiry.phone}</div>
                 </div>
-
-                <!-- Metadata -->
-                <div class="metadata">
-                    <div class="metadata-item">
-                        <span class="metadata-label">Received Date</span>
-                        ${new Date().toLocaleDateString('en-US', { 
-                          weekday: 'long', 
-                          year: 'numeric', 
-                          month: 'long', 
-                          day: 'numeric' 
-                        })}
-                    </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Received Time</span>
-                        ${new Date().toLocaleTimeString('en-US', { 
-                          hour: '2-digit', 
-                          minute: '2-digit',
-                          timeZoneName: 'short'
-                        })}
-                    </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Source</span>
-                        Website Contact Form
-                    </div>
-                    <div class="metadata-item">
-                        <span class="metadata-label">Priority</span>
-                        Normal
-                    </div>
+                <div class="info-item">
+                    <span class="info-label">Subject</span>
+                    <div class="info-value">${inquiry.subject}</div>
                 </div>
             </div>
 
-            <!-- Footer Section -->
-            <div class="footer">
-                <div class="footer-logo">RND Technosoft</div>
-                <p>This is an automated notification from your website contact form.<br>
-                Please respond to the client within 24 hours for best customer experience.</p>
+            <!-- Message Section -->
+            <div class="message-section">
+                <span class="message-label">📝 Message Details</span>
+                <div class="message-content">${inquiry.message}</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="mailto:${inquiry.email}?subject=Re: ${encodeURIComponent(inquiry.subject)}" class="btn">
+                    📧 Reply to Client
+                </a>
+            </div>
+
+            <!-- Metadata -->
+            <div class="metadata">
+                <div class="metadata-item">
+                    <span class="metadata-label">Received Date</span>
+                    ${new Date().toLocaleDateString('en-US', {
+                      weekday: 'long',
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Received Time</span>
+                    ${new Date().toLocaleTimeString('en-US', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      timeZoneName: 'short'
+                    })}
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Source</span>
+                    Website Contact Form
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Priority</span>
+                    <span class="priority-badge">Normal</span>
+                </div>
             </div>
         </div>
-    </body>
-    </html>
+
+        <!-- Footer Section -->
+        <div class="footer">
+            <div class="footer-logo">RND Technosoft</div>
+            <p>This is an automated notification from your website contact form.<br>
+            Please respond to the client within 24 hours for best customer experience.</p>
+        </div>
+    </div>
+</body>
+</html>
   `;
 }
 

@@ -29,7 +29,6 @@ const Portfolio = lazy(() => import('./adminComponent/Pages/Portfolio'));
 const CreatePortfolio = lazy(() => import('./adminComponent/Pages/CreatePortfolio'));
 const EditPortfolio = lazy(() => import('./adminComponent/Pages/EditPortfolio'));
 
-
 const News = lazy(() => import('./adminComponent/Pages/News'));
 const CreateNews = lazy(() => import('./adminComponent/Pages/CreateNews'));
 const EditNews = lazy(() => import('./adminComponent/Pages/EditNews'));
@@ -341,8 +340,6 @@ function App() {
                   <Route path="/why-partner-us" element={<WhyPartnerUs />} />
                   <Route path="/ServiceCategory" element={<ServiceCategory />} />
                   <Route path="/we-are-expert" element={<WeAreExpert />} />
-
-
                   <Route path="/meta-form" element={<StaticMetaForm />} />
                   <Route path="/meta/edit-meta-form/:id" element={<StaticMetaForm />} />
                   <Route path="/meta-table" element={<MetaList />} />

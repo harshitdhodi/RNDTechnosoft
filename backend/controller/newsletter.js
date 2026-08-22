@@ -1,14 +1,5 @@
 const Newsletter = require('../model/newsletter');
-const nodemailer = require('nodemailer');
-
-
-const transporter = nodemailer.createTransport({
-    service: 'Gmail', 
-    auth: {
-        user: process.env.EMAIL_USER, 
-        pass: process.env.EMAIL_PASS  
-    }
-});
+const { sendThankYouEmail } = require('../utils/emailService');
 
 
 exports.addEmail = async (req, res) => {
@@ -24,23 +15,18 @@ exports.addEmail = async (req, res) => {
         const newEmail = new Newsletter({ email, name });
         await newEmail.save();
 
-        // Send confirmation email
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
+        // Send confirmation HTML email
+        await sendThankYouEmail({
             to: email,
-            cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
-            subject: 'Newsletter Subscription Confirmation',
-            text: `Hello, ${name}\n\nThank you for subscribing to our newsletter! You will now receive updates from us.\n\nBest regards,\nRND Technosoft.`
-        };
-
-        // Send the email
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                return res.status(500).json({ message: 'Failed to send confirmation email', error });
-            } else {
-                res.status(201).json({ message: 'Email subscribed successfully and confirmation sent', data: newEmail });
+            name: name || 'Subscriber',
+            subject: 'Welcome to RND Technosoft Newsletter!',
+            formType: 'Newsletter Subscription',
+            inquiryDetails: {
+                'Subscriber Email': email
             }
         });
+
+        res.status(201).json({ message: 'Email subscribed successfully and confirmation sent', data: newEmail });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });
     }

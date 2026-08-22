@@ -83,7 +83,7 @@ export default defineConfig({
     }), 
     // Critical CSS (used with SSR or pre-rendered HTML)
     critical({
-      criticalUrl: "http://localhost:3021", // optional: use your base URL or entry HTML
+      criticalUrl: "http://localhost:3007", // optional: use your base URL or entry HTML
       criticalBase: "dist/",
       criticalPages: [{ uri: "", template: "index" }],
       critical: {
@@ -165,7 +165,7 @@ export default defineConfig({
     },
     proxy: {
       "/api": {
-        target: "http://localhost:3021",
+        target: "http://localhost:3007",
         changeOrigin: false,
         secure: false,
       },

@@ -1,16 +1,7 @@
 const CareerInquiry = require("../model/herosectioninquiry");
 const path = require("path");
-const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
-
-
-const transporter = nodemailer.createTransport({
-  service: "Gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const { sendThankYouEmail, sendMailWithFallback } = require("../utils/emailService");
 
 exports.CreateCareerInquiry = async (req, res) => {
   try {
@@ -23,6 +14,8 @@ exports.CreateCareerInquiry = async (req, res) => {
       budget: req.body.budget,
     });
     console.log("newInquiry", newInquiry);
+
+    await newInquiry.save();
 
     const logoImageUrl = "https://rndtechnosoft.com/api/logo/download/rndlogo.png";
     const logoStyle = "width: 100px; height: auto;";
@@ -94,32 +87,55 @@ exports.CreateCareerInquiry = async (req, res) => {
       </html>
       `;
 
+    const adminRecipient = process.env.EMAIL_USER || process.env.BDM_EMAIL || 'bdm@rndtechnosoft.com';
+    const ccRecipient = (process.env.OWNER_EMAIL && process.env.OWNER_EMAIL !== adminRecipient) ? process.env.OWNER_EMAIL : undefined;
+
     const mailOptions = {
-      from: newInquiry.email,
+      from: `"RND Technosoft Hero Section Form" <${adminRecipient}>`,
       replyTo: newInquiry.email,
-      to: process.env.EMAIL_USER,
-      subject: "New Inquiry",
+      to: adminRecipient,
+      cc: ccRecipient,
+      subject: "New Inquiry Received (Hero Section)",
       html: emailHTML,
     };
 
-    // Send email
-    await transporter.sendMail(mailOptions);
-    await newInquiry.save();
- // Send data to external API
- try {
-  await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
-    API_KEY: "A78A8BC90C6F6235",
-    API_ID: "MW1V",
-    name: newInquiry.name,
-    email: newInquiry.email,
-    phone: newInquiry.mobileNo,
-    subject: "Career Inquiry",
-    message: newInquiry.message
-  });
-} catch (externalError) {
-  console.error('Failed to send data to external DB:', externalError.message);
-  // Optional: log more details or notify internally
-}
+    // Send email to admin
+    try {
+      await sendMailWithFallback(mailOptions);
+    } catch (adminErr) {
+      console.error('Failed to send admin hero inquiry email:', adminErr.message);
+    }
+
+    // Send thank you email to user
+    await sendThankYouEmail({
+      to: newInquiry.email,
+      name: newInquiry.name,
+      subject: 'Thank You for Your Inquiry - RND Technosoft',
+      formType: 'Hero Section Inquiry',
+      inquiryDetails: {
+        'Name': newInquiry.name,
+        'Email': newInquiry.email,
+        'Phone': newInquiry.phone,
+        'City': newInquiry.city || 'N/A',
+        'Service': newInquiry.service || 'N/A',
+        'Budget': newInquiry.budget || 'N/A'
+      }
+    });
+
+    // Send data to external API
+    try {
+      await axios.post('https://leads.rndtechnosoft.com/api/contactform/message', {
+        API_KEY: "A78A8BC90C6F6235",
+        API_ID: "MW1V",
+        name: newInquiry.name,
+        email: newInquiry.email,
+        phone: newInquiry.phone,
+        subject: "Hero Section Inquiry",
+        message: `Service: ${newInquiry.service || ''}, City: ${newInquiry.city || ''}, Budget: ${newInquiry.budget || ''}`
+      });
+    } catch (externalError) {
+      console.error('Failed to send data to external DB:', externalError.message);
+    }
 
     // Respond to the client
     res.status(201).json({ success: true, data: newInquiry, message: "Your message has been sent successfully! We will get back to you soon." });

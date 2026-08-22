@@ -1,17 +1,7 @@
 const CareerInquiry = require('../model/carrerinquiry');
 const path = require('path')
-const nodemailer = require('nodemailer');
 const { default: axios } = require('axios');
-
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com', // Gmail SMTP server
-  port: 587, // Port
-  secure: false, // Use `true` for 465, `false` for other ports
-  auth: {
-    user: process.env.EMAIL_HR,
-    pass: process.env.HR_PASS
-  }
-});
+const { sendThankYouEmail, sendMailWithFallback } = require('../utils/emailService');
 
 exports.CreateCareerInquiry = async (req, res) => {
   try {
@@ -64,18 +54,38 @@ async function processInquiryAsync(req, newInquiry) {
   const jobTitle = req.body.jobTitle || 'Career Inquiry';
   console.log('JobTitle:', jobTitle);
 
-  // Process email and external API in parallel
+  // Process HR email, candidate thank you email, and external API in parallel
   const emailPromise = sendEmail(req, newInquiry, jobTitle);
+  const thankYouPromise = sendThankYouEmail({
+    to: newInquiry.email,
+    name: newInquiry.name,
+    subject: `Application Received - ${jobTitle} at RND Technosoft`,
+    formType: 'Career Application',
+    inquiryDetails: {
+      'Position': jobTitle,
+      'Applicant Name': newInquiry.name,
+      'Email': newInquiry.email,
+      'Mobile': newInquiry.mobileNo,
+      'LinkedIn': newInquiry.linkedin || 'N/A'
+    },
+    useHrAccount: true
+  });
   const externalApiPromise = sendToExternalAPI(newInquiry);
 
-  // Execute both operations in parallel
-  const [emailResult, apiResult] = await Promise.allSettled([emailPromise, externalApiPromise]);
+  // Execute all operations in parallel
+  const [emailResult, thankYouResult, apiResult] = await Promise.allSettled([emailPromise, thankYouPromise, externalApiPromise]);
 
   // Log results
   if (emailResult.status === 'fulfilled') {
-    console.log('✓ Email processing completed');
+    console.log('✓ HR Email processing completed');
   } else {
-    console.error('✗ Email processing failed:', emailResult.reason);
+    console.error('✗ HR Email processing failed:', emailResult.reason);
+  }
+
+  if (thankYouResult.status === 'fulfilled') {
+    console.log('✓ Candidate Thank-You email processing completed');
+  } else {
+    console.error('✗ Candidate Thank-You email processing failed:', thankYouResult.reason);
   }
 
   if (apiResult.status === 'fulfilled') {
@@ -94,14 +104,14 @@ async function sendEmail(req, newInquiry, jobTitle) {
     const resumeFile = req.files && req.files['resume'] ? req.files['resume'][0] : null;
     console.log('Resume file:', resumeFile ? resumeFile.filename : 'No resume file');
 
-    // Check if EMAIL_HR is configured
-    if (!process.env.EMAIL_HR) {
-      throw new Error('EMAIL_HR environment variable is not configured');
+    const recipient = process.env.OWNER_EMAIL || process.env.EMAIL_HR;
+    if (!recipient) {
+      throw new Error('Recipient environment variable is not configured');
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_FROM || newInquiry.email, // Use configured sender email
-      to: process.env.EMAIL_HR,
+      from: process.env.EMAIL_FROM || `"RND Technosoft Career Portal" <${recipient}>`,
+      to: recipient,
       replyTo: newInquiry.email,
       subject: `${jobTitle} - ${newInquiry.name}`,
       html: emailHTML
@@ -118,7 +128,7 @@ async function sendEmail(req, newInquiry, jobTitle) {
     }
 
     console.log('Attempting to send email...');
-    const emailResult = await transporter.sendMail(mailOptions);
+    const emailResult = await sendMailWithFallback(mailOptions);
     console.log('✓ Email sent successfully:', emailResult.messageId);
     return emailResult;
 

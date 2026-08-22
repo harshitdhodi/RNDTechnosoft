@@ -11,21 +11,17 @@ const {insertTestimonial, getTestimonialsPackage,
      deleteVideoAndAltText,
      getTestimonialsHigh,insertTestimonialForSubCategory,insertTestimonialForSubSubCategory
      } = require('../controller/testimonial');
-const { uploadMedia } = require('../middleware/uploadMedia');
+const { uploadPhoto } = require('../middleware/fileUpload');
 const { requireAuth } = require('../middleware/authmiddleware');
-
-
-router.post('/insertTestinomial',requireAuth,uploadMedia , insertTestimonial);
-router.post('/insertTestimonialForSubCategory',requireAuth,uploadMedia , insertTestimonialForSubCategory);
-router.post('/insertTestimonialForSubSubCategory',requireAuth,uploadMedia , insertTestimonialForSubSubCategory);
+router.post('/insertTestinomial',requireAuth,uploadPhoto , insertTestimonial);
+router.post('/insertTestimonialForSubCategory',requireAuth,uploadPhoto , insertTestimonialForSubCategory);
+router.post('/insertTestimonialForSubSubCategory',requireAuth,uploadPhoto , insertTestimonialForSubSubCategory);
 
 router.get('/getTestimonial' , getTestimonials);
 router.get('/sub/getTestimonial' , getTestimonialsSub);
 router.get('/subsub/getTestimonial' , getTestimonialsSubSub);
 
-
-
-router.put('/updateTestimonial',requireAuth,uploadMedia, updateTestimonial)
+router.put('/updateTestimonial',requireAuth,uploadPhoto, updateTestimonial)
 router.delete('/deleteTestimonial' ,requireAuth, deleteTestimonial)
 router.get('/getTestimonialById', requireAuth,getTestimonialById)
 router.get('/countTestimonial',requireAuth, countTestimonial)

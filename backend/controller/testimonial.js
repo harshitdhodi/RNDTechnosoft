@@ -3,9 +3,6 @@ const path=require('path')
 const fs=require('fs')
 const ServiceCategory = require('../model/serviceCategory')
 const Package = require('../model/packages');  // Assuming you have the Package model in this path
-
-
-
 const mongoose = require('mongoose');
 
 const getTestimonialsPackage = async (req, res) => {

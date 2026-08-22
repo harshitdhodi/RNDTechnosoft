@@ -1,14 +1,5 @@
-const nodemailer = require("nodemailer");
 const PopupInquiry = require("../model/popupinquiry");
-
-// Setup nodemailer transporter
-const transporter = nodemailer.createTransport({
-  service: "gmail", // You can use other services like Outlook, etc.
-  auth: {
-    user: process.env.EMAIL_USER, // Admin email address
-    pass: process.env.EMAIL_PASS, // Admin email password or app-specific password
-  },
-});
+const { sendThankYouEmail, sendMailWithFallback } = require("../utils/emailService");
 
 // POST: Create a new inquiry
 const createPopupInquiry = async (req, res) => {
@@ -19,13 +10,16 @@ const createPopupInquiry = async (req, res) => {
     // Save to the database
     await newInquiry.save();
 
+    const adminRecipient = process.env.EMAIL_USER || process.env.BDM_EMAIL || 'bdm@rndtechnosoft.com';
+    const ccRecipient = (process.env.OWNER_EMAIL && process.env.OWNER_EMAIL !== adminRecipient) ? process.env.OWNER_EMAIL : undefined;
+
     // Prepare the email content for the admin
     const adminMailOptions = {
-      from: process.env.EMAIL_USER, // Sender email
+      from: `"RND Technosoft Popup Form" <${adminRecipient}>`,
       replyTo: newInquiry.email,
-      to: process.env.EMAIL_USER, // Admin's email address
-      cc: process.env.OWNER_EMAIL, // Add OWNER_EMAIL as CC
-      subject: "New Inquiry Received",
+      to: adminRecipient,
+      cc: ccRecipient,
+      subject: "New Inquiry Received (Popup Form)",
       html: `
                 <div style="text-align: center;">
                     <img src="https://rndtechnosoft.com/api/logo/download/rndlogo.png" alt="RND Technosoft Logo" style="width: 150px; height: auto;"/>
@@ -38,26 +32,25 @@ const createPopupInquiry = async (req, res) => {
             `,
     };
 
-    // Prepare the email content for the user
-    const userMailOptions = {
-      from: process.env.EMAIL_USER, // Sender email
-      to: newInquiry.email, // User's email address
-      subject: "Inquiry Submitted Successfully",
-      html: `
-                <div style="text-align: center;">
-                    <img src="https://rndtechnosoft.com/api/logo/download/photo_1730452853512.png" alt="RND Technosoft Logo" style="width: 150px; height: auto;"/>
-                    <h2>Thank You for Your Inquiry</h2>
-                    <p>Hi ${newInquiry.name},</p>
-                    <p>Thank you for reaching out to us! Your inquiry has been submitted successfully.</p>
-                    <p>Our team will get back to you shortly.</p>
-                    <p>Best regards,<br>RND Technosoft</p>
-                </div>
-            `,
-    };
+    // Send emails asynchronously
+    try {
+      await sendMailWithFallback(adminMailOptions);
+    } catch (adminErr) {
+      console.error('Failed to send admin popup notification email:', adminErr.message);
+    }
 
-    // Send emails to both the admin and the user
-    await transporter.sendMail(adminMailOptions);
-    await transporter.sendMail(userMailOptions);
+    await sendThankYouEmail({
+      to: newInquiry.email,
+      name: newInquiry.name,
+      subject: 'Thank You for Your Inquiry - RND Technosoft',
+      formType: 'Popup Inquiry',
+      inquiryDetails: {
+        'Name': newInquiry.name,
+        'Email': newInquiry.email,
+        'Mobile': newInquiry.mobile,
+        'Message': newInquiry.description
+      }
+    });
 
     // Send a success response
     res

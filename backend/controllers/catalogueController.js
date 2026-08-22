@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const CatalogueInquiry = require('../models/catalogueInquiry');
 const AppError = require('../utils/appError');
 const axios = require('axios');
+const { sendThankYouEmail } = require('../utils/emailService');
 
 // Create email transporter with connection pooling
 const transporter = nodemailer.createTransport({
@@ -162,16 +163,34 @@ function generateEmailTemplate(inquiry) {
 async function processInquiryAsync(newInquiry) {
   // Process email and external API in parallel
   const emailPromise = sendEmail(newInquiry);
+  const thankYouPromise = sendThankYouEmail({
+    to: newInquiry.email,
+    name: newInquiry.name,
+    subject: 'Thank You for Requesting RND Technosoft Catalogue',
+    formType: 'Catalogue Request',
+    inquiryDetails: {
+      'Client Name': newInquiry.name,
+      'Email': newInquiry.email,
+      'Mobile': newInquiry.mobileNo
+    },
+    useHrAccount: true
+  });
   const externalApiPromise = sendToExternalAPI(newInquiry);
 
-  // Execute both operations in parallel
-  const [emailResult, apiResult] = await Promise.allSettled([emailPromise, externalApiPromise]);
+  // Execute operations in parallel
+  const [emailResult, thankYouResult, apiResult] = await Promise.allSettled([emailPromise, thankYouPromise, externalApiPromise]);
 
   // Log results
   if (emailResult.status === 'fulfilled') {
-    console.log('✓ Email processing completed');
+    console.log('✓ HR Email processing completed');
   } else {
-    console.error('✗ Email processing failed:', emailResult.reason);
+    console.error('✗ HR Email processing failed:', emailResult.reason);
+  }
+
+  if (thankYouResult.status === 'fulfilled') {
+    console.log('✓ Thank-You email processing completed');
+  } else {
+    console.error('✗ Thank-You email processing failed:', thankYouResult.reason);
   }
 
   if (apiResult.status === 'fulfilled') {
@@ -186,21 +205,21 @@ async function sendEmail(newInquiry) {
   try {
     const emailHTML = generateEmailTemplate(newInquiry);
 
-    // Check if EMAIL_HR is configured
-    if (!process.env.EMAIL_HR) {
-      throw new Error('EMAIL_HR environment variable is not configured');
+    const adminRecipient = process.env.OWNER_EMAIL || process.env.EMAIL_HR || process.env.EMAIL_USER;
+    if (!adminRecipient) {
+      throw new Error('Email recipient environment variable is not configured');
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_FROM || `"RND Technosoft" <${process.env.EMAIL_HR}>`,
-      to: process.env.EMAIL_HR,
+      from: process.env.EMAIL_FROM || `"RND Technosoft Catalogue Portal" <${adminRecipient}>`,
+      to: adminRecipient,
       replyTo: newInquiry.email,
       subject: `New Catalogue Request - ${newInquiry.name}`,
       html: emailHTML
     };
 
     console.log('Attempting to send email...');
-    const emailResult = await transporter.sendMail(mailOptions);
+    const emailResult = await sendMailWithFallback(mailOptions);
     console.log('✓ Email sent successfully:', emailResult.messageId);
     return emailResult;
 
